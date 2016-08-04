@@ -25,7 +25,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
      */
     public ContainerAbilityContainer(EntityPlayer player, int itemIndex) {
         super(player.inventory, (ItemGuiAbilityContainer) InventoryHelpers.getItemFromIndex(player, itemIndex).getItem(), itemIndex);
-        this.addPlayerInventory(player.inventory, 8, 31);
+        addInventory(player.inventory, 0, 8, 196, 1, 9);
     }
 
     @SideOnly(Side.CLIENT)
