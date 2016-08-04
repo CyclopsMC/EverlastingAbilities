@@ -27,7 +27,7 @@ public class DefaultAbilityStore implements IAbilityStore {
     @Override
     public void setAbilities(Map<IAbilityType, Integer> abilityTypes) {
         this.abilityTypes.clear();
-        abilityTypes.putAll(abilityTypes);
+        this.abilityTypes.putAll(abilityTypes);
     }
 
     @Override
@@ -51,6 +51,9 @@ public class DefaultAbilityStore implements IAbilityStore {
 
     @Override
     public Ability getAbility(IAbilityType abilityType) {
+        if (!hasAbilityType(abilityType)) {
+            return null;
+        }
         return new Ability(abilityType, abilityTypes.get(abilityType));
     }
 }

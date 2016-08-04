@@ -24,12 +24,18 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
         int maxLevel = abilityType.getMaxLevel();
         int toAddLevel = ability.getLevel();
         int finalLevel = Math.min(currentLevel + toAddLevel, maxLevel);
+        int addedLevel = finalLevel - currentLevel;
         Ability newAbility = new Ability(abilityType, finalLevel);
+        Ability addedAbility = addedLevel == 0 ? null : new Ability(abilityType, addedLevel);
 
         if (doAdd) {
-            abilityTypes.put(newAbility.getAbilityType(), newAbility.getLevel());
+            if (newAbility.getLevel() == 0) {
+                abilityTypes.remove(newAbility.getAbilityType());
+            } else {
+                abilityTypes.put(newAbility.getAbilityType(), newAbility.getLevel());
+            }
         }
-        return newAbility;
+        return addedAbility;
     }
 
     @Override
@@ -38,11 +44,17 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
         int currentLevel = abilityTypes.containsKey(abilityType) ? abilityTypes.get(abilityType) : 0;
         int toRemoveLevel = ability.getLevel();
         int finalLevel = Math.max(currentLevel - toRemoveLevel, 0);
+        int removedLevel = currentLevel - finalLevel;
         Ability newAbility = new Ability(abilityType, finalLevel);
+        Ability removedAbility = removedLevel == 0 ? null : new Ability(abilityType, removedLevel);
 
         if (doRemove) {
-            abilityTypes.put(newAbility.getAbilityType(), newAbility.getLevel());
+            if (newAbility.getLevel() == 0) {
+                abilityTypes.remove(newAbility.getAbilityType());
+            } else {
+                abilityTypes.put(newAbility.getAbilityType(), newAbility.getLevel());
+            }
         }
-        return newAbility;
+        return removedAbility;
     }
 }

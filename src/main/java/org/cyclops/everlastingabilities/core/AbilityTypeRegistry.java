@@ -4,6 +4,8 @@ import com.google.common.collect.Maps;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.IAbilityTypeRegistry;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -33,5 +35,10 @@ public class AbilityTypeRegistry implements IAbilityTypeRegistry {
     @Override
     public IAbilityType getAbilityType(String unlocalizedName) {
         return abilities.get(unlocalizedName);
+    }
+
+    @Override
+    public Collection<IAbilityType> getAbilityTypes() {
+        return Collections.unmodifiableCollection(abilities.values());
     }
 }

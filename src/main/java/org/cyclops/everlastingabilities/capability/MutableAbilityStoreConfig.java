@@ -4,7 +4,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import org.cyclops.everlastingabilities.api.capability.AbilityStoreStorage;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
-import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.CapabilityConfig;
 
@@ -20,8 +19,8 @@ public class MutableAbilityStoreConfig extends CapabilityConfig {
      */
     public static MutableAbilityStoreConfig _instance;
 
-    @CapabilityInject(IAbilityStore.class)
-    public static Capability<IAbilityStore> CAPABILITY = null;
+    @CapabilityInject(IMutableAbilityStore.class)
+    public static Capability<IMutableAbilityStore> CAPABILITY = null;
 
     /**
      * Make a new instance.

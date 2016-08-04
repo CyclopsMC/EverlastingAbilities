@@ -1,20 +1,35 @@
 package org.cyclops.everlastingabilities;
 
+import com.google.common.collect.Maps;
+import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.Level;
+import org.cyclops.cyclopscore.command.CommandMod;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
+import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
+import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityTypeRegistry;
+import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
+import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
 import org.cyclops.everlastingabilities.core.AbilityTypeRegistry;
+import org.cyclops.everlastingabilities.core.SerializableCapabilityProvider;
+
+import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * The main mod class of this mod.
@@ -53,6 +68,15 @@ public class EverlastingAbilities extends ModBaseVersionable {
         return new RecipeHandler(this);
     }
 
+    @Override
+    protected ICommand constructBaseCommand() {
+        Map<String, ICommand> commands = Maps.newHashMap();
+        commands.put(CommandModifyAbilities.NAME, new CommandModifyAbilities(this));
+        CommandMod command =  new CommandMod(this, commands);
+        command.addAlias("ea");
+        return command;
+    }
+
     /**
      * The pre-initialization, will register required configs.
      * @param event The Forge event required for this.
@@ -73,6 +97,21 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
+
+        AbilityTypes.load();
+
+        getCapabilityConstructorRegistry().registerInheritableEntity(EntityPlayer.class, new SimpleCapabilityConstructor<IMutableAbilityStore, EntityPlayer>() {
+            @Nullable
+            @Override
+            public ICapabilityProvider createProvider(EntityPlayer host) {
+                return new SerializableCapabilityProvider<IMutableAbilityStore>(getCapability(), new DefaultMutableAbilityStore());
+            }
+
+            @Override
+            public Capability<IMutableAbilityStore> getCapability() {
+                return MutableAbilityStoreConfig.CAPABILITY;
+            }
+        });
     }
     
     /**

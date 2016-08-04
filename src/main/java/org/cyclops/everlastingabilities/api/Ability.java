@@ -1,5 +1,7 @@
 package org.cyclops.everlastingabilities.api;
 
+import org.cyclops.cyclopscore.helper.L10NHelpers;
+
 /**
  * An ability instance.
  * @author rubensworks
@@ -22,4 +24,8 @@ public class Ability {
         return level;
     }
 
+    @Override
+    public String toString() {
+        return String.format("[%s @ %s]", L10NHelpers.localize(abilityType.getUnlocalizedName()), level);
+    }
 }
