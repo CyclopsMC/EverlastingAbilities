@@ -8,11 +8,11 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
-import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigReference;
-import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
+import org.cyclops.everlastingabilities.api.IAbilityTypeRegistry;
+import org.cyclops.everlastingabilities.core.AbilityTypeRegistry;
 
 /**
  * The main mod class of this mod.
@@ -58,6 +58,8 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @EventHandler
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        getRegistryManager().addRegistry(IAbilityTypeRegistry.class, AbilityTypeRegistry.getInstance());
+
         super.preInit(event);
     }
     
