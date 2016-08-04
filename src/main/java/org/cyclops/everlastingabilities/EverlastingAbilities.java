@@ -14,6 +14,8 @@ import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.command.CommandMod;
 import org.cyclops.cyclopscore.config.ConfigHandler;
+import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigReference;
+import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
 import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
@@ -27,6 +29,8 @@ import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
 import org.cyclops.everlastingabilities.core.AbilityTypeRegistry;
 import org.cyclops.everlastingabilities.core.SerializableCapabilityProvider;
+import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
+import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -156,9 +160,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
     @Override
     public CreativeTabs constructDefaultCreativeTab() {
-        // Uncomment the following line and specify an item config class to add a creative tab
-        // return new ItemCreativeTab(this, new ItemConfigReference(ITEM CONFIG CLASS));
-        return null;
+        return new ItemCreativeTab(this, new ItemConfigReference(ItemAbilityTotemConfig.class));
     }
 
     @Override
@@ -169,8 +171,12 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @Override
     public void onMainConfigsRegister(ConfigHandler configHandler) {
         super.onMainConfigsRegister(configHandler);
+
         configHandler.add(new AbilityStoreConfig());
         configHandler.add(new MutableAbilityStoreConfig());
+
+        configHandler.add(new ItemAbilityTotemConfig());
+        configHandler.add(new ItemAbilityBottleConfig());
     }
 
     @Override

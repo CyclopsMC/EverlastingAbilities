@@ -1,5 +1,6 @@
 # General
 itemGroup.everlastingabilities=Everlasting Abilities
+general.everlastingabilities.empty=None
 
 # Command
 chat.everlastingabilities.command.invalidAbility=Could not find the ability with id "%s".
@@ -9,3 +10,7 @@ chat.everlastingabilities.command.removedAbility=Removed ability %s, new ability
 ## Abilities
 ability.abilities.everlastingabilities.speed.name=Speed
 ability.abilities.everlastingabilities.speed.info=Walk faster
+
+# Items
+item.items.everlastingabilities.abilityTotem.name=Ability Totem
+item.items.everlastingabilities.abilityBottle.name=Ability Bottle
