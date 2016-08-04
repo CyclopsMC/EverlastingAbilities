@@ -1,0 +1,17 @@
+[
+{
+  "modid": "everlastingabilities",
+  "name": "EverlastingAbilities",
+  "description": "Discover, share and conquer abilities that stick.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "logoFile": "assets/everlastingabilities/textures/logo.png",
+  "url": "https://github.com/CyclopsMC/EverlastingAbilities",
+  "updateUrl": "todo",
+  "authorList": [ "rubensworks (aka kroeserr)" ],
+  "credits": "rubensworks (aka kroeserr)",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
