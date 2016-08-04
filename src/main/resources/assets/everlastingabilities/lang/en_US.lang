@@ -1,0 +1,6 @@
+# General
+itemGroup.everlastingabilities=Everlasting Abilities
+
+## Abilities
+ability.abilities.everlastingabilities.speed.name=Speed
+ability.abilities.everlastingabilities.speed.info=Walk faster
