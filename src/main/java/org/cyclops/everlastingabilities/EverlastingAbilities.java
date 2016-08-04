@@ -12,6 +12,8 @@ import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.api.IAbilityTypeRegistry;
+import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
+import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.core.AbilityTypeRegistry;
 
 /**
@@ -123,6 +125,13 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @Override
     public void onGeneralConfigsRegister(ConfigHandler configHandler) {
         configHandler.add(new GeneralConfig());
+    }
+
+    @Override
+    public void onMainConfigsRegister(ConfigHandler configHandler) {
+        super.onMainConfigsRegister(configHandler);
+        configHandler.add(new AbilityStoreConfig());
+        configHandler.add(new MutableAbilityStoreConfig());
     }
 
     @Override
