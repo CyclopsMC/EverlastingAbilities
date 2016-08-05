@@ -210,7 +210,6 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        System.out.println("join"); // TODO
         if (event.getEntity() instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
             getPacketHandler().sendToPlayer(

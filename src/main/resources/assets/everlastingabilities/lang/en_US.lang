@@ -1,6 +1,8 @@
 # General
 itemGroup.everlastingabilities=Everlasting Abilities
 general.everlastingabilities.empty=None
+general.everlastingabilities.level=Level: %s / %s
+general.everlastingabilities.xp=XP/Level: %s
 
 # Command
 chat.everlastingabilities.command.invalidAbility=Could not find the ability with id "%s".
