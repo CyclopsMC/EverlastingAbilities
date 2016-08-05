@@ -4,13 +4,17 @@ import com.google.common.collect.Maps;
 import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.command.CommandMod;
 import org.cyclops.cyclopscore.config.ConfigHandler;
@@ -29,8 +33,10 @@ import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
 import org.cyclops.everlastingabilities.core.AbilityTypeRegistry;
 import org.cyclops.everlastingabilities.core.SerializableCapabilityProvider;
+import org.cyclops.everlastingabilities.core.helper.obfuscation.ObfuscationHelpers;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
+import org.cyclops.everlastingabilities.network.packet.SendPlayerCapabilitiesPacket;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -88,6 +94,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @EventHandler
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(this);
         getRegistryManager().addRegistry(IAbilityTypeRegistry.class, AbilityTypeRegistry.getInstance());
 
         super.preInit(event);
@@ -199,6 +206,16 @@ public class EverlastingAbilities extends ModBaseVersionable {
      */
     public static void clog(Level level, String message) {
         EverlastingAbilities._instance.getLoggerHelper().log(level, message);
+    }
+
+    @SubscribeEvent
+    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+        System.out.println("join"); // TODO
+        if (event.getEntity() instanceof EntityPlayerMP) {
+            EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
+            getPacketHandler().sendToPlayer(
+                    new SendPlayerCapabilitiesPacket(ObfuscationHelpers.getEntityCapabilities(player)), player);
+        }
     }
     
 }

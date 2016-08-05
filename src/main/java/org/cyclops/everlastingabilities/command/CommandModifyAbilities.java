@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.cyclops.cyclopscore.command.CommandMod;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.init.ModBase;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -100,7 +101,7 @@ public class CommandModifyAbilities extends CommandMod {
                                 level = Math.max(1, Math.min(abilityType.getMaxLevel(), level));
                                 Ability ability = new Ability(abilityType, level);
 
-                                Ability addedAbility = abilityStore.addAbility(ability, true);
+                                Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true);
                                 Ability newAbility = abilityStore.getAbility(abilityType);
 
                                 sender.addChatMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility)));
@@ -108,7 +109,7 @@ public class CommandModifyAbilities extends CommandMod {
                                 level = Math.max(1, level);
                                 Ability ability = new Ability(abilityType, level);
 
-                                Ability removedAbility = abilityStore.removeAbility(ability, true);
+                                Ability removedAbility = AbilityHelpers.removePlayerAbility(player, ability, true);
                                 Ability newAbility = abilityStore.getAbility(abilityType);
 
                                 sender.addChatMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility)));

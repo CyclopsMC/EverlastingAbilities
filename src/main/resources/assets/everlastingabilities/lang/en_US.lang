@@ -10,6 +10,18 @@ chat.everlastingabilities.command.removedAbility=Removed ability %s, new ability
 ## Abilities
 ability.abilities.everlastingabilities.speed.name=Speed
 ability.abilities.everlastingabilities.speed.info=Walk faster
+ability.abilities.everlastingabilities.haste.name=Haste
+ability.abilities.everlastingabilities.haste.info=Mine faster
+ability.abilities.everlastingabilities.strength.name=Strength
+ability.abilities.everlastingabilities.strength.info=Inflict more damage when attacking
+ability.abilities.everlastingabilities.jump_boost.name=Jump Boost
+ability.abilities.everlastingabilities.jump_boost.info=Jump Higher
+ability.abilities.everlastingabilities.regeneration.name=Regeneration
+ability.abilities.everlastingabilities.regeneration.info=Regenerate health faster
+ability.abilities.everlastingabilities.resistance.name=Resistance
+ability.abilities.everlastingabilities.resistance.info=Take less damage from attacks
+ability.abilities.everlastingabilities.fire_resistance.name=Fire Resistance
+ability.abilities.everlastingabilities.fire_resistance.info=Take less damage from fire
 
 # Items
 item.items.everlastingabilities.abilityTotem.name=Ability Totem
