@@ -296,5 +296,12 @@ public class EverlastingAbilities extends ModBaseVersionable {
             }
         }
     }
+
+    @SubscribeEvent
+    public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
+        IMutableAbilityStore oldStore = event.getOriginal().getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+        IMutableAbilityStore newStore = event.getEntityPlayer().getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+        newStore.setAbilities(Maps.newHashMap(oldStore.getAbilitiesRaw()));
+    }
     
 }

@@ -6,6 +6,7 @@ import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -47,6 +48,11 @@ public class DefaultAbilityStore implements IAbilityStore {
             abilities.add(getAbility(abilityType));
         }
         return abilities;
+    }
+
+    @Override
+    public Map<IAbilityType, Integer> getAbilitiesRaw() {
+        return Collections.unmodifiableMap(abilityTypes);
     }
 
     @Override

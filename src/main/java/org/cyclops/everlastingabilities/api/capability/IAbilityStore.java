@@ -16,6 +16,7 @@ public interface IAbilityStore {
     public boolean hasAbilityType(IAbilityType abilityType);
     public Collection<IAbilityType> getAbilityTypes();
     public Collection<Ability> getAbilities();
+    public Map<IAbilityType, Integer> getAbilitiesRaw();
     public Ability getAbility(IAbilityType abilityType);
 
 }
