@@ -4,7 +4,6 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityProvider;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
 /**
  * TODO: port to CyclopsCore
@@ -23,11 +22,11 @@ public class SerializableCapabilityProvider<T> extends DefaultCapabilityProvider
 
     @Override
     public NBTBase serializeNBT() {
-        return MutableAbilityStoreConfig._instance.getStorage().writeNBT(capabilityType, capability, null);
+        return capabilityType.writeNBT(capability, null);
     }
 
     @Override
     public void deserializeNBT(NBTBase nbt) {
-        MutableAbilityStoreConfig._instance.getStorage().readNBT(capabilityType, capability, null, nbt);
+        capabilityType.readNBT(capability, null, nbt);
     }
 }
