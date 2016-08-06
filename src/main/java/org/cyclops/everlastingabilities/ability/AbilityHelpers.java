@@ -2,8 +2,10 @@ package org.cyclops.everlastingabilities.ability;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.EnumRarity;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
@@ -11,7 +13,9 @@ import org.cyclops.everlastingabilities.core.helper.obfuscation.ObfuscationHelpe
 import org.cyclops.everlastingabilities.network.packet.SendPlayerCapabilitiesPacket;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * General ability helpers.
@@ -126,6 +130,14 @@ public class AbilityHelpers {
 
     public static Ability extract(Ability ability, IMutableAbilityStore mutableAbilityStore) {
         return mutableAbilityStore.removeAbility(ability, true);
+    }
+
+    public static IAbilityType getRandomAbility(Random random, EnumRarity rarity) {
+        List<IAbilityType> abilities = AbilityTypes.REGISTRY.getAbilityTypes(EnumRarity.values()[Math.min(EnumRarity.values().length, rarity.ordinal())]);
+        if (abilities.size() > 0) {
+            return abilities.get(random.nextInt(abilities.size()));
+        }
+        return null;
     }
 
 }

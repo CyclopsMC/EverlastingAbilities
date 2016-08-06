@@ -31,6 +31,7 @@ import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
 import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -45,12 +46,10 @@ import org.cyclops.everlastingabilities.core.SerializableCapabilityProvider;
 import org.cyclops.everlastingabilities.core.helper.obfuscation.ObfuscationHelpers;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottle;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
-import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
 import org.cyclops.everlastingabilities.network.packet.SendPlayerCapabilitiesPacket;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -243,9 +242,8 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
                 World world = event.player.worldObj;
                 EntityPlayer player = event.player;
-                List<IAbilityType> abilities = AbilityTypes.REGISTRY.getAbilityTypes(EnumRarity.values()[Math.min(EnumRarity.values().length, GeneralConfig.totemMaximumSpawnRarity)]);
-                if (abilities.size() > 0) {
-                    IAbilityType abilityType = abilities.get(world.rand.nextInt(abilities.size()));
+                IAbilityType abilityType = AbilityHelpers.getRandomAbility(world.rand, EnumRarity.values()[GeneralConfig.totemMaximumSpawnRarity]);
+                if (abilityType != null) {
                     ItemStack itemStack = new ItemStack(ItemAbilityBottle.getInstance());
                     IMutableAbilityStore mutableAbilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
                     mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
