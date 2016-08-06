@@ -15,9 +15,29 @@ import java.util.Map;
 
 /**
  * General ability helpers.
+ * XP-related methods inspired by Ender IO's XpUtil for compatibility
  * @author rubensworks
  */
 public class AbilityHelpers {
+
+    public static int getExperienceForLevel(int level) {
+        if (level == 0) { return 0; }
+        if (level > 0 && level < 16) {
+            return level * 17;
+        } else if (level > 15 && level < 31) {
+            return (int)(1.5 * Math.pow(level, 2) - 29.5 * level + 360);
+        } else {
+            return (int)(3.5 * Math.pow(level, 2) - 151.5 * level + 2220);
+        }
+    }
+
+    public static int getLevelForExperience(int experience) {
+        int i = 0;
+        while (getExperienceForLevel(i) <= experience) {
+            i++;
+        }
+        return i - 1;
+    }
 
     public static void sendPlayerUpdateCapabilities(EntityPlayerMP player) {
         EverlastingAbilities._instance.getPacketHandler().sendToPlayer(
@@ -43,7 +63,11 @@ public class AbilityHelpers {
             }
         }
         if (doAdd && result != null) {
-            player.addExperience(-getExperience(result));
+            player.experienceTotal -= getExperience(result);
+            // Fix xp bar
+            player.experienceLevel = getLevelForExperience(player.experienceTotal);
+            int xpForLevel = getExperienceForLevel(player.experienceLevel);
+            player.experience = (float)(player.experienceTotal - xpForLevel) / (float)player.xpBarCap();
         }
         if (player instanceof EntityPlayerMP) {
             sendPlayerUpdateCapabilities((EntityPlayerMP) player);
