@@ -59,17 +59,7 @@ public class ItemAbilityTotemConfig extends ItemConfig {
                             new LootFunction(new LootCondition[0]) {
                                 @Override
                                 public ItemStack apply(ItemStack stack, Random rand, LootContext context) {
-                                    int chance = rand.nextInt(100);
-                                    EnumRarity rarity;
-                                    if (chance >= 99) {
-                                        rarity = EnumRarity.EPIC;
-                                    } else if (chance >= 90) {
-                                        rarity = EnumRarity.RARE;
-                                    } else if (chance >= 60) {
-                                        rarity = EnumRarity.UNCOMMON;
-                                    } else {
-                                        rarity = EnumRarity.COMMON;
-                                    }
+                                    EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
                                     IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity);
 
                                     ItemStack itemStack = new ItemStack(ItemAbilityBottle.getInstance());

@@ -14,5 +14,10 @@ public class ObfuscationData {
      * Field from {@link net.minecraft.entity.Entity}.
      */
     public static final String[] ENTITY_CAPABILITIES = new String[] { "capabilities" };
+
+    /**
+     * Field from net.minecraft.client.particle.EffectRenderer.
+     */
+    public static final String[] PARTICLE_TEXTURES = new String[] { "PARTICLE_TEXTURES", "field_110737_b", "b" };
 	
 }

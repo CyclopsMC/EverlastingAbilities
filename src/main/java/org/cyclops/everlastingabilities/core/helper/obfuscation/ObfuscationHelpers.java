@@ -1,6 +1,8 @@
 package org.cyclops.everlastingabilities.core.helper.obfuscation;
 
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -26,6 +28,14 @@ public class ObfuscationHelpers {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Get the private 'particleTextures' field from {@link net.minecraft.client.particle.ParticleManager}.
+     * @return The private 'particleTextures' field.
+     */
+    public static ResourceLocation getParticleTexture() {
+        return ReflectionHelper.getPrivateValue(ParticleManager.class, null, ObfuscationData.PARTICLE_TEXTURES);
     }
 	
 }

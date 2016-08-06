@@ -72,6 +72,12 @@ public class GeneralConfig extends DummyConfig {
     public static boolean alwaysDropAbilities = false;
 
     /**
+     * 1/x chance for mobs to have abilities.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "1/x chance for mobs to have abilities", isCommandable = true)
+    public static int mobAbilityChance = 10;
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;

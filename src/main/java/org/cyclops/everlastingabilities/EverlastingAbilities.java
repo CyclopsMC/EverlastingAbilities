@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
@@ -32,6 +34,7 @@ import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigReference;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
+import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
@@ -59,6 +62,7 @@ import org.cyclops.everlastingabilities.network.packet.SendPlayerCapabilitiesPac
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * The main mod class of this mod.
@@ -135,6 +139,33 @@ public class EverlastingAbilities extends ModBaseVersionable {
             @Override
             public ICapabilityProvider createProvider(EntityPlayer host) {
                 return new SerializableCapabilityProvider<IMutableAbilityStore>(getCapability(), new DefaultMutableAbilityStore());
+            }
+
+            @Override
+            public Capability<IMutableAbilityStore> getCapability() {
+                return MutableAbilityStoreConfig.CAPABILITY;
+            }
+        });
+        getCapabilityConstructorRegistry().registerInheritableEntity(IAnimals.class, new SimpleCapabilityConstructor<IMutableAbilityStore, IAnimals>() {
+            @Nullable
+            @Override
+            public ICapabilityProvider createProvider(IAnimals host) {
+                IMutableAbilityStore store = new DefaultMutableAbilityStore();
+                if (host instanceof EntityLivingBase) {
+                    EntityLivingBase entity = (EntityLivingBase) host;
+                    if (GeneralConfig.mobAbilityChance > 0
+                            && entity.getEntityId() % GeneralConfig.mobAbilityChance == 0) {
+                        Random rand = new Random();
+                        rand.setSeed(entity.getEntityId());
+                        EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
+                        IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity);
+                        if (abilityType != null) {
+                            store.addAbility(new Ability(abilityType, 1), true);
+                        }
+                    }
+                }
+
+                return new SerializableCapabilityProvider<IMutableAbilityStore>(getCapability(), store);
             }
 
             @Override
@@ -264,13 +295,23 @@ public class EverlastingAbilities extends ModBaseVersionable {
     }
 
     @SubscribeEvent
-    public void onPlayerDeath(LivingDeathEvent event) {
-        if (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
-                && event.getEntityLiving() instanceof EntityPlayer && !event.getEntityLiving().worldObj.isRemote
-                && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource) && event.getSource().getEntity() instanceof EntityPlayer)) {
-            int toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
-            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            IMutableAbilityStore mutableAbilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+    public void onLivingDeath(LivingDeathEvent event) {
+        if (!event.getEntityLiving().worldObj.isRemote
+                && event.getEntityLiving().hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+                && (event.getEntityLiving() instanceof EntityPlayer
+                    ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
+                        && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
+                        && event.getSource().getEntity() instanceof EntityPlayer))
+                    : ((event.getSource() instanceof EntityDamageSource)
+                        && event.getSource().getEntity() instanceof EntityPlayer))) {
+            int toDrop = 1;
+            if (event.getEntityLiving() instanceof EntityPlayer
+                    && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
+                    && event.getSource().getEntity() instanceof EntityPlayer)) {
+                toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
+            }
+            EntityLivingBase entity = event.getEntityLiving();
+            IMutableAbilityStore mutableAbilityStore = entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
 
             ItemStack itemStack = new ItemStack(ItemAbilityTotem.getInstance());
             IMutableAbilityStore itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
@@ -283,8 +324,8 @@ public class EverlastingAbilities extends ModBaseVersionable {
                     if (removed != null) {
                         toDrop -= removed.getLevel();
                         itemStackStore.addAbility(removed, true);
-                        player.addChatMessage(new TextComponentTranslation(L10NHelpers.localize("chat.everlastingabilities.playerLostAbility",
-                                player.getName(),
+                        entity.addChatMessage(new TextComponentTranslation(L10NHelpers.localize("chat.everlastingabilities.playerLostAbility",
+                                entity.getName(),
                                 removed.getAbilityType().getRarity().rarityColor.toString() + TextFormatting.BOLD + L10NHelpers.localize(removed.getAbilityType().getUnlocalizedName()) + TextFormatting.RESET,
                                 removed.getLevel())));
                     }
@@ -292,7 +333,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
             }
 
             if (!itemStackStore.getAbilities().isEmpty()) {
-                ItemStackHelpers.spawnItemStack(player.worldObj, player.getPosition(), itemStack);
+                ItemStackHelpers.spawnItemStack(entity.worldObj, entity.getPosition(), itemStack);
             }
         }
     }

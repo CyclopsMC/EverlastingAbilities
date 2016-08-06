@@ -140,4 +140,19 @@ public class AbilityHelpers {
         return null;
     }
 
+    public static EnumRarity getRandomRarity(Random rand) {
+        int chance = rand.nextInt(50);
+        EnumRarity rarity;
+        if (chance >= 49) {
+            rarity = EnumRarity.EPIC;
+        } else if (chance >= 40) {
+            rarity = EnumRarity.RARE;
+        } else if (chance >= 25) {
+            rarity = EnumRarity.UNCOMMON;
+        } else {
+            rarity = EnumRarity.COMMON;
+        }
+        return rarity;
+    }
+
 }
