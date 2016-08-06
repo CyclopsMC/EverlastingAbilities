@@ -43,7 +43,7 @@ public class AbilityHelpers {
             }
         }
         if (doAdd && result != null) {
-            player.experienceTotal -= getExperience(result);
+            player.addExperience(-getExperience(result));
         }
         if (player instanceof EntityPlayerMP) {
             sendPlayerUpdateCapabilities((EntityPlayerMP) player);
@@ -61,7 +61,7 @@ public class AbilityHelpers {
         IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
         Ability result = abilityStore.removeAbility(ability, doRemove);
         if (modifyXp && result != null) {
-            player.experienceTotal += getExperience(result);
+            player.addExperience(getExperience(result));
         }
         if (player instanceof EntityPlayerMP) {
             sendPlayerUpdateCapabilities((EntityPlayerMP) player);

@@ -198,6 +198,8 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         int j = this.guiTop;
         drawFancyBackground(i + 8, j + 17, 66, 61, false, 0.2F); // TODO: variable 'activity' (it's not really working btw)
         GuiInventory.drawEntityOnScreen(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.mc.thePlayer);
+        drawXp(i + 67, j + 70);
+        RenderHelpers.drawScaledCenteredString(fontRendererObj, "" + player.experienceTotal, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         drawFancyBackground(i + 102, j + 17, 66, 61, true, 1F); // TODO: variable 'activity'
         drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.mc.thePlayer));
 
