@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<recipes>
+
+	<recipe type="shaped">
+		<condition type="config">abilityBottle</condition>
+		<input>
+			<grid>
+				<gridrow>
+					<item meta="15">minecraft:dye</item>
+					<item>minecraft:slime_ball</item>
+					<item meta="15">minecraft:dye</item>
+				</gridrow>
+				<gridrow>
+					<item>minecraft:gold_nugget</item>
+					<item>minecraft:bucket</item>
+					<item>minecraft:gold_nugget</item>
+				</gridrow>
+			</grid>
+		</input>
+		<output>
+			<item>everlastingabilities:abilityBottle</item>
+		</output>
+	</recipe>
+
+</recipes>
