@@ -5,6 +5,10 @@ import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -15,16 +19,21 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.command.CommandMod;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigReference;
+import org.cyclops.cyclopscore.helper.EntityHelpers;
+import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
 import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
+import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.IAbilityTypeRegistry;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
@@ -34,11 +43,14 @@ import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
 import org.cyclops.everlastingabilities.core.AbilityTypeRegistry;
 import org.cyclops.everlastingabilities.core.SerializableCapabilityProvider;
 import org.cyclops.everlastingabilities.core.helper.obfuscation.ObfuscationHelpers;
+import org.cyclops.everlastingabilities.item.ItemAbilityBottle;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
+import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
 import org.cyclops.everlastingabilities.network.packet.SendPlayerCapabilitiesPacket;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -214,6 +226,34 @@ public class EverlastingAbilities extends ModBaseVersionable {
             EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
             getPacketHandler().sendToPlayer(
                     new SendPlayerCapabilitiesPacket(ObfuscationHelpers.getEntityCapabilities(player)), player);
+        }
+    }
+
+    private static final String NBT_TOTEM_SPAWNED = Reference.MOD_ID + ":totemSpawned";
+    @SubscribeEvent
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (GeneralConfig.totemMaximumSpawnRarity >= 0) {
+            NBTTagCompound tag = event.player.getEntityData();
+            if (!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {
+                tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+            }
+            NBTTagCompound playerTag = tag.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+            if (!playerTag.hasKey(NBT_TOTEM_SPAWNED)) {
+                playerTag.setBoolean(NBT_TOTEM_SPAWNED, true);
+
+                World world = event.player.worldObj;
+                EntityPlayer player = event.player;
+                List<IAbilityType> abilities = AbilityTypes.REGISTRY.getAbilityTypes(EnumRarity.values()[Math.min(EnumRarity.values().length, GeneralConfig.totemMaximumSpawnRarity)]);
+                if (abilities.size() > 0) {
+                    IAbilityType abilityType = abilities.get(world.rand.nextInt(abilities.size()));
+                    ItemStack itemStack = new ItemStack(ItemAbilityBottle.getInstance());
+                    IMutableAbilityStore mutableAbilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+                    mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
+
+                    ItemStackHelpers.spawnItemStackToPlayer(world, player.getPosition(), itemStack, player);
+                    EntityHelpers.spawnXpAtPlayer(world, player, abilityType.getBaseXpPerLevel());
+                }
+            }
         }
     }
     

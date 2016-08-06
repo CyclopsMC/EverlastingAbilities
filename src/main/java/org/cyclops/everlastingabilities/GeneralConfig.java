@@ -54,6 +54,12 @@ public class GeneralConfig extends DummyConfig {
     public static boolean versionChecker = true;
 
     /**
+     * The maximum rarity of totems to spawn when a player first logs in. [0-3], -1 disables totem spawning.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.CORE, comment = "The maximum rarity of totems to spawn when a player first logs in. [0-3], -1 disables totem spawning.")
+    public static int totemMaximumSpawnRarity = 1;
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;
