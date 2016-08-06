@@ -36,17 +36,19 @@ public class AbilityStoreStorage implements Capability.IStorage<IAbilityStore> {
     @Override
     public void readNBT(Capability<IAbilityStore> capability, IAbilityStore instance, EnumFacing side, NBTBase nbt) {
         Map<IAbilityType, Integer> abilityTypes = Maps.newHashMap();
-        if (nbt instanceof NBTTagList && ((NBTTagList) nbt).getTagType() == MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal()) {
-            NBTTagList list = (NBTTagList) nbt;
-            for (int i = 0; i < list.tagCount(); i++) {
-                NBTTagCompound tag = list.getCompoundTagAt(i);
-                String unlocalizedName = tag.getString("name");
-                int level = tag.getInteger("level");
-                IAbilityType abilityType = AbilityTypes.REGISTRY.getAbilityType(unlocalizedName);
-                if (abilityType != null) {
-                    abilityTypes.put(abilityType, level);
-                } else {
-                    EverlastingAbilities.clog(Level.WARN, "Skipped loading unknown ability by name: " + unlocalizedName);
+        if (nbt instanceof NBTTagList) {
+            if (((NBTTagList) nbt).getTagType() == MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal()) {
+                NBTTagList list = (NBTTagList) nbt;
+                for (int i = 0; i < list.tagCount(); i++) {
+                    NBTTagCompound tag = list.getCompoundTagAt(i);
+                    String unlocalizedName = tag.getString("name");
+                    int level = tag.getInteger("level");
+                    IAbilityType abilityType = AbilityTypes.REGISTRY.getAbilityType(unlocalizedName);
+                    if (abilityType != null) {
+                        abilityTypes.put(abilityType, level);
+                    } else {
+                        EverlastingAbilities.clog(Level.WARN, "Skipped loading unknown ability by name: " + unlocalizedName);
+                    }
                 }
             }
         } else {
