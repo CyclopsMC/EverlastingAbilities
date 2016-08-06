@@ -4,6 +4,7 @@ import org.cyclops.cyclopscore.init.ModBase;
 import org.cyclops.cyclopscore.network.PacketHandler;
 import org.cyclops.cyclopscore.proxy.CommonProxyComponent;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.network.packet.MoveAbilityPacket;
 import org.cyclops.everlastingabilities.network.packet.SendPlayerCapabilitiesPacket;
 
 /**
@@ -23,5 +24,6 @@ public class CommonProxy extends CommonProxyComponent {
         super.registerPacketHandlers(packetHandler);
 
         packetHandler.register(SendPlayerCapabilitiesPacket.class);
+        packetHandler.register(MoveAbilityPacket.class);
     }
 }

@@ -101,7 +101,7 @@ public class CommandModifyAbilities extends CommandMod {
                                 level = Math.max(1, Math.min(abilityType.getMaxLevel(), level));
                                 Ability ability = new Ability(abilityType, level);
 
-                                Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true);
+                                Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true, false);
                                 Ability newAbility = abilityStore.getAbility(abilityType);
 
                                 sender.addChatMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility)));
@@ -109,7 +109,7 @@ public class CommandModifyAbilities extends CommandMod {
                                 level = Math.max(1, level);
                                 Ability ability = new Ability(abilityType, level);
 
-                                Ability removedAbility = AbilityHelpers.removePlayerAbility(player, ability, true);
+                                Ability removedAbility = AbilityHelpers.removePlayerAbility(player, ability, true, false);
                                 Ability newAbility = abilityStore.getAbility(abilityType);
 
                                 sender.addChatMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility)));

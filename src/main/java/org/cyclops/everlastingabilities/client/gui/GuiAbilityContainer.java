@@ -13,15 +13,22 @@ import net.minecraft.util.text.TextFormatting;
 import org.cyclops.cyclopscore.client.gui.component.button.GuiButtonArrow;
 import org.cyclops.cyclopscore.client.gui.container.GuiContainerConfigurable;
 import org.cyclops.cyclopscore.client.gui.container.GuiContainerExtended;
-import org.cyclops.cyclopscore.helper.*;
+import org.cyclops.cyclopscore.helper.Helpers;
+import org.cyclops.cyclopscore.helper.L10NHelpers;
+import org.cyclops.cyclopscore.helper.RenderHelpers;
+import org.cyclops.cyclopscore.helper.StringHelpers;
 import org.cyclops.cyclopscore.inventory.container.ExtendedInventoryContainer;
 import org.cyclops.cyclopscore.inventory.container.button.IButtonActionClient;
 import org.cyclops.cyclopscore.item.IInformationProvider;
+import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
+import org.cyclops.everlastingabilities.network.packet.MoveAbilityPacket;
 
-import javax.annotation.Nullable;
 import java.awt.*;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -33,7 +40,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
     private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
     protected static final int ABILITY_LIST_SIZE = 6;
     protected static final int ABILITY_BOX_HEIGHT = 18;
-    protected static final int ABILITY_BOX_WIDTH = 60;
+    protected static final int ABILITY_BOX_WIDTH = 63;
 
     private static final int BUTTON_UP_1 = 0;
     private static final int BUTTON_DOWN_1 = 1;
@@ -46,6 +53,9 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
     protected int startIndexPlayer = 0;
     protected int startIndexItem = 0;
+
+    protected int absoluteSelectedIndexPlayer = -1;
+    protected int absoluteSelectedIndexItem = -1;
 
     protected GuiButtonArrow buttonUp1;
     protected GuiButtonArrow buttonDown1;
@@ -74,19 +84,40 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         putButtonAction(BUTTON_DOWN_1, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
             @Override
             public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
-                if (startIndexPlayer + ABILITY_LIST_SIZE < Math.min(ABILITY_LIST_SIZE, getPlayerAbilitiesCount()) - 1) startIndexPlayer++;
+                if (startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount())) startIndexPlayer++;
             }
         });
-        putButtonAction(BUTTON_UP_1, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
+        putButtonAction(BUTTON_UP_2, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
             @Override
             public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
                 if (startIndexItem > 0) startIndexItem--;
             }
         });
-        putButtonAction(BUTTON_DOWN_1, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
+        putButtonAction(BUTTON_DOWN_2, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
             @Override
             public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
-                if (startIndexItem + ABILITY_LIST_SIZE < Math.min(ABILITY_LIST_SIZE, getItemAbilitiesCount()) - 1) startIndexItem++;
+                if (startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount())) startIndexItem++;
+            }
+        });
+
+        putButtonAction(BUTTON_LEFT, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
+            @Override
+            public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
+                if (canMoveToPlayer()) {
+                    EverlastingAbilities._instance.getPacketHandler().sendToServer(
+                            new MoveAbilityPacket(getSelectedItemAbilitySingle(), MoveAbilityPacket.Movement.TO_PLAYER));
+                    moveToPlayer();
+                }
+            }
+        });
+        putButtonAction(BUTTON_RIGHT, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
+            @Override
+            public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
+                if (canMoveFromPlayer()) {
+                    EverlastingAbilities._instance.getPacketHandler().sendToServer(
+                            new MoveAbilityPacket(getSelectedPlayerAbilitySingle(), MoveAbilityPacket.Movement.FROM_PLAYER));
+                    moveFromPlayer();
+                }
             }
         });
     }
@@ -106,7 +137,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
     @Override
     protected int getBaseYSize() {
-        return 220;
+        return 219;
     }
 
     @Override
@@ -114,16 +145,24 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
         // Draw abilities
-        drawAbilitiesTooltip(8, 84, getPlayerAbilities(), startIndexPlayer, mouseX, mouseY);
-        drawAbilitiesTooltip(106, 84, getItemAbilities(), startIndexItem, mouseX, mouseY);
+        drawAbilitiesTooltip(8, 83, getPlayerAbilities(), startIndexPlayer, mouseX, mouseY);
+        drawAbilitiesTooltip(105, 83, getItemAbilities(), startIndexItem, mouseX, mouseY);
     }
 
-    protected @Nullable List<Ability> getPlayerAbilities() {
+    protected List<Ability> getPlayerAbilities() {
         return getContainer().getPlayerAbilities();
     }
 
     protected List<Ability> getItemAbilities() {
         return getContainer().getItemAbilities();
+    }
+
+    protected IMutableAbilityStore getPlayerAbilityStore() {
+        return getContainer().getPlayerAbilityStore();
+    }
+
+    protected IMutableAbilityStore getItemAbilityStore() {
+        return getContainer().getItemAbilityStore();
     }
 
     protected int getPlayerAbilitiesCount() {
@@ -137,12 +176,12 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         buttonUp1.enabled = startIndexPlayer > 0;
-        buttonDown1.enabled = startIndexPlayer + ABILITY_LIST_SIZE < Math.min(ABILITY_LIST_SIZE, getPlayerAbilitiesCount()) - 1;
+        buttonDown1.enabled = startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount());
         buttonUp2.enabled = startIndexItem > 0;
-        buttonDown2.enabled = startIndexItem + ABILITY_LIST_SIZE < Math.min(ABILITY_LIST_SIZE, getItemAbilitiesCount()) - 1;
+        buttonDown2.enabled = startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount());
 
-        buttonLeft.enabled = false;//TODO
-        buttonRight.enabled = false;//TODO
+        buttonLeft.enabled = canMoveToPlayer();
+        buttonRight.enabled = canMoveFromPlayer();
 
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 
@@ -154,8 +193,8 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.mc.thePlayer));
 
         // Draw abilities
-        drawAbilities(this.guiLeft + 8, this.guiTop + 84, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE);
-        drawAbilities(this.guiLeft + 106, this.guiTop + 84, getItemAbilities(), startIndexItem, player.experienceTotal);
+        drawAbilities(this.guiLeft + 8, this.guiTop + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY);
+        drawAbilities(this.guiLeft + 105, this.guiTop + 83, getItemAbilities(), startIndexItem, player.experienceTotal, absoluteSelectedIndexItem, mouseX, mouseY);
     }
 
     public void drawFancyBackground(int x, int y, int width, int height, boolean mirror, float activity) {
@@ -184,11 +223,13 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         GlStateManager.popMatrix();
         GlStateManager.matrixMode(5888);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        GlStateManager.enableLighting();
+        //GlStateManager.enableLighting();
         GlStateManager.depthFunc(515);
         GlStateManager.depthMask(true);
         GlStateManager.disableBlend();
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
+        GlStateManager.color(1, 1, 1, 1);
     }
 
     protected void drawXp(int x, int y) {
@@ -196,21 +237,28 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         drawTexturedModalRect(x, y, 0, 219, 5, 5);
     }
 
-    private void drawAbilities(int x, int y, List<Ability> abilities, int startIndex, int playerXp) {
+    private void drawAbilities(int x, int y, List<Ability> abilities, int startIndex, int playerXp, int currentSelectedIndex, int mouseX, int mouseY) {
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
             int boxY = y + i * ABILITY_BOX_HEIGHT;
             Ability ability = abilities.get(i + startIndex);
 
+            // select box (+hover)
+            boolean active = currentSelectedIndex == i + startIndex;
+            boolean showActive = active || isPointInRegion(new Rectangle(x - this.guiLeft, boxY - this.guiTop, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT), new Point(mouseX, mouseY));
+            if (showActive) {
+                drawFancyBackground(x, boxY - 1, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT, false, 0.5F);
+            }
+
             // Name
             RenderHelpers.drawScaledCenteredString(fontRendererObj,
                     ability.getAbilityType().getRarity().rarityColor + L10NHelpers.localize(ability.getAbilityType().getUnlocalizedName()),
-                    x + 27, boxY + 6, 0, 1.0F, 50, -1);
+                    x + 27, boxY + 7, 0, 1.0F, 50, -1);
 
             // Level
             RenderHelpers.drawScaledCenteredString(fontRendererObj,
                     "" + ability.getLevel(),
-                    x + 58, boxY + 4, 0, 0.8F, 10000);
+                    x + 58, boxY + 5, 0, 0.8F, 10000);
 
             // XP
             int requiredXp = ability.getAbilityType().getBaseXpPerLevel();
@@ -219,12 +267,10 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
             } else {
                 GlStateManager.color(1, 1, 1, 1);
             }
-            drawXp(x + 57, boxY + 9);
+            drawXp(x + 57, boxY + 10);
             RenderHelpers.drawScaledCenteredString(fontRendererObj,
                     "" + requiredXp,
-                    x + 53, boxY + 12, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
-
-            // TODO: select box (+hover)
+                    x + 53, boxY + 13, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         }
         GlStateManager.color(1, 1, 1, 1);
     }
@@ -297,4 +343,94 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        int newSelectedPlayer = clickAbilities(8, 83, getPlayerAbilities(), startIndexPlayer, absoluteSelectedIndexPlayer, mouseX, mouseY);
+        int newSelectedItem = clickAbilities(105, 83, getItemAbilities(), startIndexItem, absoluteSelectedIndexItem, mouseX, mouseY);
+
+        if (newSelectedPlayer >= -1) {
+            absoluteSelectedIndexPlayer = newSelectedPlayer;
+        }
+        if (newSelectedItem >= -1) {
+            absoluteSelectedIndexItem = newSelectedItem;
+        }
+
+        if (newSelectedPlayer < 0 && newSelectedItem < 0) {
+            super.mouseClicked(mouseX, mouseY, mouseButton);
+        }
+    }
+
+    private int clickAbilities(int x, int y, List<Ability> abilities, int startIndex, int currentSelectedIndex, int mouseX, int mouseY) {
+        int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
+        for (int i = 0; i < maxI; i++) {
+            int boxY = y + i * ABILITY_BOX_HEIGHT;
+            if (isPointInRegion(new Rectangle(x, boxY, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT), new Point(mouseX, mouseY))) {
+                int absoluteIndex = startIndex + i;
+                if (currentSelectedIndex == absoluteIndex) {
+                    return -1;
+                } else {
+                    return absoluteIndex;
+                }
+            }
+        }
+        return -2;
+    }
+
+    public Ability getSelectedPlayerAbilitySingle() {
+        Ability ability = getSelectedPlayerAbility();
+        if (ability != null) {
+            ability = new Ability(ability.getAbilityType(), 1);
+        }
+        return ability;
+    }
+
+    public Ability getSelectedItemAbilitySingle() {
+        Ability ability = getSelectedItemAbility();
+        if (ability != null) {
+            ability = new Ability(ability.getAbilityType(), 1);
+        }
+        return ability;
+    }
+
+    public Ability getSelectedPlayerAbility() {
+        List<Ability> abilities = getPlayerAbilities();
+        if (absoluteSelectedIndexPlayer >= 0 && absoluteSelectedIndexPlayer < abilities.size()) {
+            return abilities.get(absoluteSelectedIndexPlayer);
+        }
+        return null;
+    }
+
+    public Ability getSelectedItemAbility() {
+        List<Ability> abilities = getItemAbilities();
+        if (absoluteSelectedIndexItem >= 0 && absoluteSelectedIndexItem < abilities.size()) {
+            return abilities.get(absoluteSelectedIndexItem);
+        }
+        return null;
+    }
+
+    public boolean canMoveFromPlayer(Ability ability, EntityPlayer player, IMutableAbilityStore target) {
+        return ability != null && AbilityHelpers.canInsert(ability, target);
+    }
+
+    public boolean canMoveToPlayer(Ability ability, EntityPlayer player) {
+        return ability != null && AbilityHelpers.canInsertToPlayer(ability, player);
+    }
+
+    public boolean canMoveFromPlayer() {
+        Ability playerAbility = getSelectedPlayerAbilitySingle();
+        return canMoveFromPlayer(playerAbility, player, getItemAbilityStore());
+    }
+
+    public boolean canMoveToPlayer() {
+        Ability itemAbility = getSelectedItemAbilitySingle();
+        return canMoveToPlayer(itemAbility, player);
+    }
+
+    public void moveFromPlayer() {
+        getContainer().moveFromPlayer(getSelectedPlayerAbilitySingle());
+    }
+
+    public void moveToPlayer() {
+        getContainer().moveToPlayer(getSelectedItemAbilitySingle());
+    }
 }

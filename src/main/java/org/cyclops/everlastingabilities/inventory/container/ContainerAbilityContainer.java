@@ -6,6 +6,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cyclops.cyclopscore.helper.InventoryHelpers;
 import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainer;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
@@ -51,11 +52,11 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     }
 
 
-    protected IMutableAbilityStore getPlayerAbilityStore() {
+    public IMutableAbilityStore getPlayerAbilityStore() {
         return player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
     }
 
-    protected IMutableAbilityStore getItemAbilityStore() {
+    public IMutableAbilityStore getItemAbilityStore() {
         return getItemStack(player).getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
     }
 
@@ -65,5 +66,15 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
 
     public List<Ability> getItemAbilities() {
         return Lists.newArrayList(getItemAbilityStore().getAbilities());
+    }
+
+    public void moveFromPlayer(Ability playerAbility) {
+        Ability insertedAbility = AbilityHelpers.insert(playerAbility, getItemAbilityStore());
+        AbilityHelpers.removePlayerAbility(player, insertedAbility, true, true);
+    }
+
+    public void moveToPlayer(Ability itemAbility) {
+        Ability insertedAbility = AbilityHelpers.addPlayerAbility(player, itemAbility, true, true);
+        AbilityHelpers.extract(insertedAbility, getItemAbilityStore());
     }
 }
