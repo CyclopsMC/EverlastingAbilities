@@ -131,8 +131,8 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         buttonList.add(buttonUp2 = new GuiButtonArrow(BUTTON_UP_2, this.guiLeft + 88,  this.guiTop + 83, GuiButtonArrow.Direction.NORTH));
         buttonList.add(buttonDown2 = new GuiButtonArrow(BUTTON_DOWN_2, this.guiLeft + 88,  this.guiTop + 174, GuiButtonArrow.Direction.SOUTH));
 
-        buttonList.add(buttonLeft = new GuiButtonArrow(BUTTON_LEFT, this.guiLeft + 78,  this.guiTop + 130, GuiButtonArrow.Direction.WEST));
-        buttonList.add(buttonRight = new GuiButtonArrow(BUTTON_RIGHT, this.guiLeft + 88,  this.guiTop + 130, GuiButtonArrow.Direction.EAST));
+        buttonList.add(buttonLeft = new GuiButtonArrow(BUTTON_LEFT, this.guiLeft + 76,  this.guiTop + 130, GuiButtonArrow.Direction.WEST));
+        buttonList.add(buttonRight = new GuiButtonArrow(BUTTON_RIGHT, this.guiLeft + 90,  this.guiTop + 130, GuiButtonArrow.Direction.EAST));
     }
 
     @Override
@@ -142,6 +142,10 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        if (getContainer().getItemStack(player) == null) {
+            return;
+        }
+
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
         // Draw abilities
@@ -175,6 +179,10 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        if (getContainer().getItemStack(player) == null) {
+            return;
+        }
+
         buttonUp1.enabled = startIndexPlayer > 0;
         buttonDown1.enabled = startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount());
         buttonUp2.enabled = startIndexItem > 0;
@@ -182,6 +190,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
         buttonLeft.enabled = canMoveToPlayer();
         buttonRight.enabled = canMoveFromPlayer();
+        buttonRight.visible = canMoveFromPlayerByItem();
 
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 
@@ -193,8 +202,8 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.mc.thePlayer));
 
         // Draw abilities
-        drawAbilities(this.guiLeft + 8, this.guiTop + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY);
-        drawAbilities(this.guiLeft + 105, this.guiTop + 83, getItemAbilities(), startIndexItem, player.experienceTotal, absoluteSelectedIndexItem, mouseX, mouseY);
+        drawAbilities(this.guiLeft + 8, this.guiTop + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
+        drawAbilities(this.guiLeft + 105, this.guiTop + 83, getItemAbilities(), startIndexItem, player.experienceTotal, absoluteSelectedIndexItem, mouseX, mouseY, true);
     }
 
     public void drawFancyBackground(int x, int y, int width, int height, boolean mirror, float activity) {
@@ -237,17 +246,20 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         drawTexturedModalRect(x, y, 0, 219, 5, 5);
     }
 
-    private void drawAbilities(int x, int y, List<Ability> abilities, int startIndex, int playerXp, int currentSelectedIndex, int mouseX, int mouseY) {
+    private void drawAbilities(int x, int y, List<Ability> abilities, int startIndex, int playerXp,
+                               int currentSelectedIndex, int mouseX, int mouseY, boolean canEdit) {
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
             int boxY = y + i * ABILITY_BOX_HEIGHT;
             Ability ability = abilities.get(i + startIndex);
 
             // select box (+hover)
-            boolean active = currentSelectedIndex == i + startIndex;
-            boolean showActive = active || isPointInRegion(new Rectangle(x - this.guiLeft, boxY - this.guiTop, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT), new Point(mouseX, mouseY));
-            if (showActive) {
-                drawFancyBackground(x, boxY - 1, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT, false, 0.5F);
+            if (canEdit) {
+                boolean active = currentSelectedIndex == i + startIndex;
+                boolean showActive = active || isPointInRegion(new Rectangle(x - this.guiLeft, boxY - this.guiTop, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT), new Point(mouseX, mouseY));
+                if (showActive) {
+                    drawFancyBackground(x, boxY - 1, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT, false, 0.5F);
+                }
             }
 
             // Name
@@ -345,7 +357,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        int newSelectedPlayer = clickAbilities(8, 83, getPlayerAbilities(), startIndexPlayer, absoluteSelectedIndexPlayer, mouseX, mouseY);
+        int newSelectedPlayer = canMoveFromPlayerByItem() ? clickAbilities(8, 83, getPlayerAbilities(), startIndexPlayer, absoluteSelectedIndexPlayer, mouseX, mouseY) : -2;
         int newSelectedItem = clickAbilities(105, 83, getItemAbilities(), startIndexItem, absoluteSelectedIndexItem, mouseX, mouseY);
 
         if (newSelectedPlayer >= -1) {
@@ -360,7 +372,8 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         }
     }
 
-    private int clickAbilities(int x, int y, List<Ability> abilities, int startIndex, int currentSelectedIndex, int mouseX, int mouseY) {
+    private int clickAbilities(int x, int y, List<Ability> abilities, int startIndex, int currentSelectedIndex,
+                               int mouseX, int mouseY) {
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
             int boxY = y + i * ABILITY_BOX_HEIGHT;
@@ -416,7 +429,14 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         return ability != null && AbilityHelpers.canInsertToPlayer(ability, player);
     }
 
+    public boolean canMoveFromPlayerByItem() {
+        return getContainer().getItem().canMoveFromPlayer();
+    }
+
     public boolean canMoveFromPlayer() {
+        if (!canMoveFromPlayerByItem()) {
+            return false;
+        }
         Ability playerAbility = getSelectedPlayerAbilitySingle();
         return canMoveFromPlayer(playerAbility, player, getItemAbilityStore());
     }

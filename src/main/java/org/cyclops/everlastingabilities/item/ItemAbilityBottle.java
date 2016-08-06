@@ -25,8 +25,13 @@ public class ItemAbilityBottle extends ItemGuiAbilityContainer {
      */
     public ItemAbilityBottle(ExtendedConfig eConfig) {
         super(eConfig);
+        this.maxStackSize = 1;
     }
 
+    @Override
+    public boolean canMoveFromPlayer() {
+        return true;
+    }
 
 
 }

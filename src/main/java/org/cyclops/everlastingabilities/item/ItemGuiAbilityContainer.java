@@ -68,4 +68,6 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
         return new SerializableCapabilityProvider<IMutableAbilityStore>(MutableAbilityStoreConfig.CAPABILITY,
                 new DefaultMutableAbilityStore());
     }
+
+    public abstract boolean canMoveFromPlayer();
 }

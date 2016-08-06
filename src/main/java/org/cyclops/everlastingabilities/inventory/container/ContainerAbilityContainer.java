@@ -5,12 +5,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cyclops.cyclopscore.helper.InventoryHelpers;
+import org.cyclops.cyclopscore.inventory.IGuiContainerProviderConfigurable;
 import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainer;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.client.gui.GuiAbilityContainer;
+import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemGuiAbilityContainer;
 
 import javax.annotation.Nullable;
@@ -34,6 +36,11 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     public ContainerAbilityContainer(EntityPlayer player, int itemIndex) {
         super(player.inventory, (ItemGuiAbilityContainer) InventoryHelpers.getItemFromIndex(player, itemIndex).getItem(), itemIndex);
         addInventory(player.inventory, 0, 8, 196, 1, 9);
+    }
+
+    @Override
+    public IGuiContainerProviderConfigurable getGuiProvider() {
+        return ItemAbilityTotem.getInstance();
     }
 
     @SideOnly(Side.CLIENT)
@@ -76,5 +83,15 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     public void moveToPlayer(Ability itemAbility) {
         Ability insertedAbility = AbilityHelpers.addPlayerAbility(player, itemAbility, true, true);
         AbilityHelpers.extract(insertedAbility, getItemAbilityStore());
+
+        if(getItemAbilities().isEmpty() && !getItem().canMoveFromPlayer()) {
+            player.inventory.setInventorySlotContents(itemIndex, null);
+
+        }
+    }
+
+    @Override
+    public boolean canInteractWith(EntityPlayer player) {
+        return getItem().canMoveFromPlayer() || (getItemStack(player) != null && !getItemAbilities().isEmpty());
     }
 }

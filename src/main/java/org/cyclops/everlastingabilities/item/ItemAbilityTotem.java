@@ -40,6 +40,11 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
     }
 
     @Override
+    public boolean canMoveFromPlayer() {
+        return false;
+    }
+
+    @Override
     public EnumRarity getRarity(ItemStack itemStack) {
         IAbilityStore abilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
         int maxRarity = 0;
