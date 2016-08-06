@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities.core;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import org.cyclops.everlastingabilities.api.AbilityType;
 
@@ -7,11 +8,16 @@ import org.cyclops.everlastingabilities.api.AbilityType;
  * Internal default ability type.
  * @author rubensworks
  */
-public class DefaultAbilityType extends AbilityType {
+public class AbilityTypeDefault extends AbilityType {
 
     private static final String PREFIX = "ability.abilities.everlastingabilities.";
 
-    public DefaultAbilityType(String id, EnumRarity rarity, int maxLevel, int baseXpPerLevel) {
+    public AbilityTypeDefault(String id, EnumRarity rarity, int maxLevel, int baseXpPerLevel) {
         super(PREFIX + id + ".name", PREFIX + id + ".info", rarity, maxLevel, baseXpPerLevel);
+    }
+
+    @Override
+    public void onTick(EntityPlayer player, int level) {
+
     }
 }

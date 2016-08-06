@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities.api;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 
 /**
@@ -46,5 +47,10 @@ public class AbilityType implements IAbilityType {
     @Override
     public int getBaseXpPerLevel() {
         return baseXpPerLevel;
+    }
+
+    @Override
+    public void onTick(EntityPlayer player, int level) {
+
     }
 }

@@ -1,8 +1,9 @@
 package org.cyclops.everlastingabilities.api;
 
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
-import org.cyclops.everlastingabilities.core.DefaultAbilityType;
+import org.cyclops.everlastingabilities.core.AbilityTypePotionEffect;
 
 /**
  * All ability types.
@@ -21,13 +22,13 @@ public class AbilityTypes {
     public static IAbilityType FIRE_RESISTANCE = null;
 
     public static void load() {
-        SPEED = REGISTRY.register(new DefaultAbilityType("speed", EnumRarity.COMMON, 3, 10));
-        HASTE = REGISTRY.register(new DefaultAbilityType("haste", EnumRarity.COMMON, 3, 10));
-        STRENGTH = REGISTRY.register(new DefaultAbilityType("strength", EnumRarity.UNCOMMON, 3, 10));
-        JUMP_BOOST = REGISTRY.register(new DefaultAbilityType("jump_boost", EnumRarity.COMMON, 3, 10));
-        REGENERATION = REGISTRY.register(new DefaultAbilityType("regeneration", EnumRarity.RARE, 3, 10));
-        RESISTANCE = REGISTRY.register(new DefaultAbilityType("resistance", EnumRarity.RARE, 3, 10));
-        FIRE_RESISTANCE = REGISTRY.register(new DefaultAbilityType("fire_resistance", EnumRarity.UNCOMMON, 3, 10));
+        SPEED = REGISTRY.register(new AbilityTypePotionEffect("speed", EnumRarity.COMMON, 3, 10, MobEffects.SPEED));
+        HASTE = REGISTRY.register(new AbilityTypePotionEffect("haste", EnumRarity.COMMON, 3, 10, MobEffects.HASTE));
+        STRENGTH = REGISTRY.register(new AbilityTypePotionEffect("strength", EnumRarity.UNCOMMON, 3, 10, MobEffects.STRENGTH));
+        JUMP_BOOST = REGISTRY.register(new AbilityTypePotionEffect("jump_boost", EnumRarity.COMMON, 3, 10, MobEffects.JUMP_BOOST));
+        REGENERATION = REGISTRY.register(new AbilityTypePotionEffect("regeneration", EnumRarity.RARE, 3, 10, MobEffects.REGENERATION));
+        RESISTANCE = REGISTRY.register(new AbilityTypePotionEffect("resistance", EnumRarity.RARE, 3, 10, MobEffects.RESISTANCE));
+        FIRE_RESISTANCE = REGISTRY.register(new AbilityTypePotionEffect("fire_resistance", EnumRarity.UNCOMMON, 3, 10, MobEffects.FIRE_RESISTANCE));
     }
 
 }

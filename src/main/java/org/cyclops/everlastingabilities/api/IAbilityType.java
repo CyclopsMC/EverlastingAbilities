@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities.api;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 
 /**
@@ -14,5 +15,6 @@ public interface IAbilityType {
     public int getMaxLevel();
     public int getBaseXpPerLevel();
     //public ResourceLocation getIcon(); // TODO
+    public void onTick(EntityPlayer player, int level);
 
 }
