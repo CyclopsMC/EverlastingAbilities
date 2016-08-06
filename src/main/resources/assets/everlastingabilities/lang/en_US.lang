@@ -24,6 +24,16 @@ ability.abilities.everlastingabilities.resistance.name=Resistance
 ability.abilities.everlastingabilities.resistance.info=Take less damage from attacks
 ability.abilities.everlastingabilities.fire_resistance.name=Fire Resistance
 ability.abilities.everlastingabilities.fire_resistance.info=Take less damage from fire
+ability.abilities.everlastingabilities.invisibility.name=Invisibility
+ability.abilities.everlastingabilities.invisibility.info=Become invisible
+ability.abilities.everlastingabilities.night_vision.name=Night Vision
+ability.abilities.everlastingabilities.night_vision.info=See in the dark
+ability.abilities.everlastingabilities.absorbtion.name=Absorbtion
+ability.abilities.everlastingabilities.absorbtion.info=Adds absorbtion hearts
+ability.abilities.everlastingabilities.saturation.name=Saturation
+ability.abilities.everlastingabilities.saturation.info=Reduce hunger
+ability.abilities.everlastingabilities.luck.name=Luck
+ability.abilities.everlastingabilities.luck.info=Have a higher chance on better loot
 
 # Items
 item.items.everlastingabilities.abilityTotem.name=Ability Totem

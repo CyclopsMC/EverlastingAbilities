@@ -20,15 +20,32 @@ public class AbilityTypes {
     public static IAbilityType REGENERATION = null;
     public static IAbilityType RESISTANCE = null;
     public static IAbilityType FIRE_RESISTANCE = null;
+    public static IAbilityType WATER_BREATHING = null;
+    public static IAbilityType INVISIBILITY = null;
+    public static IAbilityType NIGHT_VISION = null;
+    public static IAbilityType ABSORPTION = null;
+    public static IAbilityType SATURATION = null;
+    public static IAbilityType LUCK = null;
 
     public static void load() {
-        SPEED = REGISTRY.register(new AbilityTypePotionEffect("speed", EnumRarity.COMMON, 3, 10, MobEffects.SPEED));
-        HASTE = REGISTRY.register(new AbilityTypePotionEffect("haste", EnumRarity.COMMON, 3, 10, MobEffects.HASTE));
-        STRENGTH = REGISTRY.register(new AbilityTypePotionEffect("strength", EnumRarity.UNCOMMON, 3, 10, MobEffects.STRENGTH));
-        JUMP_BOOST = REGISTRY.register(new AbilityTypePotionEffect("jump_boost", EnumRarity.COMMON, 3, 10, MobEffects.JUMP_BOOST));
-        REGENERATION = REGISTRY.register(new AbilityTypePotionEffect("regeneration", EnumRarity.RARE, 3, 10, MobEffects.REGENERATION));
-        RESISTANCE = REGISTRY.register(new AbilityTypePotionEffect("resistance", EnumRarity.RARE, 3, 10, MobEffects.RESISTANCE));
-        FIRE_RESISTANCE = REGISTRY.register(new AbilityTypePotionEffect("fire_resistance", EnumRarity.UNCOMMON, 3, 10, MobEffects.FIRE_RESISTANCE));
+        SPEED = REGISTRY.register(new AbilityTypePotionEffect("speed", EnumRarity.COMMON, 5, 10, MobEffects.SPEED));
+        HASTE = REGISTRY.register(new AbilityTypePotionEffect("haste", EnumRarity.COMMON, 5, 15, MobEffects.HASTE));
+        STRENGTH = REGISTRY.register(new AbilityTypePotionEffect("strength", EnumRarity.UNCOMMON, 5, 20, MobEffects.STRENGTH));
+        JUMP_BOOST = REGISTRY.register(new AbilityTypePotionEffect("jump_boost", EnumRarity.COMMON, 5, 10, MobEffects.JUMP_BOOST));
+        REGENERATION = REGISTRY.register(new AbilityTypePotionEffect("regeneration", EnumRarity.RARE, 3, 50, MobEffects.REGENERATION));
+        RESISTANCE = REGISTRY.register(new AbilityTypePotionEffect("resistance", EnumRarity.RARE, 3, 50, MobEffects.RESISTANCE));
+        FIRE_RESISTANCE = REGISTRY.register(new AbilityTypePotionEffect("fire_resistance", EnumRarity.UNCOMMON, 1, 20, MobEffects.FIRE_RESISTANCE));
+        WATER_BREATHING = REGISTRY.register(new AbilityTypePotionEffect("water_breathing", EnumRarity.COMMON, 1, 10, MobEffects.WATER_BREATHING));
+        INVISIBILITY = REGISTRY.register(new AbilityTypePotionEffect("invisibility", EnumRarity.UNCOMMON, 1, 20, MobEffects.INVISIBILITY));
+        NIGHT_VISION = REGISTRY.register(new AbilityTypePotionEffect("night_vision", EnumRarity.UNCOMMON, 1, 15, MobEffects.NIGHT_VISION) {
+            @Override
+            protected int getDurationMultiplier() {
+                return 27;
+            }
+        });
+        ABSORPTION = REGISTRY.register(new AbilityTypePotionEffect("absorbtion", EnumRarity.EPIC, 5, 75, MobEffects.ABSORPTION));
+        SATURATION = REGISTRY.register(new AbilityTypePotionEffect("saturation", EnumRarity.RARE, 3, 30, MobEffects.SATURATION));
+        LUCK = REGISTRY.register(new AbilityTypePotionEffect("luck", EnumRarity.RARE, 3, 40, MobEffects.LUCK));
     }
 
 }
