@@ -56,8 +56,20 @@ public class GeneralConfig extends DummyConfig {
     /**
      * The maximum rarity of totems to spawn when a player first logs in. [0-3], -1 disables totem spawning.
      */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.CORE, comment = "The maximum rarity of totems to spawn when a player first logs in. [0-3], -1 disables totem spawning.")
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "The maximum rarity of totems to spawn when a player first logs in. [0-3], -1 disables totem spawning.")
     public static int totemMaximumSpawnRarity = 1;
+
+    /**
+     * How many abilities should be dropped on player death.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "How many abilities should be dropped on player death.", isCommandable = true)
+    public static int dropAbilitiesOnPlayerDeath = 1;
+
+    /**
+     * true: Abilities drop when players die; false: Abilities drop when players die by the hand of other players.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "true: Abilities drop when players die; false: Abilities drop when players die by the hand of other players.", isCommandable = true)
+    public static boolean alwaysDropAbilities = false;
 
     /**
      * The type of this config.

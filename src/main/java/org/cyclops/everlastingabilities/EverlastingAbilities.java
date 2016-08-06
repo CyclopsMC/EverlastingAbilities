@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
@@ -8,11 +9,15 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -26,6 +31,7 @@ import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigReference;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
+import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
@@ -46,10 +52,12 @@ import org.cyclops.everlastingabilities.core.SerializableCapabilityProvider;
 import org.cyclops.everlastingabilities.core.helper.obfuscation.ObfuscationHelpers;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottle;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
+import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
 import org.cyclops.everlastingabilities.network.packet.SendPlayerCapabilitiesPacket;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -251,6 +259,40 @@ public class EverlastingAbilities extends ModBaseVersionable {
                     ItemStackHelpers.spawnItemStackToPlayer(world, player.getPosition(), itemStack, player);
                     EntityHelpers.spawnXpAtPlayer(world, player, abilityType.getBaseXpPerLevel());
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerDeath(LivingDeathEvent event) {
+        if (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
+                && event.getEntityLiving() instanceof EntityPlayer && !event.getEntityLiving().worldObj.isRemote
+                && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource) && event.getSource().getEntity() instanceof EntityPlayer)) {
+            int toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
+            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+            IMutableAbilityStore mutableAbilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+
+            ItemStack itemStack = new ItemStack(ItemAbilityTotem.getInstance());
+            IMutableAbilityStore itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+
+            Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
+            for (Ability ability : abilities) {
+                if (toDrop > 0) {
+                    Ability toRemove = new Ability(ability.getAbilityType(), toDrop);
+                    Ability removed = mutableAbilityStore.removeAbility(toRemove, true);
+                    if (removed != null) {
+                        toDrop -= removed.getLevel();
+                        itemStackStore.addAbility(removed, true);
+                        player.addChatMessage(new TextComponentTranslation(L10NHelpers.localize("chat.everlastingabilities.playerLostAbility",
+                                player.getName(),
+                                removed.getAbilityType().getRarity().rarityColor.toString() + TextFormatting.BOLD + L10NHelpers.localize(removed.getAbilityType().getUnlocalizedName()) + TextFormatting.RESET,
+                                removed.getLevel())));
+                    }
+                }
+            }
+
+            if (!itemStackStore.getAbilities().isEmpty()) {
+                ItemStackHelpers.spawnItemStack(player.worldObj, player.getPosition(), itemStack);
             }
         }
     }

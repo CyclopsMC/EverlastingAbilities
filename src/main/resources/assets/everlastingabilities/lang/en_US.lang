@@ -4,10 +4,11 @@ general.everlastingabilities.empty=None
 general.everlastingabilities.level=Level: %s / %s
 general.everlastingabilities.xp=XP/Level: %s
 
-# Command
+# Chat
 chat.everlastingabilities.command.invalidAbility=Could not find the ability with id "%s".
 chat.everlastingabilities.command.addedAbility=Added ability %s, new ability %s.
 chat.everlastingabilities.command.removedAbility=Removed ability %s, new ability %s.
+chat.everlastingabilities.playerLostAbility=%s dropped %s of level %s!
 
 ## Abilities
 ability.abilities.everlastingabilities.speed.name=Speed
