@@ -44,6 +44,7 @@ public class AbilityTypes {
     public static IAbilityType STEP_ASSIST = null;
     public static IAbilityType FERTILITY = null;
     public static IAbilityType BONEMEALER = null;
+    public static IAbilityType POWER_STARE = null;
 
     public static void load() {
         SPEED = REGISTRY.register(new AbilityTypePotionEffectSelf("speed", EnumRarity.COMMON, 5, 10, MobEffects.SPEED));
@@ -81,6 +82,7 @@ public class AbilityTypes {
         STEP_ASSIST = REGISTRY.register(new AbilityTypeStepAssist("step_assist", EnumRarity.COMMON, 3, 25));
         FERTILITY = REGISTRY.register(new AbilityTypeFertility("fertility", EnumRarity.UNCOMMON, 3, 30));
         BONEMEALER = REGISTRY.register(new AbilityTypeBonemealer("bonemealer", EnumRarity.UNCOMMON, 5, 30));
+        POWER_STARE = REGISTRY.register(new AbilityTypePowerStare("power_stare", EnumRarity.UNCOMMON, 5, 50));
     }
 
 }

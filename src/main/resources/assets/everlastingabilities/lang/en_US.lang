@@ -69,6 +69,8 @@ ability.abilities.everlastingabilities.fertility.name=Fertility
 ability.abilities.everlastingabilities.fertility.info=Animals in the area become fertile
 ability.abilities.everlastingabilities.bonemealer.name=Bonemealer
 ability.abilities.everlastingabilities.bonemealer.info=Bonemeal the area
+ability.abilities.everlastingabilities.power_stare.name=Power Stare
+ability.abilities.everlastingabilities.power_stare.info=Push away entities you're looking at
 
 # Items
 item.items.everlastingabilities.abilityTotem.name=Ability Totem
