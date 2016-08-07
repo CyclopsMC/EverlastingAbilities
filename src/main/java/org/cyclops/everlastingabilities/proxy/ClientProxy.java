@@ -11,6 +11,7 @@ import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.init.ModBase;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponent;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.client.particle.ParticleBlur;
 
 import java.util.Random;
@@ -22,13 +23,6 @@ import java.util.Random;
  * 
  */
 public class ClientProxy extends ClientProxyComponent {
-
-	int[] RARITY_COLORS = new int[] {
-			Helpers.RGBToInt(255, 255, 255),
-			Helpers.RGBToInt(255, 255, 0),
-			Helpers.RGBToInt(0, 255, 255),
-			Helpers.RGBToInt(255, 0, 255),
-	};
 
 	public ClientProxy() {
 		super(new CommonProxy());
@@ -46,7 +40,7 @@ public class ClientProxy extends ClientProxyComponent {
 		if (entity instanceof IAnimals && entity.worldObj.getTotalWorldTime() % 10 == 0
 				&& entity.getDataManager().get(EverlastingAbilities.ENTITY_DATA_ABILITY_RARITY) >= 0) {
 			int rarity = entity.getDataManager().get(EverlastingAbilities.ENTITY_DATA_ABILITY_RARITY);
-			int color = RARITY_COLORS[rarity];
+			int color = AbilityHelpers.RARITY_COLORS[rarity];
 			Triple<Float, Float, Float> colorObj = Helpers.intToRGB(color);
 			float r = colorObj.getLeft();
 			float g = colorObj.getMiddle();

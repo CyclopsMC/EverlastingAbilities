@@ -10,19 +10,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.gui.component.button.GuiButtonArrow;
 import org.cyclops.cyclopscore.client.gui.container.GuiContainerConfigurable;
 import org.cyclops.cyclopscore.client.gui.container.GuiContainerExtended;
-import org.cyclops.cyclopscore.helper.Helpers;
-import org.cyclops.cyclopscore.helper.L10NHelpers;
-import org.cyclops.cyclopscore.helper.RenderHelpers;
-import org.cyclops.cyclopscore.helper.StringHelpers;
+import org.cyclops.cyclopscore.helper.*;
 import org.cyclops.cyclopscore.inventory.container.ExtendedInventoryContainer;
 import org.cyclops.cyclopscore.inventory.container.button.IButtonActionClient;
 import org.cyclops.cyclopscore.item.IInformationProvider;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 import org.cyclops.everlastingabilities.network.packet.MoveAbilityPacket;
@@ -146,7 +145,8 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
             return;
         }
 
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+        this.fontRendererObj.drawString(player.getDisplayNameString(), 8, 6, -1);
+        this.fontRendererObj.drawString(L10NHelpers.localize(getContainer().getItem().getConfig().getFullUnlocalizedName()), 102, 6, -1);
 
         // Draw abilities
         drawAbilitiesTooltip(8, 83, getPlayerAbilities(), startIndexPlayer, mouseX, mouseY);
@@ -196,11 +196,11 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
         int i = this.guiLeft;
         int j = this.guiTop;
-        drawFancyBackground(i + 8, j + 17, 66, 61, false, 0.2F); // TODO: variable 'activity' (it's not really working btw)
+        drawFancyBackground(i + 8, j + 17, 66, 61, getPlayerAbilityStore());
         GuiInventory.drawEntityOnScreen(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.mc.thePlayer);
         drawXp(i + 67, j + 70);
         RenderHelpers.drawScaledCenteredString(fontRendererObj, "" + player.experienceTotal, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
-        drawFancyBackground(i + 102, j + 17, 66, 61, true, 1F); // TODO: variable 'activity'
+        drawFancyBackground(i + 102, j + 17, 66, 61, getItemAbilityStore());
         drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.mc.thePlayer));
 
         // Draw abilities
@@ -208,7 +208,18 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         drawAbilities(this.guiLeft + 105, this.guiTop + 83, getItemAbilities(), startIndexItem, player.experienceTotal, absoluteSelectedIndexItem, mouseX, mouseY, true);
     }
 
-    public void drawFancyBackground(int x, int y, int width, int height, boolean mirror, float activity) {
+    public void drawFancyBackground(int x, int y, int width, int height, IAbilityStore abilityStore) {
+        int r = 140;
+        int g = 140;
+        int b = 140;
+        if (abilityStore != null) {
+            if (abilityStore.getAbilityTypes().isEmpty()) return;
+            Triple<Integer, Integer, Integer> color = AbilityHelpers.getAverageRarityColor(abilityStore);
+            r = color.getLeft();
+            g = color.getMiddle();
+            b = color.getRight();
+        }
+
         GlStateManager.depthMask(false);
         GlStateManager.depthFunc(514);
         GlStateManager.disableLighting();
@@ -221,7 +232,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         GlStateManager.translate(f, 0.0F, 0.0F);
         GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.enableBlend();
-        drawTexturedModalRectColor(x, y, 0, 0, width, height, 200, 50, 150, (int) (activity * 255F));
+        drawTexturedModalRectColor(x, y, 0, 0, width, height, r, g, b, 255);
         GlStateManager.popMatrix();
         GlStateManager.pushMatrix();
         GlStateManager.scale(8.0F, 8.0F, 8.0F);
@@ -230,7 +241,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         GlStateManager.rotate(10.0F, 0.0F, 0.0F, 1.0F);
         float rotation = Minecraft.getSystemTime() % 360.0F;
         GlStateManager.rotate(rotation, 1.0F, 0.5F, 1.0F);
-        drawTexturedModalRectColor(x, y, 0, 0, width, height, 150, 50, 150, (int) (activity * 255F));
+        drawTexturedModalRectColor(x, y, 0, 0, width, height, r, g, b, 255);
         GlStateManager.popMatrix();
         GlStateManager.matrixMode(5888);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -260,7 +271,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
                 boolean active = currentSelectedIndex == i + startIndex;
                 boolean showActive = active || isPointInRegion(new Rectangle(x - this.guiLeft, boxY - this.guiTop, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT), new Point(mouseX, mouseY));
                 if (showActive) {
-                    drawFancyBackground(x, boxY - 1, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT, false, 0.5F);
+                    drawFancyBackground(x, boxY - 1, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT, null);
                 }
             }
 
@@ -272,7 +283,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
             // Level
             RenderHelpers.drawScaledCenteredString(fontRendererObj,
                     "" + ability.getLevel(),
-                    x + 58, boxY + 5, 0, 0.8F, 10000);
+                    x + 58, boxY + 5, 0, 0.8F, -1);
 
             // XP
             int requiredXp = ability.getAbilityType().getBaseXpPerLevel();

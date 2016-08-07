@@ -3,10 +3,13 @@ package org.cyclops.everlastingabilities.ability;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
+import org.apache.commons.lang3.tuple.Triple;
+import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.core.helper.obfuscation.ObfuscationHelpers;
@@ -23,6 +26,13 @@ import java.util.Random;
  * @author rubensworks
  */
 public class AbilityHelpers {
+
+    public static final int[] RARITY_COLORS = new int[] {
+            Helpers.RGBToInt(255, 255, 255),
+            Helpers.RGBToInt(255, 255, 0),
+            Helpers.RGBToInt(0, 255, 255),
+            Helpers.RGBToInt(255, 0, 255),
+    };
 
     public static int getExperienceForLevel(int level) {
         if (level == 0) { return 0; }
@@ -153,6 +163,21 @@ public class AbilityHelpers {
             rarity = EnumRarity.COMMON;
         }
         return rarity;
+    }
+
+    public static Triple<Integer, Integer, Integer> getAverageRarityColor(IAbilityStore abilityStore) {
+        int r = 0;
+        int g = 0;
+        int b = 0;
+        int count = 1;
+        for (IAbilityType abilityType : abilityStore.getAbilityTypes()) {
+            Triple<Float, Float, Float> color = Helpers.intToRGB(AbilityHelpers.RARITY_COLORS[abilityType.getRarity().ordinal()]);
+            r += color.getLeft() * 255;
+            g += color.getMiddle() * 255;
+            b += color.getRight() * 255;
+            count++;
+        }
+        return Triple.of(r / count, g / count, b / count);
     }
 
 }
