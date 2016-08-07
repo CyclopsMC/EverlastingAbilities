@@ -37,10 +37,34 @@ ability.abilities.everlastingabilities.saturation.name=Saturation
 ability.abilities.everlastingabilities.saturation.info=Reduce hunger
 ability.abilities.everlastingabilities.luck.name=Luck
 ability.abilities.everlastingabilities.luck.info=Have a higher chance on better loot
+
 ability.abilities.everlastingabilities.flight.name=Flight
 ability.abilities.everlastingabilities.flight.info=Allows you to fly
 ability.abilities.everlastingabilities.step_assist.name=Step Assist
 ability.abilities.everlastingabilities.step_assist.info=Automatically step up a certain number of blocks depending on the level
+
+ability.abilities.everlastingabilities.slowness.name=Slowness
+ability.abilities.everlastingabilities.slowness.info=Entities in the area move slower
+ability.abilities.everlastingabilities.mining_fatigue.name=Mining Fatigue
+ability.abilities.everlastingabilities.mining_fatigue.info=Entities in the area mine slower
+ability.abilities.everlastingabilities.nausea.name=Nausea
+ability.abilities.everlastingabilities.nausea.info=Entities in the area get nauseous
+ability.abilities.everlastingabilities.blindness.name=Blindness
+ability.abilities.everlastingabilities.blindness.info=Entities in the area become blind
+ability.abilities.everlastingabilities.hunger.name=Hunger
+ability.abilities.everlastingabilities.hunger.info=Entities in the area become hungry
+ability.abilities.everlastingabilities.weakness.name=Weakness
+ability.abilities.everlastingabilities.weakness.info=Entities in the area become weaker
+ability.abilities.everlastingabilities.poison.name=Poison
+ability.abilities.everlastingabilities.poison.info=Entities in the area become poisoned
+ability.abilities.everlastingabilities.wither.name=Wither
+ability.abilities.everlastingabilities.wither.info=Entities in the area become withered
+ability.abilities.everlastingabilities.glowing.name=Glowing
+ability.abilities.everlastingabilities.glowing.info=Entities in the area start glowing
+ability.abilities.everlastingabilities.levitation.name=Levitation
+ability.abilities.everlastingabilities.levitation.info=Entities in the area start levitating
+ability.abilities.everlastingabilities.unluck.name=Unluck
+ability.abilities.everlastingabilities.unluck.info=Entities in the area have a lower chance on good loot
 
 # Items
 item.items.everlastingabilities.abilityTotem.name=Ability Totem
