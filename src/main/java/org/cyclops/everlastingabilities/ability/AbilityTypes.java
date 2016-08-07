@@ -29,6 +29,7 @@ public class AbilityTypes {
     public static IAbilityType LUCK = null;
 
     public static IAbilityType FLIGHT = null;
+    public static IAbilityType STEP_ASSIST = null;
 
     public static void load() {
         SPEED = REGISTRY.register(new AbilityTypePotionEffect("speed", EnumRarity.COMMON, 5, 10, MobEffects.SPEED));
@@ -51,6 +52,7 @@ public class AbilityTypes {
         LUCK = REGISTRY.register(new AbilityTypePotionEffect("luck", EnumRarity.RARE, 3, 40, MobEffects.LUCK));
 
         FLIGHT = REGISTRY.register(new AbilityTypeFlight("flight", EnumRarity.EPIC, 1, 100));
+        STEP_ASSIST = REGISTRY.register(new AbilityTypeStepAssist("step_assist", EnumRarity.COMMON, 3, 25));
     }
 
 }

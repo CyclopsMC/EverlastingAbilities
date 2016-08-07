@@ -39,6 +39,8 @@ ability.abilities.everlastingabilities.luck.name=Luck
 ability.abilities.everlastingabilities.luck.info=Have a higher chance on better loot
 ability.abilities.everlastingabilities.flight.name=Flight
 ability.abilities.everlastingabilities.flight.info=Allows you to fly
+ability.abilities.everlastingabilities.step_assist.name=Step Assist
+ability.abilities.everlastingabilities.step_assist.info=Automatically step up a certain number of blocks depending on the level
 
 # Items
 item.items.everlastingabilities.abilityTotem.name=Ability Totem
