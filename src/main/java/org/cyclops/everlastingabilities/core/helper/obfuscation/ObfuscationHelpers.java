@@ -29,13 +29,5 @@ public class ObfuscationHelpers {
             return null;
         }
     }
-
-    /**
-     * Get the private 'particleTextures' field from {@link net.minecraft.client.particle.ParticleManager}.
-     * @return The private 'particleTextures' field.
-     */
-    public static ResourceLocation getParticleTexture() {
-        return ReflectionHelper.getPrivateValue(ParticleManager.class, null, ObfuscationData.PARTICLE_TEXTURES);
-    }
 	
 }

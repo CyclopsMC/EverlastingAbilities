@@ -7,12 +7,12 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.lang3.tuple.Triple;
+import org.cyclops.cyclopscore.client.particle.ParticleBlur;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.init.ModBase;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponent;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.client.particle.ParticleBlur;
 
 import java.util.Random;
 
