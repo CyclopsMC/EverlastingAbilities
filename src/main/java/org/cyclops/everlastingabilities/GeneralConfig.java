@@ -78,6 +78,12 @@ public class GeneralConfig extends DummyConfig {
     public static int mobAbilityChance = 10;
 
     /**
+     * If the magnetize ability should move xp.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "If the magnetize ability should move xp.", isCommandable = true)
+    public static boolean magnetizeMoveXp = true;
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;

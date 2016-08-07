@@ -71,6 +71,8 @@ ability.abilities.everlastingabilities.bonemealer.name=Bonemealer
 ability.abilities.everlastingabilities.bonemealer.info=Bonemeal the area
 ability.abilities.everlastingabilities.power_stare.name=Power Stare
 ability.abilities.everlastingabilities.power_stare.info=Push away entities you're looking at
+ability.abilities.everlastingabilities.magnetize.name=Magnetize
+ability.abilities.everlastingabilities.magnetize.info=Attract nearby items
 
 # Items
 item.items.everlastingabilities.abilityTotem.name=Ability Totem
