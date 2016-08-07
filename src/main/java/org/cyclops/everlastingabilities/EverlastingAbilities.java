@@ -57,7 +57,7 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
-import org.cyclops.everlastingabilities.core.AbilityTypeRegistry;
+import org.cyclops.everlastingabilities.ability.AbilityTypeRegistry;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottle;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;

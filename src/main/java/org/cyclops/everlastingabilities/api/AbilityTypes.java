@@ -3,7 +3,7 @@ package org.cyclops.everlastingabilities.api;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
-import org.cyclops.everlastingabilities.core.AbilityTypePotionEffect;
+import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffect;
 
 /**
  * All ability types.

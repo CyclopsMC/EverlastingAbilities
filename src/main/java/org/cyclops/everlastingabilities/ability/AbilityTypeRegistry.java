@@ -1,4 +1,4 @@
-package org.cyclops.everlastingabilities.core;
+package org.cyclops.everlastingabilities.ability;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

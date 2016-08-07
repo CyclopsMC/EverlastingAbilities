@@ -1,4 +1,4 @@
-package org.cyclops.everlastingabilities.core;
+package org.cyclops.everlastingabilities.ability;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
