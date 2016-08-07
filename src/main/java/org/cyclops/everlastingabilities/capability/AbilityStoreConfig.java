@@ -2,10 +2,11 @@ package org.cyclops.everlastingabilities.capability;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import org.cyclops.cyclopscore.config.extendedconfig.CapabilityConfig;
+import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.api.capability.AbilityStoreStorage;
 import org.cyclops.everlastingabilities.api.capability.DefaultAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
-import org.cyclops.everlastingabilities.core.config.extendedconfig.CapabilityConfig;
 
 /**
  * Config for the worker capability.
@@ -27,6 +28,7 @@ public class AbilityStoreConfig extends CapabilityConfig {
      */
     public AbilityStoreConfig() {
         super(
+                EverlastingAbilities._instance,
                 true,
                 "abilityStore",
                 "Storage for abilities.",
