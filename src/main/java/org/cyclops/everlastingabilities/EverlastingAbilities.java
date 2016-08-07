@@ -4,13 +4,18 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -92,6 +97,8 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @Instance(value = Reference.MOD_ID)
     public static EverlastingAbilities _instance;
 
+    public static final DataParameter<Integer> ENTITY_DATA_ABILITY_RARITY = EntityDataManager.<Integer>createKey(Entity.class, DataSerializers.VARINT);
+
     public EverlastingAbilities() {
         super(Reference.MOD_ID, Reference.MOD_NAME, Reference.MOD_VERSION);
     }
@@ -150,22 +157,26 @@ public class EverlastingAbilities extends ModBaseVersionable {
             @Nullable
             @Override
             public ICapabilityProvider createProvider(IAnimals host) {
-                IMutableAbilityStore store = new DefaultMutableAbilityStore();
-                if (host instanceof EntityLivingBase) {
-                    EntityLivingBase entity = (EntityLivingBase) host;
-                    if (GeneralConfig.mobAbilityChance > 0
-                            && entity.getEntityId() % GeneralConfig.mobAbilityChance == 0) {
-                        Random rand = new Random();
-                        rand.setSeed(entity.getEntityId());
-                        EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
-                        IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity);
-                        if (abilityType != null) {
-                            store.addAbility(new Ability(abilityType, 1), true);
+                if (host instanceof Entity) {
+                    Entity entity = (Entity) host;
+                    IMutableAbilityStore store = new DefaultMutableAbilityStore();
+                    entity.getDataManager().register(ENTITY_DATA_ABILITY_RARITY, -1);
+                    if (!MinecraftHelpers.isClientSide() && host instanceof EntityLivingBase) {
+                        if (GeneralConfig.mobAbilityChance > 0
+                                && entity.getEntityId() % GeneralConfig.mobAbilityChance == 0) {
+                            Random rand = new Random();
+                            rand.setSeed(entity.getEntityId());
+                            EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
+                            IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity);
+                            if (abilityType != null) {
+                                store.addAbility(new Ability(abilityType, 1), true);
+                                entity.getDataManager().set(ENTITY_DATA_ABILITY_RARITY, abilityType.getRarity().ordinal());
+                            }
                         }
                     }
+                    return new SerializableCapabilityProvider<IMutableAbilityStore>(getCapability(), store);
                 }
-
-                return new SerializableCapabilityProvider<IMutableAbilityStore>(getCapability(), store);
+                return null;
             }
 
             @Override

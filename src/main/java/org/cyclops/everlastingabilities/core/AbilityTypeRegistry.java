@@ -56,7 +56,7 @@ public class AbilityTypeRegistry implements IAbilityTypeRegistry {
     public List<IAbilityType> getAbilityTypes(EnumRarity rarity) {
         List<IAbilityType> abilityTypes = Lists.newArrayList();
         for (IAbilityType abilityType : abilities.values()) {
-            if (abilityType.getRarity().ordinal() < rarity.ordinal()) {
+            if (abilityType.getRarity().ordinal() <= rarity.ordinal()) {
                 abilityTypes.add(abilityType);
             }
         }
