@@ -70,4 +70,9 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     }
 
     public abstract boolean canMoveFromPlayer();
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
+    }
 }
