@@ -73,6 +73,6 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
 
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return false;
+        return oldStack == null || newStack == null || oldStack.getItem() != newStack.getItem();
     }
 }
