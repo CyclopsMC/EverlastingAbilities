@@ -12,11 +12,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.item.ItemGui;
-import org.cyclops.cyclopscore.modcompat.capabilities.SerializableCapabilityProvider;
+import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityProvider;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.ItemStackMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.client.gui.GuiAbilityContainer;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
@@ -65,8 +65,11 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
-        return new SerializableCapabilityProvider<IMutableAbilityStore>(MutableAbilityStoreConfig.CAPABILITY,
-                new DefaultMutableAbilityStore());
+        // TODO: restore when Forge fixed that bug (backwards compat is already taken care of, because data is stored twice (in stacktag and capdata))
+        //return new SerializableCapabilityProvider<IMutableAbilityStore>(MutableAbilityStoreConfig.CAPABILITY,
+        //        new DefaultMutableAbilityStore());
+        return new DefaultCapabilityProvider<IMutableAbilityStore>(MutableAbilityStoreConfig.CAPABILITY,
+                new ItemStackMutableAbilityStore(stack));
     }
 
     public abstract boolean canMoveFromPlayer();
