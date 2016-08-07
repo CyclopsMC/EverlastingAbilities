@@ -12,13 +12,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.item.ItemGui;
+import org.cyclops.cyclopscore.modcompat.capabilities.SerializableCapabilityProvider;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.client.gui.GuiAbilityContainer;
-import org.cyclops.everlastingabilities.core.SerializableCapabilityProvider;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
 import java.util.List;
