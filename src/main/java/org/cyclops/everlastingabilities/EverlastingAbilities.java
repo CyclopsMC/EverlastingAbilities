@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -48,8 +47,9 @@ import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructo
 import org.cyclops.cyclopscore.network.packet.SendPlayerCapabilitiesPacket;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.ability.AbilityTypeRegistry;
 import org.cyclops.everlastingabilities.ability.AbilityTypes;
+import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.IAbilityTypeRegistry;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
@@ -57,7 +57,6 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
-import org.cyclops.everlastingabilities.ability.AbilityTypeRegistry;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottle;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
@@ -96,7 +95,9 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @Instance(value = Reference.MOD_ID)
     public static EverlastingAbilities _instance;
 
-    public static final DataParameter<Integer> ENTITY_DATA_ABILITY_RARITY = EntityDataManager.<Integer>createKey(Entity.class, DataSerializers.VARINT);
+    // TODO: this results in error sometimes... (hardcoded id for now...)
+    //public static final DataParameter<Integer> ENTITY_DATA_ABILITY_RARITY = EntityDataManager.<Integer>createKey(Entity.class, DataSerializers.VARINT);
+    public static final DataParameter<Integer> ENTITY_DATA_ABILITY_RARITY = new DataParameter<Integer>(248, DataSerializers.VARINT);
 
     public EverlastingAbilities() {
         super(Reference.MOD_ID, Reference.MOD_NAME, Reference.MOD_VERSION);
