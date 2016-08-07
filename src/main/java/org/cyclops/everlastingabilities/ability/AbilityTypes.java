@@ -28,9 +28,6 @@ public class AbilityTypes {
     public static IAbilityType SATURATION = null;
     public static IAbilityType LUCK = null;
 
-    public static IAbilityType FLIGHT = null;
-    public static IAbilityType STEP_ASSIST = null;
-
     public static IAbilityType SLOWNESS = null;
     public static IAbilityType MINING_FATIGUE = null;
     public static IAbilityType NAUSEA = null;
@@ -42,6 +39,11 @@ public class AbilityTypes {
     public static IAbilityType GLOWING = null;
     public static IAbilityType LEVITATION = null;
     public static IAbilityType UNLUCK = null;
+
+    public static IAbilityType FLIGHT = null;
+    public static IAbilityType STEP_ASSIST = null;
+    public static IAbilityType FERTILITY = null;
+    public static IAbilityType BONEMEALER = null;
 
     public static void load() {
         SPEED = REGISTRY.register(new AbilityTypePotionEffectSelf("speed", EnumRarity.COMMON, 5, 10, MobEffects.SPEED));
@@ -63,9 +65,6 @@ public class AbilityTypes {
         SATURATION = REGISTRY.register(new AbilityTypePotionEffectSelf("saturation", EnumRarity.RARE, 3, 30, MobEffects.SATURATION));
         LUCK = REGISTRY.register(new AbilityTypePotionEffectSelf("luck", EnumRarity.RARE, 3, 40, MobEffects.LUCK));
 
-        FLIGHT = REGISTRY.register(new AbilityTypeFlight("flight", EnumRarity.EPIC, 1, 150));
-        STEP_ASSIST = REGISTRY.register(new AbilityTypeStepAssist("step_assist", EnumRarity.COMMON, 3, 25));
-
         SLOWNESS = REGISTRY.register(new AbilityTypePotionEffectRadius("slowness", EnumRarity.UNCOMMON, 3, 40, MobEffects.SLOWNESS));
         MINING_FATIGUE = REGISTRY.register(new AbilityTypePotionEffectRadius("mining_fatigue", EnumRarity.UNCOMMON, 3, 40, MobEffects.MINING_FATIGUE));
         NAUSEA = REGISTRY.register(new AbilityTypePotionEffectRadius("nausea", EnumRarity.UNCOMMON, 3, 50, MobEffects.NAUSEA));
@@ -77,6 +76,11 @@ public class AbilityTypes {
         GLOWING = REGISTRY.register(new AbilityTypePotionEffectRadius("glowing", EnumRarity.UNCOMMON, 3, 50, MobEffects.GLOWING));
         LEVITATION = REGISTRY.register(new AbilityTypePotionEffectRadius("levitation", EnumRarity.RARE, 3, 75, MobEffects.LEVITATION));
         UNLUCK = REGISTRY.register(new AbilityTypePotionEffectRadius("unluck", EnumRarity.RARE, 3, 50, MobEffects.UNLUCK));
+
+        FLIGHT = REGISTRY.register(new AbilityTypeFlight("flight", EnumRarity.EPIC, 1, 150));
+        STEP_ASSIST = REGISTRY.register(new AbilityTypeStepAssist("step_assist", EnumRarity.COMMON, 3, 25));
+        FERTILITY = REGISTRY.register(new AbilityTypeFertility("fertility", EnumRarity.UNCOMMON, 3, 30));
+        BONEMEALER = REGISTRY.register(new AbilityTypeBonemealer("bonemealer", EnumRarity.UNCOMMON, 5, 30));
     }
 
 }

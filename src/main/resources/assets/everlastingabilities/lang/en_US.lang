@@ -38,11 +38,6 @@ ability.abilities.everlastingabilities.saturation.info=Reduce hunger
 ability.abilities.everlastingabilities.luck.name=Luck
 ability.abilities.everlastingabilities.luck.info=Have a higher chance on better loot
 
-ability.abilities.everlastingabilities.flight.name=Flight
-ability.abilities.everlastingabilities.flight.info=Allows you to fly
-ability.abilities.everlastingabilities.step_assist.name=Step Assist
-ability.abilities.everlastingabilities.step_assist.info=Automatically step up a certain number of blocks depending on the level
-
 ability.abilities.everlastingabilities.slowness.name=Slowness
 ability.abilities.everlastingabilities.slowness.info=Entities in the area move slower
 ability.abilities.everlastingabilities.mining_fatigue.name=Mining Fatigue
@@ -65,6 +60,15 @@ ability.abilities.everlastingabilities.levitation.name=Levitation
 ability.abilities.everlastingabilities.levitation.info=Entities in the area start levitating
 ability.abilities.everlastingabilities.unluck.name=Unluck
 ability.abilities.everlastingabilities.unluck.info=Entities in the area have a lower chance on good loot
+
+ability.abilities.everlastingabilities.flight.name=Flight
+ability.abilities.everlastingabilities.flight.info=Allows you to fly
+ability.abilities.everlastingabilities.step_assist.name=Step Assist
+ability.abilities.everlastingabilities.step_assist.info=Automatically step up a certain number of blocks depending on the level
+ability.abilities.everlastingabilities.fertility.name=Fertility
+ability.abilities.everlastingabilities.fertility.info=Animals in the area become fertile
+ability.abilities.everlastingabilities.bonemealer.name=Bonemealer
+ability.abilities.everlastingabilities.bonemealer.info=Bonemeal the area
 
 # Items
 item.items.everlastingabilities.abilityTotem.name=Ability Totem
