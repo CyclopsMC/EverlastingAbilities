@@ -5,7 +5,6 @@ import org.cyclops.cyclopscore.network.PacketHandler;
 import org.cyclops.cyclopscore.proxy.CommonProxyComponent;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.network.packet.MoveAbilityPacket;
-import org.cyclops.everlastingabilities.network.packet.SendPlayerCapabilitiesPacket;
 
 /**
  * Proxy for server and client side.
@@ -23,7 +22,6 @@ public class CommonProxy extends CommonProxyComponent {
     public void registerPacketHandlers(PacketHandler packetHandler) {
         super.registerPacketHandlers(packetHandler);
 
-        packetHandler.register(SendPlayerCapabilitiesPacket.class);
         packetHandler.register(MoveAbilityPacket.class);
     }
 }

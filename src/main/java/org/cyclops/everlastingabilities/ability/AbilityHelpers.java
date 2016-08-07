@@ -5,6 +5,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.Helpers;
+import org.cyclops.cyclopscore.helper.obfuscation.ObfuscationHelpers;
+import org.cyclops.cyclopscore.network.packet.SendPlayerCapabilitiesPacket;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
@@ -12,8 +14,6 @@ import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
-import org.cyclops.everlastingabilities.core.helper.obfuscation.ObfuscationHelpers;
-import org.cyclops.everlastingabilities.network.packet.SendPlayerCapabilitiesPacket;
 
 import javax.annotation.Nullable;
 import java.util.List;

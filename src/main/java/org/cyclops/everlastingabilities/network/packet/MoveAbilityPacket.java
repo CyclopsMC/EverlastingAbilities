@@ -2,16 +2,13 @@ package org.cyclops.everlastingabilities.network.packet;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
-import org.cyclops.everlastingabilities.core.helper.obfuscation.ObfuscationHelpers;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
 /**
