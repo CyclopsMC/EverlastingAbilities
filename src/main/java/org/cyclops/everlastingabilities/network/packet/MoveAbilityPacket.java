@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.AbilityTypes;
+import org.cyclops.everlastingabilities.ability.AbilityTypes;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
 /**

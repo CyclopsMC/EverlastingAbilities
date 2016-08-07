@@ -53,4 +53,9 @@ public class AbilityType implements IAbilityType {
     public void onTick(EntityPlayer player, int level) {
 
     }
+
+    @Override
+    public void onChangedLevel(EntityPlayer player, int oldLevel, int newLevel) {
+
+    }
 }

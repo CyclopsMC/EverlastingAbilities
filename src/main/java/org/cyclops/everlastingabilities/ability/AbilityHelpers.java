@@ -9,7 +9,6 @@ import org.cyclops.cyclopscore.helper.obfuscation.ObfuscationHelpers;
 import org.cyclops.cyclopscore.network.packet.SendPlayerCapabilitiesPacket;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
@@ -58,6 +57,10 @@ public class AbilityHelpers {
                 new SendPlayerCapabilitiesPacket(ObfuscationHelpers.getEntityCapabilities(player)), player);
     }
 
+    public static void onPlayerAbilityChanged(EntityPlayer player, IAbilityType abilityType, int oldLevel, int newLevel) {
+        abilityType.onChangedLevel(player, oldLevel, newLevel);
+    }
+
     /**
      * Add the given ability.
      * @param ability The ability.
@@ -66,6 +69,8 @@ public class AbilityHelpers {
      */
     public static @Nullable Ability addPlayerAbility(EntityPlayer player, Ability ability, boolean doAdd, boolean modifyXp) {
         IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+        int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
+                ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
         Ability result = abilityStore.addAbility(ability, doAdd);
         int currentXp = player.experienceTotal;
         if (result != null && modifyXp && getExperience(result) > currentXp) {
@@ -82,6 +87,9 @@ public class AbilityHelpers {
             player.experienceLevel = getLevelForExperience(player.experienceTotal);
             int xpForLevel = getExperienceForLevel(player.experienceLevel);
             player.experience = (float)(player.experienceTotal - xpForLevel) / (float)player.xpBarCap();
+
+            int newLevel = abilityStore.getAbility(result.getAbilityType()).getLevel();
+            onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
         }
         if (player instanceof EntityPlayerMP) {
             sendPlayerUpdateCapabilities((EntityPlayerMP) player);
@@ -97,9 +105,14 @@ public class AbilityHelpers {
      */
     public static @Nullable Ability removePlayerAbility(EntityPlayer player, Ability ability, boolean doRemove, boolean modifyXp) {
         IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+        int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
+                ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
         Ability result = abilityStore.removeAbility(ability, doRemove);
         if (modifyXp && result != null) {
             player.addExperience(getExperience(result));
+            int newLevel = abilityStore.hasAbilityType(result.getAbilityType())
+                    ? abilityStore.getAbility(result.getAbilityType()).getLevel() : 0;
+            onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
         }
         if (player instanceof EntityPlayerMP) {
             sendPlayerUpdateCapabilities((EntityPlayerMP) player);

@@ -14,6 +14,8 @@ public interface IAbilityType {
     public EnumRarity getRarity();
     public int getMaxLevel();
     public int getBaseXpPerLevel();
+
     public void onTick(EntityPlayer player, int level);
+    public void onChangedLevel(EntityPlayer player, int oldLevel, int newLevel);
 
 }

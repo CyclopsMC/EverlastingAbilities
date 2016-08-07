@@ -37,6 +37,8 @@ ability.abilities.everlastingabilities.saturation.name=Saturation
 ability.abilities.everlastingabilities.saturation.info=Reduce hunger
 ability.abilities.everlastingabilities.luck.name=Luck
 ability.abilities.everlastingabilities.luck.info=Have a higher chance on better loot
+ability.abilities.everlastingabilities.flight.name=Flight
+ability.abilities.everlastingabilities.flight.info=Allows you to fly
 
 # Items
 item.items.everlastingabilities.abilityTotem.name=Ability Totem

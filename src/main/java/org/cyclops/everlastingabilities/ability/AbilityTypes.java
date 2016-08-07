@@ -1,9 +1,10 @@
-package org.cyclops.everlastingabilities.api;
+package org.cyclops.everlastingabilities.ability;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
-import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffect;
+import org.cyclops.everlastingabilities.api.IAbilityType;
+import org.cyclops.everlastingabilities.api.IAbilityTypeRegistry;
 
 /**
  * All ability types.
@@ -27,6 +28,8 @@ public class AbilityTypes {
     public static IAbilityType SATURATION = null;
     public static IAbilityType LUCK = null;
 
+    public static IAbilityType FLIGHT = null;
+
     public static void load() {
         SPEED = REGISTRY.register(new AbilityTypePotionEffect("speed", EnumRarity.COMMON, 5, 10, MobEffects.SPEED));
         HASTE = REGISTRY.register(new AbilityTypePotionEffect("haste", EnumRarity.COMMON, 5, 15, MobEffects.HASTE));
@@ -43,9 +46,11 @@ public class AbilityTypes {
                 return 27;
             }
         });
-        ABSORPTION = REGISTRY.register(new AbilityTypePotionEffect("absorbtion", EnumRarity.EPIC, 5, 75, MobEffects.ABSORPTION));
+        ABSORPTION = REGISTRY.register(new AbilityTypePotionEffect("absorbtion", EnumRarity.RARE, 5, 75, MobEffects.ABSORPTION));
         SATURATION = REGISTRY.register(new AbilityTypePotionEffect("saturation", EnumRarity.RARE, 3, 30, MobEffects.SATURATION));
         LUCK = REGISTRY.register(new AbilityTypePotionEffect("luck", EnumRarity.RARE, 3, 40, MobEffects.LUCK));
+
+        FLIGHT = REGISTRY.register(new AbilityTypeFlight("flight", EnumRarity.EPIC, 1, 100));
     }
 
 }

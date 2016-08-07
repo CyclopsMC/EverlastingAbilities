@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.AbilityTypes;
+import org.cyclops.everlastingabilities.ability.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.Map;
