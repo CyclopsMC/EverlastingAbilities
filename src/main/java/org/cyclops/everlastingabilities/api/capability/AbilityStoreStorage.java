@@ -47,7 +47,8 @@ public class AbilityStoreStorage implements Capability.IStorage<IAbilityStore> {
                     if (abilityType != null) {
                         abilityTypes.put(abilityType, level);
                     } else {
-                        EverlastingAbilities.clog(Level.WARN, "Skipped loading unknown ability by name: " + unlocalizedName);
+                        // Don't spam the player...
+                        //EverlastingAbilities.clog(Level.WARN, "Skipped loading unknown ability by name: " + unlocalizedName);
                     }
                 }
             }

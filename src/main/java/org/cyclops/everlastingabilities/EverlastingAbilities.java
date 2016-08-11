@@ -47,6 +47,7 @@ import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructo
 import org.cyclops.cyclopscore.network.packet.SendPlayerCapabilitiesPacket;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
+import org.cyclops.everlastingabilities.ability.config.*;
 import org.cyclops.everlastingabilities.ability.AbilityTypeRegistry;
 import org.cyclops.everlastingabilities.ability.AbilityTypes;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -138,8 +139,6 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
-
-        AbilityTypes.load();
 
         getCapabilityConstructorRegistry().registerInheritableEntity(EntityPlayer.class, new SimpleCapabilityConstructor<IMutableAbilityStore, EntityPlayer>() {
             @Nullable
@@ -245,6 +244,37 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
         configHandler.add(new ItemAbilityTotemConfig());
         configHandler.add(new ItemAbilityBottleConfig());
+
+        configHandler.add(new AbilitySpeedConfig());
+        configHandler.add(new AbilityHasteConfig());
+        configHandler.add(new AbilityStrengthConfig());
+        configHandler.add(new AbilityJumpBoostConfig());
+        configHandler.add(new AbilityRegenerationConfig());
+        configHandler.add(new AbilityResistanceConfig());
+        configHandler.add(new AbilityFireResistanceConfig());
+        configHandler.add(new AbilityWaterBreathingConfig());
+        configHandler.add(new AbilityInvisibilityConfig());
+        configHandler.add(new AbilityNightVisionConfig());
+        configHandler.add(new AbilityAbsorbtionConfig());
+        configHandler.add(new AbilitySaturationConfig());
+        configHandler.add(new AbilityLuckConfig());
+        configHandler.add(new AbilitySlownessConfig());
+        configHandler.add(new AbilityMiningFatigueConfig());
+        configHandler.add(new AbilityNauseaConfig());
+        configHandler.add(new AbilityBlindnessConfig());
+        configHandler.add(new AbilityHungerConfig());
+        configHandler.add(new AbilityWeaknessConfig());
+        configHandler.add(new AbilityPoisonConfig());
+        configHandler.add(new AbilityWitherConfig());
+        configHandler.add(new AbilityGlowingConfig());
+        configHandler.add(new AbilityLevitationConfig());
+        configHandler.add(new AbilityUnluckConfig());
+        configHandler.add(new AbilityFlightConfig());
+        configHandler.add(new AbilityStepAssistConfig());
+        configHandler.add(new AbilityFertilityConfig());
+        configHandler.add(new AbilityBonemealerConfig());
+        configHandler.add(new AbilityPowerStareConfig());
+        configHandler.add(new AbilityMagnetizeConfig());
     }
 
     @Override
