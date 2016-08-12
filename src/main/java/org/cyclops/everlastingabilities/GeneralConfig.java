@@ -75,7 +75,7 @@ public class GeneralConfig extends DummyConfig {
      * 1/x chance for mobs to have abilities.
      */
     @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "1/x chance for mobs to have abilities", isCommandable = true)
-    public static int mobAbilityChance = 10;
+    public static int mobAbilityChance = 50;
 
     /**
      * If the magnetize ability should move xp.
