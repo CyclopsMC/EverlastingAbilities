@@ -5,8 +5,8 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
-import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.ability.AbilityTypes;
+import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
@@ -54,15 +54,19 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
         return EnumRarity.values()[maxRarity];
     }
 
+    public ItemStack getTotem(Ability ability) {
+        ItemStack itemStack = new ItemStack(this);
+        IMutableAbilityStore mutableAbilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+        mutableAbilityStore.addAbility(ability, true);
+        return itemStack;
+    }
+
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
         for (IAbilityType abilityType : AbilityTypes.REGISTRY.getAbilityTypes()) {
             for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
                 Ability ability = new Ability(abilityType, level);
-                ItemStack itemStack = new ItemStack(itemIn);
-                IMutableAbilityStore mutableAbilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-                mutableAbilityStore.addAbility(ability, true);
-                subItems.add(itemStack);
+                subItems.add(getTotem(ability));
             }
         }
     }

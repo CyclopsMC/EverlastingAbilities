@@ -47,9 +47,9 @@ import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructo
 import org.cyclops.cyclopscore.network.packet.SendPlayerCapabilitiesPacket;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.ability.config.*;
 import org.cyclops.everlastingabilities.ability.AbilityTypeRegistry;
 import org.cyclops.everlastingabilities.ability.AbilityTypes;
+import org.cyclops.everlastingabilities.ability.config.*;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.IAbilityTypeRegistry;
@@ -67,6 +67,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * The main mod class of this mod.
@@ -106,7 +107,24 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
     @Override
     protected RecipeHandler constructRecipeHandler() {
-        return new RecipeHandler(this, "shaped.xml");
+        return new RecipeHandler(this, "shaped.xml") {
+            @Override
+            protected void loadPredefineds(Map<String, ItemStack> predefinedItems, Set<String> predefinedValues) {
+                super.loadPredefineds(predefinedItems, predefinedValues);
+
+                for (IAbilityType abilityType : AbilityTypes.REGISTRY.getAbilityTypes()) {
+                    for (int level = 0; level < abilityType.getMaxLevel(); level++) {
+                        Ability ability = new Ability(abilityType, level);
+                        String name = abilityType.getUnlocalizedName();
+                        String[] split = name.split("\\.");
+                        name = split[split.length - 2];
+                        String id = Reference.MOD_ID + ":" + "abilityTotem_" + name + "_" + level;
+                        predefinedItems.put(id, ItemAbilityTotem.getInstance().getTotem(ability));
+                    }
+                }
+
+            }
+        };
     }
 
     @Override
