@@ -74,7 +74,7 @@ public class GeneralConfig extends DummyConfig {
     /**
      * 1/x chance for mobs to have abilities.
      */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "1/x chance for mobs to have abilities", isCommandable = true)
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "1/x chance for mobs to have abilities.", isCommandable = true)
     public static int mobAbilityChance = 50;
 
     /**
@@ -82,6 +82,12 @@ public class GeneralConfig extends DummyConfig {
      */
     @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "If the magnetize ability should move xp.", isCommandable = true)
     public static boolean magnetizeMoveXp = true;
+
+    /**
+     * The multiplier for ability XP requirement.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "The multiplier for ability XP requirement", isCommandable = true)
+    public static int abilityXpMultiplier = 10;
 
     /**
      * The type of this config.
