@@ -35,6 +35,7 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
      */
     protected ItemGuiAbilityContainer(ExtendedConfig eConfig) {
         super(eConfig);
+        setMaxStackSize(1);
     }
 
     @Override
