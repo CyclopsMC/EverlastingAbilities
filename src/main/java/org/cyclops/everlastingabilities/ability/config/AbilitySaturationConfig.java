@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -25,7 +26,17 @@ public class AbilitySaturationConfig extends AbilityConfig {
                 true,
                 "saturation",
                 "Reduce hunger",
-                new AbilityTypePotionEffectSelf("saturation", EnumRarity.RARE, 3, 30, MobEffects.SATURATION)
+                new AbilityTypePotionEffectSelf("saturation", EnumRarity.RARE, 3, 30, MobEffects.SATURATION) {
+                    @Override
+                    protected int getDuration(int tickModulus) {
+                        return 1;
+                    }
+
+                    @Override
+                    protected int getTickModulus() {
+                        return MinecraftHelpers.SECOND_IN_TICKS * 5;
+                    }
+                }
         );
     }
 }

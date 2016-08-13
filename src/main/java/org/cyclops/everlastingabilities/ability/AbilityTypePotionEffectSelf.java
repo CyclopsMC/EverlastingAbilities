@@ -21,15 +21,19 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
         this.potion = potion;
     }
 
-    protected int getDurationMultiplier() {
-        return 3;
+    protected int getDuration(int tickModulus) {
+        return tickModulus * 3;
+    }
+
+    protected int getTickModulus() {
+        return TICK_MODULUS;
     }
 
     @Override
     public void onTick(EntityPlayer player, int level) {
-        if (player.worldObj.getWorldTime() % TICK_MODULUS == 0) {
+        if (player.worldObj.getWorldTime() % getTickModulus() == 0) {
             player.addPotionEffect(
-                    new PotionEffect(potion, TICK_MODULUS * getDurationMultiplier(), level - 1, true, false));
+                    new PotionEffect(potion, getDuration(getTickModulus()), level - 1, true, false));
         }
     }
 }

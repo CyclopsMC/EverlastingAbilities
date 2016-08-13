@@ -27,8 +27,8 @@ public class AbilityNightVisionConfig extends AbilityConfig {
                 "See in the dark",
                 new AbilityTypePotionEffectSelf("night_vision", EnumRarity.UNCOMMON, 1, 15, MobEffects.NIGHT_VISION) {
                     @Override
-                    protected int getDurationMultiplier() {
-                        return 27;
+                    protected int getDuration(int tickModulus) {
+                        return tickModulus * 27;
                     }
                 }
         );
