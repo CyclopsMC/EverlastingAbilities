@@ -1,0 +1,14 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.7.3 or higher.
+
+Additions:
+* Add Ability Totems references for XML recipe system, Closes #3. You can now refer to things like 'everlastingabilities:abilityTotem_speed_3'
+* Make abilities disableable, Closes #2
+
+Changes:
+* Nerf saturation, Closes #6. You won't be invincible anymore with just Saturation I
+* Add xp config multiplier for abilities. By default, all abilities cost 10x more xp.
+* Lower mob totem drop chance from 1/10 to 1/50 (Requires a config reset)
+
+Fixes:
+* Set max stacksize of bottles and totems to 1, Closes #4
