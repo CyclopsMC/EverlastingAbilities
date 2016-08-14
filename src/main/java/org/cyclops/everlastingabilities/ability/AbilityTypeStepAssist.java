@@ -3,6 +3,7 @@ package org.cyclops.everlastingabilities.ability;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import org.cyclops.everlastingabilities.Reference;
+import org.cyclops.everlastingabilities.ability.config.AbilityStepAssistConfig;
 
 /**
  * Ability type for flight.
@@ -26,7 +27,9 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
         if (oldLevel > 0 && newLevel == 0) {
             float stepHeight = 0.5F;
             if(player.getEntityData().hasKey(PLAYER_NBT_KEY)) {
-                stepHeight = player.getEntityData().getFloat(PLAYER_NBT_KEY);
+                if (!AbilityStepAssistConfig.forceDefaultStepHeight) {
+                    stepHeight = player.getEntityData().getFloat(PLAYER_NBT_KEY);
+                }
                 player.getEntityData().removeTag(PLAYER_NBT_KEY);
             }
             player.stepHeight = stepHeight;
