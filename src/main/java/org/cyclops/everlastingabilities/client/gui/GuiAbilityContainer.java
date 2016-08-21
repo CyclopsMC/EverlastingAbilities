@@ -239,7 +239,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         float f1 = (float)(Minecraft.getSystemTime() % 4873L) / 4873.0F / 8.0F;
         GlStateManager.translate(-f1, 0.0F, 0.0F);
         GlStateManager.rotate(10.0F, 0.0F, 0.0F, 1.0F);
-        float rotation = Minecraft.getSystemTime() % 360.0F;
+        float rotation = ((float) (Minecraft.getSystemTime() / 100 % 3600)) / 10F;
         GlStateManager.rotate(rotation, 1.0F, 0.5F, 1.0F);
         drawTexturedModalRectColor(x, y, 0, 0, width, height, r, g, b, 255);
         GlStateManager.popMatrix();
