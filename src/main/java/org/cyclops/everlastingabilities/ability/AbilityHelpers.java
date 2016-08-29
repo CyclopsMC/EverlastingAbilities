@@ -8,6 +8,7 @@ import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.helper.obfuscation.ObfuscationHelpers;
 import org.cyclops.cyclopscore.network.packet.SendPlayerCapabilitiesPacket;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
@@ -71,6 +72,13 @@ public class AbilityHelpers {
         IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
         int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
                 ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
+
+        // Check max ability count
+        if (GeneralConfig.maxPlayerAbilities >= 0 && oldLevel == 0
+                && GeneralConfig.maxPlayerAbilities <= abilityStore.getAbilities().size()) {
+            return null;
+        }
+
         Ability result = abilityStore.addAbility(ability, doAdd);
         int currentXp = player.experienceTotal;
         if (result != null && modifyXp && getExperience(result) > currentXp) {

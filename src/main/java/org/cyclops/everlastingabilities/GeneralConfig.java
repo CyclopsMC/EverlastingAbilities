@@ -96,6 +96,12 @@ public class GeneralConfig extends DummyConfig {
     public static boolean showPlayerParticles = true;
 
     /**
+     * The maximum amount of abilities a player can have, -1 is infinite.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "The maximum amount of abilities a player can have, -1 is infinite.", isCommandable = true)
+    public static int maxPlayerAbilities = -1;
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;
