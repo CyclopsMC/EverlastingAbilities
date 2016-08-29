@@ -34,7 +34,7 @@ public class AbilitySaturationConfig extends AbilityConfig {
 
                     @Override
                     protected int getTickModulus() {
-                        return MinecraftHelpers.SECOND_IN_TICKS * 5;
+                        return MinecraftHelpers.SECOND_IN_TICKS * 10;
                     }
                 }
         );
