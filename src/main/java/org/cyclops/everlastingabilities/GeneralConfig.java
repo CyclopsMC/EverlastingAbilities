@@ -90,6 +90,12 @@ public class GeneralConfig extends DummyConfig {
     public static int abilityXpMultiplier = 10;
 
     /**
+     * If players should have particle effects for the abilities they carry.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "If players should have particle effects for the abilities they carry.", isCommandable = true)
+    public static boolean showPlayerParticles = true;
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;

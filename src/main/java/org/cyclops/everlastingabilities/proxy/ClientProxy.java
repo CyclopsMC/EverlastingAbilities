@@ -3,15 +3,16 @@ package org.cyclops.everlastingabilities.proxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.IAnimals;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.particle.ParticleBlur;
-import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.init.ModBase;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponent;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
@@ -39,7 +40,7 @@ public class ClientProxy extends ClientProxyComponent {
 	@SubscribeEvent
 	public void onRenderLiving(RenderLivingEvent.Post event) {
 		EntityLivingBase entity = event.getEntity();
-		if (entity instanceof IAnimals && entity.worldObj.getTotalWorldTime() % 10 == 0
+		if ((entity instanceof IAnimals || (GeneralConfig.showPlayerParticles && entity instanceof EntityPlayer)) && entity.worldObj.getTotalWorldTime() % 10 == 0
 				&& entity.hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)) {
 			IMutableAbilityStore abilityStore = entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
 			Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
