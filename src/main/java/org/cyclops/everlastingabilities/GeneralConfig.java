@@ -102,6 +102,12 @@ public class GeneralConfig extends DummyConfig {
     public static int maxPlayerAbilities = -1;
 
     /**
+     * The amount of exhaustion that should by applied to the player per active ability per second.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "The amount of exhaustion that should by applied to the player per active ability per second.", isCommandable = true)
+    public static double exhaustionPerAbilityTick = 0.01;
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;

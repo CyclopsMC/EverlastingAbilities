@@ -7,6 +7,8 @@ import net.minecraft.item.EnumRarity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.IAbilityTypeRegistry;
@@ -69,6 +71,9 @@ public class AbilityTypeRegistry implements IAbilityTypeRegistry {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             IAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
             for (Ability ability : abilityStore.getAbilities()) {
+                if (event.getEntity().worldObj.getTotalWorldTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
+                    player.addExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
+                }
                 ability.getAbilityType().onTick(player, ability.getLevel());
             }
         }
