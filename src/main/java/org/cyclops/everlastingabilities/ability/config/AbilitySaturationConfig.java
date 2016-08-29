@@ -26,7 +26,7 @@ public class AbilitySaturationConfig extends AbilityConfig {
                 true,
                 "saturation",
                 "Reduce hunger",
-                new AbilityTypePotionEffectSelf("saturation", EnumRarity.RARE, 3, 30, MobEffects.SATURATION) {
+                new AbilityTypePotionEffectSelf("saturation", EnumRarity.EPIC, 3, 30, MobEffects.SATURATION) {
                     @Override
                     protected int getDuration(int tickModulus) {
                         return 1;
