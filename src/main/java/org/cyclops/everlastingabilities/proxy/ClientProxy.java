@@ -13,6 +13,8 @@ import org.cyclops.cyclopscore.init.ModBase;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponent;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
+import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
+import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
 import java.util.Random;
 
@@ -38,13 +40,12 @@ public class ClientProxy extends ClientProxyComponent {
 	public void onRenderLiving(RenderLivingEvent.Post event) {
 		EntityLivingBase entity = event.getEntity();
 		if (entity instanceof IAnimals && entity.worldObj.getTotalWorldTime() % 10 == 0
-				&& entity.getDataManager().get(EverlastingAbilities.ENTITY_DATA_ABILITY_RARITY) >= 0) {
-			int rarity = entity.getDataManager().get(EverlastingAbilities.ENTITY_DATA_ABILITY_RARITY);
-			int color = AbilityHelpers.RARITY_COLORS[rarity];
-			Triple<Float, Float, Float> colorObj = Helpers.intToRGB(color);
-			float r = colorObj.getLeft();
-			float g = colorObj.getMiddle();
-			float b = colorObj.getRight();
+				&& entity.hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)) {
+			IMutableAbilityStore abilityStore = entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+			Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
+			float r = abilityColors.getLeft() / 255F;
+			float g = abilityColors.getMiddle() / 255F;
+			float b = abilityColors.getRight() / 255F;
 
 			Random rand = entity.worldObj.rand;
 			float scale = 0.5F - rand.nextFloat() * 0.3F;

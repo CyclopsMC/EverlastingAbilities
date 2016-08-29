@@ -62,6 +62,7 @@ import org.cyclops.everlastingabilities.item.ItemAbilityBottle;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
+import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -97,12 +98,9 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @Instance(value = Reference.MOD_ID)
     public static EverlastingAbilities _instance;
 
-    // TODO: this results in error sometimes... (hardcoded id for now...)
-    //public static final DataParameter<Integer> ENTITY_DATA_ABILITY_RARITY = EntityDataManager.<Integer>createKey(Entity.class, DataSerializers.VARINT);
-    public static final DataParameter<Integer> ENTITY_DATA_ABILITY_RARITY = new DataParameter<Integer>(248, DataSerializers.VARINT);
-
     public EverlastingAbilities() {
         super(Reference.MOD_ID, Reference.MOD_NAME, Reference.MOD_VERSION);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -143,7 +141,6 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @EventHandler
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(this);
         getRegistryManager().addRegistry(IAbilityTypeRegistry.class, AbilityTypeRegistry.getInstance());
 
         super.preInit(event);
@@ -177,7 +174,6 @@ public class EverlastingAbilities extends ModBaseVersionable {
                 if (host instanceof Entity) {
                     Entity entity = (Entity) host;
                     IMutableAbilityStore store = new DefaultMutableAbilityStore();
-                    entity.getDataManager().register(ENTITY_DATA_ABILITY_RARITY, -1);
                     if (!MinecraftHelpers.isClientSide() && host instanceof EntityLivingBase) {
                         if (GeneralConfig.mobAbilityChance > 0
                                 && entity.getEntityId() % GeneralConfig.mobAbilityChance == 0) {
@@ -187,7 +183,6 @@ public class EverlastingAbilities extends ModBaseVersionable {
                             IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity);
                             if (abilityType != null) {
                                 store.addAbility(new Ability(abilityType, 1), true);
-                                entity.getDataManager().set(ENTITY_DATA_ABILITY_RARITY, abilityType.getRarity().ordinal());
                             }
                         }
                     }
@@ -323,6 +318,8 @@ public class EverlastingAbilities extends ModBaseVersionable {
             EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
             getPacketHandler().sendToPlayer(
                     new SendPlayerCapabilitiesPacket(ObfuscationHelpers.getEntityCapabilities(player)), player);
+        } else if (MinecraftHelpers.isClientSide() && event.getEntity().hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)) {
+            getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUniqueID().toString()));
         }
     }
 
