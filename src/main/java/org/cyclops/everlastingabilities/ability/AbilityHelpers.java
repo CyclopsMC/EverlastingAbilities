@@ -22,7 +22,7 @@ import java.util.Random;
 
 /**
  * General ability helpers.
- * XP-related methods inspired by Ender IO's XpUtil for compatibility
+ * XP-related methods inspired by Ender IO's XpUtil and the Minecraft Wiki
  * @author rubensworks
  */
 public class AbilityHelpers {
@@ -35,13 +35,14 @@ public class AbilityHelpers {
     };
 
     public static int getExperienceForLevel(int level) {
-        if (level == 0) { return 0; }
-        if (level > 0 && level < 16) {
-            return level * 17;
-        } else if (level > 15 && level < 31) {
-            return (int)(1.5 * Math.pow(level, 2) - 29.5 * level + 360);
+        if (level == 0) {
+            return 0;
+        } else if (level < 16) {
+            return (int) (Math.pow(level, 2) + 6 * level);
+        } else if (level < 31) {
+            return (int) (2.5 * Math.pow(level, 2) - 40.5 * level + 360);
         } else {
-            return (int)(3.5 * Math.pow(level, 2) - 151.5 * level + 2220);
+            return (int) (4.5 * Math.pow(level, 2) - 162.5 * level + 2220);
         }
     }
 
