@@ -1,0 +1,18 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.7.7 or higher.
+
+Additions:
+* Add option to set maximum amount of player abilities, Closes #10
+* Render particle effects on players with abilities, this is disable by default.
+* Add config option to force a default step height
+
+Changes:
+* Only apply saturation effect every 10 seconds at level 1
+* Drain hunger from active abilities, Closes #11
+* Mark saturation as an epic ability
+* Add oredict support for the Ability Bottle recipe
+
+Fixes:
+* Fix incorrect xp level calculation when removing abilities, Closes #12
+* Fix mobs with particles not always dropping totems, Closes #7
+* Improve fancy background animation. Apparently, Windows users had glitchy backgrounds
