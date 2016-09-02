@@ -27,7 +27,7 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
     }
 
     protected int getDurationMultiplier() {
-        return 3;
+        return 6;
     }
 
     @Override

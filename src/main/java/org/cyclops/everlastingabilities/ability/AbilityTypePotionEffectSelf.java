@@ -22,7 +22,7 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
     }
 
     protected int getDuration(int tickModulus) {
-        return tickModulus * 3;
+        return tickModulus * 6;
     }
 
     protected int getTickModulus() {
