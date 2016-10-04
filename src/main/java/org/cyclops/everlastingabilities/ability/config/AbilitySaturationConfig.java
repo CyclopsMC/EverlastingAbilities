@@ -28,12 +28,12 @@ public class AbilitySaturationConfig extends AbilityConfig {
                 "Reduce hunger",
                 new AbilityTypePotionEffectSelf("saturation", EnumRarity.EPIC, 3, 30, MobEffects.SATURATION) {
                     @Override
-                    protected int getDuration(int tickModulus) {
+                    protected int getDuration(int tickModulus, int level) {
                         return 1;
                     }
 
                     @Override
-                    protected int getTickModulus() {
+                    protected int getTickModulus(int level) {
                         return MinecraftHelpers.SECOND_IN_TICKS * 10;
                     }
                 }
