@@ -20,7 +20,7 @@ public class AbilityTypeBonemealer extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS;
 
-    public AbilityTypeBonemealer(String id, EnumRarity rarity, int maxLevel, int baseXpPerLevel) {
+    public AbilityTypeBonemealer(String id, int rarity, int maxLevel, int baseXpPerLevel) {
         super(id, rarity, maxLevel, baseXpPerLevel);
     }
 

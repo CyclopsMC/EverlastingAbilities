@@ -24,6 +24,21 @@ public class AbilityStepAssistConfig extends AbilityConfig {
      */
     @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "Forces the default step height value to 0.5 when this ability is deactivated.", isCommandable = true)
     public static boolean forceDefaultStepHeight = true;
+    /**
+     * Rarity of this ability.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "Rarity of this ability.", requiresMcRestart = true)
+    public static int rarity = EnumRarity.COMMON.ordinal();
+    /**
+     * The maximum ability level.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The maximum ability level.", requiresMcRestart = true)
+    public static int maxLevel = 3;
+    /**
+     * The xp required per level.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The xp required per level.", requiresMcRestart = true)
+    public static int xpPerLevel = 25;
 
     /**
      * Make a new instance.
@@ -38,6 +53,6 @@ public class AbilityStepAssistConfig extends AbilityConfig {
 
     @Override
     protected IConfigurable initSubInstance() {
-        return new AbilityTypeStepAssist(getNamedId(), EnumRarity.COMMON, 3, 25);
+        return new AbilityTypeStepAssist(getNamedId(), rarity, maxLevel, xpPerLevel);
     }
 }

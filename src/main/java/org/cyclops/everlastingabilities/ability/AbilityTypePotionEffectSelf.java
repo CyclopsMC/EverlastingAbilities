@@ -1,7 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
@@ -16,7 +15,7 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
 
     private final Potion potion;
 
-    public AbilityTypePotionEffectSelf(String id, EnumRarity rarity, int maxLevel, int baseXpPerLevel, Potion potion) {
+    public AbilityTypePotionEffectSelf(String id, int rarity, int maxLevel, int baseXpPerLevel, Potion potion) {
         super(id, rarity, maxLevel, baseXpPerLevel);
         this.potion = potion;
     }

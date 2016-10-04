@@ -202,4 +202,8 @@ public class AbilityHelpers {
         return Triple.of(r / count, g / count, b / count);
     }
 
+    public static EnumRarity getSafeRarity(int rarity) {
+        return rarity < 0 ? EnumRarity.COMMON : (rarity >= EnumRarity.values().length ? EnumRarity.EPIC : EnumRarity.values()[rarity]);
+    }
+
 }

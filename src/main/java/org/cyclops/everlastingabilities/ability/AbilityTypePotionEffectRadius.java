@@ -2,7 +2,6 @@ package org.cyclops.everlastingabilities.ability;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EntitySelectors;
@@ -21,7 +20,7 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
 
     private final Potion potion;
 
-    public AbilityTypePotionEffectRadius(String id, EnumRarity rarity, int maxLevel, int baseXpPerLevel, Potion potion) {
+    public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel, Potion potion) {
         super(id, rarity, maxLevel, baseXpPerLevel);
         this.potion = potion;
     }

@@ -23,7 +23,7 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 20;
 
-    public AbilityTypeMagnetize(String id, EnumRarity rarity, int maxLevel, int baseXpPerLevel) {
+    public AbilityTypeMagnetize(String id, int rarity, int maxLevel, int baseXpPerLevel) {
         super(id, rarity, maxLevel, baseXpPerLevel);
     }
 

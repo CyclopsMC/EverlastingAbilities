@@ -2,7 +2,6 @@ package org.cyclops.everlastingabilities.ability;
 
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.world.World;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
@@ -17,7 +16,7 @@ public class AbilityTypeFertility extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS;
 
-    public AbilityTypeFertility(String id, EnumRarity rarity, int maxLevel, int baseXpPerLevel) {
+    public AbilityTypeFertility(String id, int rarity, int maxLevel, int baseXpPerLevel) {
         super(id, rarity, maxLevel, baseXpPerLevel);
     }
 

@@ -1,7 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import org.cyclops.everlastingabilities.Reference;
 
 /**
@@ -12,7 +11,7 @@ public class AbilityTypeFlight extends AbilityTypeDefault {
 
     private static final String PLAYER_NBT_KEY = Reference.MOD_ID + ":" + "lastFlight";
 
-    public AbilityTypeFlight(String id, EnumRarity rarity, int maxLevel, int baseXpPerLevel) {
+    public AbilityTypeFlight(String id, int rarity, int maxLevel, int baseXpPerLevel) {
         super(id, rarity, maxLevel, baseXpPerLevel);
     }
 

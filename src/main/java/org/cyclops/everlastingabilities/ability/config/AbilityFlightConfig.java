@@ -1,6 +1,8 @@
 package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.ConfigurableProperty;
+import org.cyclops.cyclopscore.config.ConfigurableTypeCategory;
 import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypeFlight;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
@@ -11,6 +13,22 @@ import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig
  *
  */
 public class AbilityFlightConfig extends AbilityConfig {
+
+    /**
+     * Rarity of this ability.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "Rarity of this ability.", requiresMcRestart = true)
+    public static int rarity = EnumRarity.EPIC.ordinal();
+    /**
+     * The maximum ability level.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The maximum ability level.", requiresMcRestart = true)
+    public static int maxLevel = 1;
+    /**
+     * The xp required per level.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The xp required per level.", requiresMcRestart = true)
+    public static int xpPerLevel = 150;
 
     /**
      * The unique instance.
@@ -30,6 +48,6 @@ public class AbilityFlightConfig extends AbilityConfig {
 
     @Override
     protected IConfigurable initSubInstance() {
-        return new AbilityTypeFlight(getNamedId(), EnumRarity.EPIC, 1, 150);
+        return new AbilityTypeFlight(getNamedId(), rarity, maxLevel, xpPerLevel);
     }
 }

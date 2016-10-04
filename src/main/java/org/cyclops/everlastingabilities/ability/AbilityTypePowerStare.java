@@ -21,7 +21,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 4;
 
-    public AbilityTypePowerStare(String id, EnumRarity rarity, int maxLevel, int baseXpPerLevel) {
+    public AbilityTypePowerStare(String id, int rarity, int maxLevel, int baseXpPerLevel) {
         super(id, rarity, maxLevel, baseXpPerLevel);
     }
 

@@ -18,6 +18,10 @@ public class AbilityTypeDefault extends AbilityType implements IConfigurable {
         super(PREFIX + id + ".name", PREFIX + id + ".info", rarity, maxLevel, baseXpPerLevel * GeneralConfig.abilityXpMultiplier);
     }
 
+    public AbilityTypeDefault(String id, int rarity, int maxLevel, int baseXpPerLevel) {
+        this(id, AbilityHelpers.getSafeRarity(rarity), maxLevel, baseXpPerLevel);
+    }
+
     @Override
     public ExtendedConfig<?> getConfig() {
         return null;
