@@ -38,6 +38,14 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     public ContainerAbilityContainer(EntityPlayer player, int itemIndex) {
         super(player.inventory, (ItemGuiAbilityContainer) InventoryHelpers.getItemFromIndex(player, itemIndex).getItem(), itemIndex);
         addInventory(player.inventory, 0, 8, 195, 1, 9);
+
+        // If level is not consistent with total experience count, fix it.
+        // This can be caused by vanilla's xp command that adds levels but doesn't change the total xp count.
+        // If other mods mess things up, this will resolve it as well.
+        int level = AbilityHelpers.getLevelForExperience(player.experienceTotal);
+        if (player.experienceLevel != level) {
+            player.experienceTotal = AbilityHelpers.getExperienceForLevel(player.experienceLevel);
+        }
     }
 
     @Override
