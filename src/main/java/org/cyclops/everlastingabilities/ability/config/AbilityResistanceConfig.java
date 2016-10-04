@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -24,8 +25,12 @@ public class AbilityResistanceConfig extends AbilityConfig {
         super(
                 true,
                 "resistance",
-                "Take less damage from attacks",
-                new AbilityTypePotionEffectSelf("resistance", EnumRarity.RARE, 3, 50, MobEffects.RESISTANCE)
+                "Take less damage from attacks"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypePotionEffectSelf(getNamedId(), EnumRarity.RARE, 3, 50, MobEffects.RESISTANCE);
     }
 }

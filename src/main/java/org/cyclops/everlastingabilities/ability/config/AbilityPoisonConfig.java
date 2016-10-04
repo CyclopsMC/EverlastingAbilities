@@ -2,8 +2,8 @@ package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectRadius;
-import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
 /**
@@ -25,8 +25,12 @@ public class AbilityPoisonConfig extends AbilityConfig {
         super(
                 true,
                 "poison",
-                "Entities in the area become poisoned",
-                new AbilityTypePotionEffectRadius("poison", EnumRarity.EPIC, 3, 100, MobEffects.POISON)
+                "Entities in the area become poisoned"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypePotionEffectRadius(getNamedId(), EnumRarity.EPIC, 3, 100, MobEffects.POISON);
     }
 }

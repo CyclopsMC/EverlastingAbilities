@@ -2,8 +2,8 @@ package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectRadius;
-import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
 /**
@@ -25,8 +25,12 @@ public class AbilityWitherConfig extends AbilityConfig {
         super(
                 true,
                 "wither",
-                "Entities in the area become withered",
-                new AbilityTypePotionEffectRadius("wither", EnumRarity.EPIC, 3, 125, MobEffects.WITHER)
+                "Entities in the area become withered"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypePotionEffectRadius(getNamedId(), EnumRarity.EPIC, 3, 125, MobEffects.WITHER);
     }
 }

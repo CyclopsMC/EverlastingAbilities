@@ -1,8 +1,7 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
-import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypePowerStare;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -25,8 +24,12 @@ public class AbilityPowerStareConfig extends AbilityConfig {
         super(
                 true,
                 "power_stare",
-                "Push away entities you're looking at",
-                new AbilityTypePowerStare("power_stare", EnumRarity.UNCOMMON, 5, 50)
+                "Push away entities you're looking at"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypePowerStare(getNamedId(), EnumRarity.UNCOMMON, 5, 50);
     }
 }

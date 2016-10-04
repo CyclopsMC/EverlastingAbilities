@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypeFlight;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -23,8 +24,12 @@ public class AbilityFlightConfig extends AbilityConfig {
         super(
                 true,
                 "flight",
-                "Allows you to fly",
-                new AbilityTypeFlight("flight", EnumRarity.EPIC, 1, 150)
+                "Allows you to fly"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypeFlight(getNamedId(), EnumRarity.EPIC, 1, 150);
     }
 }

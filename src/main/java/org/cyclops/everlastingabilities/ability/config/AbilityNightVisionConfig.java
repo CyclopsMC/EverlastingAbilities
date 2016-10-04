@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -24,13 +25,17 @@ public class AbilityNightVisionConfig extends AbilityConfig {
         super(
                 true,
                 "night_vision",
-                "See in the dark",
-                new AbilityTypePotionEffectSelf("night_vision", EnumRarity.UNCOMMON, 1, 15, MobEffects.NIGHT_VISION) {
-                    @Override
-                    protected int getDuration(int tickModulus, int level) {
-                        return tickModulus * 27;
-                    }
-                }
+                "See in the dark"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypePotionEffectSelf(getNamedId(), EnumRarity.UNCOMMON, 1, 15, MobEffects.NIGHT_VISION) {
+            @Override
+            protected int getDuration(int tickModulus, int level) {
+                return tickModulus * 27;
+            }
+        };
     }
 }

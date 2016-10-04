@@ -2,8 +2,8 @@ package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectRadius;
-import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
 /**
@@ -25,8 +25,12 @@ public class AbilityGlowingConfig extends AbilityConfig {
         super(
                 true,
                 "glowing",
-                "Entities in the area start glowing",
-                new AbilityTypePotionEffectRadius("glowing", EnumRarity.UNCOMMON, 3, 50, MobEffects.GLOWING)
+                "Entities in the area start glowing"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypePotionEffectRadius(getNamedId(), EnumRarity.UNCOMMON, 3, 50, MobEffects.GLOWING);
     }
 }

@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypeFertility;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
@@ -25,8 +26,12 @@ public class AbilityFertilityConfig extends AbilityConfig {
         super(
                 true,
                 "fertility",
-                "Animals in the area become fertile",
-                new AbilityTypeFertility("fertility", EnumRarity.UNCOMMON, 3, 30)
+                "Animals in the area become fertile"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypeFertility(getNamedId(), EnumRarity.UNCOMMON, 3, 30);
     }
 }

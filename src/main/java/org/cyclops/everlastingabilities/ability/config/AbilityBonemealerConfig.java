@@ -1,9 +1,8 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypeBonemealer;
-import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
 /**
@@ -25,8 +24,12 @@ public class AbilityBonemealerConfig extends AbilityConfig {
         super(
                 true,
                 "bonemealer",
-                "Bonemeal the area",
-                new AbilityTypeBonemealer("bonemealer", EnumRarity.UNCOMMON, 5, 30)
+                "Bonemeal the area"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypeBonemealer("bonemealer", EnumRarity.UNCOMMON, 5, 30);
     }
 }

@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -24,8 +25,12 @@ public class AbilityWaterBreathingConfig extends AbilityConfig {
         super(
                 true,
                 "water_breathing",
-                "Breathe underwater",
-                new AbilityTypePotionEffectSelf("water_breathing", EnumRarity.COMMON, 1, 10, MobEffects.WATER_BREATHING)
+                "Breathe underwater"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypePotionEffectSelf(getNamedId(), EnumRarity.COMMON, 1, 10, MobEffects.WATER_BREATHING);
     }
 }

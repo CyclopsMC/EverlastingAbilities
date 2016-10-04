@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypeMagnetize;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -23,8 +24,12 @@ public class AbilityMagnetizeConfig extends AbilityConfig {
         super(
                 true,
                 "magnetize",
-                "Attract nearby items",
-                new AbilityTypeMagnetize("magnetize", EnumRarity.UNCOMMON, 5, 20)
+                "Attract nearby items"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypeMagnetize(getNamedId(), EnumRarity.UNCOMMON, 5, 20);
     }
 }

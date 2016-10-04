@@ -2,8 +2,8 @@ package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectRadius;
-import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
 /**
@@ -25,8 +25,12 @@ public class AbilityMiningFatigueConfig extends AbilityConfig {
         super(
                 true,
                 "mining_fatigue",
-                "Entities in the area mine slower",
-                new AbilityTypePotionEffectRadius("mining_fatigue", EnumRarity.UNCOMMON, 3, 40, MobEffects.MINING_FATIGUE)
+                "Entities in the area mine slower"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypePotionEffectRadius(getNamedId(), EnumRarity.UNCOMMON, 3, 40, MobEffects.MINING_FATIGUE);
     }
 }

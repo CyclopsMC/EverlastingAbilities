@@ -2,8 +2,8 @@ package org.cyclops.everlastingabilities.ability.config;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectRadius;
-import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
 /**
@@ -25,8 +25,12 @@ public class AbilityWeaknessConfig extends AbilityConfig {
         super(
                 true,
                 "weakness",
-                "Entities in the area become weaker",
-                new AbilityTypePotionEffectRadius("weakness", EnumRarity.RARE, 3, 80, MobEffects.WEAKNESS)
+                "Entities in the area become weaker"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypePotionEffectRadius(getNamedId(), EnumRarity.RARE, 3, 80, MobEffects.WEAKNESS);
     }
 }

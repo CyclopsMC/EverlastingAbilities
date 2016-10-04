@@ -3,6 +3,7 @@ package org.cyclops.everlastingabilities.ability.config;
 import net.minecraft.item.EnumRarity;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.ConfigurableTypeCategory;
+import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypeStepAssist;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -31,8 +32,12 @@ public class AbilityStepAssistConfig extends AbilityConfig {
         super(
                 true,
                 "step_assist",
-                "Automatically step up a certain number of blocks depending on the level",
-                new AbilityTypeStepAssist("step_assist", EnumRarity.COMMON, 3, 25)
+                "Automatically step up a certain number of blocks depending on the level"
         );
+    }
+
+    @Override
+    protected IConfigurable initSubInstance() {
+        return new AbilityTypeStepAssist(getNamedId(), EnumRarity.COMMON, 3, 25);
     }
 }
