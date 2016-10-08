@@ -1,0 +1,14 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.8.0 or higher.
+
+Additions:
+* Add specific config options for all abilities, Closes #21. This adds rarity, maxLevel and xpPerLevel parameters for all abilities.
+
+Changes:
+* Update textures and logo, by NebulaDragon
+* Nerf absorbtion, Closes #20
+* Make potion effects last longer, Closes #14. To reduce the effects of latency in SMP
+
+Fixes:
+* Fix xp inconsistencies when adding xp levels using the vanilla command, Closes #17
+* Add safety for corrupted itemstacks while in inventory, Closes #18
