@@ -1,6 +1,6 @@
 ## EverlastingAbilities
 
-[![Build Status](https://travis-ci.org/CyclopsMC/EverlastingAbilities.svg?branch=master-1.8)](https://travis-ci.org/CyclopsMC/EverlastingAbilities)
+[![Build Status](https://travis-ci.org/CyclopsMC/EverlastingAbilities.svg?branch=master-1.9)](https://travis-ci.org/CyclopsMC/EverlastingAbilities)
 
 Discover, share and conquer abilities that stick.
 
