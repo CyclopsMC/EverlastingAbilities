@@ -110,14 +110,16 @@ public class EverlastingAbilities extends ModBaseVersionable {
             protected void loadPredefineds(Map<String, ItemStack> predefinedItems, Set<String> predefinedValues) {
                 super.loadPredefineds(predefinedItems, predefinedValues);
 
-                for (IAbilityType abilityType : AbilityTypes.REGISTRY.getAbilityTypes()) {
-                    for (int level = 0; level < abilityType.getMaxLevel(); level++) {
-                        Ability ability = new Ability(abilityType, level);
-                        String name = abilityType.getUnlocalizedName();
-                        String[] split = name.split("\\.");
-                        name = split[split.length - 2];
-                        String id = Reference.MOD_ID + ":" + "abilityTotem_" + name + "_" + level;
-                        predefinedItems.put(id, ItemAbilityTotem.getInstance().getTotem(ability));
+                if (ConfigHandler.isEnabled(ItemAbilityBottleConfig.class)) {
+                    for (IAbilityType abilityType : AbilityTypes.REGISTRY.getAbilityTypes()) {
+                        for (int level = 0; level < abilityType.getMaxLevel(); level++) {
+                            Ability ability = new Ability(abilityType, level);
+                            String name = abilityType.getUnlocalizedName();
+                            String[] split = name.split("\\.");
+                            name = split[split.length - 2];
+                            String id = Reference.MOD_ID + ":" + "abilityTotem_" + name + "_" + level;
+                            predefinedItems.put(id, ItemAbilityTotem.getInstance().getTotem(ability));
+                        }
                     }
                 }
 
@@ -326,7 +328,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
     private static final String NBT_TOTEM_SPAWNED = Reference.MOD_ID + ":totemSpawned";
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (GeneralConfig.totemMaximumSpawnRarity >= 0) {
+        if (GeneralConfig.totemMaximumSpawnRarity >= 0 && ConfigHandler.isEnabled(ItemAbilityBottleConfig.class)) {
             NBTTagCompound tag = event.player.getEntityData();
             if (!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {
                 tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
@@ -369,8 +371,12 @@ public class EverlastingAbilities extends ModBaseVersionable {
             EntityLivingBase entity = event.getEntityLiving();
             IMutableAbilityStore mutableAbilityStore = entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
 
-            ItemStack itemStack = new ItemStack(ItemAbilityTotem.getInstance());
-            IMutableAbilityStore itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+            ItemStack itemStack = null;
+            IMutableAbilityStore itemStackStore = null;
+            if (ConfigHandler.isEnabled(ItemAbilityTotemConfig.class)) {
+                itemStack = new ItemStack(ItemAbilityTotem.getInstance());
+                itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+            }
 
             Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
             for (Ability ability : abilities) {
@@ -379,7 +385,9 @@ public class EverlastingAbilities extends ModBaseVersionable {
                     Ability removed = mutableAbilityStore.removeAbility(toRemove, true);
                     if (removed != null) {
                         toDrop -= removed.getLevel();
-                        itemStackStore.addAbility(removed, true);
+                        if (itemStackStore != null) {
+                            itemStackStore.addAbility(removed, true);
+                        }
                         entity.addChatMessage(new TextComponentTranslation(L10NHelpers.localize("chat.everlastingabilities.playerLostAbility",
                                 entity.getName(),
                                 removed.getAbilityType().getRarity().rarityColor.toString() + TextFormatting.BOLD + L10NHelpers.localize(removed.getAbilityType().getUnlocalizedName()) + TextFormatting.RESET,
@@ -388,7 +396,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
                 }
             }
 
-            if (!itemStackStore.getAbilities().isEmpty()) {
+            if (itemStack != null && !itemStackStore.getAbilities().isEmpty()) {
                 ItemStackHelpers.spawnItemStack(entity.worldObj, entity.getPosition(), itemStack);
             }
         }
