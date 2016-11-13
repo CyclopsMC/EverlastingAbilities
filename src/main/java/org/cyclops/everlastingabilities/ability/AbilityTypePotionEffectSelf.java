@@ -3,7 +3,9 @@ package org.cyclops.everlastingabilities.ability;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+import org.cyclops.everlastingabilities.EverlastingAbilities;
 
 /**
  * Ability type for potion effects.
@@ -18,6 +20,9 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
     public AbilityTypePotionEffectSelf(String id, int rarity, int maxLevel, int baseXpPerLevel, Potion potion) {
         super(id, rarity, maxLevel, baseXpPerLevel);
         this.potion = potion;
+        if (this.potion == null) {
+            EverlastingAbilities.clog(Level.WARN, "Tried to register a null potion for ability " + id + ". This is possibly caused by a mod forcefully removing the potion effect for this ability.");
+        }
     }
 
     protected int getDuration(int tickModulus, int level) {
@@ -34,7 +39,7 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
 
     @Override
     public void onTick(EntityPlayer player, int level) {
-        if (player.worldObj.getWorldTime() % getTickModulus(level) == 0) {
+        if (potion != null && player.worldObj.getWorldTime() % getTickModulus(level) == 0) {
             player.addPotionEffect(
                     new PotionEffect(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, false));
         }

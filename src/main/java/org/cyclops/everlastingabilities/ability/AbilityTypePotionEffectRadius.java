@@ -6,7 +6,9 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+import org.cyclops.everlastingabilities.EverlastingAbilities;
 
 import java.util.List;
 
@@ -23,6 +25,9 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
     public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel, Potion potion) {
         super(id, rarity, maxLevel, baseXpPerLevel);
         this.potion = potion;
+        if (this.potion == null) {
+            EverlastingAbilities.clog(Level.WARN, "Tried to register a null potion for ability " + id + ". This is possibly caused by a mod forcefully removing the potion effect for this ability.");
+        }
     }
 
     protected int getDurationMultiplier() {
@@ -32,7 +37,7 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
     @Override
     public void onTick(EntityPlayer player, int level) {
         World world = player.worldObj;
-        if (!world.isRemote && player.worldObj.getWorldTime() % TICK_MODULUS == 0) {
+        if (potion != null && !world.isRemote && player.worldObj.getWorldTime() % TICK_MODULUS == 0) {
             int radius = level * 2;
             List<EntityLivingBase> mobs = world.getEntitiesWithinAABB(EntityLivingBase.class,
                     player.getEntityBoundingBox().expandXyz(radius), EntitySelectors.NOT_SPECTATING);
