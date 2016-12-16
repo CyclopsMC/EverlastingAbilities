@@ -48,8 +48,11 @@ public class AbilityHelpers {
 
     public static int getLevelForExperience(int experience) {
         int i = 0;
-        while (getExperienceForLevel(i) <= experience) {
+        int newXp, lastXp = -1;
+        while ((newXp = getExperienceForLevel(i)) <= experience) {
+            if (newXp <= lastXp) break; // Avoid infinite loops when the MC level is too high, resulting in an xp overflow. See https://github.com/CyclopsMC/EverlastingAbilities/issues/27
             i++;
+            lastXp = newXp;
         }
         return i - 1;
     }
