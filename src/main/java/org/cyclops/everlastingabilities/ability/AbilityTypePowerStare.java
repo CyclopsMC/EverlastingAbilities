@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.ability;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -39,7 +40,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
                     player.getEntityBoundingBox().addCoord(lookVec.xCoord * range, lookVec.yCoord * range, lookVec.zCoord * range)
                             .expand((double) range, (double) range, (double) range));
             for (Entity e : list) {
-                if (e.canBeCollidedWith()) {
+                if (e.canBeCollidedWith() && (!(e instanceof IEntityOwnable) || ((IEntityOwnable) e).getOwner() != player) && !player.isOnSameTeam(e)) {
                     Entity entity = null;
                     float f10 = e.getCollisionBorderSize();
                     AxisAlignedBB axisalignedbb = e.getEntityBoundingBox().expand((double) f10, (double) f10, (double) f10);

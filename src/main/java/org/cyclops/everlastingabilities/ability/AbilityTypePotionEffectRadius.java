@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.ability;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -42,7 +43,7 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
             List<EntityLivingBase> mobs = world.getEntitiesWithinAABB(EntityLivingBase.class,
                     player.getEntityBoundingBox().expandXyz(radius), EntitySelectors.NOT_SPECTATING);
             for (EntityLivingBase mob : mobs) {
-                if (mob != player && !player.isOnSameTeam(mob)) {
+                if (mob != player && (!(mob instanceof IEntityOwnable) || ((IEntityOwnable) mob).getOwner() != player) && !player.isOnSameTeam(mob)) {
                     mob.addPotionEffect(
                             new PotionEffect(potion, TICK_MODULUS * getDurationMultiplier(), level - 1, true, false));
                 }
