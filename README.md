@@ -6,7 +6,7 @@
 
 Discover, share and conquer abilities that stick.
 
-All stable releases (including deobfuscated builds) can be found on [CurseForge](http://minecraft.curseforge.com/mc-mods/248353/files).
+All stable releases (including deobfuscated builds) can be found on [CurseForge](https://minecraft.curseforge.com/projects/everlastingabilities).
 
 ### Contributing
 * Before submitting a pull request containing a new feature, please discuss this first with one of the lead developers.
