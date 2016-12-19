@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.8.0 or higher.
+
+Fixes:
+* Fix infinite loop when player level is too high, Closes #27
+* Don't apply effects on entities that are owned or in the same team, Closes #29
+
