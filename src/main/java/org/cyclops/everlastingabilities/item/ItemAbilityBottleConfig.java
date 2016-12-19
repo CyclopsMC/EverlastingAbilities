@@ -21,7 +21,7 @@ public class ItemAbilityBottleConfig extends ItemConfig {
         super(
                 EverlastingAbilities._instance,
                 true,
-                "abilityBottle",
+                "ability_bottle",
                 null,
                 ItemAbilityBottle.class
         );

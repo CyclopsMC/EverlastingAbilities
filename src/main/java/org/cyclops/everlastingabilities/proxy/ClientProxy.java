@@ -40,7 +40,7 @@ public class ClientProxy extends ClientProxyComponent {
 	@SubscribeEvent
 	public void onRenderLiving(RenderLivingEvent.Post event) {
 		EntityLivingBase entity = event.getEntity();
-		if ((entity instanceof IAnimals || (GeneralConfig.showPlayerParticles && entity instanceof EntityPlayer)) && entity.worldObj.getTotalWorldTime() % 10 == 0
+		if ((entity instanceof IAnimals || (GeneralConfig.showPlayerParticles && entity instanceof EntityPlayer)) && entity.world.getTotalWorldTime() % 10 == 0
 				&& entity.hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)) {
 			IMutableAbilityStore abilityStore = entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
 			Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
@@ -48,7 +48,7 @@ public class ClientProxy extends ClientProxyComponent {
 			float g = abilityColors.getMiddle() / 255F;
 			float b = abilityColors.getRight() / 255F;
 
-			Random rand = entity.worldObj.rand;
+			Random rand = entity.world.rand;
 			float scale = 0.5F - rand.nextFloat() * 0.3F;
 			float red = Math.max(0, r - rand.nextFloat() * 0.1F);
 			float green = Math.max(0, g - rand.nextFloat() * 0.1F);
@@ -63,7 +63,7 @@ public class ClientProxy extends ClientProxyComponent {
 			double motionY = 0.02D - rand.nextDouble() * 0.04D;
 			double motionZ = 0.02D - rand.nextDouble() * 0.04D;
 
-			ParticleBlur blur = new ParticleBlur(entity.worldObj, x, y, z, scale,
+			ParticleBlur blur = new ParticleBlur(entity.world, x, y, z, scale,
 					motionX, motionY, motionZ,
 					red, green, blue, ageMultiplier);
 			Minecraft.getMinecraft().effectRenderer.addEffect(blur);

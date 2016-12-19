@@ -43,7 +43,7 @@ public class ItemAbilityTotemConfig extends ItemConfig {
         super(
                 EverlastingAbilities._instance,
                 true,
-                "abilityTotem",
+                "ability_totem",
                 null,
                 ItemAbilityTotem.class
         );

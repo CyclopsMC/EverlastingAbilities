@@ -1,6 +1,6 @@
 {
   "parent": "cyclopscore:item/flat",
   "textures": {
-    "layer0": "everlastingabilities:items/abilityBottle"
+    "layer0": "everlastingabilities:items/ability_totem"
   }
 }

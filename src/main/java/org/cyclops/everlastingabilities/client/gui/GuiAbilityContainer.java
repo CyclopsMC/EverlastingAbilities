@@ -197,11 +197,11 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         int i = this.guiLeft;
         int j = this.guiTop;
         drawFancyBackground(i + 8, j + 17, 66, 61, getPlayerAbilityStore());
-        GuiInventory.drawEntityOnScreen(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.mc.thePlayer);
+        GuiInventory.drawEntityOnScreen(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.mc.player);
         drawXp(i + 67, j + 70);
         RenderHelpers.drawScaledCenteredString(fontRendererObj, "" + player.experienceTotal, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         drawFancyBackground(i + 102, j + 17, 66, 61, getItemAbilityStore());
-        drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.mc.thePlayer));
+        drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.mc.player));
 
         // Draw abilities
         drawAbilities(this.guiLeft + 8, this.guiTop + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());

@@ -71,7 +71,7 @@ public class AbilityTypeRegistry implements IAbilityTypeRegistry {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             IAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
             for (Ability ability : abilityStore.getAbilities()) {
-                if (event.getEntity().worldObj.getTotalWorldTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
+                if (event.getEntity().world.getTotalWorldTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
                     player.addExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
                 }
                 ability.getAbilityType().onTick(player, ability.getLevel());

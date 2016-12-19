@@ -28,8 +28,8 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
 
     @Override
     public void onTick(EntityPlayer player, int level) {
-        World world = player.worldObj;
-        if (!world.isRemote && player.worldObj.getWorldTime() % TICK_MODULUS == 0) {
+        World world = player.world;
+        if (!world.isRemote && player.world.getWorldTime() % TICK_MODULUS == 0) {
             int range = level * 10;
             double eyeHeight = player.getEyeHeight();
             Vec3d lookVec = player.getLookVec();
@@ -65,7 +65,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
                         double dx = entity.posX - player.posX;
                         double dy = entity.posY - player.posY;
                         double dz = entity.posZ - player.posZ;
-                        double d = (double) MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
+                        double d = (double) MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
                         double m = 1 / (2 * (Math.max(1, d)));
                         dx *= m;
                         dy *= m;
