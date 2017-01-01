@@ -62,10 +62,9 @@ public class ItemAbilityTotemConfig extends ItemConfig {
                                     EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
                                     IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity);
 
-                                    ItemStack itemStack = new ItemStack(ItemAbilityBottle.getInstance());
-                                    IMutableAbilityStore mutableAbilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+                                    IMutableAbilityStore mutableAbilityStore = stack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
                                     mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
-                                    return itemStack;
+                                    return stack;
                                 }
                             }
                     }, new LootCondition[0], getMod().getModId() + ":" + getSubUniqueName()));
