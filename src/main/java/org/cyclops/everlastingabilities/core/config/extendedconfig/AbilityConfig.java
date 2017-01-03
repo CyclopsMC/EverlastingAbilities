@@ -27,6 +27,11 @@ public abstract class AbilityConfig<T> extends ExtendedConfig<AbilityConfig<T>> 
 	public String getUnlocalizedName() {
 		return "ability." + getNamedId();
 	}
+
+    @Override
+    public String getFullUnlocalizedName() {
+        return "ability.abilities." + getMod().getModId()  + "." +getNamedId() + ".name";
+    }
     
     @Override
 	public ConfigurableType getHolderType() {
