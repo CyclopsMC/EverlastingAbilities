@@ -77,3 +77,136 @@ ability.abilities.everlastingabilities.magnetize.info=Attract nearby items
 # Items
 item.items.everlastingabilities.ability_totem.name=Ability Totem
 item.items.everlastingabilities.ability_bottle.name=Ability Bottle
+
+# Config Screens
+config.everlastingabilities=%s configuration
+
+## Config categories
+config.everlastingabilities.item=Item settings
+config.everlastingabilities.item.tooltip=Item settings
+config.everlastingabilities.general=General settings
+config.everlastingabilities.general.tooltip=General settings
+config.everlastingabilities.core=Core settings
+config.everlastingabilities.core.tooltip=Core settings
+config.everlastingabilities.capability=Capability settings
+config.everlastingabilities.capability.tooltip=Capability settings
+config.everlastingabilities.ability=Ability settings
+config.everlastingabilities.ability.tooltip=Ability settings
+
+## Ability settings
+config.everlastingabilities.absorbtion.maxLevel=Max absorbtion level
+config.everlastingabilities.absorbtion.rarity=Rarity of absorbtion
+config.everlastingabilities.absorbtion.xpPerLevel=Xp required per absorbtion level
+config.everlastingabilities.blindness.maxLevel=Max blindness level
+config.everlastingabilities.blindness.rarity=Rarity of blindness
+config.everlastingabilities.blindness.xpPerLevel=Xp required per blindness level
+config.everlastingabilities.bonemealer.maxLevel=Max bonemealer level
+config.everlastingabilities.bonemealer.rarity=Rarity of bonemealer
+config.everlastingabilities.bonemealer.xpPerLevel=Xp required per bonemealer level
+config.everlastingabilities.fertility.maxLevel=Max fertility level
+config.everlastingabilities.fertility.rarity=Rarity of fertility
+config.everlastingabilities.fertility.xpPerLevel=Xp required per fertility level
+config.everlastingabilities.fire_resistance.maxLevel=Max fire resistance level
+config.everlastingabilities.fire_resistance.rarity=Rarity of fire resistance
+config.everlastingabilities.fire_resistance.xpPerLevel=Xp required per fire resistance level
+config.everlastingabilities.flight.maxLevel=Max flight level
+config.everlastingabilities.flight.rarity=Rarity of flight
+config.everlastingabilities.flight.xpPerLevel=Xp required per flight level
+config.everlastingabilities.glowing.maxLevel=Max glowing level
+config.everlastingabilities.glowing.rarity=Rarity of glowing
+config.everlastingabilities.glowing.xpPerLevel=Xp required per glowing level
+config.everlastingabilities.haste.maxLevel=Max haste level
+config.everlastingabilities.haste.rarity=Rarity of haste
+config.everlastingabilities.haste.xpPerLevel=Xp required per haste level
+config.everlastingabilities.hunger.maxLevel=Max hunger level
+config.everlastingabilities.hunger.rarity=Rarity of hunger
+config.everlastingabilities.hunger.xpPerLevel=Xp required per hunger level
+config.everlastingabilities.invisibility.maxLevel=Max invisibility level
+config.everlastingabilities.invisibility.rarity=Rarity of invisibility
+config.everlastingabilities.invisibility.xpPerLevel=Xp required per invisibility level
+config.everlastingabilities.jump_boost.maxLevel=Max jump boost level
+config.everlastingabilities.jump_boost.rarity=Rarity of jump boost
+config.everlastingabilities.jump_boost.xpPerLevel=Xp required per jump boost level
+config.everlastingabilities.levitation.maxLevel=Max levitation level
+config.everlastingabilities.levitation.rarity=Rarity of levitation
+config.everlastingabilities.levitation.xpPerLevel=Xp required per levitation level
+config.everlastingabilities.luck.maxLevel=Max luck level
+config.everlastingabilities.luck.rarity=Rarity of luck
+config.everlastingabilities.luck.xpPerLevel=Xp required per luck level
+config.everlastingabilities.magnetize.maxLevel=Max magnetize level
+config.everlastingabilities.magnetize.rarity=Rarity of magnetize
+config.everlastingabilities.magnetize.xpPerLevel=Xp required per magnetize level
+config.everlastingabilities.mining_fatigue.maxLevel=Max mining fatigue level
+config.everlastingabilities.mining_fatigue.rarity=Rarity of mining fatigue
+config.everlastingabilities.mining_fatigue.xpPerLevel=Xp required per mining fatigue level
+config.everlastingabilities.nausea.maxLevel=Max nausea level
+config.everlastingabilities.nausea.rarity=Rarity of nausea
+config.everlastingabilities.nausea.xpPerLevel=Xp required per nausea level
+config.everlastingabilities.night_vision.maxLevel=Max night vision level
+config.everlastingabilities.night_vision.rarity=Rarity of night vision
+config.everlastingabilities.night_vision.xpPerLevel=Xp required per night vision level
+config.everlastingabilities.poison.maxLevel=Max poison level
+config.everlastingabilities.poison.rarity=Rarity of poison
+config.everlastingabilities.poison.xpPerLevel=Xp required per poison level
+config.everlastingabilities.power_stare.maxLevel=Max power stare level
+config.everlastingabilities.power_stare.rarity=Rarity of power stare
+config.everlastingabilities.power_stare.xpPerLevel=Xp required per power stare level
+config.everlastingabilities.regeneration.maxLevel=Max regeneration level
+config.everlastingabilities.regeneration.rarity=Rarity of regeneration
+config.everlastingabilities.regeneration.xpPerLevel=Xp required per regeneration level
+config.everlastingabilities.resistance.maxLevel=Max resistance level
+config.everlastingabilities.resistance.rarity=Rarity of resistance
+config.everlastingabilities.resistance.xpPerLevel=Xp required per resistance level
+config.everlastingabilities.saturation.maxLevel=Max saturation level
+config.everlastingabilities.saturation.rarity=Rarity of saturation
+config.everlastingabilities.saturation.xpPerLevel=Xp required per saturation level
+config.everlastingabilities.slowness.maxLevel=Max slowness level
+config.everlastingabilities.slowness.rarity=Rarity of slowness
+config.everlastingabilities.slowness.xpPerLevel=Xp required per slowness level
+config.everlastingabilities.speed.maxLevel=Max speed level
+config.everlastingabilities.speed.rarity=Rarity of speed
+config.everlastingabilities.speed.xpPerLevel=Xp required per speed level
+config.everlastingabilities.step_assist.maxLevel=Max step assist level
+config.everlastingabilities.step_assist.rarity=Rarity of step assist
+config.everlastingabilities.step_assist.xpPerLevel=Xp required per step assist level
+config.everlastingabilities.strength.maxLevel=Max strength level
+config.everlastingabilities.strength.rarity=Rarity of strength
+config.everlastingabilities.strength.xpPerLevel=Xp required per strength level
+config.everlastingabilities.unluck.maxLevel=Max unluck level
+config.everlastingabilities.unluck.rarity=Rarity of unluck
+config.everlastingabilities.unluck.xpPerLevel=Xp required per unluck level
+config.everlastingabilities.water_breathing.maxLevel=Max water breathing level
+config.everlastingabilities.water_breathing.rarity=Rarity of water breathing
+config.everlastingabilities.water_breathing.xpPerLevel=Xp required per water breathing level
+config.everlastingabilities.weakness.maxLevel=Max weakness level
+config.everlastingabilities.weakness.rarity=Rarity of weakness
+config.everlastingabilities.weakness.xpPerLevel=Xp required per weakness level
+config.everlastingabilities.wither.maxLevel=Max wither level
+config.everlastingabilities.wither.rarity=Rarity of wither
+config.everlastingabilities.wither.xpPerLevel=Xp required per wither level
+
+## Core settings
+config.everlastingabilities.ability_totem.lootChests=Ability totem in lootchests
+config.everlastingabilities.general.analytics=Send anonymous analytics
+config.everlastingabilities.general.anonymousAnalyticsID=Anonymous id
+config.everlastingabilities.general.crashOnInvalidRecipe=Crash on invalid Recipe
+config.everlastingabilities.general.crashOnModCompatCrash=Crash on Compatibility issue
+config.everlastingabilities.general.debug=Develop mode
+config.everlastingabilities.general.version=Version
+config.everlastingabilities.general.versionChecker=Version check
+
+## General settings
+config.everlastingabilities.general.abilityXpMultiplier=Ability xp multiplier
+config.everlastingabilities.general.alwaysDropAbilities=Always drop abilities
+config.everlastingabilities.general.dropAbilitiesOnPlayerDeath=Amount of abilities dropped on death
+config.everlastingabilities.general.exhaustionPerAbilityTick=Exhaustion per ability
+config.everlastingabilities.general.magnetizeMoveXp=Move xp with magnetize
+config.everlastingabilities.general.maxPlayerAbilities=Maximal abilities
+config.everlastingabilities.general.mobAbilityChance=Mob ability chance
+config.everlastingabilities.general.showPlayerParticles=Show player particles
+config.everlastingabilities.general.totemMaximumSpawnRarity=Totem spawn rarity
+config.everlastingabilities.step_assist.forceDefaultStepHeight=Force default step height
+
+## Capability settings
+capability.everlastingabilities.abilityStore=Ability storage
+capability.everlastingabilities.mutableAbilityStore=Mutable ability storage
