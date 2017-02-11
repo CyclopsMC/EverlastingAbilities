@@ -44,11 +44,11 @@ public class CommandModifyAbilities extends CommandMod {
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] parts, BlockPos blockPos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] parts, BlockPos blockPos) {
         if (parts.length <= 1) {
             return Lists.newArrayList("add", "remove", "list");
         } else if (parts.length <= 2) {
-            return CommandBase.getListOfStringsMatchingLastWord(parts, FMLCommonHandler.instance().getMinecraftServerInstance().getAllUsernames());
+            return CommandBase.getListOfStringsMatchingLastWord(parts, FMLCommonHandler.instance().getMinecraftServerInstance().getOnlinePlayerNames());
         } else if (parts.length <= 3 && ("add".equals(parts[0]) || "remove".equals(parts[0]))) {
             List<String> abilityIds = Lists.newArrayList();
             Collection<IAbilityType> abilityTypes = AbilityTypes.REGISTRY.getAbilityTypes();
@@ -74,14 +74,14 @@ public class CommandModifyAbilities extends CommandMod {
             GameProfile gameprofile = minecraftserver.getPlayerProfileCache().getGameProfileForUsername(parts[1]);
 
             if (gameprofile == null) {
-                sender.addChatMessage(new TextComponentString(L10NHelpers.localize("chat.cyclopscore.command.invalidPlayer", parts[1])));
+                sender.sendMessage(new TextComponentString(L10NHelpers.localize("chat.cyclopscore.command.invalidPlayer", parts[1])));
             } else {
                 EntityPlayerMP player = minecraftserver.getPlayerList().getPlayerByUsername(parts[1]);
                 IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
 
                 String command = parts[0];
                 if ("list".equals(command)) {
-                    sender.addChatMessage(new TextComponentString(abilityStore.getAbilities().toString()));
+                    sender.sendMessage(new TextComponentString(abilityStore.getAbilities().toString()));
                 } else if ("add".equals(command) || "remove".equals(command)) {
                     if (parts.length >= 3 && parts.length < 5) {
                         String unlocalizedAbilityName = parts[2];
@@ -95,7 +95,7 @@ public class CommandModifyAbilities extends CommandMod {
                             }
                         }
                         if (abilityType == null) {
-                            sender.addChatMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.invalidAbility", abilityType)));
+                            sender.sendMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.invalidAbility", abilityType)));
                         } else {
                             if ("add".equals(command)) {
                                 level = Math.max(1, Math.min(abilityType.getMaxLevel(), level));
@@ -104,7 +104,7 @@ public class CommandModifyAbilities extends CommandMod {
                                 Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true, false);
                                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                                sender.addChatMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility)));
+                                sender.sendMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility)));
                             } else {
                                 level = Math.max(1, level);
                                 Ability ability = new Ability(abilityType, level);
@@ -112,7 +112,7 @@ public class CommandModifyAbilities extends CommandMod {
                                 Ability removedAbility = AbilityHelpers.removePlayerAbility(player, ability, true, false);
                                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                                sender.addChatMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility)));
+                                sender.sendMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility)));
                             }
                         }
                     }

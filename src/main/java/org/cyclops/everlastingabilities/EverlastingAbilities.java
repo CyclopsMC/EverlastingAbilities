@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.minecraft.block.Block;
 import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -10,6 +11,7 @@ import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -33,6 +35,9 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.command.CommandMod;
 import org.cyclops.cyclopscore.config.ConfigHandler;
+import org.cyclops.cyclopscore.config.extendedconfig.BlockConfig;
+import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
+import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigReference;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
@@ -314,6 +319,11 @@ public class EverlastingAbilities extends ModBaseVersionable {
         EverlastingAbilities._instance.getLoggerHelper().log(level, message);
     }
 
+    @EventHandler
+    public void onMissingMappings(FMLMissingMappingsEvent event) {
+        super.onMissingMappings(event);
+    }
+
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof EntityPlayerMP) {
@@ -337,7 +347,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
             if (!playerTag.hasKey(NBT_TOTEM_SPAWNED)) {
                 playerTag.setBoolean(NBT_TOTEM_SPAWNED, true);
 
-                World world = event.player.worldObj;
+                World world = event.player.world;
                 EntityPlayer player = event.player;
                 IAbilityType abilityType = AbilityHelpers.getRandomAbility(world.rand, EnumRarity.values()[GeneralConfig.totemMaximumSpawnRarity]);
                 if (abilityType != null) {
@@ -354,7 +364,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        if (!event.getEntityLiving().worldObj.isRemote
+        if (!event.getEntityLiving().world.isRemote
                 && event.getEntityLiving().hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)
                 && (event.getEntityLiving() instanceof EntityPlayer
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
@@ -388,7 +398,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
                         if (itemStackStore != null) {
                             itemStackStore.addAbility(removed, true);
                         }
-                        entity.addChatMessage(new TextComponentTranslation(L10NHelpers.localize("chat.everlastingabilities.playerLostAbility",
+                        entity.sendMessage(new TextComponentTranslation(L10NHelpers.localize("chat.everlastingabilities.playerLostAbility",
                                 entity.getName(),
                                 removed.getAbilityType().getRarity().rarityColor.toString() + TextFormatting.BOLD + L10NHelpers.localize(removed.getAbilityType().getUnlocalizedName()) + TextFormatting.RESET,
                                 removed.getLevel())));
@@ -397,7 +407,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
             }
 
             if (itemStack != null && !itemStackStore.getAbilities().isEmpty()) {
-                ItemStackHelpers.spawnItemStack(entity.worldObj, entity.getPosition(), itemStack);
+                ItemStackHelpers.spawnItemStack(entity.world, entity.getPosition(), itemStack);
             }
         }
     }

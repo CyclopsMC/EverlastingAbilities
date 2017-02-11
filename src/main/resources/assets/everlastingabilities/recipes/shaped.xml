@@ -2,7 +2,7 @@
 <recipes>
 
 	<recipe type="shaped">
-		<condition type="config">abilityBottle</condition>
+		<condition type="config">ability_bottle</condition>
 		<condition type="oredict">dyeWhite</condition>
 		<condition type="oredict">slimeball</condition>
 		<input>
@@ -20,7 +20,7 @@
 			</grid>
 		</input>
 		<output>
-			<item>everlastingabilities:abilityBottle</item>
+			<item>everlastingabilities:ability_bottle</item>
 		</output>
 	</recipe>
 

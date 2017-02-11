@@ -37,8 +37,8 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
 
     @Override
     public void onTick(EntityPlayer player, int level) {
-        World world = player.worldObj;
-        if (potion != null && !world.isRemote && player.worldObj.getWorldTime() % TICK_MODULUS == 0) {
+        World world = player.world;
+        if (potion != null && !world.isRemote && player.world.getWorldTime() % TICK_MODULUS == 0) {
             int radius = level * 2;
             List<EntityLivingBase> mobs = world.getEntitiesWithinAABB(EntityLivingBase.class,
                     player.getEntityBoundingBox().expandXyz(radius), EntitySelectors.NOT_SPECTATING);

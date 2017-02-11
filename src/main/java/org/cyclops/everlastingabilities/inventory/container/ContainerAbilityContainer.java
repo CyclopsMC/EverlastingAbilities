@@ -107,7 +107,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
         AbilityHelpers.extract(insertedAbility, getItemAbilityStore());
 
         if(getItemAbilities().isEmpty() && !getItem().canMoveFromPlayer()) {
-            player.inventory.setInventorySlotContents(itemIndex, null);
+            player.inventory.setInventorySlotContents(itemIndex, ItemStack.EMPTY);
 
         }
     }

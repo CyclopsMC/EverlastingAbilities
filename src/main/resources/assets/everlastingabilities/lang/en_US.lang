@@ -75,8 +75,8 @@ ability.abilities.everlastingabilities.magnetize.name=Magnetize
 ability.abilities.everlastingabilities.magnetize.info=Attract nearby items
 
 # Items
-item.items.everlastingabilities.abilityTotem.name=Ability Totem
-item.items.everlastingabilities.abilityBottle.name=Ability Bottle
+item.items.everlastingabilities.ability_totem.name=Ability Totem
+item.items.everlastingabilities.ability_bottle.name=Ability Bottle
 
 # Config Screens
 config.everlastingabilities=%s configuration
@@ -186,7 +186,7 @@ config.everlastingabilities.wither.rarity=Rarity of wither
 config.everlastingabilities.wither.xpPerLevel=Xp required per wither level
 
 ## Core settings
-config.everlastingabilities.abilityTotem.lootChests=Ability totem in lootchests
+config.everlastingabilities.ability_totem.lootChests=Ability totem in lootchests
 config.everlastingabilities.general.analytics=Send anonymous analytics
 config.everlastingabilities.general.anonymousAnalyticsID=Anonymous id
 config.everlastingabilities.general.crashOnInvalidRecipe=Crash on invalid Recipe

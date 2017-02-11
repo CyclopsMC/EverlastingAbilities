@@ -39,7 +39,7 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
 
     @Override
     public void onTick(EntityPlayer player, int level) {
-        if (potion != null && player.worldObj.getWorldTime() % getTickModulus(level) == 0) {
+        if (potion != null && player.world.getWorldTime() % getTickModulus(level) == 0) {
             player.addPotionEffect(
                     new PotionEffect(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, false));
         }
