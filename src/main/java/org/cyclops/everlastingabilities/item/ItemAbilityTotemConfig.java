@@ -37,6 +37,12 @@ public class ItemAbilityTotemConfig extends ItemConfig {
     public static boolean lootChests = true;
 
     /**
+     * Can totems be combined in the crafting grid
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.CORE, comment = "This many totems combined in a crafting grid produces a new random totem (0 to disable)")
+    public static int totemCraftingCount = 3;
+	
+    /**
      * Make a new instance.
      */
     public ItemAbilityTotemConfig() {

@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
 import org.cyclops.everlastingabilities.ability.AbilityTypes;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
@@ -62,6 +63,12 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
         return itemStack;
     }
 
+	public static ItemStack getRandomTotem(java.util.Random rand) {
+		EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
+		IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity);
+		return getInstance().getTotem(new Ability(abilityType, 1));
+	}
+	
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (IAbilityType abilityType : AbilityTypes.REGISTRY.getAbilityTypes()) {
