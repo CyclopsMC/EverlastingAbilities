@@ -25,6 +25,8 @@ public class ItemStackMutableAbilityStore implements IMutableAbilityStore {
 
     private final ItemStack itemStack;
 
+	protected DisplayType displayType = DisplayType.NORMAL;
+
     public ItemStackMutableAbilityStore(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
@@ -101,4 +103,14 @@ public class ItemStackMutableAbilityStore implements IMutableAbilityStore {
         IMutableAbilityStore store = getInnerStore();
         return store.getAbility(abilityType);
     }
+
+	@Override
+	public DisplayType getDisplayType() {
+		return displayType;
+	}
+
+	@Override
+	public void setDisplayType(DisplayType type) {
+		displayType = type;
+	}
 }

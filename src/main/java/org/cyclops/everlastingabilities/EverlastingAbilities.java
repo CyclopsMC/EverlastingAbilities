@@ -205,10 +205,10 @@ public class EverlastingAbilities extends ModBaseVersionable {
                 return MutableAbilityStoreConfig.CAPABILITY;
             }
         });
-		
-		if (ItemAbilityTotemConfig.totemCraftingCount > 0) {
-			GameRegistry.addRecipe(new TotemRecycleRecipe());
-		}
+        
+        if (ItemAbilityTotemConfig.totemCraftingCount > 0) {
+            GameRegistry.addRecipe(new TotemRecycleRecipe());
+        }
     }
     
     /**
