@@ -18,10 +18,10 @@ public interface IAbilityStore {
     public Collection<Ability> getAbilities();
     public Map<IAbilityType, Integer> getAbilitiesRaw();
     public Ability getAbility(IAbilityType abilityType);
-	public DisplayType getDisplayType();
-	
-	public enum DisplayType {
-		NORMAL,
-		OBFUSCATED;
-	}
+    public DisplayType getDisplayType();
+
+    public enum DisplayType {
+        NORMAL,
+        OBFUSCATED;
+    }
 }

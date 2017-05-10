@@ -70,10 +70,10 @@ public class AbilityHelpers {
 
     /**
      * Add the given ability.
-	 * @param player The player.
+     * @param player The player.
      * @param ability The ability.
      * @param doAdd If the addition should actually be done.
-	 * @param modifyXp Whether to require player to have enough XP before adding
+     * @param modifyXp Whether to require player to have enough XP before adding
      * @return The ability part that was added.
      */
     public static @Nullable Ability addPlayerAbility(EntityPlayer player, Ability ability, boolean doAdd, boolean modifyXp) {
@@ -115,10 +115,10 @@ public class AbilityHelpers {
 
     /**
      * Remove the given ability.
-	 * @param player The player.
+     * @param player The player.
      * @param ability The ability.
      * @param doRemove If the removal should actually be done.
-	 * @param modifyXp Whether to refund XP cost of ability
+     * @param modifyXp Whether to refund XP cost of ability
      * @return The ability part that was removed.
      */
     public static @Nullable Ability removePlayerAbility(EntityPlayer player, Ability ability, boolean doRemove, boolean modifyXp) {

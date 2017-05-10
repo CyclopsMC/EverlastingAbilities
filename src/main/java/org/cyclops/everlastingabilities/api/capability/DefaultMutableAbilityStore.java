@@ -57,9 +57,9 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
         }
         return removedAbility;
     }
-	
-	@Override
-	public void setDisplayType(DisplayType type) {
-		displayType = type;
-	}
+
+    @Override
+    public void setDisplayType(DisplayType type) {
+        displayType = type;
+    }
 }

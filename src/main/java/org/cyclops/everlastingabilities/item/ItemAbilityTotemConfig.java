@@ -41,7 +41,13 @@ public class ItemAbilityTotemConfig extends ItemConfig {
      */
     @ConfigurableProperty(category = ConfigurableTypeCategory.CORE, comment = "This many totems combined in a crafting grid produces a new random totem (0 to disable)")
     public static int totemCraftingCount = 3;
-	
+
+    /**
+     * Percent chance that combined totem will have a rarity bump
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.CORE, comment = "When combining totems, percentage chance of getting one higher rarity than normal.")
+    public static int totemCraftingRarityIncreasePercent = 15;
+
     /**
      * Make a new instance.
      */
