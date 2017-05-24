@@ -5,15 +5,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
-import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.item.ItemGui;
 import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityProvider;
-import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.ItemStackMutableAbilityStore;
@@ -54,29 +51,7 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
         super.addInformation(itemStack, entityPlayer, list, par4);
         IAbilityStore abilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
 
-        switch(abilityStore.getDisplayType()) {
-            case NORMAL: {
-                // Normal display of abilities
-                boolean empty = true;
-                for (Ability ability : abilityStore.getAbilities()) {
-                    empty = false;
-                    String name = L10NHelpers.localize(ability.getAbilityType().getUnlocalizedName());
-                    list.add(TextFormatting.YELLOW + name + ": " + TextFormatting.RESET + ability.getLevel());
-                }
-                if (empty) {
-                    list.add(TextFormatting.GRAY.toString() + TextFormatting.ITALIC + L10NHelpers.localize("general.everlastingabilities.empty"));
-                }
-                break;
-            }
-            
-            case OBFUSCATED: {
-                // Ability display is obfuscated.  
-                // This only blocks display in item tooltip.  Player can still view abilities by activating totem.
-                list.add(TextFormatting.OBFUSCATED.toString() + "Obfuscated");
-                break;
-            }
-        }
-        
+        abilityStore.getDisplayType().addInformation(abilityStore, itemStack, entityPlayer, list, par4);
     }
 
     @Override

@@ -8,7 +8,9 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.world.World;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ForgeHooks;
+import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.AbilityStoreDisplayType;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
@@ -18,13 +20,11 @@ import java.util.Random;
 
 public class TotemRecycleRecipe implements IRecipe {
 
-    private World _world = null;
+    private final Random rand = new Random();
     
     @Override
     public boolean matches(InventoryCrafting invCrafting, World world) {
     
-        _world = world;
-
         int inputCount = 0;
         for (int i = 0; i < invCrafting.getSizeInventory(); i++) {
             ItemStack slot = invCrafting.getStackInSlot(i);
@@ -43,13 +43,13 @@ public class TotemRecycleRecipe implements IRecipe {
     
     @Override
     public ItemStack getCraftingResult(InventoryCrafting invCrafting) {
-        if (_world.isRemote) {
+        if (MinecraftHelpers.isClientSide()) {
         
             // Getting item for display in crafting output.
             // User hasn't picked it up yet, so display an obfuscated name.
             ItemStack stack = new ItemStack(ItemAbilityTotem.getInstance());
             IMutableAbilityStore abilityStore = stack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-            abilityStore.setDisplayType(IAbilityStore.DisplayType.OBFUSCATED);
+            abilityStore.setDisplayType(AbilityStoreDisplayType.OBFUSCATED);
         
             return stack;
         }
@@ -58,7 +58,7 @@ public class TotemRecycleRecipe implements IRecipe {
             
             // Select one of the inputs at random, and use its rarity for the rarity of the output.
             int inputIndex = 0;
-            int inputTargetIndex = _world.rand.nextInt(ItemAbilityTotemConfig.totemCraftingCount);
+            int inputTargetIndex = rand.nextInt(ItemAbilityTotemConfig.totemCraftingCount);
             EnumRarity rarity = EnumRarity.COMMON;
             
             for (int i = 0; i < invCrafting.getSizeInventory(); i++) {
@@ -81,11 +81,11 @@ public class TotemRecycleRecipe implements IRecipe {
             }
             
             // 20% chance of a bump
-            if (rarity.ordinal() < EnumRarity.EPIC.ordinal() && _world.rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent) {
+            if (rarity.ordinal() < EnumRarity.EPIC.ordinal() && rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent) {
                 rarity = EnumRarity.values()[rarity.ordinal()+1];
             }
             
-            return AbilityHelpers.getRandomTotem(rarity, _world.rand);
+            return AbilityHelpers.getRandomTotem(rarity, rand);
         }
     }
 

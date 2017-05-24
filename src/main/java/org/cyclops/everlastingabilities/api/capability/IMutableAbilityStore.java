@@ -31,5 +31,5 @@ public interface IMutableAbilityStore extends IAbilityStore {
      * Set display type for the ability store.
      * @param type the type to set
      */
-    public void setDisplayType(DisplayType type);
+    public void setDisplayType(AbilityStoreDisplayType type);
 }

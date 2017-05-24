@@ -59,7 +59,7 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
     }
 
     @Override
-    public void setDisplayType(DisplayType type) {
+    public void setDisplayType(AbilityStoreDisplayType type) {
         displayType = type;
     }
 }
