@@ -96,7 +96,7 @@ public class TotemRecycleRecipe implements IRecipe {
     
     @Override
     public int getRecipeSize() {
-        return 3;
+        return ItemAbilityTotemConfig.totemCraftingCount;
     }
     
     @Override
