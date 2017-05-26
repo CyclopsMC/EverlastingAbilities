@@ -1,0 +1,6 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.10.4 or higher.
+
+Additions:
+* Combining totems in a crafting grid creates a new random totem.
+* Power Stare only activates when player is sneaking (configurable)
