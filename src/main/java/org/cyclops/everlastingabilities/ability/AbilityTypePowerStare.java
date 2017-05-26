@@ -11,6 +11,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+import org.cyclops.everlastingabilities.ability.config.AbilityPowerStareConfig;
 
 import java.util.List;
 
@@ -28,6 +29,11 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
 
     @Override
     public void onTick(EntityPlayer player, int level) {
+    
+        if ( AbilityPowerStareConfig.requireSneak && !player.isSneaking() ) {
+            return;
+        }
+
         World world = player.world;
         if (!world.isRemote && player.world.getWorldTime() % TICK_MODULUS == 0) {
             int range = level * 10;
