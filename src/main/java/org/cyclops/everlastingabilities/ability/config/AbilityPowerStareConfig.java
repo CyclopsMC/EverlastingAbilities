@@ -29,7 +29,12 @@ public class AbilityPowerStareConfig extends AbilityConfig {
      */
     @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The xp required per level.", requiresMcRestart = true)
     public static int xpPerLevel = 50;
-
+    /**
+     * If true, Power Stare only works while crouching
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "Require sneak to activate.", requiresMcRestart = false)
+    public static boolean requireSneak = true;
+    
     /**
      * The unique instance.
      */
