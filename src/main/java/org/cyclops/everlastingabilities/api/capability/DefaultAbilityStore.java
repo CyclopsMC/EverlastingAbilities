@@ -16,6 +16,7 @@ import java.util.Map;
 public class DefaultAbilityStore implements IAbilityStore {
 
     protected final Map<IAbilityType, Integer> abilityTypes = Maps.newLinkedHashMap();
+    protected AbilityStoreDisplayType displayType = AbilityStoreDisplayType.NORMAL;
 
     public DefaultAbilityStore() {
 
@@ -61,5 +62,10 @@ public class DefaultAbilityStore implements IAbilityStore {
             return null;
         }
         return new Ability(abilityType, abilityTypes.get(abilityType));
+    }
+
+    @Override
+    public AbilityStoreDisplayType getDisplayType() {
+        return displayType;
     }
 }

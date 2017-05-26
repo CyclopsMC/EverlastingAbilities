@@ -3,6 +3,7 @@ package org.cyclops.everlastingabilities.ability;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.helper.obfuscation.ObfuscationHelpers;
@@ -14,6 +15,7 @@ import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
+import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -68,8 +70,10 @@ public class AbilityHelpers {
 
     /**
      * Add the given ability.
+     * @param player The player.
      * @param ability The ability.
      * @param doAdd If the addition should actually be done.
+     * @param modifyXp Whether to require player to have enough XP before adding
      * @return The ability part that was added.
      */
     public static @Nullable Ability addPlayerAbility(EntityPlayer player, Ability ability, boolean doAdd, boolean modifyXp) {
@@ -111,8 +115,10 @@ public class AbilityHelpers {
 
     /**
      * Remove the given ability.
+     * @param player The player.
      * @param ability The ability.
      * @param doRemove If the removal should actually be done.
+     * @param modifyXp Whether to refund XP cost of ability
      * @return The ability part that was removed.
      */
     public static @Nullable Ability removePlayerAbility(EntityPlayer player, Ability ability, boolean doRemove, boolean modifyXp) {
@@ -174,6 +180,12 @@ public class AbilityHelpers {
         }
         return null;
     }
+
+    public static ItemStack getRandomTotem(EnumRarity rarity, Random rand) {
+        IAbilityType abilityType = getRandomAbility(rand, rarity);
+        return ItemAbilityTotem.getInstance().getTotem(new Ability(abilityType, 1));
+    }
+    
 
     public static EnumRarity getRandomRarity(Random rand) {
         int chance = rand.nextInt(50);

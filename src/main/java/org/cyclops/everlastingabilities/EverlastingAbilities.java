@@ -32,6 +32,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.command.CommandMod;
 import org.cyclops.cyclopscore.config.ConfigHandler;
@@ -67,6 +68,7 @@ import org.cyclops.everlastingabilities.item.ItemAbilityBottle;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
+import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
 import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket;
 
 import javax.annotation.Nullable;
@@ -203,6 +205,10 @@ public class EverlastingAbilities extends ModBaseVersionable {
                 return MutableAbilityStoreConfig.CAPABILITY;
             }
         });
+        
+        if (ItemAbilityTotemConfig.totemCraftingCount > 0) {
+            GameRegistry.addRecipe(new TotemRecycleRecipe());
+        }
     }
     
     /**

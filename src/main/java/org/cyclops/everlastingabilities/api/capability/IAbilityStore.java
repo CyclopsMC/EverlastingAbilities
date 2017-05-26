@@ -18,5 +18,5 @@ public interface IAbilityStore {
     public Collection<Ability> getAbilities();
     public Map<IAbilityType, Integer> getAbilitiesRaw();
     public Ability getAbility(IAbilityType abilityType);
-
+    public AbilityStoreDisplayType getDisplayType();
 }
