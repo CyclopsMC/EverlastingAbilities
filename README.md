@@ -1,6 +1,6 @@
 ## EverlastingAbilities
 
-[![Build Status](https://travis-ci.org/CyclopsMC/EverlastingAbilities.svg?branch=master-1.9)](https://travis-ci.org/CyclopsMC/EverlastingAbilities)
+[![Build Status](https://travis-ci.org/CyclopsMC/EverlastingAbilities.svg?branch=master-1.11)](https://travis-ci.org/CyclopsMC/EverlastingAbilities)
 [![Download](https://api.bintray.com/packages/cyclopsmc/dev/EverlastingAbilities/images/download.svg) ](https://bintray.com/cyclopsmc/dev/EverlastingAbilities/_latestVersion)
 [![CurseForge](http://cf.way2muchnoise.eu/full_248353_downloads.svg)](http://minecraft.curseforge.com/projects/248353)
 
