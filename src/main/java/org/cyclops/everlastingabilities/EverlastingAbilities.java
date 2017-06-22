@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -40,10 +41,7 @@ import org.cyclops.cyclopscore.config.extendedconfig.BlockConfig;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigReference;
-import org.cyclops.cyclopscore.helper.EntityHelpers;
-import org.cyclops.cyclopscore.helper.ItemStackHelpers;
-import org.cyclops.cyclopscore.helper.L10NHelpers;
-import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+import org.cyclops.cyclopscore.helper.*;
 import org.cyclops.cyclopscore.helper.obfuscation.ObfuscationHelpers;
 import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
@@ -207,7 +205,8 @@ public class EverlastingAbilities extends ModBaseVersionable {
         });
         
         if (ItemAbilityTotemConfig.totemCraftingCount > 0) {
-            GameRegistry.addRecipe(new TotemRecycleRecipe());
+            ResourceLocation id = CraftingHelpers.newRecipeIdentifier(new ItemStack(ItemAbilityTotem.getInstance()));
+            CraftingHelpers.registerRecipe(id, new TotemRecycleRecipe());
         }
     }
     
@@ -375,13 +374,13 @@ public class EverlastingAbilities extends ModBaseVersionable {
                 && (event.getEntityLiving() instanceof EntityPlayer
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
                         && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getEntity() instanceof EntityPlayer))
+                        && event.getSource().getTrueSource() instanceof EntityPlayer))
                     : ((event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getEntity() instanceof EntityPlayer))) {
+                        && event.getSource().getTrueSource() instanceof EntityPlayer))) {
             int toDrop = 1;
             if (event.getEntityLiving() instanceof EntityPlayer
                     && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
-                    && event.getSource().getEntity() instanceof EntityPlayer)) {
+                    && event.getSource().getTrueSource() instanceof EntityPlayer)) {
                 toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
             }
             EntityLivingBase entity = event.getEntityLiving();

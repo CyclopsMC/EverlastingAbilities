@@ -2,18 +2,16 @@ package org.cyclops.everlastingabilities.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
+import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.everlastingabilities.ability.AbilityTypes;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
-
-import java.util.List;
 
 /**
  * A totem with abilities.
@@ -63,7 +61,8 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        if (!ItemStackHelpers.isValidCreativeTab(this, tab)) return;
         for (IAbilityType abilityType : AbilityTypes.REGISTRY.getAbilityTypes()) {
             for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
                 Ability ability = new Ability(abilityType, level);

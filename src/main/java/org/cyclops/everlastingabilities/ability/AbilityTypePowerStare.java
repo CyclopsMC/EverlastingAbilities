@@ -40,10 +40,10 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
             double eyeHeight = player.getEyeHeight();
             Vec3d lookVec = player.getLookVec();
             Vec3d origin = new Vec3d(player.posX, player.posY + eyeHeight, player.posZ);
-            Vec3d direction = origin.addVector(lookVec.xCoord * range, lookVec.yCoord * range, lookVec.zCoord * range);
+            Vec3d direction = origin.addVector(lookVec.x * range, lookVec.y * range, lookVec.z * range);
 
             List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(player,
-                    player.getEntityBoundingBox().addCoord(lookVec.xCoord * range, lookVec.yCoord * range, lookVec.zCoord * range)
+                    player.getEntityBoundingBox().offset(lookVec.x * range, lookVec.y * range, lookVec.z * range)
                             .expand((double) range, (double) range, (double) range));
             for (Entity e : list) {
                 if (e.canBeCollidedWith() && (!(e instanceof IEntityOwnable) || ((IEntityOwnable) e).getOwner() != player) && !player.isOnSameTeam(e)) {
@@ -52,7 +52,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
                     AxisAlignedBB axisalignedbb = e.getEntityBoundingBox().expand((double) f10, (double) f10, (double) f10);
                     RayTraceResult mop = axisalignedbb.calculateIntercept(origin, direction);
 
-                    if (axisalignedbb.isVecInside(origin)) {
+                    if (axisalignedbb.contains(origin)) {
                         entity = e;
                     } else if (mop != null) {
                         double distance = origin.distanceTo(mop.hitVec);

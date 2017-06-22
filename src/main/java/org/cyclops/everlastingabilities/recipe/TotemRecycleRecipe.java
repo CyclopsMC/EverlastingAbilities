@@ -1,24 +1,24 @@
 package org.cyclops.everlastingabilities.recipe;
 
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.world.World;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.capability.AbilityStoreDisplayType;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
+import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
+
 import java.util.Random;
 
-public class TotemRecycleRecipe implements IRecipe {
+public class TotemRecycleRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
     private final Random rand = new Random();
     
@@ -90,19 +90,18 @@ public class TotemRecycleRecipe implements IRecipe {
     }
 
     @Override
+    public boolean canFit(int width, int height) {
+        return width * height >= ItemAbilityTotemConfig.totemCraftingCount;
+    }
+
+    @Override
     public ItemStack getRecipeOutput() {
         return new ItemStack(ItemAbilityTotem.getInstance());
-    }
-    
-    @Override
-    public int getRecipeSize() {
-        return ItemAbilityTotemConfig.totemCraftingCount;
     }
     
     @Override
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
         return ForgeHooks.defaultRecipeGetRemainingItems(inv);
     }
-
 }
 

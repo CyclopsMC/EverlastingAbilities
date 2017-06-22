@@ -14,7 +14,10 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.gui.component.button.GuiButtonArrow;
 import org.cyclops.cyclopscore.client.gui.container.GuiContainerConfigurable;
 import org.cyclops.cyclopscore.client.gui.container.GuiContainerExtended;
-import org.cyclops.cyclopscore.helper.*;
+import org.cyclops.cyclopscore.helper.Helpers;
+import org.cyclops.cyclopscore.helper.L10NHelpers;
+import org.cyclops.cyclopscore.helper.RenderHelpers;
+import org.cyclops.cyclopscore.helper.StringHelpers;
 import org.cyclops.cyclopscore.inventory.container.ExtendedInventoryContainer;
 import org.cyclops.cyclopscore.inventory.container.button.IButtonActionClient;
 import org.cyclops.cyclopscore.item.IInformationProvider;
@@ -145,8 +148,8 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
             return;
         }
 
-        this.fontRendererObj.drawString(player.getDisplayNameString(), 8, 6, -1);
-        this.fontRendererObj.drawString(L10NHelpers.localize(getContainer().getItem().getConfig().getFullUnlocalizedName()), 102, 6, -1);
+        this.fontRenderer.drawString(player.getDisplayNameString(), 8, 6, -1);
+        this.fontRenderer.drawString(L10NHelpers.localize(getContainer().getItem().getConfig().getFullUnlocalizedName()), 102, 6, -1);
 
         // Draw abilities
         drawAbilitiesTooltip(8, 83, getPlayerAbilities(), startIndexPlayer, mouseX, mouseY);
@@ -199,7 +202,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         drawFancyBackground(i + 8, j + 17, 66, 61, getPlayerAbilityStore());
         GuiInventory.drawEntityOnScreen(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.mc.player);
         drawXp(i + 67, j + 70);
-        RenderHelpers.drawScaledCenteredString(fontRendererObj, "" + player.experienceTotal, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
+        RenderHelpers.drawScaledCenteredString(fontRenderer, "" + player.experienceTotal, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         drawFancyBackground(i + 102, j + 17, 66, 61, getItemAbilityStore());
         drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.mc.player));
 
@@ -276,12 +279,12 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
             }
 
             // Name
-            RenderHelpers.drawScaledCenteredString(fontRendererObj,
+            RenderHelpers.drawScaledCenteredString(fontRenderer,
                     ability.getAbilityType().getRarity().rarityColor + L10NHelpers.localize(ability.getAbilityType().getUnlocalizedName()),
                     x + 27, boxY + 7, 0, 1.0F, 50, -1);
 
             // Level
-            RenderHelpers.drawScaledCenteredString(fontRendererObj,
+            RenderHelpers.drawScaledCenteredString(fontRenderer,
                     "" + ability.getLevel(),
                     x + 58, boxY + 5, 0, 0.8F, -1);
 
@@ -293,7 +296,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
                 GlStateManager.color(1, 1, 1, 1);
             }
             drawXp(x + 57, boxY + 10);
-            RenderHelpers.drawScaledCenteredString(fontRendererObj,
+            RenderHelpers.drawScaledCenteredString(fontRenderer,
                     "" + requiredXp,
                     x + 53, boxY + 13, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         }
@@ -332,7 +335,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         float f = 0.00390625F;
         float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         vertexbuffer.pos((double)(x + 0), (double)(y + height), (double)this.zLevel).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + height) * f1)).color(r, g, b, a).endVertex();
         vertexbuffer.pos((double)(x + width), (double)(y + height), (double)this.zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).color(r, g, b, a).endVertex();
