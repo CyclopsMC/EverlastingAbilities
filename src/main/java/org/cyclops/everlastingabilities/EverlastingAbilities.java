@@ -324,11 +324,6 @@ public class EverlastingAbilities extends ModBaseVersionable {
         EverlastingAbilities._instance.getLoggerHelper().log(level, message);
     }
 
-    @EventHandler
-    public void onMissingMappings(FMLMissingMappingsEvent event) {
-        super.onMissingMappings(event);
-    }
-
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof EntityPlayerMP) {
