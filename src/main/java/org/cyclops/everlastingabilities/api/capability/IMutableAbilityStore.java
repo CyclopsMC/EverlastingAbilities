@@ -26,10 +26,4 @@ public interface IMutableAbilityStore extends IAbilityStore {
      */
     public @Nullable Ability removeAbility(Ability ability, boolean doRemove);
 
-
-    /**
-     * Set display type for the ability store.
-     * @param type the type to set
-     */
-    public void setDisplayType(AbilityStoreDisplayType type);
 }

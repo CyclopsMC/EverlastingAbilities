@@ -2,17 +2,19 @@ package org.cyclops.everlastingabilities.item;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
+import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.item.ItemGui;
 import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityProvider;
+import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.ItemStackMutableAbilityStore;
@@ -53,7 +55,17 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
         super.addInformation(itemStack, world, list, flag);
         IAbilityStore abilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
 
-        abilityStore.getDisplayType().addInformation(abilityStore, itemStack, world, list, flag);
+        // Display each ability in store, one line at a time
+        // Or display "none" string if list is empty
+        boolean empty = true;
+        for (Ability ability : abilityStore.getAbilities()) {
+            empty = false;
+            String name = L10NHelpers.localize(ability.getAbilityType().getUnlocalizedName());
+            list.add(TextFormatting.YELLOW + name + ": " + TextFormatting.RESET + ability.getLevel());
+        }
+        if (empty) {
+            list.add(TextFormatting.GRAY.toString() + TextFormatting.ITALIC + L10NHelpers.localize("general.everlastingabilities.empty"));
+        }
     }
 
     @Override
