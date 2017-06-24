@@ -18,5 +18,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives deobfJar
     archives sourceJar
-    archives javadocJar
+    // TODO: temp disable because travis fails on a IForgeRegistryEntry error...
+    //archives javadocJar
 }
