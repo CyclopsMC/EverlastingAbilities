@@ -99,16 +99,20 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
 
     public void moveFromPlayer(Ability playerAbility) {
         Ability insertedAbility = AbilityHelpers.insert(playerAbility, getItemAbilityStore());
-        AbilityHelpers.removePlayerAbility(player, insertedAbility, true, true);
+        if (insertedAbility != null) {
+            AbilityHelpers.removePlayerAbility(player, insertedAbility, true, true);
+        }
     }
 
     public void moveToPlayer(Ability itemAbility) {
         Ability insertedAbility = AbilityHelpers.addPlayerAbility(player, itemAbility, true, true);
-        AbilityHelpers.extract(insertedAbility, getItemAbilityStore());
+        if (insertedAbility != null) {
+            AbilityHelpers.extract(insertedAbility, getItemAbilityStore());
 
-        if(getItemAbilities().isEmpty() && !getItem().canMoveFromPlayer()) {
-            player.inventory.setInventorySlotContents(itemIndex, null);
+            if(getItemAbilities().isEmpty() && !getItem().canMoveFromPlayer()) {
+                player.inventory.setInventorySlotContents(itemIndex, null);
 
+            }
         }
     }
 
