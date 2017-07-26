@@ -174,7 +174,7 @@ public class AbilityHelpers {
     }
 
     public static IAbilityType getRandomAbility(Random random, EnumRarity rarity) {
-        List<IAbilityType> abilities = AbilityTypes.REGISTRY.getAbilityTypes(EnumRarity.values()[Math.min(EnumRarity.values().length, rarity.ordinal())]);
+        List<IAbilityType> abilities = AbilityTypes.REGISTRY.getAbilityTypes(EnumRarity.values()[Math.min(EnumRarity.values().length - 1, rarity.ordinal())]);
         if (abilities.size() > 0) {
             return abilities.get(random.nextInt(abilities.size()));
         }
@@ -208,7 +208,8 @@ public class AbilityHelpers {
         int b = 0;
         int count = 1;
         for (IAbilityType abilityType : abilityStore.getAbilityTypes()) {
-            Triple<Float, Float, Float> color = Helpers.intToRGB(AbilityHelpers.RARITY_COLORS[abilityType.getRarity().ordinal()]);
+            Triple<Float, Float, Float> color = Helpers.intToRGB(AbilityHelpers.RARITY_COLORS
+                    [Math.min(AbilityHelpers.RARITY_COLORS.length - 1, abilityType.getRarity().ordinal())]);
             r += color.getLeft() * 255;
             g += color.getMiddle() * 255;
             b += color.getRight() * 255;
