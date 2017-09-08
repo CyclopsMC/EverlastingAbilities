@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.10.7 or higher.
+
+Fixes:
+* Fix bounding-box-based effects not always working
+* Fix Fertility ability not always working, #51
+* Fix Power Stare not working in all directions, Closes #50
