@@ -41,7 +41,7 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
         if (potion != null && !world.isRemote && player.world.getWorldTime() % TICK_MODULUS == 0) {
             int radius = level * 2;
             List<EntityLivingBase> mobs = world.getEntitiesWithinAABB(EntityLivingBase.class,
-                    player.getEntityBoundingBox().expand(radius, radius, radius), EntitySelectors.NOT_SPECTATING);
+                    player.getEntityBoundingBox().grow(radius, radius, radius), EntitySelectors.NOT_SPECTATING);
             for (EntityLivingBase mob : mobs) {
                 if (mob != player && (!(mob instanceof IEntityOwnable) || ((IEntityOwnable) mob).getOwner() != player) && !player.isOnSameTeam(mob)) {
                     mob.addPotionEffect(

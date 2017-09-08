@@ -38,7 +38,7 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
 
             // Get items in calculated area.
             int area = level * 2;
-            AxisAlignedBB box = new AxisAlignedBB(x, y, z, x, y, z).expand(area, area, area);
+            AxisAlignedBB box = new AxisAlignedBB(x, y, z, x, y, z).grow(area, area, area);
             List<Entity> entities = world.getEntitiesInAABBexcluding(player, box, new Predicate<Entity>() {
 
                 @Override
