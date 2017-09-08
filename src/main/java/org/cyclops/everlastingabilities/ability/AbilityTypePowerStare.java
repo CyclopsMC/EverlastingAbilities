@@ -43,8 +43,8 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
             Vec3d direction = origin.addVector(lookVec.x * range, lookVec.y * range, lookVec.z * range);
 
             List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(player,
-                    player.getEntityBoundingBox().offset(lookVec.x * range, lookVec.y * range, lookVec.z * range)
-                            .expand((double) range, (double) range, (double) range));
+                    player.getEntityBoundingBox().expand(lookVec.x * range, lookVec.y * range, lookVec.z * range)
+                            .grow((double) range));
             for (Entity e : list) {
                 if (e.canBeCollidedWith() && (!(e instanceof IEntityOwnable) || ((IEntityOwnable) e).getOwner() != player) && !player.isOnSameTeam(e)) {
                     Entity entity = null;
