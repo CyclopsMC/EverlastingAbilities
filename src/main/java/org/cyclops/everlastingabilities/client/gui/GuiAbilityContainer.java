@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Triple;
@@ -70,9 +71,10 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
      * Make a new instance.
      * @param player The player.
      * @param itemIndex The index of the item in use inside the player inventory.
+     * @param hand The hand the item is in.
      */
-    public GuiAbilityContainer(EntityPlayer player, int itemIndex) {
-        super(new ContainerAbilityContainer(player, itemIndex));
+    public GuiAbilityContainer(EntityPlayer player, int itemIndex, EnumHand hand) {
+        super(new ContainerAbilityContainer(player, itemIndex, hand));
         this.player = player;
         ContainerAbilityContainer container = getContainer();
         container.setGui(this);

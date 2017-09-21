@@ -3,6 +3,7 @@ package org.cyclops.everlastingabilities.inventory.container;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cyclops.cyclopscore.helper.InventoryHelpers;
@@ -34,9 +35,10 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
      *
      * @param player The player.
      * @param itemIndex The index of the item in use inside the player inventory.
+     * @param hand The hand the item is in.
      */
-    public ContainerAbilityContainer(EntityPlayer player, int itemIndex) {
-        super(player.inventory, (ItemGuiAbilityContainer) InventoryHelpers.getItemFromIndex(player, itemIndex).getItem(), itemIndex);
+    public ContainerAbilityContainer(EntityPlayer player, int itemIndex, EnumHand hand) {
+        super(player.inventory, (ItemGuiAbilityContainer) InventoryHelpers.getItemFromIndex(player, itemIndex, hand).getItem(), itemIndex, hand);
         addInventory(player.inventory, 0, 8, 195, 1, 9);
 
         // If level is not consistent with total experience count, fix it.
