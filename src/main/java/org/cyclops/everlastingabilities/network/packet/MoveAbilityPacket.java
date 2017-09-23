@@ -9,6 +9,7 @@ import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.ability.AbilityTypes;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
 /**
@@ -50,11 +51,14 @@ public class MoveAbilityPacket extends PacketCodec {
 	public void actionServer(World world, EntityPlayerMP player) {
 		if (player.openContainer instanceof ContainerAbilityContainer) {
 			ContainerAbilityContainer container = (ContainerAbilityContainer) player.openContainer;
-			Ability ability = new Ability(AbilityTypes.REGISTRY.getAbilityType(abilityName), abilityLevel);
-			if (movement == Movement.FROM_PLAYER.ordinal()) {
-				container.moveFromPlayer(ability);
-			} else {
-				container.moveToPlayer(ability);
+			IAbilityType abilityType = AbilityTypes.REGISTRY.getAbilityType(abilityName);
+			if (abilityType != null) {
+				Ability ability = new Ability(abilityType, abilityLevel);
+				if (movement == Movement.FROM_PLAYER.ordinal()) {
+					container.moveFromPlayer(ability);
+				} else {
+					container.moveToPlayer(ability);
+				}
 			}
 		}
 	}
