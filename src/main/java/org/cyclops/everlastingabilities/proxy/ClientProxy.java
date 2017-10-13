@@ -40,7 +40,9 @@ public class ClientProxy extends ClientProxyComponent {
 	@SubscribeEvent
 	public void onRenderLiving(RenderLivingEvent.Post event) {
 		EntityLivingBase entity = event.getEntity();
-		if ((entity instanceof IAnimals || (GeneralConfig.showPlayerParticles && entity instanceof EntityPlayer)) && entity.world.getTotalWorldTime() % 10 == 0
+		if ((entity instanceof IAnimals || (GeneralConfig.showPlayerParticles && entity instanceof EntityPlayer))
+				&& !Minecraft.getMinecraft().isGamePaused()
+				&& entity.world.getTotalWorldTime() % 10 == 0
 				&& entity.hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)) {
 			IMutableAbilityStore abilityStore = entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
 			Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
