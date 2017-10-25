@@ -71,7 +71,7 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
                         moveEntity.motionX = dx * strength;
                         moveEntity.motionY = dy * strength;
                         moveEntity.motionZ = dz * strength;
-                        if(moveEntity.isCollidedHorizontally) {
+                        if(moveEntity.collidedHorizontally) {
                             moveEntity.motionY = 0.3;
                         }
                     }
