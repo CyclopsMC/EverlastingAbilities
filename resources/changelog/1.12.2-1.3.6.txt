@@ -1,0 +1,6 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.10.22 or higher.
+
+Changes:
+* Compress PNGs
+* Rebalance absorption ability to reduce flickering, Closes #55
