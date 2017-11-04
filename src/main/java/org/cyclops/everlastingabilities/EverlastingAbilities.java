@@ -86,7 +86,8 @@ import java.util.Set;
         useMetadata = true,
         version = Reference.MOD_VERSION,
         dependencies = Reference.MOD_DEPENDENCIES,
-        guiFactory = "org.cyclops.everlastingabilities.GuiConfigOverview$ExtendedConfigGuiFactory"
+        guiFactory = "org.cyclops.everlastingabilities.GuiConfigOverview$ExtendedConfigGuiFactory",
+        certificateFingerprint = Reference.MOD_FINGERPRINT
 )
 public class EverlastingAbilities extends ModBaseVersionable {
     
