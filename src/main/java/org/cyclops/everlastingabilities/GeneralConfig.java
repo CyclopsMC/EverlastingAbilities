@@ -108,6 +108,28 @@ public class GeneralConfig extends DummyConfig {
     public static double exhaustionPerAbilityTick = 0.01;
 
     /**
+     * Mobs that are immune to hostile potion effect abilities
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "These mobs will not be affected by hostile area potion effects such as poison or weakness.")
+    public static String[] friendlyMobs = new String[]{
+        "minecraft:villager",
+        "minecraft:villager_golem",
+        "minecraft:cow",
+        "minecraft:sheep",
+        "minecraft:pig",
+        "minecraft:chicken",
+        "minecraft:rabbit",
+        "minecraft:mooshroom",
+        "minecraft:horse",
+        "minecraft:donkey",
+        "minecraft:mule",
+        "minecraft:llama",
+        "minecraft:ocelot",
+        "minecraft:parrot",
+        "minecraft:wolf",
+    };
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;

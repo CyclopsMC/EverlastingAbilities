@@ -49,6 +49,6 @@ public class AbilityGlowingConfig extends AbilityConfig {
 
     @Override
     protected IConfigurable initSubInstance() {
-        return new AbilityTypePotionEffectRadius(getNamedId(), rarity, maxLevel, xpPerLevel, MobEffects.GLOWING);
+        return new AbilityTypePotionEffectRadius(getNamedId(), rarity, maxLevel, xpPerLevel, MobEffects.GLOWING, false);
     }
 }

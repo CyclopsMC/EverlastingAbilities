@@ -1,15 +1,18 @@
 package org.cyclops.everlastingabilities.ability;
 
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.GeneralConfig;
 
 import java.util.List;
 
@@ -22,13 +25,18 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 2;
 
     private final Potion potion;
+    private boolean hostile;
 
-    public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel, Potion potion) {
+    public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel, Potion potion, boolean isHostile) {
         super(id, rarity, maxLevel, baseXpPerLevel);
         this.potion = potion;
+        this.hostile = isHostile;
         if (this.potion == null) {
             EverlastingAbilities.clog(Level.WARN, "Tried to register a null potion for ability " + id + ". This is possibly caused by a mod forcefully removing the potion effect for this ability.");
         }
+    }
+    public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel, Potion potion) {
+        this(id, rarity, maxLevel, baseXpPerLevel, potion, true);
     }
 
     protected int getDurationMultiplier() {
@@ -43,11 +51,30 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
             List<EntityLivingBase> mobs = world.getEntitiesWithinAABB(EntityLivingBase.class,
                     player.getEntityBoundingBox().grow(radius, radius, radius), EntitySelectors.NOT_SPECTATING);
             for (EntityLivingBase mob : mobs) {
-                if (mob != player && (!(mob instanceof IEntityOwnable) || ((IEntityOwnable) mob).getOwner() != player) && !player.isOnSameTeam(mob)) {
-                    mob.addPotionEffect(
-                            new PotionEffect(potion, TICK_MODULUS * getDurationMultiplier(), level - 1, true, false));
+                if (!(this.hostile && isFriendlyMob(mob, player))) {
+                    mob.addPotionEffect(new PotionEffect(potion, TICK_MODULUS * getDurationMultiplier(), level - 1, true, false));
                 }
             }
         }
     }
+
+    private static java.util.Set<ResourceLocation> friendlyMobs = null;
+
+    static boolean isFriendlyMob(EntityLivingBase mob, EntityPlayer player) {
+
+        if (friendlyMobs == null) {
+            friendlyMobs = new java.util.HashSet<ResourceLocation>();
+            for (String s : GeneralConfig.friendlyMobs) {
+                friendlyMobs.add(new ResourceLocation(s));
+            }
+        }
+
+        return (
+            mob == player ||
+            player.isOnSameTeam(mob) ||
+            (mob instanceof IEntityOwnable && ((IEntityOwnable) mob).getOwner() != player) ||
+            friendlyMobs.contains(EntityList.getKey(mob))
+        );
+    }
+
 }
