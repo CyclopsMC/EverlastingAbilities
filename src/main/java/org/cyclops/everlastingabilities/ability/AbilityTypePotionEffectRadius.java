@@ -15,6 +15,8 @@ import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
 
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Ability type for potion effects in an area.
@@ -58,23 +60,20 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
         }
     }
 
-    private static java.util.Set<ResourceLocation> friendlyMobs = null;
-
+    private static Set<ResourceLocation> friendlyMobs = null;
     static boolean isFriendlyMob(EntityLivingBase mob, EntityPlayer player) {
-
-        if (friendlyMobs == null) {
-            friendlyMobs = new java.util.HashSet<ResourceLocation>();
-            for (String s : GeneralConfig.friendlyMobs) {
-                friendlyMobs.add(new ResourceLocation(s));
-            }
-        }
-
         return (
             mob == player ||
             player.isOnSameTeam(mob) ||
-            (mob instanceof IEntityOwnable && ((IEntityOwnable) mob).getOwner() != player) ||
+            (mob instanceof IEntityOwnable && ((IEntityOwnable) mob).getOwner() == player) ||
             friendlyMobs.contains(EntityList.getKey(mob))
         );
     }
 
+    public static void loadBlacklist(String[] mobNames) {
+        friendlyMobs = new HashSet<ResourceLocation>();
+        for (String s : mobNames) {
+            friendlyMobs.add(new ResourceLocation(s));
+        }
+    }
 }
