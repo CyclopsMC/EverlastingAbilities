@@ -23,6 +23,8 @@ import org.cyclops.everlastingabilities.client.gui.GuiAbilityContainer;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Base class for items with abilities.
@@ -54,11 +56,13 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     public void addInformation(ItemStack itemStack, World world, List<String> list, ITooltipFlag flag) {
         super.addInformation(itemStack, world, list, flag);
         IAbilityStore abilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+        List<Ability> abilities = new ArrayList<Ability>(abilityStore.getAbilities());
+        Collections.sort(abilities);
 
         // Display each ability in store, one line at a time
         // Or display "none" string if list is empty
         boolean empty = true;
-        for (Ability ability : abilityStore.getAbilities()) {
+        for (Ability ability : abilities) {
             empty = false;
             String name = L10NHelpers.localize(ability.getAbilityType().getUnlocalizedName());
             list.add(TextFormatting.YELLOW + name + ": " + TextFormatting.RESET + ability.getLevel());
