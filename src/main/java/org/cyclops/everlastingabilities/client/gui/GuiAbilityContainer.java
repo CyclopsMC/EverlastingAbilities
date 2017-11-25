@@ -33,6 +33,7 @@ import org.cyclops.everlastingabilities.network.packet.MoveAbilityPacket;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Gui for the labeller.
@@ -266,6 +267,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
     private void drawAbilities(int x, int y, List<Ability> abilities, int startIndex, int playerXp,
                                int currentSelectedIndex, int mouseX, int mouseY, boolean canEdit) {
+        Collections.sort(abilities);
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
             int boxY = y + i * ABILITY_BOX_HEIGHT;
