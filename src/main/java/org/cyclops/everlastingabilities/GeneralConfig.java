@@ -5,9 +5,11 @@ import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.ConfigurableType;
 import org.cyclops.cyclopscore.config.ConfigurableTypeCategory;
 import org.cyclops.cyclopscore.config.extendedconfig.DummyConfig;
+import org.cyclops.cyclopscore.config.IChangedCallback;
 import org.cyclops.cyclopscore.init.ModBase;
 import org.cyclops.cyclopscore.tracking.Analytics;
 import org.cyclops.cyclopscore.tracking.Versions;
+import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectRadius;
 
 /**
  * A config with general options for this mod.
@@ -108,6 +110,28 @@ public class GeneralConfig extends DummyConfig {
     public static double exhaustionPerAbilityTick = 0.01;
 
     /**
+     * Mobs that are immune to hostile potion effect abilities
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "These mobs will not be affected by hostile area potion effects such as poison or weakness.", changedCallback = FriendlyMobListChanged.class)
+    public static String[] friendlyMobs = new String[]{
+        "minecraft:villager",
+        "minecraft:villager_golem",
+        "minecraft:cow",
+        "minecraft:sheep",
+        "minecraft:pig",
+        "minecraft:chicken",
+        "minecraft:rabbit",
+        "minecraft:mooshroom",
+        "minecraft:horse",
+        "minecraft:donkey",
+        "minecraft:mule",
+        "minecraft:llama",
+        "minecraft:ocelot",
+        "minecraft:parrot",
+        "minecraft:wolf",
+    };
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;
@@ -136,5 +160,19 @@ public class GeneralConfig extends DummyConfig {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    /**
+     * Callback class when friendlyMobs blacklist changes
+     */
+    public static class FriendlyMobListChanged implements IChangedCallback {
+        @Override
+        public void onChanged(Object value) {
+            AbilityTypePotionEffectRadius.loadBlacklist((String[])value);
+        }
+        @Override
+        public void onRegisteredPostInit(Object value) {
+            AbilityTypePotionEffectRadius.loadBlacklist((String[])value);
+        }
     }
 }
