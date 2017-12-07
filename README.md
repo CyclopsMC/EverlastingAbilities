@@ -1,12 +1,14 @@
 ## EverlastingAbilities
 
 [![Build Status](https://travis-ci.org/CyclopsMC/EverlastingAbilities.svg?branch=master-1.11)](https://travis-ci.org/CyclopsMC/EverlastingAbilities)
-[![Download](https://api.bintray.com/packages/cyclopsmc/dev/EverlastingAbilities/images/download.svg) ](https://bintray.com/cyclopsmc/dev/EverlastingAbilities/_latestVersion)
+[![Download](https://img.shields.io/maven-metadata/v/http/cyclopsmc.jfrog.io/cyclopsmc/libs-release/org/cyclops/everlastingabilities/EverlastingAbilities/maven-metadata.xml.svg) ](https://cyclopsmc.jfrog.io/cyclopsmc/libs-release/org/cyclops/everlastingabilities/EverlastingAbilities/)
 [![CurseForge](http://cf.way2muchnoise.eu/full_248353_downloads.svg)](http://minecraft.curseforge.com/projects/248353)
 
 Discover, share and conquer abilities that stick.
 
 All stable releases (including deobfuscated builds) can be found on [CurseForge](https://minecraft.curseforge.com/projects/everlastingabilities).
+
+[Development builds](https://cyclopsmc.jfrog.io/cyclopsmc/libs-release/org/cyclops/everlastingabilities/EverlastingAbilities/) are hosted by [JFrog Artifactory](https://www.jfrog.com/artifactory/).
 
 ### Contributing
 * Before submitting a pull request containing a new feature, please discuss this first with one of the lead developers.
