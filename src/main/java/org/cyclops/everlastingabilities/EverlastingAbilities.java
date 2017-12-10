@@ -118,7 +118,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
                 if (ConfigHandler.isEnabled(ItemAbilityBottleConfig.class)) {
                     for (IAbilityType abilityType : AbilityTypes.REGISTRY.getAbilityTypes()) {
-                        for (int level = 0; level < abilityType.getMaxLevel(); level++) {
+                        for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
                             Ability ability = new Ability(abilityType, level);
                             String name = abilityType.getUnlocalizedName();
                             String[] split = name.split("\\.");
