@@ -1,0 +1,13 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.10.23 or higher.
+
+Additions:
+* Add config blacklist of friendly mobs that hostile potion abilities don't affect.  Fixes #41
+
+Changes:
+* Make totem recycling more deterministic for different input orders
+* Sort abilities in GUI, Closes #44
+* Sign jars
+
+Fixes:
+* Fix XML recipe constants not properly setting levels, Closes #63
