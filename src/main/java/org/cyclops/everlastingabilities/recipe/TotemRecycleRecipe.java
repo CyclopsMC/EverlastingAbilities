@@ -79,6 +79,9 @@ public class TotemRecycleRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
             rarity = EnumRarity.values()[rarity.ordinal()+1];
         }
 
+        // Set the rand seed so that the resulting ability will always be different
+        // (but deterministic) for different input abilities
+        rand.setSeed(sortedStacks.stream().mapToInt(ItemStackHelpers::getItemStackHashCode).sum());
         return AbilityHelpers.getRandomTotem(rarity, rand);
     }
 
