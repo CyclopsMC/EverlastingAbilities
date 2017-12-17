@@ -1,0 +1,10 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.10.23 or higher.
+
+Changes:
+* Add required player levels to ability tooltips, Closes #64
+
+Fixes:
+* Fix gui tooltips not matching abilities, Closes #67
+* Fix totem recycle recipe not being random enough, Closes #66
+  It only checked the rarity levels of the input, now it also checks the actual abilities.
