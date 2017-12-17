@@ -329,7 +329,9 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
                         IInformationProvider.INFO_PREFIX));
 
                 // Xp
-                lines.add(TextFormatting.DARK_GREEN + L10NHelpers.localize("general.everlastingabilities.xp", ability.getAbilityType().getBaseXpPerLevel()));
+                lines.add(TextFormatting.DARK_GREEN + L10NHelpers.localize("general.everlastingabilities.xp",
+                        ability.getAbilityType().getBaseXpPerLevel(),
+                        AbilityHelpers.getLevelForExperience(ability.getAbilityType().getBaseXpPerLevel())));
 
                 drawTooltip(lines, mouseX - this.guiLeft, mouseY - this.guiTop);
             }
