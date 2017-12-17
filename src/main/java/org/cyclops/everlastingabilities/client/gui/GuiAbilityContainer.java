@@ -308,6 +308,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
     }
 
     private void drawAbilitiesTooltip(int x, int y, List<Ability> abilities, int startIndex, int mouseX, int mouseY) {
+        Collections.sort(abilities);
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
             int boxY = y + i * ABILITY_BOX_HEIGHT;
