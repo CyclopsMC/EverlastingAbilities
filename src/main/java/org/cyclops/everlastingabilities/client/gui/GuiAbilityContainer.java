@@ -160,11 +160,15 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
     }
 
     protected List<Ability> getPlayerAbilities() {
-        return getContainer().getPlayerAbilities();
+        List<Ability> abilities = getContainer().getPlayerAbilities();
+        Collections.sort(abilities);
+        return abilities;
     }
 
     protected List<Ability> getItemAbilities() {
-        return getContainer().getItemAbilities();
+        List<Ability> abilities = getContainer().getItemAbilities();
+        Collections.sort(abilities);
+        return abilities;
     }
 
     protected IMutableAbilityStore getPlayerAbilityStore() {
@@ -267,7 +271,6 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
     private void drawAbilities(int x, int y, List<Ability> abilities, int startIndex, int playerXp,
                                int currentSelectedIndex, int mouseX, int mouseY, boolean canEdit) {
-        Collections.sort(abilities);
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
             int boxY = y + i * ABILITY_BOX_HEIGHT;
@@ -308,7 +311,6 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
     }
 
     private void drawAbilitiesTooltip(int x, int y, List<Ability> abilities, int startIndex, int mouseX, int mouseY) {
-        Collections.sort(abilities);
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
             int boxY = y + i * ABILITY_BOX_HEIGHT;
