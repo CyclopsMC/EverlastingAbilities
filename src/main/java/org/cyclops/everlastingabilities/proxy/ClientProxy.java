@@ -40,7 +40,8 @@ public class ClientProxy extends ClientProxyComponent {
 	@SubscribeEvent
 	public void onRenderLiving(RenderLivingEvent.Post event) {
 		EntityLivingBase entity = event.getEntity();
-		if ((entity instanceof IAnimals || (GeneralConfig.showPlayerParticles && entity instanceof EntityPlayer))
+		if (((GeneralConfig.showEntityParticles && entity instanceof IAnimals)
+				|| (GeneralConfig.showPlayerParticles && entity instanceof EntityPlayer))
 				&& !Minecraft.getMinecraft().isGamePaused()
 				&& entity.world.getTotalWorldTime() % 10 == 0
 				&& entity.hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)) {

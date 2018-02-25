@@ -98,6 +98,12 @@ public class GeneralConfig extends DummyConfig {
     public static boolean showPlayerParticles = false;
 
     /**
+     * If non-player entities should have particle effects for the abilities they carry.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "If on-player entities should have particle effects for the abilities they carry.", isCommandable = true)
+    public static boolean showEntityParticles = true;
+
+    /**
      * The maximum amount of abilities a player can have, -1 is infinite.
      */
     @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "The maximum amount of abilities a player can have, -1 is infinite.", isCommandable = true)
