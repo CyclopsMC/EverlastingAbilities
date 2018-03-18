@@ -25,7 +25,7 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
     @Override
     public void onChangedLevel(EntityPlayer player, int oldLevel, int newLevel) {
         if (oldLevel > 0 && newLevel == 0) {
-            float stepHeight = 0.5F;
+            float stepHeight = 0.6F;
             if(player.getEntityData().hasKey(PLAYER_NBT_KEY)) {
                 if (!AbilityStepAssistConfig.forceDefaultStepHeight) {
                     stepHeight = player.getEntityData().getFloat(PLAYER_NBT_KEY);

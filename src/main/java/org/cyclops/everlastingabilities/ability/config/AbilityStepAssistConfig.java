@@ -20,9 +20,9 @@ public class AbilityStepAssistConfig extends AbilityConfig {
     public static AbilityConfig _instance;
 
     /**
-     * Forces the default step height value to 0.5 when this ability is deactivated.
+     * Forces the default step height value to 0.6 when this ability is deactivated.
      */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "Forces the default step height value to 0.5 when this ability is deactivated.", isCommandable = true)
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "Forces the default step height value to 0.6 when this ability is deactivated.", isCommandable = true)
     public static boolean forceDefaultStepHeight = true;
     /**
      * Rarity of this ability.
