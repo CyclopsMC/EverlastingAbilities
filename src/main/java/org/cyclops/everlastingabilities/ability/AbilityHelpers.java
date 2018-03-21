@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
+import com.google.common.collect.Iterables;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
@@ -174,11 +175,11 @@ public class AbilityHelpers {
     }
 
     public static IAbilityType getRandomAbility(Random random, EnumRarity rarity) {
-        List<IAbilityType> abilities = AbilityTypes.REGISTRY.getAbilityTypes(EnumRarity.values()[Math.min(EnumRarity.values().length - 1, rarity.ordinal())]);
+        List<IAbilityType> abilities = AbilityTypes.REGISTRY.getAbilityTypes(rarity);
         if (abilities.size() > 0) {
             return abilities.get(random.nextInt(abilities.size()));
         }
-        return null;
+        throw new IllegalStateException("Tried getting a random ability for a rarity for which no abilities exist: " + rarity);
     }
 
     public static ItemStack getRandomTotem(EnumRarity rarity, Random rand) {
@@ -199,6 +200,16 @@ public class AbilityHelpers {
         } else {
             rarity = EnumRarity.COMMON;
         }
+
+        // Fallback to a random selection of a rarity that is guaranteed to exist in the registered abilities
+        if (AbilityTypes.REGISTRY.getAbilityTypes(rarity).isEmpty()) {
+            int size = AbilityTypes.REGISTRY.getAbilityTypes().size();
+            if (size == 0) {
+                throw new IllegalStateException("No abilities were registered, at least one ability must be enabled for this mod to function correctly.");
+            }
+            rarity = Iterables.get(AbilityTypes.REGISTRY.getAbilityTypes(), rand.nextInt(size)).getRarity();
+        }
+
         return rarity;
     }
 
