@@ -29,6 +29,7 @@ public class AbilityTypeRegistry implements IAbilityTypeRegistry {
     private static final AbilityTypeRegistry INSTANCE = new AbilityTypeRegistry();
 
     private final Map<String, IAbilityType> abilities = Maps.newHashMap();
+    private final Map<EnumRarity, List<IAbilityType>> rarityAbilities = Maps.newEnumMap(EnumRarity.class);
 
     private AbilityTypeRegistry() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -41,6 +42,7 @@ public class AbilityTypeRegistry implements IAbilityTypeRegistry {
     @Override
     public <A extends IAbilityType> A register(A abilityType) {
         abilities.put(abilityType.getUnlocalizedName(), abilityType);
+        rarityAbilities.computeIfAbsent(abilityType.getRarity(), (rarity) -> Lists.newArrayList()).add(abilityType);
         return abilityType;
     }
 
@@ -56,13 +58,7 @@ public class AbilityTypeRegistry implements IAbilityTypeRegistry {
 
     @Override
     public List<IAbilityType> getAbilityTypes(EnumRarity rarity) {
-        List<IAbilityType> abilityTypes = Lists.newArrayList();
-        for (IAbilityType abilityType : abilities.values()) {
-            if (abilityType.getRarity().ordinal() <= rarity.ordinal()) {
-                abilityTypes.add(abilityType);
-            }
-        }
-        return abilityTypes;
+        return rarityAbilities.getOrDefault(rarity, Collections.emptyList());
     }
 
     @SubscribeEvent
