@@ -1,0 +1,8 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.11.0 or higher.
+
+Changes:
+* Improve performance of rarity-based ability lookup
+
+Fixes:
+* Fix crash when certain ability rarities are not available, Closes #78
