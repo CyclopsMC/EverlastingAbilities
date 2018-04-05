@@ -46,10 +46,8 @@ public class TotemRecycleRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
         // Item is being taken out of crafting grid.
 
         // Select one of the inputs at random, and use its rarity for the rarity of the output.
-        int inputIndex = 0;
         rand.setSeed(seed);
         int inputTargetIndex = rand.nextInt(ItemAbilityTotemConfig.totemCraftingCount);
-        EnumRarity rarity = EnumRarity.COMMON;
 
         // Sort our input stacks, so we can deterministically select one specific one to determine the output rarity.
         NonNullList<ItemStack> sortedStacks = NonNullList.create();
@@ -72,17 +70,28 @@ public class TotemRecycleRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
             // Should not be able to happen, unless some mod is doing funky stuff.
             return ItemStack.EMPTY;
         }
-        rarity = ItemAbilityTotem.getInstance().getRarity(sortedStacks.get(inputTargetIndex));
+        EnumRarity rarity = ItemAbilityTotem.getInstance().getRarity(sortedStacks.get(inputTargetIndex));
 
         // 20% chance of a bump
-        if (rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent && rarity.ordinal() < EnumRarity.EPIC.ordinal()) {
-            rarity = EnumRarity.values()[rarity.ordinal()+1];
+        if (rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent) {
+            EnumRarity newRarity = rarity;
+            // This loop ensures that the new rarity has at least one registered ability
+            do {
+                if (newRarity.ordinal() < EnumRarity.EPIC.ordinal()) {
+                    newRarity = EnumRarity.values()[newRarity.ordinal() + 1];
+                } else {
+                    // Fallback to the original rarity.
+                    // By logical inference, this will have at least one rarity, i.e., the original ability.
+                    newRarity = rarity;
+                }
+            } while (!AbilityHelpers.hasRarityAbilities(newRarity));
+            rarity = newRarity;
         }
 
         // Set the rand seed so that the resulting ability will always be different
         // (but deterministic) for different input abilities
         rand.setSeed(sortedStacks.stream().mapToInt(ItemStackHelpers::getItemStackHashCode).sum());
-        return AbilityHelpers.getRandomTotem(rarity, rand);
+        return AbilityHelpers.getRandomTotem(rarity, rand).get(); // This optional should always be present
     }
 
     @Override

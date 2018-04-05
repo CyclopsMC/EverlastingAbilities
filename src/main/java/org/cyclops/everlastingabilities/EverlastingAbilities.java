@@ -2,7 +2,6 @@ package org.cyclops.everlastingabilities;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.block.Block;
 import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -11,11 +10,8 @@ import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -30,18 +26,23 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.command.CommandMod;
 import org.cyclops.cyclopscore.config.ConfigHandler;
-import org.cyclops.cyclopscore.config.extendedconfig.BlockConfig;
-import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
-import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigReference;
-import org.cyclops.cyclopscore.helper.*;
+import org.cyclops.cyclopscore.helper.CraftingHelpers;
+import org.cyclops.cyclopscore.helper.EntityHelpers;
+import org.cyclops.cyclopscore.helper.ItemStackHelpers;
+import org.cyclops.cyclopscore.helper.L10NHelpers;
+import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.cyclopscore.helper.obfuscation.ObfuscationHelpers;
 import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
@@ -66,12 +67,13 @@ import org.cyclops.everlastingabilities.item.ItemAbilityBottle;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
-import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
 import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket;
+import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -188,10 +190,9 @@ public class EverlastingAbilities extends ModBaseVersionable {
                             Random rand = new Random();
                             rand.setSeed(entity.getEntityId());
                             EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
-                            IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity);
-                            if (abilityType != null) {
-                                store.addAbility(new Ability(abilityType, 1), true);
-                            }
+                            AbilityHelpers.getRandomAbility(rand, rarity).ifPresent(
+                                    abilityType -> store.addAbility(new Ability(abilityType, 1), true));
+                            ;
                         }
                     }
                     return new SerializableCapabilityProvider<IMutableAbilityStore>(getCapability(), store);
@@ -350,15 +351,15 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
                 World world = event.player.world;
                 EntityPlayer player = event.player;
-                IAbilityType abilityType = AbilityHelpers.getRandomAbility(world.rand, EnumRarity.values()[GeneralConfig.totemMaximumSpawnRarity]);
-                if (abilityType != null) {
+                EnumRarity rarity = EnumRarity.values()[GeneralConfig.totemMaximumSpawnRarity];
+                AbilityHelpers.getRandomAbilityUntil(world.rand, rarity, true).ifPresent(abilityType -> {
                     ItemStack itemStack = new ItemStack(ItemAbilityBottle.getInstance());
                     IMutableAbilityStore mutableAbilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
                     mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
 
                     ItemStackHelpers.spawnItemStackToPlayer(world, player.getPosition(), itemStack, player);
                     EntityHelpers.spawnXpAtPlayer(world, player, abilityType.getBaseXpPerLevel());
-                }
+                });
             }
         }
     }

@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.ability;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
@@ -19,8 +20,11 @@ import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 
 import javax.annotation.Nullable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -174,17 +178,29 @@ public class AbilityHelpers {
         return mutableAbilityStore.removeAbility(ability, true);
     }
 
-    public static IAbilityType getRandomAbility(Random random, EnumRarity rarity) {
+    public static Optional<IAbilityType> getRandomAbility(Random random, EnumRarity rarity) {
         List<IAbilityType> abilities = AbilityTypes.REGISTRY.getAbilityTypes(rarity);
         if (abilities.size() > 0) {
-            return abilities.get(random.nextInt(abilities.size()));
+            return Optional.of(abilities.get(random.nextInt(abilities.size())));
         }
-        throw new IllegalStateException("Tried getting a random ability for a rarity for which no abilities exist: " + rarity);
+        return Optional.empty();
     }
 
-    public static ItemStack getRandomTotem(EnumRarity rarity, Random rand) {
-        IAbilityType abilityType = getRandomAbility(rand, rarity);
-        return ItemAbilityTotem.getInstance().getTotem(new Ability(abilityType, 1));
+    public static Optional<IAbilityType> getRandomAbilityUntil(Random random, EnumRarity rarity, boolean inclusive) {
+        NavigableSet<EnumRarity> validRarities = AbilityHelpers.getValidAbilityRarities().headSet(rarity, inclusive);
+        Iterator<EnumRarity> it = validRarities.descendingIterator();
+        while (it.hasNext()) {
+            Optional<IAbilityType> optional = getRandomAbility(random, it.next());
+            if (optional.isPresent()) {
+                return optional;
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<ItemStack> getRandomTotem(EnumRarity rarity, Random rand) {
+        return getRandomAbility(rand, rarity).flatMap(
+                abilityType -> Optional.of(ItemAbilityTotem.getInstance().getTotem(new Ability(abilityType, 1))));
     }
     
 
@@ -202,7 +218,7 @@ public class AbilityHelpers {
         }
 
         // Fallback to a random selection of a rarity that is guaranteed to exist in the registered abilities
-        if (AbilityTypes.REGISTRY.getAbilityTypes(rarity).isEmpty()) {
+        if (hasRarityAbilities(rarity)) {
             int size = AbilityTypes.REGISTRY.getAbilityTypes().size();
             if (size == 0) {
                 throw new IllegalStateException("No abilities were registered, at least one ability must be enabled for this mod to function correctly.");
@@ -211,6 +227,20 @@ public class AbilityHelpers {
         }
 
         return rarity;
+    }
+
+    public static boolean hasRarityAbilities(EnumRarity rarity) {
+        return AbilityTypes.REGISTRY.getAbilityTypes(rarity).isEmpty();
+    }
+
+    public static NavigableSet<EnumRarity> getValidAbilityRarities() {
+        NavigableSet<EnumRarity> rarities = Sets.newTreeSet();
+        for (EnumRarity rarity : EnumRarity.values()) {
+            if (!AbilityTypes.REGISTRY.getAbilityTypes(rarity).isEmpty()) {
+                rarities.add(rarity);
+            }
+        }
+        return rarities;
     }
 
     public static Triple<Integer, Integer, Integer> getAverageRarityColor(IAbilityStore abilityStore) {

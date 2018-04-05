@@ -72,7 +72,7 @@ public class ItemAbilityTotemConfig extends ItemConfig {
                                 @Override
                                 public ItemStack apply(ItemStack stack, Random rand, LootContext context) {
                                     EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
-                                    IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity);
+                                    IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity).get(); // Should always be present, as the method above guarantees that
 
                                     IMutableAbilityStore mutableAbilityStore = stack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
                                     mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
