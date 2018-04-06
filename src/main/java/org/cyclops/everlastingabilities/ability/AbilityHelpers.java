@@ -230,7 +230,7 @@ public class AbilityHelpers {
     }
 
     public static boolean hasRarityAbilities(EnumRarity rarity) {
-        return AbilityTypes.REGISTRY.getAbilityTypes(rarity).isEmpty();
+        return !AbilityTypes.REGISTRY.getAbilityTypes(rarity).isEmpty();
     }
 
     public static NavigableSet<EnumRarity> getValidAbilityRarities() {
