@@ -29,7 +29,8 @@ public class AbilityTypeRegistry implements IAbilityTypeRegistry {
     private static final AbilityTypeRegistry INSTANCE = new AbilityTypeRegistry();
 
     private final Map<String, IAbilityType> abilities = Maps.newHashMap();
-    private final Map<EnumRarity, List<IAbilityType>> rarityAbilities = Maps.newEnumMap(EnumRarity.class);
+    private final Map<EnumRarity, List<IAbilityType>> rarityAbilities = Maps.newIdentityHashMap(); // An EnumMap
+    // would be better, but unfortunately doesn't work well with other mods that register new rarity types.
 
     private AbilityTypeRegistry() {
         MinecraftForge.EVENT_BUS.register(this);
