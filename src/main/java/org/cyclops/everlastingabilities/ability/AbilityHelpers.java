@@ -218,7 +218,7 @@ public class AbilityHelpers {
         }
 
         // Fallback to a random selection of a rarity that is guaranteed to exist in the registered abilities
-        if (hasRarityAbilities(rarity)) {
+        if (!hasRarityAbilities(rarity)) {
             int size = AbilityTypes.REGISTRY.getAbilityTypes().size();
             if (size == 0) {
                 throw new IllegalStateException("No abilities were registered, at least one ability must be enabled for this mod to function correctly.");
