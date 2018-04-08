@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 0.11.0 or higher.
+
+Fixes:
+* Use IdentityMap instead of EnumMap to store rarity to ability mapping, Closes #85
+* Fix potential crash when injecting loot tables with changed rarities, Closes #83
+
