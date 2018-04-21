@@ -98,7 +98,7 @@ public class CommandModifyAbilities extends CommandMod {
                             sender.sendMessage(new TextComponentString(L10NHelpers.localize("chat.everlastingabilities.command.invalidAbility", abilityType)));
                         } else {
                             if ("add".equals(command)) {
-                                level = Math.max(1, Math.min(abilityType.getMaxLevel(), level));
+                                level = Math.max(1, Math.min(abilityType.getMaxLevelInfinitySafe(), level));
                                 Ability ability = new Ability(abilityType, level);
 
                                 Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true, false);

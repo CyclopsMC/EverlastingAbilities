@@ -13,6 +13,9 @@ public interface IAbilityType {
     public String getUnlocalizedDescription();
     public EnumRarity getRarity();
     public int getMaxLevel();
+    public default int getMaxLevelInfinitySafe() {
+        return getMaxLevel() < 0 ? Integer.MAX_VALUE : getMaxLevel();
+    }
     public int getBaseXpPerLevel();
 
     public void onTick(EntityPlayer player, int level);

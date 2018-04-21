@@ -53,7 +53,8 @@ public class AbilityAbsorbtionConfig extends AbilityConfig {
         return new AbilityTypePotionEffectSelf(getNamedId(), rarity, maxLevel, xpPerLevel, MobEffects.ABSORPTION) {
             @Override
             protected int getDuration(int tickModulus, int level) {
-                return (int) (MinecraftHelpers.SECOND_IN_TICKS * ((float) level / getMaxLevel() * 20F));
+                int maxLevel = getMaxLevel() == -1 ? 5 : getMaxLevel();
+                return (int) (MinecraftHelpers.SECOND_IN_TICKS * ((float) level / maxLevel * 20F));
             }
 
             @Override

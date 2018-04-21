@@ -323,7 +323,8 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
                         + L10NHelpers.localize(ability.getAbilityType().getUnlocalizedName()));
 
                 // Level
-                lines.add(L10NHelpers.localize("general.everlastingabilities.level", ability.getLevel(), ability.getAbilityType().getMaxLevel()));
+                lines.add(L10NHelpers.localize("general.everlastingabilities.level", ability.getLevel(),
+                        ability.getAbilityType().getMaxLevel() == -1 ? "Inf" : ability.getAbilityType().getMaxLevel()));
 
                 // Description
                 String localizedDescription = L10NHelpers.localize(ability.getAbilityType().getUnlocalizedDescription());

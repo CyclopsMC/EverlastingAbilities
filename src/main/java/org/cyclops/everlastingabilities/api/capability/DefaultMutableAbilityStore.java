@@ -21,7 +21,7 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
     public Ability addAbility(Ability ability, boolean doAdd) {
         IAbilityType abilityType = ability.getAbilityType();
         int currentLevel = abilityTypes.containsKey(abilityType) ? abilityTypes.get(abilityType) : 0;
-        int maxLevel = abilityType.getMaxLevel();
+        int maxLevel = abilityType.getMaxLevelInfinitySafe();
         int toAddLevel = ability.getLevel();
         int finalLevel = Math.min(currentLevel + toAddLevel, maxLevel);
         int addedLevel = finalLevel - currentLevel;
