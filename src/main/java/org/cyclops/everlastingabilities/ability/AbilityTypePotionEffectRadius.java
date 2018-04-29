@@ -14,6 +14,7 @@ import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
@@ -60,20 +61,17 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
         }
     }
 
-    private static Set<ResourceLocation> friendlyMobs = null;
+    private static String[] friendlyMobs = null;
     static boolean isFriendlyMob(EntityLivingBase mob, EntityPlayer player) {
-        return (
-            mob == player ||
-            player.isOnSameTeam(mob) ||
-            (mob instanceof IEntityOwnable && ((IEntityOwnable) mob).getOwner() == player) ||
-            friendlyMobs.contains(EntityList.getKey(mob))
-        );
+        ResourceLocation resourceLocation = EntityList.getKey(mob);
+        String mobName = resourceLocation == null ? "null" : resourceLocation.toString();
+        return (mob == player ||
+                player.isOnSameTeam(mob) ||
+                (mob instanceof IEntityOwnable && ((IEntityOwnable) mob).getOwner() == player) ||
+                Arrays.stream(friendlyMobs).anyMatch(mobName::matches));
     }
 
     public static void loadBlacklist(String[] mobNames) {
-        friendlyMobs = new HashSet<ResourceLocation>();
-        for (String s : mobNames) {
-            friendlyMobs.add(new ResourceLocation(s));
-        }
+        friendlyMobs = mobNames;
     }
 }
