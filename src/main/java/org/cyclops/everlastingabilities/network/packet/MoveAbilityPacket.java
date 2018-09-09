@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.ability.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -55,9 +56,15 @@ public class MoveAbilityPacket extends PacketCodec {
 			if (abilityType != null) {
 				Ability ability = new Ability(abilityType, abilityLevel);
 				if (movement == Movement.FROM_PLAYER.ordinal()) {
-					container.moveFromPlayer(ability);
+					if (AbilityHelpers.canExtract(ability, container.getPlayerAbilityStore())
+							&& AbilityHelpers.canInsert(ability, container.getItemAbilityStore())) {
+						container.moveFromPlayer(ability);
+					}
 				} else {
-					container.moveToPlayer(ability);
+					if (AbilityHelpers.canExtract(ability, container.getItemAbilityStore())
+							&& AbilityHelpers.canInsert(ability, container.getPlayerAbilityStore())) {
+						container.moveToPlayer(ability);
+					}
 				}
 			}
 		}
