@@ -27,7 +27,7 @@ public class AbilityTypeFertility extends AbilityTypeDefault {
     @Override
     public void onTick(EntityPlayer player, int level) {
         World world = player.world;
-        if (!world.isRemote && player.world.getWorldTime() % TICK_MODULUS == 0) {
+        if (!world.isRemote && player.world.getTotalWorldTime() % TICK_MODULUS == 0) {
             int radius = level * 2;
             List<EntityAnimal> mobs = world.getEntitiesWithinAABB(EntityAnimal.class,
                     player.getEntityBoundingBox().grow(radius, radius, radius), EntitySelectors.NOT_SPECTATING);

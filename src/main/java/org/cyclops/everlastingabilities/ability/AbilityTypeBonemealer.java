@@ -31,7 +31,7 @@ public class AbilityTypeBonemealer extends AbilityTypeDefault {
     @Override
     public void onTick(EntityPlayer player, int level) {
         World world = player.world;
-        if (!world.isRemote && player.world.getWorldTime() % (TICK_MODULUS / level) == 0) {
+        if (!world.isRemote && player.world.getTotalWorldTime() % (TICK_MODULUS / level) == 0) {
             int radius = level * 2;
             WorldHelpers.foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.getPosition(), new WorldHelpers.WorldFoldingFunction<Void, Void>() {
                 @Nullable

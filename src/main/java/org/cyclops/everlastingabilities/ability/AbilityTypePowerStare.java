@@ -35,7 +35,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
         }
 
         World world = player.world;
-        if (!world.isRemote && player.world.getWorldTime() % TICK_MODULUS == 0) {
+        if (!world.isRemote && player.world.getTotalWorldTime() % TICK_MODULUS == 0) {
             int range = level * 10;
             double eyeHeight = player.getEyeHeight();
             Vec3d lookVec = player.getLookVec();
