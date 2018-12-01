@@ -30,7 +30,7 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
     @Override
     public void onTick(EntityPlayer player, int level) {
         World world = player.world;
-        if (!world.isRemote && !player.isSneaking() && player.world.getWorldTime() % TICK_MODULUS == 0) {
+        if (!world.isRemote && !player.isSneaking() && player.world.getTotalWorldTime() % TICK_MODULUS == 0) {
             // Center of the attraction
             double x = player.posX;
             double y = player.posY;
