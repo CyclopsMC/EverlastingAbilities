@@ -1,0 +1,212 @@
+# Общее
+itemGroup.everlastingabilities=Вечные способности
+general.everlastingabilities.empty=Ничего
+general.everlastingabilities.level=Уровень: %s / %s
+general.everlastingabilities.xp=XP/Уровень: %s (%s уровни игрока)
+
+# Чат
+chat.everlastingabilities.command.invalidAbility=Не удалось найти способность с помощью id "%s".
+chat.everlastingabilities.command.addedAbility=Добавлена способность %s, новая способность %s.
+chat.everlastingabilities.command.removedAbility=Удалена способность %s, новая способность %s.
+chat.everlastingabilities.playerLostAbility=%s сброшена %s уровень %s!
+
+## Способности
+ability.abilities.everlastingabilities.speed.name=Скорость
+ability.abilities.everlastingabilities.speed.info=Идти быстрее
+ability.abilities.everlastingabilities.haste.name=Спешка
+ability.abilities.everlastingabilities.haste.info=Добывать быстрее
+ability.abilities.everlastingabilities.strength.name=Сила
+ability.abilities.everlastingabilities.strength.info=Причиняет больше урона при атаке
+ability.abilities.everlastingabilities.jump_boost.name=Увеличенный прыжок
+ability.abilities.everlastingabilities.jump_boost.info=Прыгать выше
+ability.abilities.everlastingabilities.regeneration.name=Регенерация
+ability.abilities.everlastingabilities.regeneration.info=Восстанавливает здоровье быстрее
+ability.abilities.everlastingabilities.resistance.name=Сопротивление
+ability.abilities.everlastingabilities.resistance.info=Поглощает меньше урона от атак
+ability.abilities.everlastingabilities.fire_resistance.name=Огнестойкость
+ability.abilities.everlastingabilities.fire_resistance.info=Поглощает меньше урона от атак
+ability.abilities.everlastingabilities.water_breathing.name=Жабры
+ability.abilities.everlastingabilities.water_breathing.info=Дыхание подводой
+ability.abilities.everlastingabilities.invisibility.name=Невидимость
+ability.abilities.everlastingabilities.invisibility.info=Стать невидимым
+ability.abilities.everlastingabilities.night_vision.name=Ночное зрение
+ability.abilities.everlastingabilities.night_vision.info=Видеть в темноте
+ability.abilities.everlastingabilities.absorbtion.name=Поглощение
+ability.abilities.everlastingabilities.absorbtion.info=Добавляет поглощающиеся сердца
+ability.abilities.everlastingabilities.saturation.name=Насыщение
+ability.abilities.everlastingabilities.saturation.info=Пониженное чувство голода
+ability.abilities.everlastingabilities.luck.name=Удача
+ability.abilities.everlastingabilities.luck.info=Есть высокий шанс на лучшую добычу
+
+ability.abilities.everlastingabilities.slowness.name=Медлительность
+ability.abilities.everlastingabilities.slowness.info=Существа поблизости менее подвижные
+ability.abilities.everlastingabilities.mining_fatigue.name=Утомляемая добыча
+ability.abilities.everlastingabilities.mining_fatigue.info=Существа поблизости добывают медленее
+ability.abilities.everlastingabilities.nausea.name=Тошнота
+ability.abilities.everlastingabilities.nausea.info=Существа поблизости испытывают тошноту
+ability.abilities.everlastingabilities.blindness.name=Слепота
+ability.abilities.everlastingabilities.blindness.info=Существа поблизости становятся слепыми
+ability.abilities.everlastingabilities.hunger.name=Голод
+ability.abilities.everlastingabilities.hunger.info=Существа поблизости становятся голодными
+ability.abilities.everlastingabilities.weakness.name=Слабость
+ability.abilities.everlastingabilities.weakness.info=Существа поблизости становятся вялыми
+ability.abilities.everlastingabilities.poison.name=Отравление
+ability.abilities.everlastingabilities.poison.info=Существа поблизости становятся отравлеными
+ability.abilities.everlastingabilities.wither.name=Иссушение
+ability.abilities.everlastingabilities.wither.info=Существа поблизости становятся иссушёнными
+ability.abilities.everlastingabilities.glowing.name=Пылание
+ability.abilities.everlastingabilities.glowing.info=Существа поблизости начинают пылаться
+ability.abilities.everlastingabilities.levitation.name=Левитация
+ability.abilities.everlastingabilities.levitation.info=Существа поблизости начинают парить
+ability.abilities.everlastingabilities.unluck.name=Невезучесть
+ability.abilities.everlastingabilities.unluck.info=Существа поблизости имеют низкие шансы на хорошую добычу
+
+ability.abilities.everlastingabilities.flight.name=Полёт
+ability.abilities.everlastingabilities.flight.info=Позволяет вам летать
+ability.abilities.everlastingabilities.step_assist.name=Step Assist
+ability.abilities.everlastingabilities.step_assist.info=Автоматически увеличивает определённое кол-во блоков в зависимости от размера
+ability.abilities.everlastingabilities.fertility.name=Рождаемость
+ability.abilities.everlastingabilities.fertility.info=Животные поблизости становятся плодородными
+ability.abilities.everlastingabilities.bonemealer.name=Bonemealer
+ability.abilities.everlastingabilities.bonemealer.info=Повсюду костная мука
+ability.abilities.everlastingabilities.power_stare.name=Мощный взгляд 
+ability.abilities.everlastingabilities.power_stare.info=Отталкивайте существа, на которые вы смотрите
+ability.abilities.everlastingabilities.magnetize.name=Намагничивание
+ability.abilities.everlastingabilities.magnetize.info=Притягивает поблизости предметы
+
+# Items
+item.items.everlastingabilities.ability_totem.name=Тотем способности
+item.items.everlastingabilities.ability_bottle.name=Бутылка способности
+
+# Config Screens
+config.everlastingabilities=конфигурация %s
+
+## Config categories
+config.everlastingabilities.item=Настройки предмета
+config.everlastingabilities.item.tooltip=Настройки предмета
+config.everlastingabilities.general=Общие настройки
+config.everlastingabilities.general.tooltip=Общие настройки
+config.everlastingabilities.core=Настройки ядра
+config.everlastingabilities.core.tooltip=Настройки ядра
+config.everlastingabilities.capability=Настройки способностей
+config.everlastingabilities.capability.tooltip=Настройки способностей
+config.everlastingabilities.ability=Настройки возможностей
+config.everlastingabilities.ability.tooltip=Настройки возможностей
+
+## Ability settings
+config.everlastingabilities.absorbtion.maxLevel=Макс. уровень поглощения 
+config.everlastingabilities.absorbtion.rarity=Редкость поглощения
+config.everlastingabilities.absorbtion.xpPerLevel=Требует опыт на каждый уровень поглощения
+config.everlastingabilities.blindness.maxLevel=Макс. уровень слепоты
+config.everlastingabilities.blindness.rarity=Редкость слепоты
+config.everlastingabilities.blindness.xpPerLevel=Требует опыт на каждый уровень слепоты
+config.everlastingabilities.bonemealer.maxLevel=Макс. уровень bonemealer
+config.everlastingabilities.bonemealer.rarity=Редкость bonemealer
+config.everlastingabilities.bonemealer.xpPerLevel=Требует опыт на каждый уровень bonemealer
+config.everlastingabilities.fertility.maxLevel=Макс. уровень рождаемости
+config.everlastingabilities.fertility.rarity=Редкость рождаемости
+config.everlastingabilities.fertility.xpPerLevel=Требует опыт на каждый уровень рождаемости
+config.everlastingabilities.fire_resistance.maxLevel=Макс. уровень огнестойкость
+config.everlastingabilities.fire_resistance.rarity=Редкость огнестойкости
+config.everlastingabilities.fire_resistance.xpPerLevel=Требует опыт на каждый уровень огнестойкости
+config.everlastingabilities.flight.maxLevel=Макс. уровень полёта
+config.everlastingabilities.flight.rarity=Редкость полёта
+config.everlastingabilities.flight.xpPerLevel=Требует опыт на каждый уровень полёта
+config.everlastingabilities.glowing.maxLevel=Макс. уровень пылания
+config.everlastingabilities.glowing.rarity=Редкость пылания
+config.everlastingabilities.glowing.xpPerLevel=Требует опыт на каждый уровень пылания
+config.everlastingabilities.haste.maxLevel=Макс. уровень спешки
+config.everlastingabilities.haste.rarity=Редкость спешки
+config.everlastingabilities.haste.xpPerLevel=Требует опыт на каждый уровень спешки
+config.everlastingabilities.hunger.maxLevel=Макс. уровень голода
+config.everlastingabilities.hunger.rarity=Редкость голода
+config.everlastingabilities.hunger.xpPerLevel=Требует опыт на каждый уровень голода
+config.everlastingabilities.invisibility.maxLevel=Макс. уровень невидимости
+config.everlastingabilities.invisibility.rarity=Редкость невидимости
+config.everlastingabilities.invisibility.xpPerLevel=Требует опыт на каждый уровень невидимости
+config.everlastingabilities.jump_boost.maxLevel=Макс. уровень увеличенного прыжка
+config.everlastingabilities.jump_boost.rarity=Редкость увеличенного прыжка
+config.everlastingabilities.jump_boost.xpPerLevel=Требует опыт на каждый уровень увеличенного прыжка
+config.everlastingabilities.levitation.maxLevel=Макс. уровень левитации
+config.everlastingabilities.levitation.rarity=Редкость левитации
+config.everlastingabilities.levitation.xpPerLevel=Требует опыт на каждый уровень левитации
+config.everlastingabilities.luck.maxLevel=Макс. уровень удачи
+config.everlastingabilities.luck.rarity=Редкость удачи
+config.everlastingabilities.luck.xpPerLevel=Требует опыт на каждый уровень удачи
+config.everlastingabilities.magnetize.maxLevel=Макс. уровень намагничивания
+config.everlastingabilities.magnetize.rarity=Редкость намагничивания
+config.everlastingabilities.magnetize.xpPerLevel=Требует опыт на каждый уровень намагничивания
+config.everlastingabilities.mining_fatigue.maxLevel=Макс. уровень утомляемой добычи
+config.everlastingabilities.mining_fatigue.rarity=Редкость утомляемой добычи
+config.everlastingabilities.mining_fatigue.xpPerLevel=Требует опыт на каждый уровень утомляемой добычи
+config.everlastingabilities.nausea.maxLevel=Макс. уровень тошноты
+config.everlastingabilities.nausea.rarity=Редкость тошноты
+config.everlastingabilities.nausea.xpPerLevel=Требует опыт на каждый уровень тошноты
+config.everlastingabilities.night_vision.maxLevel=Макс. уровень ночного зрения
+config.everlastingabilities.night_vision.rarity=Редкость ночного зрения
+config.everlastingabilities.night_vision.xpPerLevel=Требует опыт на каждый уровень ночного зрения
+config.everlastingabilities.poison.maxLevel=Макс. уровень отравления
+config.everlastingabilities.poison.rarity=Редкость отравления
+config.everlastingabilities.poison.xpPerLevel=Требует опыт на каждый уровень отравления
+config.everlastingabilities.power_stare.maxLevel=Макс. уровень мощного взгляда
+config.everlastingabilities.power_stare.rarity=Редкость мощного взгляда
+config.everlastingabilities.power_stare.xpPerLevel=Требует опыт на каждый уровень мощного взгляда
+config.everlastingabilities.regeneration.maxLevel=Макс. уровень регенерации
+config.everlastingabilities.regeneration.rarity=Редкость регенерации
+config.everlastingabilities.regeneration.xpPerLevel=Требует опыт на каждый уровень регенерации
+config.everlastingabilities.resistance.maxLevel=Макс. уровень сопротивления
+config.everlastingabilities.resistance.rarity=Редкость сопротивления
+config.everlastingabilities.resistance.xpPerLevel=Требует опыт на каждый уровень сопротивления
+config.everlastingabilities.saturation.maxLevel=Макс. уровень насыщения
+config.everlastingabilities.saturation.rarity=Редкость насыщения
+config.everlastingabilities.saturation.xpPerLevel=Требует опыт на каждый уровень насыщения
+config.everlastingabilities.slowness.maxLevel=Макс. уровень медлительности
+config.everlastingabilities.slowness.rarity=Редкость медлительности
+config.everlastingabilities.slowness.xpPerLevel=Требует опыт на каждый уровень медлительности
+config.everlastingabilities.speed.maxLevel=Макс. уровень скорости
+config.everlastingabilities.speed.rarity=Редкость скорости
+config.everlastingabilities.speed.xpPerLevel=Требует опыт на каждый уровень скорости
+config.everlastingabilities.step_assist.maxLevel=Макс. уровень step assist
+config.everlastingabilities.step_assist.rarity=Редкость step assist
+config.everlastingabilities.step_assist.xpPerLevel=Требует опыт на каждый уровень step assist
+config.everlastingabilities.strength.maxLevel=Макс. уровень силы
+config.everlastingabilities.strength.rarity=Редкость силы
+config.everlastingabilities.strength.xpPerLevel=Требует опыт на каждый уровень силы
+config.everlastingabilities.unluck.maxLevel=Макс. уровень невезучести
+config.everlastingabilities.unluck.rarity=Редкость невезучести
+config.everlastingabilities.unluck.xpPerLevel=Требует опыт на каждый уровень невезучести
+config.everlastingabilities.water_breathing.maxLevel=Макс. уровень жабры
+config.everlastingabilities.water_breathing.rarity=Редкость жабры
+config.everlastingabilities.water_breathing.xpPerLevel=Требует опыт на каждый уровень жабры
+config.everlastingabilities.weakness.maxLevel=Макс. уровень слабости
+config.everlastingabilities.weakness.rarity=Редкость слабости
+config.everlastingabilities.weakness.xpPerLevel=Требует опыт на каждый уровень слабости
+config.everlastingabilities.wither.maxLevel=Макс. уровень иссушения
+config.everlastingabilities.wither.rarity=Редкость иссушения
+config.everlastingabilities.wither.xpPerLevel=Требует опыт на каждый уровень иссушения
+
+## Core settings
+config.everlastingabilities.ability_totem.lootChests=Тотем способности в сундуках с добычей
+config.everlastingabilities.general.analytics=Отправка анонимной аналитики
+config.everlastingabilities.general.anonymousAnalyticsID=Анонимный id
+config.everlastingabilities.general.crashOnInvalidRecipe=Сбой при недействительном рецепте
+config.everlastingabilities.general.crashOnModCompatCrash=Сбой при проблеме совместимости
+config.everlastingabilities.general.debug=Режим разработки
+config.everlastingabilities.general.version=Версия: 
+config.everlastingabilities.general.versionChecker=Проверка версии
+
+## General settings
+config.everlastingabilities.general.abilityXpMultiplier=Ability xp multiplier
+config.everlastingabilities.general.alwaysDropAbilities=Всегда сбрасывать способности
+config.everlastingabilities.general.dropAbilitiesOnPlayerDeath=Кол-во способностей, сброшенных при смерти
+config.everlastingabilities.general.exhaustionPerAbilityTick=Истощать на каждую способность
+config.everlastingabilities.general.magnetizeMoveXp=Move xp with magnetize
+config.everlastingabilities.general.maxPlayerAbilities=Максимальные способности
+config.everlastingabilities.general.mobAbilityChance=Шанс способности моба
+config.everlastingabilities.general.showPlayerParticles=Показать частицы игрока
+config.everlastingabilities.general.totemMaximumSpawnRarity=Редкость появления Тотема
+config.everlastingabilities.step_assist.forceDefaultStepHeight=Принудительная, высота шага по умолчанию
+
+## Capability settings
+capability.everlastingabilities.abilityStore=Хранилище способностей
+capability.everlastingabilities.mutableAbilityStore=Изменить хранилище способностей
