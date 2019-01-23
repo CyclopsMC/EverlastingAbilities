@@ -139,6 +139,14 @@ public class GeneralConfig extends DummyConfig {
     };
 
     /**
+     * Mobs that won't have abilities that can be dropped via totems. You can add things like 'minecraft:pig'.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "Mobs that won't have abilities that can be dropped via totems. You can add things like 'minecraft:pig'.")
+    public static String[] mobDropBlacklist = new String[]{
+            // Empty by default
+    };
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;

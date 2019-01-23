@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
@@ -73,6 +74,7 @@ import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket
 import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.NavigableSet;
@@ -190,13 +192,13 @@ public class EverlastingAbilities extends ModBaseVersionable {
                     IMutableAbilityStore store = new DefaultMutableAbilityStore();
                     if (!MinecraftHelpers.isClientSide() && host instanceof EntityLivingBase) {
                         if (GeneralConfig.mobAbilityChance > 0
-                                && entity.getEntityId() % GeneralConfig.mobAbilityChance == 0) {
+                                && entity.getEntityId() % GeneralConfig.mobAbilityChance == 0
+                                && canMobHaveAbility((EntityLivingBase) host)) {
                             Random rand = new Random();
                             rand.setSeed(entity.getEntityId());
                             EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
                             AbilityHelpers.getRandomAbility(rand, rarity).ifPresent(
                                     abilityType -> store.addAbility(new Ability(abilityType, 1), true));
-                            ;
                         }
                     }
                     return new SerializableCapabilityProvider<IMutableAbilityStore>(getCapability(), store);
@@ -214,6 +216,11 @@ public class EverlastingAbilities extends ModBaseVersionable {
             ResourceLocation id = CraftingHelpers.newRecipeIdentifier(new ItemStack(ItemAbilityTotem.getInstance()));
             CraftingHelpers.registerRecipe(id, new TotemRecycleRecipe());
         }
+    }
+
+    private static boolean canMobHaveAbility(EntityLivingBase mob) {
+        ResourceLocation mobName = EntityList.getKey(mob);
+        return mobName != null && Arrays.stream(GeneralConfig.mobDropBlacklist).noneMatch(mobName.toString()::matches);
     }
     
     /**
