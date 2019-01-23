@@ -63,7 +63,8 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
 
     private static String[] friendlyMobs = null;
     static boolean isFriendlyMob(EntityLivingBase mob, EntityPlayer player) {
-        ResourceLocation resourceLocation = EntityList.getKey(mob);
+        ResourceLocation resourceLocation = mob instanceof EntityPlayer
+                ? new ResourceLocation("player") : EntityList.getKey(mob);
         String mobName = resourceLocation == null ? "null" : resourceLocation.toString();
         return (mob == player ||
                 player.isOnSameTeam(mob) ||
