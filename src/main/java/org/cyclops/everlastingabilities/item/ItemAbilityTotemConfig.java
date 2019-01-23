@@ -1,23 +1,13 @@
 package org.cyclops.everlastingabilities.item;
 
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootEntryItem;
-import net.minecraft.world.storage.loot.conditions.LootCondition;
-import net.minecraft.world.storage.loot.functions.LootFunction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootTableList;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.ConfigurableTypeCategory;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
 import org.cyclops.cyclopscore.helper.LootHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.IAbilityType;
-import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
-
-import java.util.Random;
+import org.cyclops.everlastingabilities.Reference;
 
 /**
  * Config for the ability totem.
@@ -66,20 +56,13 @@ public class ItemAbilityTotemConfig extends ItemConfig {
         super.onRegistered();
 
         if (lootChests) {
-            LootHelpers.addVanillaLootChestLootEntry(
-                    new LootEntryItem(getItemInstance(), 1, 5, new LootFunction[]{
-                            new LootFunction(new LootCondition[0]) {
-                                @Override
-                                public ItemStack apply(ItemStack stack, Random rand, LootContext context) {
-                                    EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
-                                    IAbilityType abilityType = AbilityHelpers.getRandomAbility(rand, rarity).get(); // Should always be present, as the method above guarantees that
-
-                                    IMutableAbilityStore mutableAbilityStore = stack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-                                    mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
-                                    return stack;
-                                }
-                            }
-                    }, new LootCondition[0], getMod().getModId() + ":" + getSubUniqueName()));
+            LootHelpers.injectLootTable(new ResourceLocation(Reference.MOD_ID, "inject/chests/ability_totem"),
+                    LootTableList.CHESTS_SPAWN_BONUS_CHEST,
+                    LootTableList.CHESTS_VILLAGE_BLACKSMITH,
+                    LootTableList.CHESTS_NETHER_BRIDGE,
+                    LootTableList.CHESTS_SIMPLE_DUNGEON,
+                    LootTableList.CHESTS_ABANDONED_MINESHAFT,
+                    LootTableList.CHESTS_JUNGLE_TEMPLE);
         }
     }
 }

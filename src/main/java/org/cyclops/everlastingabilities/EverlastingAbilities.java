@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -67,6 +68,7 @@ import org.cyclops.everlastingabilities.item.ItemAbilityBottle;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
+import org.cyclops.everlastingabilities.loot.functions.LootFunctionSetRandomAbility;
 import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket;
 import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
 
@@ -153,6 +155,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         getRegistryManager().addRegistry(IAbilityTypeRegistry.class, AbilityTypeRegistry.getInstance());
+        LootFunctionManager.registerFunction(new LootFunctionSetRandomAbility.Serializer());
 
         super.preInit(event);
     }
