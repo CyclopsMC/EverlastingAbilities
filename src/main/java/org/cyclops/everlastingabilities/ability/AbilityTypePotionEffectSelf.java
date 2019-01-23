@@ -6,6 +6,7 @@ import net.minecraft.potion.PotionEffect;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.GeneralConfig;
 
 /**
  * Ability type for potion effects.
@@ -41,7 +42,7 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
     public void onTick(EntityPlayer player, int level) {
         if (potion != null && player.world.getTotalWorldTime() % getTickModulus(level) == 0) {
             player.addPotionEffect(
-                    new PotionEffect(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, false));
+                    new PotionEffect(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
         }
     }
 }

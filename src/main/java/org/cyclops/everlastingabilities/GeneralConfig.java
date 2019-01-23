@@ -147,6 +147,12 @@ public class GeneralConfig extends DummyConfig {
     };
 
     /**
+     * If potion abilities should show particle effects. This will also make them appear as in-game symbols.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "If potion abilities should show particle effects. This will also make them appear as in-game symbols.", isCommandable = true)
+    public static boolean showPotionEffectParticles = false;
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;

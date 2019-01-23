@@ -55,7 +55,7 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
                     player.getEntityBoundingBox().grow(radius, radius, radius), EntitySelectors.NOT_SPECTATING);
             for (EntityLivingBase mob : mobs) {
                 if (!(this.hostile && isFriendlyMob(mob, player))) {
-                    mob.addPotionEffect(new PotionEffect(potion, TICK_MODULUS * getDurationMultiplier(), level - 1, true, false));
+                    mob.addPotionEffect(new PotionEffect(potion, TICK_MODULUS * getDurationMultiplier(), level - 1, true, GeneralConfig.showPotionEffectParticles));
                 }
             }
         }
