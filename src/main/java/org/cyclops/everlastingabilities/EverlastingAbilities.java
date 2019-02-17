@@ -377,13 +377,14 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
+        boolean doMobLoot = event.getEntityLiving().world.getGameRules().getBoolean("doMobLoot");
         if (!event.getEntityLiving().world.isRemote
                 && event.getEntityLiving().hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)
                 && (event.getEntityLiving() instanceof EntityPlayer
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
                         && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
                         && event.getSource().getTrueSource() instanceof EntityPlayer))
-                    : ((event.getSource() instanceof EntityDamageSource)
+                    : (doMobLoot && (event.getSource() instanceof EntityDamageSource)
                         && event.getSource().getTrueSource() instanceof EntityPlayer))) {
             int toDrop = 1;
             if (event.getEntityLiving() instanceof EntityPlayer
