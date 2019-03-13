@@ -9,7 +9,6 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -45,13 +44,11 @@ import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.cyclopscore.helper.obfuscation.ObfuscationHelpers;
 import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
 import org.cyclops.cyclopscore.modcompat.capabilities.SerializableCapabilityProvider;
 import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
-import org.cyclops.cyclopscore.network.packet.SendPlayerCapabilitiesPacket;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.ability.AbilityTypeRegistry;
@@ -77,7 +74,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.NavigableSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -122,7 +118,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
             protected void loadPredefineds(Map<String, ItemStack> predefinedItems, Set<String> predefinedValues) {
                 super.loadPredefineds(predefinedItems, predefinedValues);
 
-                if (ConfigHandler.isEnabled(ItemAbilityBottleConfig.class)) {
+                if (EverlastingAbilities._instance.getConfigHandler().isConfigEnabled(ItemAbilityBottleConfig.class)) {
                     for (IAbilityType abilityType : AbilityTypes.REGISTRY.getAbilityTypes()) {
                         int maxLevel = abilityType.getMaxLevel() == -1 ? 5 : abilityType.getMaxLevel();
                         for (int level = 1; level <= maxLevel; level++) {
@@ -347,7 +343,8 @@ public class EverlastingAbilities extends ModBaseVersionable {
     private static final String NBT_TOTEM_SPAWNED = Reference.MOD_ID + ":totemSpawned";
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (GeneralConfig.totemMaximumSpawnRarity >= 0 && ConfigHandler.isEnabled(ItemAbilityBottleConfig.class)) {
+        if (GeneralConfig.totemMaximumSpawnRarity >= 0
+                && EverlastingAbilities._instance.getConfigHandler().isConfigEnabled(ItemAbilityBottleConfig.class)) {
             NBTTagCompound tag = event.player.getEntityData();
             if (!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {
                 tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
@@ -393,7 +390,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
             ItemStack itemStack = null;
             IMutableAbilityStore itemStackStore = null;
-            if (ConfigHandler.isEnabled(ItemAbilityTotemConfig.class)) {
+            if (EverlastingAbilities._instance.getConfigHandler().isConfigEnabled(ItemAbilityTotemConfig.class)) {
                 itemStack = new ItemStack(ItemAbilityTotem.getInstance());
                 itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
             }
