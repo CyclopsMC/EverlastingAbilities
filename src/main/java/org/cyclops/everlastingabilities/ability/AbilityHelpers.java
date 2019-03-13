@@ -64,11 +64,6 @@ public class AbilityHelpers {
         return i - 1;
     }
 
-    public static void sendPlayerUpdateCapabilities(EntityPlayerMP player) {
-        EverlastingAbilities._instance.getPacketHandler().sendToPlayer(
-                new SendPlayerCapabilitiesPacket(ObfuscationHelpers.getEntityCapabilities(player)), player);
-    }
-
     public static void onPlayerAbilityChanged(EntityPlayer player, IAbilityType abilityType, int oldLevel, int newLevel) {
         abilityType.onChangedLevel(player, oldLevel, newLevel);
     }
@@ -112,9 +107,6 @@ public class AbilityHelpers {
             int newLevel = abilityStore.getAbility(result.getAbilityType()).getLevel();
             onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
         }
-        if (player instanceof EntityPlayerMP) {
-            sendPlayerUpdateCapabilities((EntityPlayerMP) player);
-        }
         return result;
     }
 
@@ -136,9 +128,6 @@ public class AbilityHelpers {
             int newLevel = abilityStore.hasAbilityType(result.getAbilityType())
                     ? abilityStore.getAbility(result.getAbilityType()).getLevel() : 0;
             onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
-        }
-        if (player instanceof EntityPlayerMP) {
-            sendPlayerUpdateCapabilities((EntityPlayerMP) player);
         }
         return result;
     }
