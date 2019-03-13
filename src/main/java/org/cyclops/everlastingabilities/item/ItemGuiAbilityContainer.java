@@ -64,7 +64,7 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
         boolean empty = true;
         for (Ability ability : abilities) {
             empty = false;
-            String name = L10NHelpers.localize(ability.getAbilityType().getUnlocalizedName());
+            String name = L10NHelpers.localize(ability.getAbilityType().getTranslationKey());
             list.add(TextFormatting.YELLOW + name + ": " + TextFormatting.RESET + ability.getLevel());
         }
         if (empty) {

@@ -32,7 +32,7 @@ public class MoveAbilityPacket extends PacketCodec {
     }
 
 	public MoveAbilityPacket(Ability ability, Movement movement) {
-		this.abilityName = ability.getAbilityType().getUnlocalizedName();
+		this.abilityName = ability.getAbilityType().getTranslationKey();
 		this.abilityLevel = ability.getLevel();
 		this.movement = movement.ordinal();
 	}

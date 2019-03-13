@@ -9,7 +9,7 @@ import net.minecraft.item.EnumRarity;
  */
 public interface IAbilityType {
 
-    public String getUnlocalizedName();
+    public String getTranslationKey();
     public String getUnlocalizedDescription();
     public EnumRarity getRarity();
     public int getMaxLevel();

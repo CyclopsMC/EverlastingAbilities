@@ -26,7 +26,7 @@ public class AbilityStoreStorage implements Capability.IStorage<IAbilityStore> {
         NBTTagList list = new NBTTagList();
         for (Ability ability : instance.getAbilities()) {
             NBTTagCompound tag = new NBTTagCompound();
-            tag.setString("name", ability.getAbilityType().getUnlocalizedName());
+            tag.setString("name", ability.getAbilityType().getTranslationKey());
             tag.setInteger("level", ability.getLevel());
             list.appendTag(tag);
         }

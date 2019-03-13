@@ -123,7 +123,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
                         int maxLevel = abilityType.getMaxLevel() == -1 ? 5 : abilityType.getMaxLevel();
                         for (int level = 1; level <= maxLevel; level++) {
                             Ability ability = new Ability(abilityType, level);
-                            String name = abilityType.getUnlocalizedName();
+                            String name = abilityType.getTranslationKey();
                             String[] split = name.split("\\.");
                             name = split[split.length - 2];
                             String id = Reference.MOD_ID + ":" + "abilityTotem_" + name + "_" + level;
@@ -407,7 +407,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
                         }
                         entity.sendMessage(new TextComponentTranslation(L10NHelpers.localize("chat.everlastingabilities.playerLostAbility",
                                 entity.getName(),
-                                removed.getAbilityType().getRarity().rarityColor.toString() + TextFormatting.BOLD + L10NHelpers.localize(removed.getAbilityType().getUnlocalizedName()) + TextFormatting.RESET,
+                                removed.getAbilityType().getRarity().color.toString() + TextFormatting.BOLD + L10NHelpers.localize(removed.getAbilityType().getTranslationKey()) + TextFormatting.RESET,
                                 removed.getLevel())));
                     }
                 }

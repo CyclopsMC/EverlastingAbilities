@@ -287,7 +287,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
             // Name
             RenderHelpers.drawScaledCenteredString(fontRenderer,
-                    ability.getAbilityType().getRarity().rarityColor + L10NHelpers.localize(ability.getAbilityType().getUnlocalizedName()),
+                    ability.getAbilityType().getRarity().color + L10NHelpers.localize(ability.getAbilityType().getTranslationKey()),
                     x + 27, boxY + 7, 0, 1.0F, 50, -1);
 
             // Level
@@ -319,8 +319,8 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
                 List<String> lines = Lists.newLinkedList();
 
                 // Name
-                lines.add(ability.getAbilityType().getRarity().rarityColor
-                        + L10NHelpers.localize(ability.getAbilityType().getUnlocalizedName()));
+                lines.add(ability.getAbilityType().getRarity().color
+                        + L10NHelpers.localize(ability.getAbilityType().getTranslationKey()));
 
                 // Level
                 lines.add(L10NHelpers.localize("general.everlastingabilities.level", ability.getLevel(),

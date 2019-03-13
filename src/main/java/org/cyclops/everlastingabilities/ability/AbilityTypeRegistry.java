@@ -42,7 +42,7 @@ public class AbilityTypeRegistry implements IAbilityTypeRegistry {
 
     @Override
     public <A extends IAbilityType> A register(A abilityType) {
-        abilities.put(abilityType.getUnlocalizedName(), abilityType);
+        abilities.put(abilityType.getTranslationKey(), abilityType);
         rarityAbilities.computeIfAbsent(abilityType.getRarity(), (rarity) -> Lists.newArrayList()).add(abilityType);
         return abilityType;
     }

@@ -9,15 +9,15 @@ import net.minecraft.item.EnumRarity;
  */
 public class AbilityType implements IAbilityType {
 
-    private final String unlocalizedName;
+    private final String translationKey;
     private final String unlocalizedDescription;
     private final EnumRarity rarity;
     private final int maxLevel;
     private final int baseXpPerLevel;
 
-    public AbilityType(String unlocalizedName, String unlocalizedDescription, EnumRarity rarity,
+    public AbilityType(String translationKey, String unlocalizedDescription, EnumRarity rarity,
                        int maxLevel, int baseXpPerLevel) {
-        this.unlocalizedName = unlocalizedName;
+        this.translationKey = translationKey;
         this.unlocalizedDescription = unlocalizedDescription;
         this.rarity = rarity;
         this.maxLevel = maxLevel;
@@ -25,8 +25,8 @@ public class AbilityType implements IAbilityType {
     }
 
     @Override
-    public String getUnlocalizedName() {
-        return unlocalizedName;
+    public String getTranslationKey() {
+        return translationKey;
     }
 
     @Override

@@ -40,7 +40,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
             double eyeHeight = player.getEyeHeight();
             Vec3d lookVec = player.getLookVec();
             Vec3d origin = new Vec3d(player.posX, player.posY + eyeHeight, player.posZ);
-            Vec3d direction = origin.addVector(lookVec.x * range, lookVec.y * range, lookVec.z * range);
+            Vec3d direction = origin.add(lookVec.x * range, lookVec.y * range, lookVec.z * range);
 
             List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(player,
                     player.getEntityBoundingBox().expand(lookVec.x * range, lookVec.y * range, lookVec.z * range)

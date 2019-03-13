@@ -53,7 +53,7 @@ public class CommandModifyAbilities extends CommandMod {
             List<String> abilityIds = Lists.newArrayList();
             Collection<IAbilityType> abilityTypes = AbilityTypes.REGISTRY.getAbilityTypes();
             for (IAbilityType abilityType : abilityTypes) {
-                abilityIds.add(abilityType.getUnlocalizedName());
+                abilityIds.add(abilityType.getTranslationKey());
             }
             return abilityIds;
         }
