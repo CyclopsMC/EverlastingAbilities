@@ -29,7 +29,7 @@ public abstract class AbilityConfig<T> extends ExtendedConfig<AbilityConfig<T>> 
 	}
 
     @Override
-    public String getFullUnlocalizedName() {
+    public String getFullTranslationKey() {
         return "ability.abilities." + getMod().getModId()  + "." +getNamedId() + ".name";
     }
     

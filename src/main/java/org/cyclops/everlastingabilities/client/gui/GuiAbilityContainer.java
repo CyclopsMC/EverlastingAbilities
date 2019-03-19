@@ -152,7 +152,7 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         }
 
         this.fontRenderer.drawString(player.getDisplayNameString(), 8, 6, -1);
-        this.fontRenderer.drawString(L10NHelpers.localize(getContainer().getItem().getConfig().getFullUnlocalizedName()), 102, 6, -1);
+        this.fontRenderer.drawString(L10NHelpers.localize(getContainer().getItem().getConfig().getFullTranslationKey()), 102, 6, -1);
 
         // Draw abilities
         drawAbilitiesTooltip(8, 83, getPlayerAbilities(), startIndexPlayer, mouseX, mouseY);
