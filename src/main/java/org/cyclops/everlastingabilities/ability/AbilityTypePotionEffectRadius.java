@@ -42,20 +42,28 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
         this(id, rarity, maxLevel, baseXpPerLevel, potion, true);
     }
 
-    protected int getDurationMultiplier() {
-        return 6;
+    protected int getDuration(int tickModulus, int level) {
+        return tickModulus * 6;
+    }
+
+    protected int getTickModulus(int level) {
+        return TICK_MODULUS;
+    }
+
+    protected int getAmplifier(int level) {
+        return level - 1;
     }
 
     @Override
     public void onTick(EntityPlayer player, int level) {
         World world = player.world;
-        if (potion != null && !world.isRemote && player.world.getTotalWorldTime() % TICK_MODULUS == 0) {
+        if (potion != null && !world.isRemote && player.world.getTotalWorldTime() % getTickModulus(level) == 0) {
             int radius = level * 2;
             List<EntityLivingBase> mobs = world.getEntitiesWithinAABB(EntityLivingBase.class,
                     player.getEntityBoundingBox().grow(radius, radius, radius), EntitySelectors.NOT_SPECTATING);
             for (EntityLivingBase mob : mobs) {
                 if (!(this.hostile && isFriendlyMob(mob, player))) {
-                    mob.addPotionEffect(new PotionEffect(potion, TICK_MODULUS * getDurationMultiplier(), level - 1, true, GeneralConfig.showPotionEffectParticles));
+                    mob.addPotionEffect(new PotionEffect(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
                 }
             }
         }
