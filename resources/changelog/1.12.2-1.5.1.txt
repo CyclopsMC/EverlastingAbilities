@@ -1,0 +1,9 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.1.0 or higher.
+
+Fixes:
+* Add armor stands to default list of friendly mobs
+  This fixes armor stands being targeted for hostile potion effects.
+  This requires a config reset.
+  Closes CyclopsMC/EverlastingAbilities-PotionCore#3
+* Fix crash after dying in hardcore world due to null world, Closes #122
