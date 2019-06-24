@@ -44,10 +44,12 @@ public class SendAbilityStorePacket extends PacketCodec {
 	@SideOnly(Side.CLIENT)
 	public void actionClient(World world, EntityPlayer player) {
 		try {
-			Entity entity = world.getEntityByID(entityId);
-			if (entity != null && entity.hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)) {
-				IMutableAbilityStore abilityStore = entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-				MutableAbilityStoreConfig.CAPABILITY.readNBT(abilityStore, null, tag.getTag("contents"));
+			if (world != null) {
+				Entity entity = world.getEntityByID(entityId);
+				if (entity != null && entity.hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)) {
+					IMutableAbilityStore abilityStore = entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+					MutableAbilityStoreConfig.CAPABILITY.readNBT(abilityStore, null, tag.getTag("contents"));
+				}
 			}
 		} catch (IllegalArgumentException e) {
 			EverlastingAbilities.clog(Level.ERROR, e.getMessage());
