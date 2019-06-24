@@ -120,6 +120,7 @@ public class GeneralConfig extends DummyConfig {
      */
     @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "These mobs will not be affected by hostile area potion effects such as poison or weakness. (Java regular expressions are allowed)", changedCallback = FriendlyMobListChanged.class)
     public static String[] friendlyMobs = new String[]{
+            "minecraft:armor_stand",
             "minecraft:villager",
             "minecraft:villager_golem",
             "minecraft:cow",
