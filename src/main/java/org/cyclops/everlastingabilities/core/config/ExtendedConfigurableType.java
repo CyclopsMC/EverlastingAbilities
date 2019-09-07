@@ -5,13 +5,12 @@ import org.cyclops.everlastingabilities.core.config.configurabletypeaction.Abili
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
 /**
- * The different types of {@link org.cyclops.cyclopscore.config.configurable.IConfigurable}.
+ * Configurable types for abilities.
  * @author rubensworks
- *
  */
 public class ExtendedConfigurableType {
     /**
      * Degradation effect type.
      */
-    public static final ConfigurableType ABILITY = new ConfigurableType(false, AbilityConfig.class, new AbilityAction(), "ability");
+    public static final ConfigurableType ABILITY = new ConfigurableType(true, AbilityConfig.class, new AbilityAction(), "ability");
 }

@@ -1,15 +1,16 @@
 package org.cyclops.everlastingabilities.network.packet;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.ability.AbilityTypes;
+import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
@@ -32,7 +33,7 @@ public class MoveAbilityPacket extends PacketCodec {
     }
 
 	public MoveAbilityPacket(Ability ability, Movement movement) {
-		this.abilityName = ability.getAbilityType().getTranslationKey();
+		this.abilityName = ability.getAbilityType().getRegistryName().toString();
 		this.abilityLevel = ability.getLevel();
 		this.movement = movement.ordinal();
 	}
@@ -43,29 +44,33 @@ public class MoveAbilityPacket extends PacketCodec {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void actionClient(World world, EntityPlayer player) {
+	@OnlyIn(Dist.CLIENT)
+	public void actionClient(World world, PlayerEntity player) {
 
 	}
 
 	@Override
-	public void actionServer(World world, EntityPlayerMP player) {
+	public void actionServer(World world, ServerPlayerEntity player) {
 		if (player.openContainer instanceof ContainerAbilityContainer) {
 			ContainerAbilityContainer container = (ContainerAbilityContainer) player.openContainer;
-			IAbilityType abilityType = AbilityTypes.REGISTRY.getAbilityType(abilityName);
+			IAbilityType abilityType = AbilityTypes.REGISTRY.getValue(new ResourceLocation(abilityName));
 			if (abilityType != null) {
 				Ability ability = new Ability(abilityType, abilityLevel);
-				if (movement == Movement.FROM_PLAYER.ordinal()) {
-					if (AbilityHelpers.canExtract(ability, container.getPlayerAbilityStore())
-							&& AbilityHelpers.canInsert(ability, container.getItemAbilityStore())) {
-						container.moveFromPlayer(ability);
-					}
-				} else {
-					if (AbilityHelpers.canExtract(ability, container.getItemAbilityStore())
-							&& AbilityHelpers.canInsert(ability, container.getPlayerAbilityStore())) {
-						container.moveToPlayer(ability);
-					}
-				}
+				container.getPlayerAbilityStore().ifPresent(playerAbilityStore -> {
+					container.getItemAbilityStore().ifPresent(itemAbilityStore -> {
+						if (movement == Movement.FROM_PLAYER.ordinal()) {
+							if (AbilityHelpers.canExtract(ability, playerAbilityStore)
+									&& AbilityHelpers.canInsert(ability, itemAbilityStore)) {
+								container.moveFromPlayer(ability);
+							}
+						} else {
+							if (AbilityHelpers.canExtract(ability, itemAbilityStore)
+									&& AbilityHelpers.canInsert(ability, playerAbilityStore)) {
+								container.moveToPlayer(ability);
+							}
+						}
+					});
+				});
 			}
 		}
 	}

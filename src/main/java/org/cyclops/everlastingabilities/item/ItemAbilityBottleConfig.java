@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities.item;
 
+import net.minecraft.item.Item;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 
@@ -9,22 +10,12 @@ import org.cyclops.everlastingabilities.EverlastingAbilities;
  */
 public class ItemAbilityBottleConfig extends ItemConfig {
 
-    /**
-     * The unique instance.
-     */
-    public static ItemAbilityBottleConfig _instance;
-
-    /**
-     * Make a new instance.
-     */
     public ItemAbilityBottleConfig() {
-        super(
-                EverlastingAbilities._instance,
-                true,
+        super(EverlastingAbilities._instance,
                 "ability_bottle",
-                null,
-                ItemAbilityBottle.class
-        );
+                (eConfig) -> new ItemAbilityBottle(new Item.Properties()
+                        .maxStackSize(1)
+                        .group(EverlastingAbilities._instance.getDefaultItemGroup())));
     }
 
 }

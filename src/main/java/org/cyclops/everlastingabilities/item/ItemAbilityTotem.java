@@ -1,16 +1,13 @@
 package org.cyclops.everlastingabilities.item;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.NonNullList;
-import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
-import org.cyclops.cyclopscore.helper.ItemStackHelpers;
-import org.cyclops.everlastingabilities.ability.AbilityTypes;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
-import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
-import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
 /**
@@ -19,23 +16,8 @@ import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
  */
 public class ItemAbilityTotem extends ItemGuiAbilityContainer {
 
-    private static ItemAbilityTotem _instance = null;
-
-    /**
-     * Get the unique instance.
-     * @return The instance.
-     */
-    public static ItemAbilityTotem getInstance() {
-        return _instance;
-    }
-
-    /**
-     * Make a new item instance.
-     *
-     * @param eConfig Config for this blockState.
-     */
-    public ItemAbilityTotem(ExtendedConfig eConfig) {
-        super(eConfig);
+    public ItemAbilityTotem(Properties properties) {
+        super(properties);
     }
 
     @Override
@@ -44,30 +26,35 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
     }
 
     @Override
-    public EnumRarity getRarity(ItemStack itemStack) {
-        IAbilityStore abilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-        int maxRarity = 0;
-        for (Ability ability : abilityStore.getAbilities()) {
-            maxRarity = Math.max(maxRarity, ability.getAbilityType().getRarity().ordinal());
-        }
-        return EnumRarity.values()[maxRarity];
+    public Rarity getRarity(ItemStack itemStack) {
+        return itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+                .map(abilityStore -> {
+                    int maxRarity = 0;
+                    for (Ability ability : abilityStore.getAbilities()) {
+                        maxRarity = Math.max(maxRarity, ability.getAbilityType().getRarity().ordinal());
+                    }
+                    return Rarity.values()[maxRarity];
+                })
+                .orElse(super.getRarity(itemStack));
     }
 
-    public ItemStack getTotem(Ability ability) {
-        ItemStack itemStack = new ItemStack(this);
-        IMutableAbilityStore mutableAbilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-        mutableAbilityStore.addAbility(ability, true);
+    public static ItemStack getTotem(Ability ability) {
+        ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+        itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+                .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(ability, true));
         return itemStack;
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if (!ItemStackHelpers.isValidCreativeTab(this, tab)) return;
-        for (IAbilityType abilityType : AbilityTypes.REGISTRY.getAbilityTypes()) {
-            for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
-                Ability ability = new Ability(abilityType, level);
-                subItems.add(getTotem(ability));
+    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+        if (this.isInGroup(group)) {
+            for (IAbilityType abilityType : AbilityTypes.REGISTRY.getValues()) {
+                for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
+                    Ability ability = new Ability(abilityType, level);
+                    items.add(getTotem(ability));
+                }
             }
         }
     }
+
 }

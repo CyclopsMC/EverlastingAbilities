@@ -1,7 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.entity.player.PlayerEntity;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.ability.config.AbilityStepAssistConfig;
 
@@ -18,23 +17,23 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(EntityPlayer player, int level) {
+    public void onTick(PlayerEntity player, int level) {
         player.stepHeight = player.isSneaking() ? 0.5F : level;
     }
 
     @Override
-    public void onChangedLevel(EntityPlayer player, int oldLevel, int newLevel) {
+    public void onChangedLevel(PlayerEntity player, int oldLevel, int newLevel) {
         if (oldLevel > 0 && newLevel == 0) {
             float stepHeight = 0.6F;
-            if(player.getEntityData().hasKey(PLAYER_NBT_KEY)) {
+            if(player.getPersistantData().contains(PLAYER_NBT_KEY)) {
                 if (!AbilityStepAssistConfig.forceDefaultStepHeight) {
-                    stepHeight = player.getEntityData().getFloat(PLAYER_NBT_KEY);
+                    stepHeight = player.getPersistantData().getFloat(PLAYER_NBT_KEY);
                 }
-                player.getEntityData().removeTag(PLAYER_NBT_KEY);
+                player.getPersistantData().remove(PLAYER_NBT_KEY);
             }
             player.stepHeight = stepHeight;
         } else if (oldLevel == 0 && newLevel > 0) {
-            player.getEntityData().setFloat(PLAYER_NBT_KEY, player.stepHeight);
+            player.getPersistantData().putFloat(PLAYER_NBT_KEY, player.stepHeight);
         }
     }
 }

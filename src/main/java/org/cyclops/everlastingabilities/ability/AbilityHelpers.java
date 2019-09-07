@@ -2,17 +2,15 @@ package org.cyclops.everlastingabilities.ability;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.Helpers;
-import org.cyclops.cyclopscore.helper.obfuscation.ObfuscationHelpers;
-import org.cyclops.cyclopscore.network.packet.SendPlayerCapabilitiesPacket;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
@@ -26,6 +24,7 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * General ability helpers.
@@ -64,7 +63,14 @@ public class AbilityHelpers {
         return i - 1;
     }
 
-    public static void onPlayerAbilityChanged(EntityPlayer player, IAbilityType abilityType, int oldLevel, int newLevel) {
+    public static List<IAbilityType> getAbilityTypes(Rarity rarity) { // TODO: cache if needed
+        return AbilityTypes.REGISTRY.getValues()
+                .stream()
+                .filter(ability -> ability.getRarity() == rarity)
+                .collect(Collectors.toList());
+    }
+
+    public static void onPlayerAbilityChanged(PlayerEntity player, IAbilityType abilityType, int oldLevel, int newLevel) {
         abilityType.onChangedLevel(player, oldLevel, newLevel);
     }
 
@@ -76,38 +82,42 @@ public class AbilityHelpers {
      * @param modifyXp Whether to require player to have enough XP before adding
      * @return The ability part that was added.
      */
-    public static @Nullable Ability addPlayerAbility(EntityPlayer player, Ability ability, boolean doAdd, boolean modifyXp) {
-        IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-        int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
-                ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
+    @Nullable
+    public static Ability addPlayerAbility(PlayerEntity player, Ability ability, boolean doAdd, boolean modifyXp) {
+        return player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+                .map(abilityStore -> {
+                    int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
+                            ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
 
-        // Check max ability count
-        if (GeneralConfig.maxPlayerAbilities >= 0 && oldLevel == 0
-                && GeneralConfig.maxPlayerAbilities <= abilityStore.getAbilities().size()) {
-            return null;
-        }
+                    // Check max ability count
+                    if (GeneralConfig.maxPlayerAbilities >= 0 && oldLevel == 0
+                            && GeneralConfig.maxPlayerAbilities <= abilityStore.getAbilities().size()) {
+                        return null;
+                    }
 
-        Ability result = abilityStore.addAbility(ability, doAdd);
-        int currentXp = player.experienceTotal;
-        if (result != null && modifyXp && getExperience(result) > currentXp) {
-            int maxLevels = player.experienceTotal / result.getAbilityType().getBaseXpPerLevel();
-            if (maxLevels == 0) {
-                result = null;
-            } else {
-                result = new Ability(result.getAbilityType(), maxLevels);
-            }
-        }
-        if (doAdd && result != null) {
-            player.experienceTotal -= getExperience(result);
-            // Fix xp bar
-            player.experienceLevel = getLevelForExperience(player.experienceTotal);
-            int xpForLevel = getExperienceForLevel(player.experienceLevel);
-            player.experience = (float)(player.experienceTotal - xpForLevel) / (float)player.xpBarCap();
+                    Ability result = abilityStore.addAbility(ability, doAdd);
+                    int currentXp = player.experienceTotal;
+                    if (result != null && modifyXp && getExperience(result) > currentXp) {
+                        int maxLevels = player.experienceTotal / result.getAbilityType().getBaseXpPerLevel();
+                        if (maxLevels == 0) {
+                            result = null;
+                        } else {
+                            result = new Ability(result.getAbilityType(), maxLevels);
+                        }
+                    }
+                    if (doAdd && result != null) {
+                        player.experienceTotal -= getExperience(result);
+                        // Fix xp bar
+                        player.experienceLevel = getLevelForExperience(player.experienceTotal);
+                        int xpForLevel = getExperienceForLevel(player.experienceLevel);
+                        player.experience = (float)(player.experienceTotal - xpForLevel) / (float)player.xpBarCap();
 
-            int newLevel = abilityStore.getAbility(result.getAbilityType()).getLevel();
-            onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
-        }
-        return result;
+                        int newLevel = abilityStore.getAbility(result.getAbilityType()).getLevel();
+                        onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
+                    }
+                    return result;
+                })
+                .orElse(null);
     }
 
     /**
@@ -118,18 +128,22 @@ public class AbilityHelpers {
      * @param modifyXp Whether to refund XP cost of ability
      * @return The ability part that was removed.
      */
-    public static @Nullable Ability removePlayerAbility(EntityPlayer player, Ability ability, boolean doRemove, boolean modifyXp) {
-        IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-        int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
-                ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
-        Ability result = abilityStore.removeAbility(ability, doRemove);
-        if (modifyXp && result != null) {
-            player.addExperience(getExperience(result));
-            int newLevel = abilityStore.hasAbilityType(result.getAbilityType())
-                    ? abilityStore.getAbility(result.getAbilityType()).getLevel() : 0;
-            onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
-        }
-        return result;
+    @Nullable
+    public static Ability removePlayerAbility(PlayerEntity player, Ability ability, boolean doRemove, boolean modifyXp) {
+        return player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+                .map(abilityStore -> {
+                    int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
+                            ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
+                    Ability result = abilityStore.removeAbility(ability, doRemove);
+                    if (modifyXp && result != null) {
+                        player.giveExperiencePoints(getExperience(result));
+                        int newLevel = abilityStore.hasAbilityType(result.getAbilityType())
+                                ? abilityStore.getAbility(result.getAbilityType()).getLevel() : 0;
+                        onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
+                    }
+                    return result;
+                })
+                .orElse(null);
     }
 
     public static int getExperience(Ability ability) {
@@ -139,9 +153,9 @@ public class AbilityHelpers {
         return ability.getAbilityType().getBaseXpPerLevel() * ability.getLevel();
     }
 
-    public static void setPlayerAbilities(EntityPlayerMP player, Map<IAbilityType, Integer> abilityTypes) {
-        IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-        abilityStore.setAbilities(abilityTypes);
+    public static void setPlayerAbilities(ServerPlayerEntity player, Map<IAbilityType, Integer> abilityTypes) {
+        player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+                .ifPresent(abilityStore -> abilityStore.setAbilities(abilityTypes));
     }
 
     public static boolean canInsert(Ability ability, IMutableAbilityStore mutableAbilityStore) {
@@ -154,7 +168,7 @@ public class AbilityHelpers {
         return added != null && added.getLevel() == ability.getLevel();
     }
 
-    public static boolean canInsertToPlayer(Ability ability, EntityPlayer player) {
+    public static boolean canInsertToPlayer(Ability ability, PlayerEntity player) {
         Ability added = addPlayerAbility(player, ability, false, true);
         return added != null && added.getLevel() == ability.getLevel();
     }
@@ -167,17 +181,17 @@ public class AbilityHelpers {
         return mutableAbilityStore.removeAbility(ability, true);
     }
 
-    public static Optional<IAbilityType> getRandomAbility(Random random, EnumRarity rarity) {
-        List<IAbilityType> abilities = AbilityTypes.REGISTRY.getAbilityTypes(rarity);
+    public static Optional<IAbilityType> getRandomAbility(Random random, Rarity rarity) {
+        List<IAbilityType> abilities = AbilityHelpers.getAbilityTypes(rarity);
         if (abilities.size() > 0) {
             return Optional.of(abilities.get(random.nextInt(abilities.size())));
         }
         return Optional.empty();
     }
 
-    public static Optional<IAbilityType> getRandomAbilityUntil(Random random, EnumRarity rarity, boolean inclusive) {
-        NavigableSet<EnumRarity> validRarities = AbilityHelpers.getValidAbilityRarities().headSet(rarity, inclusive);
-        Iterator<EnumRarity> it = validRarities.descendingIterator();
+    public static Optional<IAbilityType> getRandomAbilityUntil(Random random, Rarity rarity, boolean inclusive) {
+        NavigableSet<Rarity> validRarities = AbilityHelpers.getValidAbilityRarities().headSet(rarity, inclusive);
+        Iterator<Rarity> it = validRarities.descendingIterator();
         while (it.hasNext()) {
             Optional<IAbilityType> optional = getRandomAbility(random, it.next());
             if (optional.isPresent()) {
@@ -187,45 +201,45 @@ public class AbilityHelpers {
         return Optional.empty();
     }
 
-    public static Optional<ItemStack> getRandomTotem(EnumRarity rarity, Random rand) {
+    public static Optional<ItemStack> getRandomTotem(Rarity rarity, Random rand) {
         return getRandomAbility(rand, rarity).flatMap(
-                abilityType -> Optional.of(ItemAbilityTotem.getInstance().getTotem(new Ability(abilityType, 1))));
+                abilityType -> Optional.of(ItemAbilityTotem.getTotem(new Ability(abilityType, 1))));
     }
     
 
-    public static EnumRarity getRandomRarity(Random rand) {
+    public static Rarity getRandomRarity(Random rand) {
         int chance = rand.nextInt(50);
-        EnumRarity rarity;
+        Rarity rarity;
         if (chance >= 49) {
-            rarity = EnumRarity.EPIC;
+            rarity = Rarity.EPIC;
         } else if (chance >= 40) {
-            rarity = EnumRarity.RARE;
+            rarity = Rarity.RARE;
         } else if (chance >= 25) {
-            rarity = EnumRarity.UNCOMMON;
+            rarity = Rarity.UNCOMMON;
         } else {
-            rarity = EnumRarity.COMMON;
+            rarity = Rarity.COMMON;
         }
 
         // Fallback to a random selection of a rarity that is guaranteed to exist in the registered abilities
         if (!hasRarityAbilities(rarity)) {
-            int size = AbilityTypes.REGISTRY.getAbilityTypes().size();
+            int size = AbilityTypes.REGISTRY.getValues().size();
             if (size == 0) {
                 throw new IllegalStateException("No abilities were registered, at least one ability must be enabled for this mod to function correctly.");
             }
-            rarity = Iterables.get(AbilityTypes.REGISTRY.getAbilityTypes(), rand.nextInt(size)).getRarity();
+            rarity = Iterables.get(AbilityTypes.REGISTRY.getValues(), rand.nextInt(size)).getRarity();
         }
 
         return rarity;
     }
 
-    public static boolean hasRarityAbilities(EnumRarity rarity) {
-        return !AbilityTypes.REGISTRY.getAbilityTypes(rarity).isEmpty();
+    public static boolean hasRarityAbilities(Rarity rarity) {
+        return !AbilityHelpers.getAbilityTypes(rarity).isEmpty();
     }
 
-    public static NavigableSet<EnumRarity> getValidAbilityRarities() {
-        NavigableSet<EnumRarity> rarities = Sets.newTreeSet();
-        for (EnumRarity rarity : EnumRarity.values()) {
-            if (!AbilityTypes.REGISTRY.getAbilityTypes(rarity).isEmpty()) {
+    public static NavigableSet<Rarity> getValidAbilityRarities() {
+        NavigableSet<Rarity> rarities = Sets.newTreeSet();
+        for (Rarity rarity : Rarity.values()) {
+            if (!AbilityHelpers.getAbilityTypes(rarity).isEmpty()) {
                 rarities.add(rarity);
             }
         }
@@ -248,8 +262,8 @@ public class AbilityHelpers {
         return Triple.of(r / count, g / count, b / count);
     }
 
-    public static EnumRarity getSafeRarity(int rarity) {
-        return rarity < 0 ? EnumRarity.COMMON : (rarity >= EnumRarity.values().length ? EnumRarity.EPIC : EnumRarity.values()[rarity]);
+    public static Rarity getSafeRarity(int rarity) {
+        return rarity < 0 ? Rarity.COMMON : (rarity >= Rarity.values().length ? Rarity.EPIC : Rarity.values()[rarity]);
     }
 
 }

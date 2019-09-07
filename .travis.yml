@@ -7,8 +7,7 @@ env:
   - TERM=dumb
 
 before_install: '[ "${TRAVIS_PULL_REQUEST}" != "false" ] || openssl aes-256-cbc -K $encrypted_28a2bffe3d7c_key -iv $encrypted_28a2bffe3d7c_iv -in keystore.jks.enc -out keystore.jks -d'
-install: ./gradlew setupCIWorkspace -S
-script: ./gradlew build -S
+install: ./gradlew build -S
 
 cache:
   directories:

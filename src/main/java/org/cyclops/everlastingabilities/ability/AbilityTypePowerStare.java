@@ -1,13 +1,10 @@
 package org.cyclops.everlastingabilities.ability;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityOwnable;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
@@ -28,14 +25,14 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(EntityPlayer player, int level) {
+    public void onTick(PlayerEntity player, int level) {
     
         if ( AbilityPowerStareConfig.requireSneak && !player.isSneaking() ) {
             return;
         }
 
         World world = player.world;
-        if (!world.isRemote && player.world.getTotalWorldTime() % TICK_MODULUS == 0) {
+        if (!world.isRemote && player.world.getGameTime() % TICK_MODULUS == 0) {
             int range = level * 10;
             double eyeHeight = player.getEyeHeight();
             Vec3d lookVec = player.getLookVec();
@@ -43,19 +40,20 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
             Vec3d direction = origin.add(lookVec.x * range, lookVec.y * range, lookVec.z * range);
 
             List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(player,
-                    player.getEntityBoundingBox().expand(lookVec.x * range, lookVec.y * range, lookVec.z * range)
+                    player.getBoundingBox().expand(lookVec.x * range, lookVec.y * range, lookVec.z * range)
                             .grow((double) range));
             for (Entity e : list) {
-                if (e.canBeCollidedWith() && (!(e instanceof IEntityOwnable) || ((IEntityOwnable) e).getOwner() != player) && !player.isOnSameTeam(e)) {
+                // TODO TameableEntity was IEntityOwnable
+                if (e.canBeCollidedWith() && (!(e instanceof TameableEntity) || ((TameableEntity) e).getOwner() != player) && !player.isOnSameTeam(e)) {
                     Entity entity = null;
                     float f10 = e.getCollisionBorderSize();
-                    AxisAlignedBB axisalignedbb = e.getEntityBoundingBox().expand((double) f10, (double) f10, (double) f10);
-                    RayTraceResult mop = axisalignedbb.calculateIntercept(origin, direction);
+                    AxisAlignedBB axisalignedbb = e.getBoundingBox().expand((double) f10, (double) f10, (double) f10);
+                    Vec3d hitVec = axisalignedbb.rayTrace(origin, direction).orElse(null);
 
                     if (axisalignedbb.contains(origin)) {
                         entity = e;
-                    } else if (mop != null) {
-                        double distance = origin.distanceTo(mop.hitVec);
+                    } else if (hitVec != null) {
+                        double distance = origin.distanceTo(hitVec);
                         if (distance < range || range == 0.0D) {
                             if (e == player.getRidingEntity() && !player.canRiderInteract()) {
                                 if (range == 0.0D) {
@@ -71,7 +69,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
                         double dx = entity.posX - player.posX;
                         double dy = entity.posY - player.posY;
                         double dz = entity.posZ - player.posZ;
-                        double d = (double) MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
+                        double d = MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
                         double m = 1 / (2 * (Math.max(1, d)));
                         dx *= m;
                         dy *= m;
@@ -79,9 +77,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
 
                         double strength = 3F;
 
-                        entity.motionX = dx * strength;
-                        entity.motionY = dy * strength;
-                        entity.motionZ = dz * strength;
+                        entity.setMotion(dx * strength, dy * strength, dz * strength);
                         break;
                     }
                 }

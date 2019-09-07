@@ -1,9 +1,9 @@
 package org.cyclops.everlastingabilities.api.capability;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -31,19 +31,19 @@ public class ItemStackMutableAbilityStore implements IMutableAbilityStore {
 
     protected IMutableAbilityStore getInnerStore() {
         IMutableAbilityStore store = new DefaultMutableAbilityStore();
-        NBTTagCompound root = ItemStackHelpers.getSafeTagCompound(itemStack);
-        if (!root.hasKey(NBT_STORE)) {
-            root.setTag(NBT_STORE, new NBTTagList());
+        CompoundNBT root = itemStack.getOrCreateTag();
+        if (!root.contains(NBT_STORE)) {
+            root.put(NBT_STORE, new ListNBT());
         }
-        NBTBase nbt = root.getTag(NBT_STORE);
+        INBT nbt = root.get(NBT_STORE);
         MutableAbilityStoreConfig.CAPABILITY.readNBT(store, null, nbt);
         return store;
     }
 
     protected IMutableAbilityStore setInnerStore(IMutableAbilityStore store) {
-        NBTTagCompound root = ItemStackHelpers.getSafeTagCompound(itemStack);
-        NBTBase nbt = MutableAbilityStoreConfig.CAPABILITY.writeNBT(store, null);
-        root.setTag(NBT_STORE, nbt);
+        CompoundNBT root = itemStack.getOrCreateTag();
+        INBT nbt = MutableAbilityStoreConfig.CAPABILITY.writeNBT(store, null);
+        root.put(NBT_STORE, nbt);
         return store;
     }
 

@@ -1,21 +1,22 @@
 package org.cyclops.everlastingabilities.api;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Rarity;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 /**
  * Default implementation of an ability type.
  * @author rubensworks
  */
-public class AbilityType implements IAbilityType {
+public class AbilityType extends ForgeRegistryEntry<IAbilityType> implements IAbilityType {
 
     private final String translationKey;
     private final String unlocalizedDescription;
-    private final EnumRarity rarity;
+    private final Rarity rarity;
     private final int maxLevel;
     private final int baseXpPerLevel;
 
-    public AbilityType(String translationKey, String unlocalizedDescription, EnumRarity rarity,
+    public AbilityType(String translationKey, String unlocalizedDescription, Rarity rarity,
                        int maxLevel, int baseXpPerLevel) {
         this.translationKey = translationKey;
         this.unlocalizedDescription = unlocalizedDescription;
@@ -35,7 +36,7 @@ public class AbilityType implements IAbilityType {
     }
 
     @Override
-    public EnumRarity getRarity() {
+    public Rarity getRarity() {
         return rarity;
     }
 
@@ -50,12 +51,12 @@ public class AbilityType implements IAbilityType {
     }
 
     @Override
-    public void onTick(EntityPlayer player, int level) {
+    public void onTick(PlayerEntity player, int level) {
 
     }
 
     @Override
-    public void onChangedLevel(EntityPlayer player, int oldLevel, int newLevel) {
+    public void onChangedLevel(PlayerEntity player, int oldLevel, int newLevel) {
 
     }
 }

@@ -29,17 +29,5 @@ public class Reference {
     public static final String TEXTURE_PATH_ITEMS = "textures/items/";
     public static final String TEXTURE_PATH_PARTICLES = "textures/particles/";
     public static final String MODEL_PATH = "models/";
-    
-    // MOD ID's
-    public static final String MOD_FORGE = "forge";
-    public static final String MOD_FORGE_VERSION = "@FORGE_VERSION@";
-    public static final String MOD_FORGE_VERSION_MIN = "14.23.5.2768";
-    public static final String MOD_CYCLOPSCORE = "cyclopscore";
-    public static final String MOD_CYCLOPSCORE_VERSION = "@CYCLOPSCORE_VERSION@";
-    public static final String MOD_CYCLOPSCORE_VERSION_MIN = "1.1.0";
-    
-    // Dependencies
-    public static final String MOD_DEPENDENCIES =
-            "required-after:" + MOD_FORGE       + "@[" + MOD_FORGE_VERSION_MIN       + ",);" +
-            "required-after:" + MOD_CYCLOPSCORE + "@[" + MOD_CYCLOPSCORE_VERSION_MIN + ",);";
+
 }

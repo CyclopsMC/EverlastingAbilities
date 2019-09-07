@@ -27,14 +27,10 @@ public class AbilityStoreConfig extends CapabilityConfig {
      * Make a new instance.
      */
     public AbilityStoreConfig() {
-        super(
-                EverlastingAbilities._instance,
-                true,
+        super(EverlastingAbilities._instance,
                 "abilityStore",
-                "Storage for abilities.",
                 IAbilityStore.class,
                 new AbilityStoreStorage(),
-                DefaultAbilityStore.class
-        );
+                DefaultAbilityStore::new);
     }
 }

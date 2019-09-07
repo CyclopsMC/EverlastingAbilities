@@ -1,9 +1,8 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Rarity;
+import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
-import org.cyclops.cyclopscore.config.ConfigurableTypeCategory;
-import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypeBonemealer;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -12,42 +11,20 @@ import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig
  * @author rubensworks
  *
  */
-public class AbilityBonemealerConfig extends AbilityConfig {
+public class AbilityBonemealerConfig extends AbilityConfig<AbilityTypeBonemealer> {
 
-    /**
-     * Rarity of this ability.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "Rarity of this ability.", requiresMcRestart = true)
-    public static int rarity = EnumRarity.UNCOMMON.ordinal();
-    /**
-     * The maximum ability level.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The maximum ability level.", requiresMcRestart = true)
+    @ConfigurableProperty(category = "ability", comment = "Rarity of this ability.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static int rarity = Rarity.UNCOMMON.ordinal();
+
+    @ConfigurableProperty(category = "ability", comment = "The maximum ability level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int maxLevel = 5;
-    /**
-     * The xp required per level.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The xp required per level.", requiresMcRestart = true)
+
+    @ConfigurableProperty(category = "ability", comment = "The xp required per level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int xpPerLevel = 30;
 
-    /**
-     * The unique instance.
-     */
-    public static AbilityConfig _instance;
-
-    /**
-     * Make a new instance.
-     */
     public AbilityBonemealerConfig() {
-        super(
-                true,
-                "bonemealer",
-                "Bonemeal the area"
-        );
+        super("bonemealer",
+                eConfig -> new AbilityTypeBonemealer(eConfig.getNamedId(), rarity, maxLevel, xpPerLevel));
     }
 
-    @Override
-    protected IConfigurable initSubInstance() {
-        return new AbilityTypeBonemealer("bonemealer", rarity, maxLevel, xpPerLevel);
-    }
 }

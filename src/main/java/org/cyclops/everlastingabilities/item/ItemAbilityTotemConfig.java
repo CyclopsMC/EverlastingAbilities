@@ -1,9 +1,10 @@
 package org.cyclops.everlastingabilities.item;
 
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.LootTables;
+import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
-import org.cyclops.cyclopscore.config.ConfigurableTypeCategory;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
 import org.cyclops.cyclopscore.helper.LootHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
@@ -15,40 +16,21 @@ import org.cyclops.everlastingabilities.Reference;
  */
 public class ItemAbilityTotemConfig extends ItemConfig {
 
-    /**
-     * The unique instance.
-     */
-    public static ItemAbilityTotemConfig _instance;
-
-    /**
-     * If totems should spawn in loot chests.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.CORE, comment = "If totems should spawn in loot chests.")
+    @ConfigurableProperty(category = "core", comment = "If totems should spawn in loot chests.", configLocation = ModConfig.Type.SERVER)
     public static boolean lootChests = true;
 
-    /**
-     * Can totems be combined in the crafting grid
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.CORE, comment = "This many totems combined in a crafting grid produces a new random totem (0 to disable)")
+    @ConfigurableProperty(category = "core", comment = "This many totems combined in a crafting grid produces a new random totem (0 to disable)")
     public static int totemCraftingCount = 3;
 
-    /**
-     * Percent chance that combined totem will have a rarity bump
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.CORE, comment = "When combining totems, percentage chance of getting one higher rarity than normal.")
+    @ConfigurableProperty(category = "core", comment = "When combining totems, percentage chance of getting one higher rarity than normal.", configLocation = ModConfig.Type.SERVER)
     public static int totemCraftingRarityIncreasePercent = 15;
 
-    /**
-     * Make a new instance.
-     */
     public ItemAbilityTotemConfig() {
-        super(
-                EverlastingAbilities._instance,
-                true,
+        super(EverlastingAbilities._instance,
                 "ability_totem",
-                null,
-                ItemAbilityTotem.class
-        );
+                (eConfig) -> new ItemAbilityTotem(new Item.Properties()
+                        .maxStackSize(1)
+                        .group(EverlastingAbilities._instance.getDefaultItemGroup())));
     }
 
     @Override
@@ -57,12 +39,14 @@ public class ItemAbilityTotemConfig extends ItemConfig {
 
         if (lootChests) {
             LootHelpers.injectLootTable(new ResourceLocation(Reference.MOD_ID, "inject/chests/ability_totem"),
-                    LootTableList.CHESTS_SPAWN_BONUS_CHEST,
-                    LootTableList.CHESTS_VILLAGE_BLACKSMITH,
-                    LootTableList.CHESTS_NETHER_BRIDGE,
-                    LootTableList.CHESTS_SIMPLE_DUNGEON,
-                    LootTableList.CHESTS_ABANDONED_MINESHAFT,
-                    LootTableList.CHESTS_JUNGLE_TEMPLE);
+                    LootTables.CHESTS_SPAWN_BONUS_CHEST,
+                    LootTables.CHESTS_VILLAGE_VILLAGE_TOOLSMITH,
+                    LootTables.CHESTS_VILLAGE_VILLAGE_WEAPONSMITH,
+                    LootTables.CHESTS_VILLAGE_VILLAGE_SHEPHERD,
+                    LootTables.CHESTS_NETHER_BRIDGE,
+                    LootTables.CHESTS_SIMPLE_DUNGEON,
+                    LootTables.CHESTS_ABANDONED_MINESHAFT,
+                    LootTables.CHESTS_JUNGLE_TEMPLE);
         }
     }
 }

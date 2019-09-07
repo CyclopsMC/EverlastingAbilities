@@ -1,28 +1,31 @@
 package org.cyclops.everlastingabilities.client.gui;
 
 import com.google.common.collect.Lists;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.TextureMap;
+import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Triple;
-import org.cyclops.cyclopscore.client.gui.component.button.GuiButtonArrow;
-import org.cyclops.cyclopscore.client.gui.container.GuiContainerConfigurable;
-import org.cyclops.cyclopscore.client.gui.container.GuiContainerExtended;
+import org.cyclops.cyclopscore.client.gui.component.button.ButtonArrow;
+import org.cyclops.cyclopscore.client.gui.container.ContainerScreenExtended;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.helper.RenderHelpers;
 import org.cyclops.cyclopscore.helper.StringHelpers;
-import org.cyclops.cyclopscore.inventory.container.ExtendedInventoryContainer;
-import org.cyclops.cyclopscore.inventory.container.button.IButtonActionClient;
 import org.cyclops.cyclopscore.item.IInformationProvider;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
@@ -31,29 +34,21 @@ import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityCont
 import org.cyclops.everlastingabilities.network.packet.MoveAbilityPacket;
 
 import java.awt.*;
-import java.io.IOException;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Gui for the labeller.
  * @author rubensworks
  */
-public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbilityContainer> {
+public class ContainerScreenAbilityContainer extends ContainerScreenExtended<ContainerAbilityContainer> {
 
     private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
     protected static final int ABILITY_LIST_SIZE = 6;
     protected static final int ABILITY_BOX_HEIGHT = 18;
     protected static final int ABILITY_BOX_WIDTH = 63;
 
-    private static final int BUTTON_UP_1 = 0;
-    private static final int BUTTON_DOWN_1 = 1;
-    private static final int BUTTON_UP_2 = 2;
-    private static final int BUTTON_DOWN_2 = 3;
-    private static final int BUTTON_LEFT = 4;
-    private static final int BUTTON_RIGHT = 5;
-
-    private final EntityPlayer player;
+    private final PlayerEntity player;
 
     protected int startIndexPlayer = 0;
     protected int startIndexItem = 0;
@@ -61,83 +56,55 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
     protected int absoluteSelectedIndexPlayer = -1;
     protected int absoluteSelectedIndexItem = -1;
 
-    protected GuiButtonArrow buttonUp1;
-    protected GuiButtonArrow buttonDown1;
-    protected GuiButtonArrow buttonUp2;
-    protected GuiButtonArrow buttonDown2;
-    protected GuiButtonArrow buttonLeft;
-    protected GuiButtonArrow buttonRight;
+    protected ButtonArrow buttonUp1;
+    protected ButtonArrow buttonDown1;
+    protected ButtonArrow buttonUp2;
+    protected ButtonArrow buttonDown2;
+    protected ButtonArrow buttonLeft;
+    protected ButtonArrow buttonRight;
 
-    /**
-     * Make a new instance.
-     * @param player The player.
-     * @param itemIndex The index of the item in use inside the player inventory.
-     * @param hand The hand the item is in.
-     */
-    public GuiAbilityContainer(EntityPlayer player, int itemIndex, EnumHand hand) {
-        super(new ContainerAbilityContainer(player, itemIndex, hand));
-        this.player = player;
-        ContainerAbilityContainer container = getContainer();
+    public ContainerScreenAbilityContainer(ContainerAbilityContainer container, PlayerInventory inventory, ITextComponent title) {
+        super(container, inventory, title);
+        this.player = inventory.player;
         container.setGui(this);
-
-        putButtonAction(BUTTON_UP_1, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
-            @Override
-            public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
-                if (startIndexPlayer > 0) startIndexPlayer--;
-            }
-        });
-        putButtonAction(BUTTON_DOWN_1, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
-            @Override
-            public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
-                if (startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount())) startIndexPlayer++;
-            }
-        });
-        putButtonAction(BUTTON_UP_2, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
-            @Override
-            public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
-                if (startIndexItem > 0) startIndexItem--;
-            }
-        });
-        putButtonAction(BUTTON_DOWN_2, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
-            @Override
-            public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
-                if (startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount())) startIndexItem++;
-            }
-        });
-
-        putButtonAction(BUTTON_LEFT, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
-            @Override
-            public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
-                if (canMoveToPlayer()) {
-                    EverlastingAbilities._instance.getPacketHandler().sendToServer(
-                            new MoveAbilityPacket(getSelectedItemAbilitySingle(), MoveAbilityPacket.Movement.TO_PLAYER));
-                    moveToPlayer();
-                }
-            }
-        });
-        putButtonAction(BUTTON_RIGHT, new IButtonActionClient<GuiContainerExtended, ExtendedInventoryContainer>() {
-            @Override
-            public void onAction(int buttonId, GuiContainerExtended gui, ExtendedInventoryContainer container) {
-                if (canMoveFromPlayer()) {
-                    EverlastingAbilities._instance.getPacketHandler().sendToServer(
-                            new MoveAbilityPacket(getSelectedPlayerAbilitySingle(), MoveAbilityPacket.Movement.FROM_PLAYER));
-                    moveFromPlayer();
-                }
-            }
-        });
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    protected ResourceLocation constructGuiTexture() {
+        return new ResourceLocation(Reference.MOD_ID, "textures/gui/ability_totem.png");
+    }
 
-        buttonList.add(buttonUp1 = new GuiButtonArrow(BUTTON_UP_1, this.guiLeft + 73,  this.guiTop + 83, GuiButtonArrow.Direction.NORTH));
-        buttonList.add(buttonDown1 = new GuiButtonArrow(BUTTON_DOWN_1, this.guiLeft + 73,  this.guiTop + 174, GuiButtonArrow.Direction.SOUTH));
-        buttonList.add(buttonUp2 = new GuiButtonArrow(BUTTON_UP_2, this.guiLeft + 88,  this.guiTop + 83, GuiButtonArrow.Direction.NORTH));
-        buttonList.add(buttonDown2 = new GuiButtonArrow(BUTTON_DOWN_2, this.guiLeft + 88,  this.guiTop + 174, GuiButtonArrow.Direction.SOUTH));
+    @Override
+    public void init() {
+        super.init();
 
-        buttonList.add(buttonLeft = new GuiButtonArrow(BUTTON_LEFT, this.guiLeft + 76,  this.guiTop + 130, GuiButtonArrow.Direction.WEST));
-        buttonList.add(buttonRight = new GuiButtonArrow(BUTTON_RIGHT, this.guiLeft + 90,  this.guiTop + 130, GuiButtonArrow.Direction.EAST));
+        addButton(buttonUp1 = new ButtonArrow(this.guiLeft + 73,  this.guiTop + 83, L10NHelpers.localize("gui.cyclopscore.up"), button -> {
+            if (startIndexPlayer > 0) startIndexPlayer--;
+        }, ButtonArrow.Direction.NORTH));
+        addButton(buttonDown1 = new ButtonArrow(this.guiLeft + 73,  this.guiTop + 174, L10NHelpers.localize("gui.cyclopscore.down"), button -> {
+            if (startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount())) startIndexPlayer++;
+        }, ButtonArrow.Direction.SOUTH));
+        addButton(buttonUp2 = new ButtonArrow(this.guiLeft + 88,  this.guiTop + 83, L10NHelpers.localize("gui.cyclopscore.up"), button -> {
+            if (startIndexItem > 0) startIndexItem--;
+        }, ButtonArrow.Direction.NORTH));
+        addButton(buttonDown2 = new ButtonArrow(this.guiLeft + 88,  this.guiTop + 174, L10NHelpers.localize("gui.cyclopscore.down"), button -> {
+            if (startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount())) startIndexItem++;
+        }, ButtonArrow.Direction.SOUTH));
+
+        addButton(buttonLeft = new ButtonArrow(this.guiLeft + 76,  this.guiTop + 130, L10NHelpers.localize("gui.cyclopscore.left"), button -> {
+            if (canMoveToPlayer()) {
+                EverlastingAbilities._instance.getPacketHandler().sendToServer(
+                        new MoveAbilityPacket(getSelectedItemAbilitySingle(), MoveAbilityPacket.Movement.TO_PLAYER));
+                moveToPlayer();
+            }
+        }, ButtonArrow.Direction.WEST));
+        addButton(buttonRight = new ButtonArrow(this.guiLeft + 90,  this.guiTop + 130, L10NHelpers.localize("gui.cyclopscore.right"), button -> {
+            if (canMoveFromPlayer()) {
+                EverlastingAbilities._instance.getPacketHandler().sendToServer(
+                        new MoveAbilityPacket(getSelectedPlayerAbilitySingle(), MoveAbilityPacket.Movement.FROM_PLAYER));
+                moveFromPlayer();
+            }
+        }, ButtonArrow.Direction.EAST));
     }
 
     @Override
@@ -151,8 +118,8 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
             return;
         }
 
-        this.fontRenderer.drawString(player.getDisplayNameString(), 8, 6, -1);
-        this.fontRenderer.drawString(L10NHelpers.localize(getContainer().getItem().getConfig().getFullTranslationKey()), 102, 6, -1);
+        this.font.drawString(player.getDisplayName().getString(), 8, 6, -1);
+        this.font.drawString(getContainer().getItemStack(player).getDisplayName().toString(), 102, 6, -1);
 
         // Draw abilities
         drawAbilitiesTooltip(8, 83, getPlayerAbilities(), startIndexPlayer, mouseX, mouseY);
@@ -172,11 +139,11 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
     }
 
     protected IMutableAbilityStore getPlayerAbilityStore() {
-        return getContainer().getPlayerAbilityStore();
+        return getContainer().getPlayerAbilityStore().orElse(null);
     }
 
     protected IMutableAbilityStore getItemAbilityStore() {
-        return getContainer().getItemAbilityStore();
+        return getContainer().getItemAbilityStore().orElse(null);
     }
 
     protected int getPlayerAbilitiesCount() {
@@ -193,13 +160,13 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
             return;
         }
 
-        buttonUp1.enabled = startIndexPlayer > 0;
-        buttonDown1.enabled = startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount());
-        buttonUp2.enabled = startIndexItem > 0;
-        buttonDown2.enabled = startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount());
+        buttonUp1.visible = startIndexPlayer > 0;
+        buttonDown1.visible = startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount());
+        buttonUp2.visible = startIndexItem > 0;
+        buttonDown2.visible = startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount());
 
-        buttonLeft.enabled = canMoveToPlayer();
-        buttonRight.enabled = canMoveFromPlayer();
+        buttonLeft.visible = canMoveToPlayer();
+        buttonRight.visible = canMoveFromPlayer();
         buttonRight.visible = canMoveFromPlayerByItem();
 
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
@@ -207,11 +174,11 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         int i = this.guiLeft;
         int j = this.guiTop;
         drawFancyBackground(i + 8, j + 17, 66, 61, getPlayerAbilityStore());
-        GuiInventory.drawEntityOnScreen(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.mc.player);
+        InventoryScreen.drawEntityOnScreen(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.getMinecraft().player);
         drawXp(i + 67, j + 70);
-        RenderHelpers.drawScaledCenteredString(fontRenderer, "" + player.experienceTotal, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
+        RenderHelpers.drawScaledCenteredString(font, "" + player.experienceTotal, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         drawFancyBackground(i + 102, j + 17, 66, 61, getItemAbilityStore());
-        drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.mc.player));
+        drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.getMinecraft().player));
 
         // Draw abilities
         drawAbilities(this.guiLeft + 8, this.guiTop + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
@@ -234,23 +201,23 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         GlStateManager.depthFunc(514);
         GlStateManager.disableLighting();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(RES_ITEM_GLINT);
+        RenderHelpers.bindTexture(RES_ITEM_GLINT);
         GlStateManager.matrixMode(5890);
         GlStateManager.pushMatrix();
-        GlStateManager.scale(8.0F, 8.0F, 8.0F);
-        float f = (float)(Minecraft.getSystemTime() % 3000L) / 3000.0F / 8.0F;
-        GlStateManager.translate(f, 0.0F, 0.0F);
-        GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.scalef(8.0F, 8.0F, 8.0F);
+        float f = (float)(Util.milliTime() % 3000L) / 3000.0F / 8.0F;
+        GlStateManager.translatef(f, 0.0F, 0.0F);
+        GlStateManager.rotatef(-50.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.enableBlend();
         drawTexturedModalRectColor(x, y, 0, 0, width, height, r, g, b, 255);
         GlStateManager.popMatrix();
         GlStateManager.pushMatrix();
-        GlStateManager.scale(8.0F, 8.0F, 8.0F);
-        float f1 = (float)(Minecraft.getSystemTime() % 4873L) / 4873.0F / 8.0F;
-        GlStateManager.translate(-f1, 0.0F, 0.0F);
-        GlStateManager.rotate(10.0F, 0.0F, 0.0F, 1.0F);
-        float rotation = ((float) (Minecraft.getSystemTime() / 100 % 3600)) / 10F;
-        GlStateManager.rotate(rotation, 1.0F, 0.5F, 1.0F);
+        GlStateManager.scalef(8.0F, 8.0F, 8.0F);
+        float f1 = (float)(Util.milliTime() % 4873L) / 4873.0F / 8.0F;
+        GlStateManager.translatef(-f1, 0.0F, 0.0F);
+        GlStateManager.rotatef(10.0F, 0.0F, 0.0F, 1.0F);
+        float rotation = ((float) (Util.milliTime() / 100 % 3600)) / 10F;
+        GlStateManager.rotatef(rotation, 1.0F, 0.5F, 1.0F);
         drawTexturedModalRectColor(x, y, 0, 0, width, height, r, g, b, 255);
         GlStateManager.popMatrix();
         GlStateManager.matrixMode(5888);
@@ -259,14 +226,14 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         GlStateManager.depthFunc(515);
         GlStateManager.depthMask(true);
         GlStateManager.disableBlend();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        RenderHelpers.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
-        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.color4f(1, 1, 1, 1);
     }
 
     protected void drawXp(int x, int y) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-        drawTexturedModalRect(x, y, 0, 219, 5, 5);
+        RenderHelpers.bindTexture(texture);
+        blit(x, y, 0, 219, 5, 5);
     }
 
     private void drawAbilities(int x, int y, List<Ability> abilities, int startIndex, int playerXp,
@@ -286,28 +253,28 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
             }
 
             // Name
-            RenderHelpers.drawScaledCenteredString(fontRenderer,
+            RenderHelpers.drawScaledCenteredString(font,
                     ability.getAbilityType().getRarity().color + L10NHelpers.localize(ability.getAbilityType().getTranslationKey()),
                     x + 27, boxY + 7, 0, 1.0F, 50, -1);
 
             // Level
-            RenderHelpers.drawScaledCenteredString(fontRenderer,
+            RenderHelpers.drawScaledCenteredString(font,
                     "" + ability.getLevel(),
                     x + 58, boxY + 5, 0, 0.8F, -1);
 
             // XP
             int requiredXp = ability.getAbilityType().getBaseXpPerLevel();
             if (playerXp < requiredXp) {
-                GlStateManager.color(0.3F, 0.3F, 0.3F, 1);
+                GlStateManager.color4f(0.3F, 0.3F, 0.3F, 1);
             } else {
-                GlStateManager.color(1, 1, 1, 1);
+                GlStateManager.color4f(1, 1, 1, 1);
             }
             drawXp(x + 57, boxY + 10);
-            RenderHelpers.drawScaledCenteredString(fontRenderer,
+            RenderHelpers.drawScaledCenteredString(font,
                     "" + requiredXp,
                     x + 53, boxY + 13, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         }
-        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.color4f(1, 1, 1, 1);
     }
 
     private void drawAbilitiesTooltip(int x, int y, List<Ability> abilities, int startIndex, int mouseX, int mouseY) {
@@ -347,10 +314,10 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        vertexbuffer.pos((double)(x + 0), (double)(y + height), (double)this.zLevel).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + height) * f1)).color(r, g, b, a).endVertex();
-        vertexbuffer.pos((double)(x + width), (double)(y + height), (double)this.zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).color(r, g, b, a).endVertex();
-        vertexbuffer.pos((double)(x + width), (double)(y + 0), (double)this.zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + 0) * f1)).color(r, g, b, a).endVertex();
-        vertexbuffer.pos((double)(x + 0), (double)(y + 0), (double)this.zLevel).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + 0) * f1)).color(r, g, b, a).endVertex();
+        vertexbuffer.pos((double)(x + 0), (double)(y + height), (double)this.blitOffset).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + height) * f1)).color(r, g, b, a).endVertex();
+        vertexbuffer.pos((double)(x + width), (double)(y + height), (double)this.blitOffset).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).color(r, g, b, a).endVertex();
+        vertexbuffer.pos((double)(x + width), (double)(y + 0), (double)this.blitOffset).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + 0) * f1)).color(r, g, b, a).endVertex();
+        vertexbuffer.pos((double)(x + 0), (double)(y + 0), (double)this.blitOffset).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + 0) * f1)).color(r, g, b, a).endVertex();
         tessellator.draw();
     }
 
@@ -359,30 +326,31 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
 
         GlStateManager.pushMatrix();
 
-        GlStateManager.translate((float)posX, (float)posY, 50.0F);
-        GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
-        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.translatef((float)posX, (float)posY, 50.0F);
+        GlStateManager.scalef((float)(-scale), (float)scale, (float)scale);
+        GlStateManager.rotatef(180.0F, 0.0F, 0.0F, 1.0F);
 
-        GlStateManager.rotate(-(float)Math.atan((double)(mouseX / 40.0F)) * 40.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 20.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotatef(-(float)Math.atan((double)(mouseX / 40.0F)) * 40.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotatef(-((float)Math.atan((double)(mouseY / 20.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
 
-        GlStateManager.pushAttrib();
+        GlStateManager.pushTextureAttributes();
+        GlStateManager.pushLightingAttributes();
         RenderHelper.enableStandardItemLighting();
         RenderHelpers.renderItem(itemStack);
         RenderHelper.disableStandardItemLighting();
-        GlStateManager.popAttrib();
+        GlStateManager.popAttributes();
         GlStateManager.enableLighting();
         GlStateManager.popMatrix();
 
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableRescaleNormal();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        GlStateManager.activeTexture(GLX.GL_TEXTURE1);
+        GlStateManager.disableTexture();
+        GlStateManager.activeTexture(GLX.GL_TEXTURE0);
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         int newSelectedPlayer = canMoveFromPlayerByItem() ? clickAbilities(8, 83, getPlayerAbilities(), startIndexPlayer, absoluteSelectedIndexPlayer, mouseX, mouseY) : -2;
         int newSelectedItem = clickAbilities(105, 83, getItemAbilities(), startIndexItem, absoluteSelectedIndexItem, mouseX, mouseY);
 
@@ -396,14 +364,16 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         if (newSelectedPlayer < 0 && newSelectedItem < 0) {
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
+
+        return true;
     }
 
     private int clickAbilities(int x, int y, List<Ability> abilities, int startIndex, int currentSelectedIndex,
-                               int mouseX, int mouseY) {
+                               double mouseX, double mouseY) {
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
             int boxY = y + i * ABILITY_BOX_HEIGHT;
-            if (isPointInRegion(new Rectangle(x, boxY, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT), new Point(mouseX, mouseY))) {
+            if (isPointInRegion(new Rectangle(x, boxY, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT), new Point((int) mouseX, (int) mouseY))) {
                 int absoluteIndex = startIndex + i;
                 if (currentSelectedIndex == absoluteIndex) {
                     return -1;
@@ -447,11 +417,11 @@ public class GuiAbilityContainer extends GuiContainerConfigurable<ContainerAbili
         return null;
     }
 
-    public boolean canMoveFromPlayer(Ability ability, EntityPlayer player, IMutableAbilityStore target) {
+    public boolean canMoveFromPlayer(Ability ability, PlayerEntity player, IMutableAbilityStore target) {
         return ability != null && AbilityHelpers.canInsert(ability, target);
     }
 
-    public boolean canMoveToPlayer(Ability ability, EntityPlayer player) {
+    public boolean canMoveToPlayer(Ability ability, PlayerEntity player) {
         return ability != null && AbilityHelpers.canInsertToPlayer(ability, player);
     }
 

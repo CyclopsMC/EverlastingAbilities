@@ -1,8 +1,8 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
@@ -16,9 +16,9 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 2;
 
-    private final Potion potion;
+    private final Effect potion;
 
-    public AbilityTypePotionEffectSelf(String id, int rarity, int maxLevel, int baseXpPerLevel, Potion potion) {
+    public AbilityTypePotionEffectSelf(String id, int rarity, int maxLevel, int baseXpPerLevel, Effect potion) {
         super(id, rarity, maxLevel, baseXpPerLevel);
         this.potion = potion;
         if (this.potion == null) {
@@ -39,10 +39,10 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(EntityPlayer player, int level) {
-        if (potion != null && player.world.getTotalWorldTime() % getTickModulus(level) == 0) {
+    public void onTick(PlayerEntity player, int level) {
+        if (potion != null && player.world.getGameTime() % getTickModulus(level) == 0) {
             player.addPotionEffect(
-                    new PotionEffect(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
+                    new EffectInstance(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
         }
     }
 }

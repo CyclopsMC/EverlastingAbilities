@@ -1,26 +1,27 @@
 package org.cyclops.everlastingabilities.core.config.extendedconfig;
 
+import net.minecraftforge.registries.IForgeRegistry;
 import org.cyclops.cyclopscore.config.ConfigurableType;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
+import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfigForge;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.core.config.ExtendedConfigurableType;
+
+import java.util.function.Function;
 
 /**
  * Config for ability types.
  * @author rubensworks
  * @see ExtendedConfig
  */
-public abstract class AbilityConfig<T> extends ExtendedConfig<AbilityConfig<T>> {
+public abstract class AbilityConfig<T> extends ExtendedConfigForge<AbilityConfig<T>, IAbilityType> {
 
-    /**
-     * Make a new instance.
-     * @param enabled If this should is enabled.
-     * @param namedId The unique name ID for the configurable.
-     * @param comment The comment to add in the config file for this configurable.
-     */
-    public AbilityConfig(boolean enabled, String namedId, String comment) {
-        super(EverlastingAbilities._instance, enabled, namedId, comment, null);
+    // TODO: add a way to disable abilities afterwards (i.e., don't allow them to occur in loot and spawn, just do this via loot tables?)
+
+    public AbilityConfig(String namedId, Function<AbilityConfig<T>, ? extends IAbilityType> elementConstructor) {
+        super(EverlastingAbilities._instance, namedId, elementConstructor);
     }
     
     @Override
@@ -32,13 +33,14 @@ public abstract class AbilityConfig<T> extends ExtendedConfig<AbilityConfig<T>> 
     public String getFullTranslationKey() {
         return "ability.abilities." + getMod().getModId()  + "." +getNamedId() + ".name";
     }
-    
-    @Override
-	public ConfigurableType getHolderType() {
-		return ExtendedConfigurableType.ABILITY;
-	}
 
-    public IAbilityType getAbilityType() {
-        return (IAbilityType) getSubInstance();
+    @Override
+    public ConfigurableType getConfigurableType() {
+        return ExtendedConfigurableType.ABILITY;
+    }
+
+    @Override
+    public IForgeRegistry<? super IAbilityType> getRegistry() {
+        return AbilityTypes.REGISTRY;
     }
 }

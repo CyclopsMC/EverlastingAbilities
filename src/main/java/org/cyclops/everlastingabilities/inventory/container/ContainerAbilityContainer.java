@@ -1,23 +1,25 @@
 package org.cyclops.everlastingabilities.inventory.container;
 
 import com.google.common.collect.Lists;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Hand;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
 import org.cyclops.cyclopscore.helper.InventoryHelpers;
-import org.cyclops.cyclopscore.inventory.IGuiContainerProviderConfigurable;
 import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainer;
+import org.cyclops.everlastingabilities.Reference;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
-import org.cyclops.everlastingabilities.client.gui.GuiAbilityContainer;
-import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
+import org.cyclops.everlastingabilities.client.gui.ContainerScreenAbilityContainer;
 import org.cyclops.everlastingabilities.item.ItemGuiAbilityContainer;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,19 +29,17 @@ import java.util.List;
  */
 public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbilityContainer> {
 
-    @SideOnly(Side.CLIENT)
-    private GuiAbilityContainer gui;
+    @OnlyIn(Dist.CLIENT)
+    private ContainerScreenAbilityContainer gui;
 
-    /**
-     * Make a new instance.
-     *
-     * @param player The player.
-     * @param itemIndex The index of the item in use inside the player inventory.
-     * @param hand The hand the item is in.
-     */
-    public ContainerAbilityContainer(EntityPlayer player, int itemIndex, EnumHand hand) {
-        super(player.inventory, (ItemGuiAbilityContainer) InventoryHelpers.getItemFromIndex(player, itemIndex, hand).getItem(), itemIndex, hand);
-        addInventory(player.inventory, 0, 8, 195, 1, 9);
+    public ContainerAbilityContainer(int id, PlayerInventory inventory, PacketBuffer data) {
+        this(id, inventory, data.getInt(0), data.getBoolean(0) ? Hand.MAIN_HAND : Hand.OFF_HAND);
+    }
+
+    public ContainerAbilityContainer(int id, PlayerInventory inventory, int itemIndex, Hand hand) {
+        super(RegistryEntries.CONTAINER_ABILITYCONTAINER, id, inventory, (ItemGuiAbilityContainer) InventoryHelpers
+                .getItemFromIndex(inventory.player, itemIndex, hand).getItem(), itemIndex, hand);
+        addInventory(inventory, 0, 8, 195, 1, 9);
 
         // If level is not consistent with total experience count, fix it.
         // This can be caused by vanilla's xp command that adds levels but doesn't change the total xp count.
@@ -50,18 +50,13 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
         }
     }
 
-    @Override
-    public IGuiContainerProviderConfigurable getGuiProvider() {
-        return ItemAbilityTotem.getInstance();
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void setGui(GuiAbilityContainer gui) {
+    @OnlyIn(Dist.CLIENT)
+    public void setGui(ContainerScreenAbilityContainer gui) {
         this.gui = gui;
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiAbilityContainer getGui() {
+    @OnlyIn(Dist.CLIENT)
+    public ContainerScreenAbilityContainer getGui() {
         return this.gui;
     }
 
@@ -70,12 +65,11 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
         return 0;
     }
 
-
-    public IMutableAbilityStore getPlayerAbilityStore() {
+    public LazyOptional<IMutableAbilityStore> getPlayerAbilityStore() {
         return player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
     }
 
-    public IMutableAbilityStore getItemAbilityStore() {
+    public LazyOptional<IMutableAbilityStore> getItemAbilityStore() {
         ItemStack itemStack = getItemStack(player);
         if (itemStack == null) {
             return null;
@@ -83,42 +77,52 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
         return itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
     }
 
-    public @Nullable List<Ability> getPlayerAbilities() {
-        IMutableAbilityStore abilityStore = getPlayerAbilityStore();
-        if (abilityStore == null) {
-            return Collections.emptyList();
-        }
-        return Lists.newArrayList(abilityStore.getAbilities());
+    public List<Ability> getPlayerAbilities() {
+        return getPlayerAbilityStore()
+                .map(abilityStore -> (List<Ability>) Lists.newArrayList(abilityStore.getAbilities()))
+                .orElseGet(Collections::emptyList);
     }
 
     public List<Ability> getItemAbilities() {
-        IMutableAbilityStore abilityStore = getItemAbilityStore();
-        if (abilityStore == null) {
-            return Collections.emptyList();
-        }
-        return Lists.newArrayList(abilityStore.getAbilities());
+        return getItemAbilityStore()
+                .map(abilityStore -> (List<Ability>) Lists.newArrayList(abilityStore.getAbilities()))
+                .orElseGet(Collections::emptyList);
     }
 
     public void moveFromPlayer(Ability playerAbility) {
-        Ability insertedAbility = AbilityHelpers.insert(playerAbility, getItemAbilityStore());
-        if (insertedAbility != null) {
-            AbilityHelpers.removePlayerAbility(player, insertedAbility, true, true);
-        }
+        getItemAbilityStore().ifPresent(abilityStore -> {
+            Ability insertedAbility = AbilityHelpers.insert(playerAbility, abilityStore);
+            if (insertedAbility != null) {
+                AbilityHelpers.removePlayerAbility(player, insertedAbility, true, true);
+            }
+        });
     }
 
     public void moveToPlayer(Ability itemAbility) {
-        Ability insertedAbility = AbilityHelpers.addPlayerAbility(player, itemAbility, true, true);
-        if (insertedAbility != null) {
-            AbilityHelpers.extract(insertedAbility, getItemAbilityStore());
+        getItemAbilityStore().ifPresent(abilityStore -> {
+            Ability insertedAbility = AbilityHelpers.addPlayerAbility(player, itemAbility, true, true);
+            if (insertedAbility != null) {
+                AbilityHelpers.extract(insertedAbility, abilityStore);
 
-            if(getItemAbilities().isEmpty() && !getItem().canMoveFromPlayer()) {
-                player.inventory.setInventorySlotContents(itemIndex, ItemStack.EMPTY);
+                if(getItemAbilities().isEmpty() && !getItem().canMoveFromPlayer()) {
+                    player.inventory.setInventorySlotContents(itemIndex, ItemStack.EMPTY);
+                }
             }
-        }
+        });
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(PlayerEntity player) {
         return getItemStack(player) != null && (getItem().canMoveFromPlayer() || !getItemAbilities().isEmpty());
+    }
+
+    @Override
+    public String getGuiModId() {
+        return Reference.MOD_ID; // TODO: needed?
+    }
+
+    @Override
+    public int getGuiId() {
+        return 0; // TODO: needed?
     }
 }

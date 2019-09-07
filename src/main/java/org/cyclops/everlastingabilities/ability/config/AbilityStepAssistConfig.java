@@ -1,9 +1,8 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Rarity;
+import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
-import org.cyclops.cyclopscore.config.ConfigurableTypeCategory;
-import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypeStepAssist;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -12,47 +11,23 @@ import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig
  * @author rubensworks
  *
  */
-public class AbilityStepAssistConfig extends AbilityConfig {
+public class AbilityStepAssistConfig extends AbilityConfig<AbilityTypeStepAssist> {
 
-    /**
-     * The unique instance.
-     */
-    public static AbilityConfig _instance;
-
-    /**
-     * Forces the default step height value to 0.6 when this ability is deactivated.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "Forces the default step height value to 0.6 when this ability is deactivated.", isCommandable = true)
+    @ConfigurableProperty(category = "ability", comment = "Forces the default step height value to 0.6 when this ability is deactivated.", isCommandable = true, configLocation = ModConfig.Type.SERVER)
     public static boolean forceDefaultStepHeight = true;
-    /**
-     * Rarity of this ability.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "Rarity of this ability.", requiresMcRestart = true)
-    public static int rarity = EnumRarity.COMMON.ordinal();
-    /**
-     * The maximum ability level.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The maximum ability level.", requiresMcRestart = true)
+
+    @ConfigurableProperty(category = "ability", comment = "Rarity of this ability.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static int rarity = Rarity.COMMON.ordinal();
+
+    @ConfigurableProperty(category = "ability", comment = "The maximum ability level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int maxLevel = 3;
-    /**
-     * The xp required per level.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The xp required per level.", requiresMcRestart = true)
+
+    @ConfigurableProperty(category = "ability", comment = "The xp required per level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int xpPerLevel = 25;
 
-    /**
-     * Make a new instance.
-     */
     public AbilityStepAssistConfig() {
-        super(
-                true,
-                "step_assist",
-                "Automatically step up a certain number of blocks depending on the level"
-        );
+        super("step_assist",
+                eConfig -> new AbilityTypeStepAssist(eConfig.getNamedId(), rarity, maxLevel, xpPerLevel));
     }
 
-    @Override
-    protected IConfigurable initSubInstance() {
-        return new AbilityTypeStepAssist(getNamedId(), rarity, maxLevel, xpPerLevel);
-    }
 }

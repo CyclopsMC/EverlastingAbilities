@@ -1,12 +1,9 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Rarity;
+import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
-import org.cyclops.cyclopscore.config.ConfigurableTypeCategory;
-import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypeFertility;
-import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
 /**
@@ -14,42 +11,20 @@ import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig
  * @author rubensworks
  *
  */
-public class AbilityFertilityConfig extends AbilityConfig {
+public class AbilityFertilityConfig extends AbilityConfig<AbilityTypeFertility> {
 
-    /**
-     * Rarity of this ability.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "Rarity of this ability.", requiresMcRestart = true)
-    public static int rarity = EnumRarity.UNCOMMON.ordinal();
-    /**
-     * The maximum ability level.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The maximum ability level.", requiresMcRestart = true)
+    @ConfigurableProperty(category = "ability", comment = "Rarity of this ability.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static int rarity = Rarity.UNCOMMON.ordinal();
+
+    @ConfigurableProperty(category = "ability", comment = "The maximum ability level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int maxLevel = 3;
-    /**
-     * The xp required per level.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The xp required per level.", requiresMcRestart = true)
+
+    @ConfigurableProperty(category = "ability", comment = "The xp required per level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int xpPerLevel = 30;
 
-    /**
-     * The unique instance.
-     */
-    public static AbilityConfig _instance;
-
-    /**
-     * Make a new instance.
-     */
     public AbilityFertilityConfig() {
-        super(
-                true,
-                "fertility",
-                "Animals in the area become fertile"
-        );
+        super("fertility",
+                eConfig -> new AbilityTypeFertility(eConfig.getNamedId(), rarity, maxLevel, xpPerLevel));
     }
 
-    @Override
-    protected IConfigurable initSubInstance() {
-        return new AbilityTypeFertility(getNamedId(), rarity, maxLevel, xpPerLevel);
-    }
 }

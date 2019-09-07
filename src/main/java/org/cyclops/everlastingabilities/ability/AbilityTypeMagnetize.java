@@ -2,10 +2,9 @@ package org.cyclops.everlastingabilities.ability;
 
 import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.entity.item.ExperienceOrbEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -28,9 +27,9 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(EntityPlayer player, int level) {
+    public void onTick(PlayerEntity player, int level) {
         World world = player.world;
-        if (!world.isRemote && !player.isSneaking() && player.world.getTotalWorldTime() % TICK_MODULUS == 0) {
+        if (!world.isRemote && !player.isSneaking() && player.world.getGameTime() % TICK_MODULUS == 0) {
             // Center of the attraction
             double x = player.posX;
             double y = player.posY;
@@ -43,17 +42,17 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
 
                 @Override
                 public boolean apply(Entity entity) {
-                    return entity instanceof EntityItem
-                            || (GeneralConfig.magnetizeMoveXp && entity instanceof EntityXPOrb);
+                    return entity instanceof ItemEntity
+                            || (GeneralConfig.magnetizeMoveXp && entity instanceof ExperienceOrbEntity);
                 }
 
             });
 
             // Move all those items in the direction of the player.
             for(Entity moveEntity : entities) {
-                if((moveEntity instanceof EntityItem && !((EntityItem) moveEntity).cannotPickup()
-                        && canKineticateItem(((EntityItem) moveEntity).getItem())) ||
-                        (moveEntity instanceof EntityXPOrb)) {
+                if((moveEntity instanceof ItemEntity && !((ItemEntity) moveEntity).cannotPickup()
+                        && canKineticateItem(((ItemEntity) moveEntity).getItem())) ||
+                        (moveEntity instanceof ExperienceOrbEntity)) {
                     double dx = moveEntity.posX - x;
                     double dy = moveEntity.posY - y + 1;
                     double dz = moveEntity.posZ - z;
@@ -65,15 +64,10 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
                         dx *= m;
                         dy *= m;
                         dz *= m;
-                        if (moveEntity instanceof EntityItem && d < 5.0D) {
-                            ((EntityItem) moveEntity).setPickupDelay(0);
+                        if (moveEntity instanceof ItemEntity && d < 5.0D) {
+                            ((ItemEntity) moveEntity).setPickupDelay(0);
                         }
-                        moveEntity.motionX = dx * strength;
-                        moveEntity.motionY = dy * strength;
-                        moveEntity.motionZ = dz * strength;
-                        if(moveEntity.collidedHorizontally) {
-                            moveEntity.motionY = 0.3;
-                        }
+                        moveEntity.setMotion(dx * strength, moveEntity.collidedHorizontally ? 0.3 : dy * strength, dz * strength);
                     }
                 }
             }

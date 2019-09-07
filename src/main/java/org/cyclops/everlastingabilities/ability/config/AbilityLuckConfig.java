@@ -1,10 +1,9 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Rarity;
+import net.minecraft.potion.Effects;
+import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
-import org.cyclops.cyclopscore.config.ConfigurableTypeCategory;
-import org.cyclops.cyclopscore.config.configurable.IConfigurable;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig;
 
@@ -13,42 +12,20 @@ import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilityConfig
  * @author rubensworks
  *
  */
-public class AbilityLuckConfig extends AbilityConfig {
+public class AbilityLuckConfig extends AbilityConfig<AbilityTypePotionEffectSelf> {
 
-    /**
-     * Rarity of this ability.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "Rarity of this ability.", requiresMcRestart = true)
-    public static int rarity = EnumRarity.RARE.ordinal();
-    /**
-     * The maximum ability level.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The maximum ability level.", requiresMcRestart = true)
+    @ConfigurableProperty(category = "ability", comment = "Rarity of this ability.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static int rarity = Rarity.RARE.ordinal();
+
+    @ConfigurableProperty(category = "ability", comment = "The maximum ability level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int maxLevel = 3;
-    /**
-     * The xp required per level.
-     */
-    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, categoryRaw = "ability", comment = "The xp required per level.", requiresMcRestart = true)
+
+    @ConfigurableProperty(category = "ability", comment = "The xp required per level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int xpPerLevel = 40;
 
-    /**
-     * The unique instance.
-     */
-    public static AbilityConfig _instance;
-
-    /**
-     * Make a new instance.
-     */
     public AbilityLuckConfig() {
-        super(
-                true,
-                "luck",
-                "Have a higher chance on better loot"
-        );
+        super("luck",
+                eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), rarity, maxLevel, xpPerLevel, Effects.LUCK));
     }
 
-    @Override
-    protected IConfigurable initSubInstance() {
-        return new AbilityTypePotionEffectSelf(getNamedId(), rarity, maxLevel, xpPerLevel, MobEffects.LUCK);
-    }
 }

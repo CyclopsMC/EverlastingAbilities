@@ -1,14 +1,14 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityOwnable;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
@@ -16,8 +16,6 @@ import org.cyclops.everlastingabilities.GeneralConfig;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
 
 /**
  * Ability type for potion effects in an area.
@@ -27,10 +25,10 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 2;
 
-    private final Potion potion;
+    private final Effect potion;
     private boolean hostile;
 
-    public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel, Potion potion, boolean isHostile) {
+    public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel, Effect potion, boolean isHostile) {
         super(id, rarity, maxLevel, baseXpPerLevel);
         this.potion = potion;
         this.hostile = isHostile;
@@ -38,7 +36,7 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
             EverlastingAbilities.clog(Level.WARN, "Tried to register a null potion for ability " + id + ". This is possibly caused by a mod forcefully removing the potion effect for this ability.");
         }
     }
-    public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel, Potion potion) {
+    public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel, Effect potion) {
         this(id, rarity, maxLevel, baseXpPerLevel, potion, true);
     }
 
@@ -55,32 +53,29 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(EntityPlayer player, int level) {
+    public void onTick(PlayerEntity player, int level) {
         World world = player.world;
-        if (potion != null && !world.isRemote && player.world.getTotalWorldTime() % getTickModulus(level) == 0) {
+        if (potion != null && !world.isRemote && player.world.getGameTime() % getTickModulus(level) == 0) {
             int radius = level * 2;
-            List<EntityLivingBase> mobs = world.getEntitiesWithinAABB(EntityLivingBase.class,
-                    player.getEntityBoundingBox().grow(radius, radius, radius), EntitySelectors.NOT_SPECTATING);
-            for (EntityLivingBase mob : mobs) {
+            List<LivingEntity> mobs = world.getEntitiesWithinAABB(LivingEntity.class,
+                    player.getBoundingBox().grow(radius, radius, radius), EntityPredicates.NOT_SPECTATING);
+            for (LivingEntity mob : mobs) {
                 if (!(this.hostile && isFriendlyMob(mob, player))) {
-                    mob.addPotionEffect(new PotionEffect(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
+                    mob.addPotionEffect(new EffectInstance(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
                 }
             }
         }
     }
 
-    private static String[] friendlyMobs = null;
-    static boolean isFriendlyMob(EntityLivingBase mob, EntityPlayer player) {
-        ResourceLocation resourceLocation = mob instanceof EntityPlayer
-                ? new ResourceLocation("player") : EntityList.getKey(mob);
+    static boolean isFriendlyMob(LivingEntity mob, PlayerEntity player) {
+        ResourceLocation resourceLocation = mob instanceof PlayerEntity
+                ? new ResourceLocation("player") : ForgeRegistries.ENTITIES.getKey(mob.getType());
         String mobName = resourceLocation == null ? "null" : resourceLocation.toString();
         return (mob == player ||
                 player.isOnSameTeam(mob) ||
-                (mob instanceof IEntityOwnable && ((IEntityOwnable) mob).getOwner() == player) ||
-                Arrays.stream(friendlyMobs).anyMatch(mobName::matches));
+                // TODO TameableEntity was IEntityOwnable
+                (mob instanceof TameableEntity && ((TameableEntity) mob).getOwner() == player) ||
+                GeneralConfig.friendlyMobs.stream().anyMatch(mobName::matches));
     }
 
-    public static void loadBlacklist(String[] mobNames) {
-        friendlyMobs = mobNames;
-    }
 }

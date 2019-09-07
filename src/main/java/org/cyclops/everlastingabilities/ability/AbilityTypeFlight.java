@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import org.cyclops.everlastingabilities.Reference;
 
 /**
@@ -16,24 +16,24 @@ public class AbilityTypeFlight extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(EntityPlayer player, int level) {
-        player.capabilities.allowFlying = true;
+    public void onTick(PlayerEntity player, int level) {
+        player.abilities.allowFlying = true;
     }
 
     @Override
-    public void onChangedLevel(EntityPlayer player, int oldLevel, int newLevel) {
+    public void onChangedLevel(PlayerEntity player, int oldLevel, int newLevel) {
         if (oldLevel > 0 && newLevel == 0) {
             boolean allowFlying = false;
-            if(player.getEntityData().hasKey(PLAYER_NBT_KEY)) {
-                allowFlying = player.getEntityData().getBoolean(PLAYER_NBT_KEY);
-                player.getEntityData().removeTag(PLAYER_NBT_KEY);
+            if(player.getPersistantData().contains(PLAYER_NBT_KEY)) {
+                allowFlying = player.getPersistantData().getBoolean(PLAYER_NBT_KEY);
+                player.getPersistantData().remove(PLAYER_NBT_KEY);
             }
-            player.capabilities.allowFlying = allowFlying;
+            player.abilities.allowFlying = allowFlying;
             if (!allowFlying) {
-                player.capabilities.isFlying = false;
+                player.abilities.isFlying = false;
             }
         } else if (oldLevel == 0 && newLevel > 0) {
-            player.getEntityData().setBoolean(PLAYER_NBT_KEY, player.capabilities.allowFlying);
+            player.getPersistantData().putBoolean(PLAYER_NBT_KEY, player.abilities.allowFlying);
         }
     }
 }

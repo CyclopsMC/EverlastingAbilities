@@ -1,20 +1,19 @@
 package org.cyclops.everlastingabilities.proxy;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.IAnimals;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.tuple.Triple;
-import org.cyclops.cyclopscore.client.particle.ParticleBlur;
+import org.cyclops.cyclopscore.client.particle.ParticleBlurData;
 import org.cyclops.cyclopscore.init.ModBase;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponent;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
 import java.util.Random;
@@ -39,37 +38,37 @@ public class ClientProxy extends ClientProxyComponent {
 
 	@SubscribeEvent
 	public void onRenderLiving(RenderLivingEvent.Post event) {
-		EntityLivingBase entity = event.getEntity();
-		if (((GeneralConfig.showEntityParticles && entity instanceof IAnimals)
-				|| (GeneralConfig.showPlayerParticles && entity instanceof EntityPlayer))
-				&& !Minecraft.getMinecraft().isGamePaused()
-				&& entity.world.getTotalWorldTime() % 10 == 0
-				&& entity.hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)) {
-			IMutableAbilityStore abilityStore = entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-			Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
-			float r = abilityColors.getLeft() / 255F;
-			float g = abilityColors.getMiddle() / 255F;
-			float b = abilityColors.getRight() / 255F;
+		LivingEntity entity = event.getEntity();
+		if (((GeneralConfig.showEntityParticles && entity instanceof AnimalEntity) // TODO AnimalEntity was IAnimal
+				|| (GeneralConfig.showPlayerParticles && entity instanceof PlayerEntity))
+				&& !Minecraft.getInstance().isGamePaused()
+				&& entity.world.getGameTime() % 10 == 0) {
+			entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent((abilityStore) -> {
+				Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
+				float r = abilityColors.getLeft() / 255F;
+				float g = abilityColors.getMiddle() / 255F;
+				float b = abilityColors.getRight() / 255F;
 
-			Random rand = entity.world.rand;
-			float scale = 0.5F - rand.nextFloat() * 0.3F;
-			float red = Math.max(0, r - rand.nextFloat() * 0.1F);
-			float green = Math.max(0, g - rand.nextFloat() * 0.1F);
-			float blue = Math.max(0, b - rand.nextFloat() * 0.1F);
-			float ageMultiplier = (float) (rand.nextDouble() * 10D + 20D);
+				Random rand = entity.world.rand;
+				float scale = 0.5F - rand.nextFloat() * 0.3F;
+				float red = Math.max(0, r - rand.nextFloat() * 0.1F);
+				float green = Math.max(0, g - rand.nextFloat() * 0.1F);
+				float blue = Math.max(0, b - rand.nextFloat() * 0.1F);
+				float ageMultiplier = (float) (rand.nextDouble() * 10D + 20D);
 
-			double x = entity.posX - 0.1D + rand.nextDouble() * 0.2D + (entity.width / 2 * (rand.nextBoolean() ? 1 : -1));
-			double y = entity.posY + entity.height - 0.2D + rand.nextDouble() * 0.4D;
-			double z = entity.posZ - 0.1D + rand.nextDouble() * 0.2D + (entity.width / 2 * (rand.nextBoolean() ? 1 : -1));
+				double x = entity.posX - 0.1D + rand.nextDouble() * 0.2D + (entity.getWidth() / 2 * (rand.nextBoolean() ? 1 : -1));
+				double y = entity.posY + entity.getHealth() - 0.2D + rand.nextDouble() * 0.4D;
+				double z = entity.posZ - 0.1D + rand.nextDouble() * 0.2D + (entity.getWidth() / 2 * (rand.nextBoolean() ? 1 : -1));
 
-			double motionX = 0.02D - rand.nextDouble() * 0.04D;
-			double motionY = 0.02D - rand.nextDouble() * 0.04D;
-			double motionZ = 0.02D - rand.nextDouble() * 0.04D;
+				double motionX = 0.02D - rand.nextDouble() * 0.04D;
+				double motionY = 0.02D - rand.nextDouble() * 0.04D;
+				double motionZ = 0.02D - rand.nextDouble() * 0.04D;
 
-			ParticleBlur blur = new ParticleBlur(entity.world, x, y, z, scale,
-					motionX, motionY, motionZ,
-					red, green, blue, ageMultiplier);
-			Minecraft.getMinecraft().effectRenderer.addEffect(blur);
+				Minecraft.getInstance().worldRenderer.addParticle(
+						new ParticleBlurData(red, green, blue, scale, ageMultiplier), false,
+						x, y, z,
+						motionX, motionY, motionZ);
+			});
 		}
 	}
     

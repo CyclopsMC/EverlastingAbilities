@@ -1,16 +1,17 @@
 package org.cyclops.everlastingabilities.api.capability;
 
 import com.google.common.collect.Maps;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.Level;
-import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.ability.AbilityTypes;
+import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.Map;
@@ -22,28 +23,28 @@ import java.util.Map;
 public class AbilityStoreStorage implements Capability.IStorage<IAbilityStore> {
 
     @Override
-    public NBTBase writeNBT(Capability<IAbilityStore> capability, IAbilityStore instance, EnumFacing side) {
-        NBTTagList list = new NBTTagList();
+    public INBT writeNBT(Capability<IAbilityStore> capability, IAbilityStore instance, Direction side) {
+        ListNBT list = new ListNBT();
         for (Ability ability : instance.getAbilities()) {
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setString("name", ability.getAbilityType().getTranslationKey());
-            tag.setInteger("level", ability.getLevel());
-            list.appendTag(tag);
+            CompoundNBT tag = new CompoundNBT();
+            tag.putString("name", ability.getAbilityType().getRegistryName().toString());
+            tag.putInt("level", ability.getLevel());
+            list.add(tag);
         }
         return list;
     }
 
     @Override
-    public void readNBT(Capability<IAbilityStore> capability, IAbilityStore instance, EnumFacing side, NBTBase nbt) {
+    public void readNBT(Capability<IAbilityStore> capability, IAbilityStore instance, Direction side, INBT nbt) {
         Map<IAbilityType, Integer> abilityTypes = Maps.newHashMap();
-        if (nbt instanceof NBTTagList) {
-            if (((NBTTagList) nbt).getTagType() == MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal()) {
-                NBTTagList list = (NBTTagList) nbt;
-                for (int i = 0; i < list.tagCount(); i++) {
-                    NBTTagCompound tag = list.getCompoundTagAt(i);
-                    String unlocalizedName = tag.getString("name");
-                    int level = tag.getInteger("level");
-                    IAbilityType abilityType = AbilityTypes.REGISTRY.getAbilityType(unlocalizedName);
+        if (nbt instanceof ListNBT) {
+            if (((ListNBT) nbt).getTagType() == Constants.NBT.TAG_COMPOUND) {
+                ListNBT list = (ListNBT) nbt;
+                for (int i = 0; i < list.size(); i++) {
+                    CompoundNBT tag = list.getCompound(i);
+                    String name = tag.getString("name");
+                    int level = tag.getInt("level");
+                    IAbilityType abilityType = AbilityTypes.REGISTRY.getValue(new ResourceLocation(name));
                     if (abilityType != null) {
                         abilityTypes.put(abilityType, level);
                     } else {

@@ -1,0 +1,31 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+issueTrackerURL="https://github.com/CyclopsMC/EverlastingAbilities/issues"
+[[mods]]
+modId="everlastingabilities"
+version="${file.jarVersion}"
+displayName="EverlastingAbilities"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/everlastingabilities"
+logoFile="logo.png"
+authors="rubensworks (aka kroeser)"
+description='''
+Discover, share and conquer abilities that stick.
+'''
+[[dependencies.everlastingabilities]]
+    modId="cyclopscore"
+    mandatory=true
+    versionRange="[1.5.0,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.everlastingabilities]]
+    modId="forge"
+    mandatory=true
+    versionRange="[28,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.everlastingabilities]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.14.4]"
+    ordering="NONE"
+    side="BOTH"

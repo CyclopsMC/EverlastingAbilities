@@ -1,8 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.item.EnumRarity;
-import org.cyclops.cyclopscore.config.configurable.IConfigurable;
-import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
+import net.minecraft.item.Rarity;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.api.AbilityType;
 
@@ -10,11 +8,11 @@ import org.cyclops.everlastingabilities.api.AbilityType;
  * Internal default ability type.
  * @author rubensworks
  */
-public class AbilityTypeDefault extends AbilityType implements IConfigurable {
+public class AbilityTypeDefault extends AbilityType {
 
     private static final String PREFIX = "ability.abilities.everlastingabilities.";
 
-    public AbilityTypeDefault(String id, EnumRarity rarity, int maxLevel, int baseXpPerLevel) {
+    public AbilityTypeDefault(String id, Rarity rarity, int maxLevel, int baseXpPerLevel) {
         super(PREFIX + id + ".name", PREFIX + id + ".info", rarity, maxLevel, baseXpPerLevel * GeneralConfig.abilityXpMultiplier);
     }
 
@@ -22,8 +20,4 @@ public class AbilityTypeDefault extends AbilityType implements IConfigurable {
         this(id, AbilityHelpers.getSafeRarity(rarity), maxLevel, baseXpPerLevel);
     }
 
-    @Override
-    public ExtendedConfig<?> getConfig() {
-        return null;
-    }
 }

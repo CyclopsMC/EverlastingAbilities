@@ -1,83 +1,81 @@
 package org.cyclops.everlastingabilities.item;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Hand;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.item.ItemGui;
 import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityProvider;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.ItemStackMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
-import org.cyclops.everlastingabilities.client.gui.GuiAbilityContainer;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
-import java.util.List;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Base class for items with abilities.
  * @author rubensworks
  */
 public abstract class ItemGuiAbilityContainer extends ItemGui {
-    /**
-     * Make a new item instance.
-     *
-     * @param eConfig Config for this blockState.
-     */
-    protected ItemGuiAbilityContainer(ExtendedConfig eConfig) {
-        super(eConfig);
-        setMaxStackSize(1);
+
+    protected ItemGuiAbilityContainer(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public Class<? extends Container> getContainer() {
+    public Class<? extends Container> getContainerClass(World world, PlayerEntity playerEntity, ItemStack itemStack) {
         return ContainerAbilityContainer.class;
     }
 
-    @SideOnly(Side.CLIENT)
+    @Nullable
     @Override
-    public Class<? extends GuiScreen> getGui() {
-        return GuiAbilityContainer.class;
+    public INamedContainerProvider getContainer(World world, PlayerEntity playerEntity, int itemIndex, Hand hand, ItemStack itemStack) {
+        return new NamedContainerProvider(itemIndex, hand);
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, World world, List<String> list, ITooltipFlag flag) {
-        super.addInformation(itemStack, world, list, flag);
-        IAbilityStore abilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-        List<Ability> abilities = new ArrayList<Ability>(abilityStore.getAbilities());
-        Collections.sort(abilities);
+    public void addInformation(ItemStack itemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(itemStack, worldIn, tooltip, flagIn);
 
-        // Display each ability in store, one line at a time
-        // Or display "none" string if list is empty
-        boolean empty = true;
-        for (Ability ability : abilities) {
-            empty = false;
-            String name = L10NHelpers.localize(ability.getAbilityType().getTranslationKey());
-            list.add(TextFormatting.YELLOW + name + ": " + TextFormatting.RESET + ability.getLevel());
-        }
-        if (empty) {
-            list.add(TextFormatting.GRAY.toString() + TextFormatting.ITALIC + L10NHelpers.localize("general.everlastingabilities.empty"));
-        }
+        itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
+            List<Ability> abilities = new ArrayList<Ability>(abilityStore.getAbilities());
+            Collections.sort(abilities);
+
+            // Display each ability in store, one line at a time
+            // Or display "none" string if list is empty
+            boolean empty = true;
+            for (Ability ability : abilities) {
+                empty = false;
+                String name = L10NHelpers.localize(ability.getAbilityType().getTranslationKey());
+                tooltip.add(new StringTextComponent(TextFormatting.YELLOW + name + ": " + TextFormatting.RESET + ability.getLevel()));
+            }
+            if (empty) {
+                tooltip.add(new StringTextComponent(TextFormatting.GRAY.toString() + TextFormatting.ITALIC + L10NHelpers.localize("general.everlastingabilities.empty")));
+            }
+        });
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
         // TODO: restore when Forge fixed that bug (backwards compat is already taken care of, because data is stored twice (in stacktag and capdata))
         //return new SerializableCapabilityProvider<IMutableAbilityStore>(MutableAbilityStoreConfig.CAPABILITY,
         //        new DefaultMutableAbilityStore());
-        return new DefaultCapabilityProvider<IMutableAbilityStore>(MutableAbilityStoreConfig.CAPABILITY,
+        return new DefaultCapabilityProvider<>(() -> MutableAbilityStoreConfig.CAPABILITY,
                 new ItemStackMutableAbilityStore(stack));
     }
 
@@ -87,4 +85,27 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return oldStack == null || newStack == null || oldStack.getItem() != newStack.getItem();
     }
+
+    public static class NamedContainerProvider implements INamedContainerProvider {
+
+        private final int itemIndex;
+        private final Hand hand;
+
+        public NamedContainerProvider(int itemIndex, Hand hand) {
+            this.itemIndex = itemIndex;
+            this.hand = hand;
+        }
+
+        @Override
+        public ITextComponent getDisplayName() {
+            return new StringTextComponent("TODO"); // TODO
+        }
+
+        @Nullable
+        @Override
+        public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player) {
+            return new ContainerAbilityContainer(id, playerInventory, itemIndex, hand);
+        }
+    }
+
 }

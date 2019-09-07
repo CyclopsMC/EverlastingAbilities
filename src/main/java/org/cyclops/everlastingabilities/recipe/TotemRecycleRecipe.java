@@ -1,14 +1,15 @@
 package org.cyclops.everlastingabilities.recipe;
 
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.Rarity;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.SpecialRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
@@ -17,14 +18,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 
-public class TotemRecycleRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class TotemRecycleRecipe extends SpecialRecipe {
 
     private final Random rand = new Random();
     private long seed = rand.nextLong();
-    
+
+    public TotemRecycleRecipe(ResourceLocation id) {
+        super(id);
+    }
+
     @Override
-    public boolean matches(InventoryCrafting invCrafting, World world) {
-    
+    public boolean matches(CraftingInventory invCrafting, World world) {
+        if (ItemAbilityTotemConfig.totemCraftingCount <= 0) {
+            return false;
+        }
+
         int inputCount = 0;
         for (int i = 0; i < invCrafting.getSizeInventory(); i++) {
             ItemStack slot = invCrafting.getStackInSlot(i);
@@ -42,7 +50,7 @@ public class TotemRecycleRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
     }
     
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting invCrafting) {
+    public ItemStack getCraftingResult(CraftingInventory invCrafting) {
         // Item is being taken out of crafting grid.
 
         // Select one of the inputs at random, and use its rarity for the rarity of the output.
@@ -70,15 +78,15 @@ public class TotemRecycleRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
             // Should not be able to happen, unless some mod is doing funky stuff.
             return ItemStack.EMPTY;
         }
-        EnumRarity rarity = ItemAbilityTotem.getInstance().getRarity(sortedStacks.get(inputTargetIndex));
+        Rarity rarity = RegistryEntries.ITEM_ABILITY_TOTEM.getRarity(sortedStacks.get(inputTargetIndex));
 
         // 20% chance of a bump
         if (rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent) {
-            EnumRarity newRarity = rarity;
+            Rarity newRarity = rarity;
             // This loop ensures that the new rarity has at least one registered ability
             do {
-                if (newRarity.ordinal() < EnumRarity.EPIC.ordinal()) {
-                    newRarity = EnumRarity.values()[newRarity.ordinal() + 1];
+                if (newRarity.ordinal() < Rarity.EPIC.ordinal()) {
+                    newRarity = Rarity.values()[newRarity.ordinal() + 1];
                 } else {
                     // Fallback to the original rarity.
                     // By logical inference, this will have at least one rarity, i.e., the original ability.
@@ -101,13 +109,29 @@ public class TotemRecycleRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
 
     @Override
     public ItemStack getRecipeOutput() {
-        return new ItemStack(ItemAbilityTotem.getInstance());
+        return new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
     }
     
     @Override
-    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
         seed++;
-        return ForgeHooks.defaultRecipeGetRemainingItems(inv);
+
+        // Code below is copied from IRecipe
+        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+
+        for(int i = 0; i < nonnulllist.size(); ++i) {
+            ItemStack item = inv.getStackInSlot(i);
+            if (item.hasContainerItem()) {
+                nonnulllist.set(i, item.getContainerItem());
+            }
+        }
+
+        return nonnulllist;
+    }
+
+    @Override
+    public IRecipeSerializer<?> getSerializer() {
+        return RegistryEntries.RECIPESERIALIZER_TOTEM_RECYCLE;
     }
 }
 

@@ -2,176 +2,115 @@ package org.cyclops.everlastingabilities;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.command.ICommand;
-import net.minecraft.creativetab.CreativeTabs;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.IAnimals;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Rarity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Level;
-import org.cyclops.cyclopscore.command.CommandMod;
 import org.cyclops.cyclopscore.config.ConfigHandler;
-import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigReference;
-import org.cyclops.cyclopscore.helper.CraftingHelpers;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.cyclopscore.init.ItemCreativeTab;
+import org.cyclops.cyclopscore.init.ItemGroupMod;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
-import org.cyclops.cyclopscore.init.RecipeHandler;
 import org.cyclops.cyclopscore.modcompat.capabilities.SerializableCapabilityProvider;
 import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
+import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.ability.AbilityTypeRegistry;
-import org.cyclops.everlastingabilities.ability.AbilityTypes;
 import org.cyclops.everlastingabilities.ability.config.*;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.IAbilityType;
-import org.cyclops.everlastingabilities.api.IAbilityTypeRegistry;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
-import org.cyclops.everlastingabilities.item.ItemAbilityBottle;
+import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainerConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
-import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
 import org.cyclops.everlastingabilities.loot.functions.LootFunctionSetRandomAbility;
 import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket;
-import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
+import org.cyclops.everlastingabilities.proxy.ClientProxy;
+import org.cyclops.everlastingabilities.proxy.CommonProxy;
+import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipeConfig;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * The main mod class of this mod.
  * @author rubensworks (aka kroeserr)
  *
  */
-@Mod(
-        modid = Reference.MOD_ID,
-        name = Reference.MOD_NAME,
-        useMetadata = true,
-        version = Reference.MOD_VERSION,
-        dependencies = Reference.MOD_DEPENDENCIES,
-        guiFactory = "org.cyclops.everlastingabilities.GuiConfigOverview$ExtendedConfigGuiFactory",
-        certificateFingerprint = Reference.MOD_FINGERPRINT
-)
-public class EverlastingAbilities extends ModBaseVersionable {
-    
-    /**
-     * The proxy of this mod, depending on 'side' a different proxy will be inside this field.
-     * @see SidedProxy
-     */
-    @SidedProxy(clientSide = "org.cyclops.everlastingabilities.proxy.ClientProxy", serverSide = "org.cyclops.everlastingabilities.proxy.CommonProxy")
-    public static ICommonProxy proxy;
+@Mod(Reference.MOD_ID)
+public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilities> {
     
     /**
      * The unique instance of this mod.
      */
-    @Instance(value = Reference.MOD_ID)
     public static EverlastingAbilities _instance;
 
     public EverlastingAbilities() {
-        super(Reference.MOD_ID, Reference.MOD_NAME, Reference.MOD_VERSION);
-        MinecraftForge.EVENT_BUS.register(this);
+        super(Reference.MOD_ID, Reference.MOD_NAME, Reference.MOD_VERSION, (instance) -> _instance = instance);
     }
 
     @Override
-    protected RecipeHandler constructRecipeHandler() {
-        return new RecipeHandler(this, "shaped.xml") {
-            @Override
-            protected void loadPredefineds(Map<String, ItemStack> predefinedItems, Set<String> predefinedValues) {
-                super.loadPredefineds(predefinedItems, predefinedValues);
+    protected LiteralArgumentBuilder<CommandSource> constructBaseCommand() {
+        LiteralArgumentBuilder<CommandSource> root = super.constructBaseCommand();
 
-                if (EverlastingAbilities._instance.getConfigHandler().isConfigEnabled(ItemAbilityBottleConfig.class)) {
-                    for (IAbilityType abilityType : AbilityTypes.REGISTRY.getAbilityTypes()) {
-                        int maxLevel = abilityType.getMaxLevel() == -1 ? 5 : abilityType.getMaxLevel();
-                        for (int level = 1; level <= maxLevel; level++) {
-                            Ability ability = new Ability(abilityType, level);
-                            String name = abilityType.getTranslationKey();
-                            String[] split = name.split("\\.");
-                            name = split[split.length - 2];
-                            String id = Reference.MOD_ID + ":" + "abilityTotem_" + name + "_" + level;
-                            predefinedItems.put(id, ItemAbilityTotem.getInstance().getTotem(ability));
-                        }
-                    }
-                }
+        root.then(CommandModifyAbilities.make());
 
-            }
-        };
+        return root;
     }
 
     @Override
-    protected ICommand constructBaseCommand() {
-        Map<String, ICommand> commands = Maps.newHashMap();
-        commands.put(CommandModifyAbilities.NAME, new CommandModifyAbilities(this));
-        CommandMod command =  new CommandMod(this, commands);
-        command.addAlias("ea");
-        return command;
+    protected IClientProxy constructClientProxy() {
+        return new ClientProxy();
     }
 
-    /**
-     * The pre-initialization, will register required configs.
-     * @param event The Forge event required for this.
-     */
-    @EventHandler
     @Override
-    public void preInit(FMLPreInitializationEvent event) {
-        getRegistryManager().addRegistry(IAbilityTypeRegistry.class, AbilityTypeRegistry.getInstance());
+    protected ICommonProxy constructCommonProxy() {
+        return new CommonProxy();
+    }
+
+    @Override
+    protected void setup(FMLCommonSetupEvent event) {
+        super.setup(event);
+
+        // Register loot functions
         LootFunctionManager.registerFunction(new LootFunctionSetRandomAbility.Serializer());
 
-        super.preInit(event);
-    }
-    
-    /**
-     * Register the config dependent things like world generation and proxy handlers.
-     * @param event The Forge event required for this.
-     */
-    @EventHandler
-    @Override
-    public void init(FMLInitializationEvent event) {
-        super.init(event);
-
-        getCapabilityConstructorRegistry().registerInheritableEntity(EntityPlayer.class, new SimpleCapabilityConstructor<IMutableAbilityStore, EntityPlayer>() {
+        // Register capabilities
+        getCapabilityConstructorRegistry().registerInheritableEntity(PlayerEntity.class, new SimpleCapabilityConstructor<IMutableAbilityStore, PlayerEntity>() {
             @Nullable
             @Override
-            public ICapabilityProvider createProvider(EntityPlayer host) {
-                return new SerializableCapabilityProvider<IMutableAbilityStore>(getCapability(), new DefaultMutableAbilityStore());
+            public ICapabilityProvider createProvider(PlayerEntity host) {
+                return new SerializableCapabilityProvider<>(this, new DefaultMutableAbilityStore());
             }
 
             @Override
@@ -179,25 +118,25 @@ public class EverlastingAbilities extends ModBaseVersionable {
                 return MutableAbilityStoreConfig.CAPABILITY;
             }
         });
-        getCapabilityConstructorRegistry().registerInheritableEntity(IAnimals.class, new SimpleCapabilityConstructor<IMutableAbilityStore, IAnimals>() {
+        getCapabilityConstructorRegistry().registerInheritableEntity(AnimalEntity.class, new SimpleCapabilityConstructor<IMutableAbilityStore, AnimalEntity>() { // TODO: AnimalEntity was IAnimal
             @Nullable
             @Override
-            public ICapabilityProvider createProvider(IAnimals host) {
+            public ICapabilityProvider createProvider(AnimalEntity host) { // TODO: AnimalEntity was IAnimal
                 if (host instanceof Entity) {
                     Entity entity = (Entity) host;
                     IMutableAbilityStore store = new DefaultMutableAbilityStore();
-                    if (!MinecraftHelpers.isClientSide() && host instanceof EntityLivingBase) {
+                    if (!MinecraftHelpers.isClientSide() && host instanceof LivingEntity) {
                         if (GeneralConfig.mobAbilityChance > 0
                                 && entity.getEntityId() % GeneralConfig.mobAbilityChance == 0
-                                && canMobHaveAbility((EntityLivingBase) host)) {
+                                && canMobHaveAbility((LivingEntity) host)) {
                             Random rand = new Random();
                             rand.setSeed(entity.getEntityId());
-                            EnumRarity rarity = AbilityHelpers.getRandomRarity(rand);
+                            Rarity rarity = AbilityHelpers.getRandomRarity(rand);
                             AbilityHelpers.getRandomAbility(rand, rarity).ifPresent(
                                     abilityType -> store.addAbility(new Ability(abilityType, 1), true));
                         }
                     }
-                    return new SerializableCapabilityProvider<IMutableAbilityStore>(getCapability(), store);
+                    return new SerializableCapabilityProvider<>(this, store);
                 }
                 return null;
             }
@@ -207,113 +146,68 @@ public class EverlastingAbilities extends ModBaseVersionable {
                 return MutableAbilityStoreConfig.CAPABILITY;
             }
         });
-        
-        if (ItemAbilityTotemConfig.totemCraftingCount > 0) {
-            ResourceLocation id = CraftingHelpers.newRecipeIdentifier(new ItemStack(ItemAbilityTotem.getInstance()));
-            CraftingHelpers.registerRecipe(id, new TotemRecycleRecipe());
-        }
     }
 
-    private static boolean canMobHaveAbility(EntityLivingBase mob) {
-        ResourceLocation mobName = EntityList.getKey(mob);
-        return mobName != null && Arrays.stream(GeneralConfig.mobDropBlacklist).noneMatch(mobName.toString()::matches);
-    }
-    
-    /**
-     * Register the event hooks.
-     * @param event The Forge event required for this.
-     */
-    @EventHandler
-    @Override
-    public void postInit(FMLPostInitializationEvent event) {
-        super.postInit(event);
-    }
-    
-    /**
-     * Register the things that are related to server starting, like commands.
-     * @param event The Forge event required for this.
-     */
-    @EventHandler
-    @Override
-    public void onServerStarting(FMLServerStartingEvent event) {
-        super.onServerStarting(event);
-    }
-
-    /**
-     * Register the things that are related to server starting.
-     * @param event The Forge event required for this.
-     */
-    @EventHandler
-    @Override
-    public void onServerStarted(FMLServerStartedEvent event) {
-        super.onServerStarted(event);
-    }
-
-    /**
-     * Register the things that are related to server stopping, like persistent storage.
-     * @param event The Forge event required for this.
-     */
-    @EventHandler
-    @Override
-    public void onServerStopping(FMLServerStoppingEvent event) {
-        super.onServerStopping(event);
+    private static boolean canMobHaveAbility(LivingEntity mob) {
+        ResourceLocation mobName = ForgeRegistries.ENTITIES.getKey(mob.getType());
+        return mobName != null && GeneralConfig.mobDropBlacklist.stream().noneMatch(mobName.toString()::matches);
     }
 
     @Override
-    public CreativeTabs constructDefaultCreativeTab() {
-        return new ItemCreativeTab(this, new ItemConfigReference(ItemAbilityTotemConfig.class));
+    public ItemGroup constructDefaultItemGroup() {
+        return new ItemGroupMod(this, () -> RegistryEntries.ITEM_ABILITY_BOTTLE);
     }
 
     @Override
-    public void onGeneralConfigsRegister(ConfigHandler configHandler) {
-        configHandler.add(new GeneralConfig());
-    }
+    protected void onConfigsRegister(ConfigHandler configHandler) {
+        super.onConfigsRegister(configHandler);
+        configHandler.addConfigurable(new GeneralConfig());
 
-    @Override
-    public void onMainConfigsRegister(ConfigHandler configHandler) {
-        super.onMainConfigsRegister(configHandler);
+        // Capabilities
+        configHandler.addConfigurable(new AbilityStoreConfig());
+        configHandler.addConfigurable(new MutableAbilityStoreConfig());
 
-        configHandler.add(new AbilityStoreConfig());
-        configHandler.add(new MutableAbilityStoreConfig());
+        // Guis
+        configHandler.addConfigurable(new ContainerAbilityContainerConfig());
 
-        configHandler.add(new ItemAbilityTotemConfig());
-        configHandler.add(new ItemAbilityBottleConfig());
+        // Recipes
+        configHandler.addConfigurable(new TotemRecycleRecipeConfig());
 
-        configHandler.add(new AbilitySpeedConfig());
-        configHandler.add(new AbilityHasteConfig());
-        configHandler.add(new AbilityStrengthConfig());
-        configHandler.add(new AbilityJumpBoostConfig());
-        configHandler.add(new AbilityRegenerationConfig());
-        configHandler.add(new AbilityResistanceConfig());
-        configHandler.add(new AbilityFireResistanceConfig());
-        configHandler.add(new AbilityWaterBreathingConfig());
-        configHandler.add(new AbilityInvisibilityConfig());
-        configHandler.add(new AbilityNightVisionConfig());
-        configHandler.add(new AbilityAbsorbtionConfig());
-        configHandler.add(new AbilitySaturationConfig());
-        configHandler.add(new AbilityLuckConfig());
-        configHandler.add(new AbilitySlownessConfig());
-        configHandler.add(new AbilityMiningFatigueConfig());
-        configHandler.add(new AbilityNauseaConfig());
-        configHandler.add(new AbilityBlindnessConfig());
-        configHandler.add(new AbilityHungerConfig());
-        configHandler.add(new AbilityWeaknessConfig());
-        configHandler.add(new AbilityPoisonConfig());
-        configHandler.add(new AbilityWitherConfig());
-        configHandler.add(new AbilityGlowingConfig());
-        configHandler.add(new AbilityLevitationConfig());
-        configHandler.add(new AbilityUnluckConfig());
-        configHandler.add(new AbilityFlightConfig());
-        configHandler.add(new AbilityStepAssistConfig());
-        configHandler.add(new AbilityFertilityConfig());
-        configHandler.add(new AbilityBonemealerConfig());
-        configHandler.add(new AbilityPowerStareConfig());
-        configHandler.add(new AbilityMagnetizeConfig());
-    }
+        // Items
+        configHandler.addConfigurable(new ItemAbilityTotemConfig());
+        configHandler.addConfigurable(new ItemAbilityBottleConfig());
 
-    @Override
-    public ICommonProxy getProxy() {
-        return proxy;
+        // Abilities
+        configHandler.addConfigurable(new AbilitySpeedConfig());
+        configHandler.addConfigurable(new AbilityHasteConfig());
+        configHandler.addConfigurable(new AbilityStrengthConfig());
+        configHandler.addConfigurable(new AbilityJumpBoostConfig());
+        configHandler.addConfigurable(new AbilityRegenerationConfig());
+        configHandler.addConfigurable(new AbilityResistanceConfig());
+        configHandler.addConfigurable(new AbilityFireResistanceConfig());
+        configHandler.addConfigurable(new AbilityWaterBreathingConfig());
+        configHandler.addConfigurable(new AbilityInvisibilityConfig());
+        configHandler.addConfigurable(new AbilityNightVisionConfig());
+        configHandler.addConfigurable(new AbilityAbsorbtionConfig());
+        configHandler.addConfigurable(new AbilitySaturationConfig());
+        configHandler.addConfigurable(new AbilityLuckConfig());
+        configHandler.addConfigurable(new AbilitySlownessConfig());
+        configHandler.addConfigurable(new AbilityMiningFatigueConfig());
+        configHandler.addConfigurable(new AbilityNauseaConfig());
+        configHandler.addConfigurable(new AbilityBlindnessConfig());
+        configHandler.addConfigurable(new AbilityHungerConfig());
+        configHandler.addConfigurable(new AbilityWeaknessConfig());
+        configHandler.addConfigurable(new AbilityPoisonConfig());
+        configHandler.addConfigurable(new AbilityWitherConfig());
+        configHandler.addConfigurable(new AbilityGlowingConfig());
+        configHandler.addConfigurable(new AbilityLevitationConfig());
+        configHandler.addConfigurable(new AbilityUnluckConfig());
+        configHandler.addConfigurable(new AbilityFlightConfig());
+        configHandler.addConfigurable(new AbilityStepAssistConfig());
+        configHandler.addConfigurable(new AbilityFertilityConfig());
+        configHandler.addConfigurable(new AbilityBonemealerConfig());
+        configHandler.addConfigurable(new AbilityPowerStareConfig());
+        configHandler.addConfigurable(new AbilityMagnetizeConfig());
     }
 
     /**
@@ -335,7 +229,7 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (MinecraftHelpers.isClientSide() && event.getEntity().hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)) {
+        if (MinecraftHelpers.isClientSide() && event.getEntity().getCapability(MutableAbilityStoreConfig.CAPABILITY).isPresent()) {
             getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUniqueID().toString()));
         }
     }
@@ -345,21 +239,21 @@ public class EverlastingAbilities extends ModBaseVersionable {
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (GeneralConfig.totemMaximumSpawnRarity >= 0
                 && EverlastingAbilities._instance.getConfigHandler().isConfigEnabled(ItemAbilityBottleConfig.class)) {
-            NBTTagCompound tag = event.player.getEntityData();
-            if (!tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {
-                tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+            CompoundNBT tag = event.getPlayer().getPersistantData();
+            if (!tag.contains(PlayerEntity.PERSISTED_NBT_TAG)) {
+                tag.put(PlayerEntity.PERSISTED_NBT_TAG, new CompoundNBT());
             }
-            NBTTagCompound playerTag = tag.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-            if (!playerTag.hasKey(NBT_TOTEM_SPAWNED)) {
-                playerTag.setBoolean(NBT_TOTEM_SPAWNED, true);
+            CompoundNBT playerTag = tag.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+            if (!playerTag.contains(NBT_TOTEM_SPAWNED)) {
+                playerTag.putBoolean(NBT_TOTEM_SPAWNED, true);
 
-                World world = event.player.world;
-                EntityPlayer player = event.player;
-                EnumRarity rarity = EnumRarity.values()[GeneralConfig.totemMaximumSpawnRarity];
+                World world = event.getPlayer().world;
+                PlayerEntity player = event.getPlayer();
+                Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
                 AbilityHelpers.getRandomAbilityUntil(world.rand, rarity, true).ifPresent(abilityType -> {
-                    ItemStack itemStack = new ItemStack(ItemAbilityBottle.getInstance());
-                    IMutableAbilityStore mutableAbilityStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-                    mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
+                    ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
+                    itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+                            .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
 
                     ItemStackHelpers.spawnItemStackToPlayer(world, player.getPosition(), itemStack, player);
                     EntityHelpers.spawnXpAtPlayer(world, player, abilityType.getBaseXpPerLevel());
@@ -370,59 +264,59 @@ public class EverlastingAbilities extends ModBaseVersionable {
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        boolean doMobLoot = event.getEntityLiving().world.getGameRules().getBoolean("doMobLoot");
+        boolean doMobLoot = event.getEntityLiving().world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT);
         if (!event.getEntityLiving().world.isRemote
-                && event.getEntityLiving().hasCapability(MutableAbilityStoreConfig.CAPABILITY, null)
-                && (event.getEntityLiving() instanceof EntityPlayer
+                && (event.getEntityLiving() instanceof PlayerEntity
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
                         && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getTrueSource() instanceof EntityPlayer))
+                        && event.getSource().getTrueSource() instanceof PlayerEntity))
                     : (doMobLoot && (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getTrueSource() instanceof EntityPlayer))) {
-            int toDrop = 1;
-            if (event.getEntityLiving() instanceof EntityPlayer
-                    && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
-                    && event.getSource().getTrueSource() instanceof EntityPlayer)) {
-                toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
-            }
-            EntityLivingBase entity = event.getEntityLiving();
-            IMutableAbilityStore mutableAbilityStore = entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+                        && event.getSource().getTrueSource() instanceof PlayerEntity))) {
+            LivingEntity entity = event.getEntityLiving();
+            entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(mutableAbilityStore -> {
+                int toDrop = 1;
+                if (event.getEntityLiving() instanceof PlayerEntity
+                        && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
+                        && event.getSource().getTrueSource() instanceof PlayerEntity)) {
+                    toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
+                }
 
-            ItemStack itemStack = null;
-            IMutableAbilityStore itemStackStore = null;
-            if (EverlastingAbilities._instance.getConfigHandler().isConfigEnabled(ItemAbilityTotemConfig.class)) {
-                itemStack = new ItemStack(ItemAbilityTotem.getInstance());
-                itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-            }
+                ItemStack itemStack = null;
+                IMutableAbilityStore itemStackStore = null;
+                if (EverlastingAbilities._instance.getConfigHandler().isConfigEnabled(ItemAbilityTotemConfig.class)) {
+                    itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+                    itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
+                }
 
-            Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
-            for (Ability ability : abilities) {
-                if (toDrop > 0) {
-                    Ability toRemove = new Ability(ability.getAbilityType(), toDrop);
-                    Ability removed = mutableAbilityStore.removeAbility(toRemove, true);
-                    if (removed != null) {
-                        toDrop -= removed.getLevel();
-                        if (itemStackStore != null) {
-                            itemStackStore.addAbility(removed, true);
+                Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
+                for (Ability ability : abilities) {
+                    if (toDrop > 0) {
+                        Ability toRemove = new Ability(ability.getAbilityType(), toDrop);
+                        Ability removed = mutableAbilityStore.removeAbility(toRemove, true);
+                        if (removed != null) {
+                            toDrop -= removed.getLevel();
+                            if (itemStackStore != null) {
+                                itemStackStore.addAbility(removed, true);
+                            }
+                            entity.sendMessage(new TranslationTextComponent(L10NHelpers.localize("chat.everlastingabilities.playerLostAbility",
+                                    entity.getName(),
+                                    removed.getAbilityType().getRarity().color.toString() + TextFormatting.BOLD + L10NHelpers.localize(removed.getAbilityType().getTranslationKey()) + TextFormatting.RESET,
+                                    removed.getLevel())));
                         }
-                        entity.sendMessage(new TextComponentTranslation(L10NHelpers.localize("chat.everlastingabilities.playerLostAbility",
-                                entity.getName(),
-                                removed.getAbilityType().getRarity().color.toString() + TextFormatting.BOLD + L10NHelpers.localize(removed.getAbilityType().getTranslationKey()) + TextFormatting.RESET,
-                                removed.getLevel())));
                     }
                 }
-            }
 
-            if (itemStack != null && !itemStackStore.getAbilities().isEmpty()) {
-                ItemStackHelpers.spawnItemStack(entity.world, entity.getPosition(), itemStack);
-            }
+                if (itemStack != null && !itemStackStore.getAbilities().isEmpty()) {
+                    ItemStackHelpers.spawnItemStack(entity.world, entity.getPosition(), itemStack);
+                }
+            });
         }
     }
 
     @SubscribeEvent
     public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
-        IMutableAbilityStore oldStore = event.getOriginal().getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
-        IMutableAbilityStore newStore = event.getEntityPlayer().getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+        IMutableAbilityStore oldStore = event.getOriginal().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
+        IMutableAbilityStore newStore = event.getPlayer().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
         newStore.setAbilities(Maps.newHashMap(oldStore.getAbilitiesRaw()));
     }
     

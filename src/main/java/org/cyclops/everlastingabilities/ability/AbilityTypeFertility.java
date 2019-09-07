@@ -1,8 +1,8 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.world.World;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 
@@ -25,13 +25,13 @@ public class AbilityTypeFertility extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(EntityPlayer player, int level) {
+    public void onTick(PlayerEntity player, int level) {
         World world = player.world;
-        if (!world.isRemote && player.world.getTotalWorldTime() % TICK_MODULUS == 0) {
+        if (!world.isRemote && player.world.getGameTime() % TICK_MODULUS == 0) {
             int radius = level * 2;
-            List<EntityAnimal> mobs = world.getEntitiesWithinAABB(EntityAnimal.class,
-                    player.getEntityBoundingBox().grow(radius, radius, radius), EntitySelectors.NOT_SPECTATING);
-            for (EntityAnimal animal : mobs) {
+            List<AnimalEntity> mobs = world.getEntitiesWithinAABB(AnimalEntity.class,
+                    player.getBoundingBox().grow(radius, radius, radius), EntityPredicates.NOT_SPECTATING);
+            for (AnimalEntity animal : mobs) {
                 animal.setInLove(player);
             }
         }
