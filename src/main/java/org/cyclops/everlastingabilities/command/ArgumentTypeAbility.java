@@ -10,6 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -26,9 +27,10 @@ public class ArgumentTypeAbility implements ArgumentType<IAbilityType> {
 
     @Override
     public IAbilityType parse(StringReader reader) throws CommandSyntaxException {
-        IAbilityType abilityType = AbilityTypes.REGISTRY.getValue(new ResourceLocation(reader.getString()));
+        ResourceLocation id = ResourceLocation.read(reader);
+        IAbilityType abilityType = AbilityTypes.REGISTRY.getValue(id);
         if (abilityType == null) {
-            throw new SimpleCommandExceptionType(new StringTextComponent("Unknown ability")).create();
+            throw new SimpleCommandExceptionType(new TranslationTextComponent("chat.everlastingabilities.command.invalidAbility", id)).create();
         }
         return abilityType;
     }

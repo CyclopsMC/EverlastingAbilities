@@ -35,7 +35,7 @@ public class ArgumentTypeEnum<T extends Enum<T>> implements ArgumentType<T> {
     @Override
     public T parse(StringReader reader) throws CommandSyntaxException {
         try {
-            return Enum.valueOf(this.enumClass, reader.getString().toUpperCase(Locale.ENGLISH));
+            return Enum.valueOf(this.enumClass, reader.readString().toUpperCase(Locale.ENGLISH));
         } catch (IllegalArgumentException e) {
             throw new SimpleCommandExceptionType(new StringTextComponent("Unknown value")).create();
         }
@@ -43,15 +43,7 @@ public class ArgumentTypeEnum<T extends Enum<T>> implements ArgumentType<T> {
 
     @Override
     public Collection<String> getExamples() {
-        // Alternative to SharedSecrets.getJavaLangAccess().getEnumConstantsShared(this.enumClass)
-        T[] values = null;
-        try {
-            Method method = this.enumClass.getDeclaredMethod("values");
-            values = (T[]) method.invoke(null);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return Arrays.stream(values)
+        return Arrays.stream(this.enumClass.getEnumConstants())
                 .map(Enum::name)
                 .map(name -> name.toLowerCase(Locale.ENGLISH))
                 .collect(Collectors.toList());

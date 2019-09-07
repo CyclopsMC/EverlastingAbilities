@@ -229,7 +229,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (MinecraftHelpers.isClientSide() && event.getEntity().getCapability(MutableAbilityStoreConfig.CAPABILITY).isPresent()) {
+        if (event.getWorld().isRemote && event.getEntity().getCapability(MutableAbilityStoreConfig.CAPABILITY).isPresent()) {
             getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUniqueID().toString()));
         }
     }

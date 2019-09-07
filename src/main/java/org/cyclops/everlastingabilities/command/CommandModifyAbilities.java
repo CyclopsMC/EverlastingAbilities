@@ -4,7 +4,9 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandExceptionType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -23,6 +25,14 @@ import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
  */
 public class CommandModifyAbilities implements Command<CommandSource> {
 
+    private final boolean checkAbility;
+    private final boolean checkLevel;
+
+    public CommandModifyAbilities(boolean checkAbility, boolean checkLevel) {
+        this.checkAbility = checkAbility;
+        this.checkLevel = checkLevel;
+    }
+
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity sender = context.getSource().asPlayer();
@@ -33,15 +43,14 @@ public class CommandModifyAbilities implements Command<CommandSource> {
         if (action == Action.LIST) {
             sender.sendMessage(new StringTextComponent(abilityStore.getAbilities().toString()));
         } else {
-            // Determine level to add or remove
-            int level = 1;
-            try {
-                level = context.getArgument("level", Integer.class);
-            } catch (IllegalArgumentException e) {
-                // Invalid duration amount, ignore.
+            if (!this.checkAbility) {
+                throw new SimpleCommandExceptionType(new TranslationTextComponent(
+                        "chat.everlastingabilities.command.invalidAbility", "null")).create();
             }
             // Determine the ability
             IAbilityType abilityType = context.getArgument("ability", IAbilityType.class);
+            // Determine level to add or remove
+            int level = this.checkLevel ? context.getArgument("level", Integer.class) : 1;
 
             if (action == Action.ADD) {
                 level = Math.max(1, Math.min(abilityType.getMaxLevelInfinitySafe(), level));
@@ -67,11 +76,13 @@ public class CommandModifyAbilities implements Command<CommandSource> {
     public static LiteralArgumentBuilder<CommandSource> make() {
         return Commands.literal("abilities")
                 .requires((commandSource) -> commandSource.hasPermissionLevel(2))
-                .then(Commands.argument("action", new ArgumentTypeEnum<>(Action.class)))
-                .then(Commands.argument("player", EntityArgument.player()))
-                .then(Commands.argument("ability", new ArgumentTypeAbility()))
-                .then(Commands.argument("level", IntegerArgumentType.integer(1)))
-                .executes(new CommandModifyAbilities());
+                .then(Commands.argument("action", new ArgumentTypeEnum<>(Action.class))
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(new CommandModifyAbilities(false, false))
+                                .then(Commands.argument("ability", new ArgumentTypeAbility())
+                                        .executes(new CommandModifyAbilities(true, false))
+                                        .then(Commands.argument("level", IntegerArgumentType.integer(1))
+                                                .executes(new CommandModifyAbilities(true, true))))));
     }
 
     public static enum Action {
