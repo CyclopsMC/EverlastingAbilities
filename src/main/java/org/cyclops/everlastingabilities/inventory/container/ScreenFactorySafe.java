@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * A type-safe implementation of {@link ScreenManager.IScreenFactory}.
  * This enables more convenient syntax via lambdas than the default {@link ScreenManager.IScreenFactory}.
  *
- * For example: `new ScreenFactorySafe<>(ContainerScreenAbilityContainer::new)`.
+ * For example: `new ScreenFactorySafe(ContainerScreenAbilityContainer::new)`.
  *
  * TODO: move to cyclopscore
  * @author rubensworks

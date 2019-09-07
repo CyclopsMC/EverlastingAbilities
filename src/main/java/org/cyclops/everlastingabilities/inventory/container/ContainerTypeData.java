@@ -8,7 +8,7 @@ import net.minecraftforge.fml.network.IContainerFactory;
  * A {@link ContainerType} for a {@link IContainerFactory}.
  * This enables more convenient syntax via lambdas than the default {@link ContainerType}.
  *
- * For example: `new ContainerTypeData<>(ContainerAbilityContainer::new))`.
+ * For example: `new ContainerTypeData(ContainerAbilityContainer::new))`.
  *
  * TODO: move to cyclopscore
  * @author rubensworks
