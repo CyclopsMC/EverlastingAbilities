@@ -10,10 +10,10 @@ import org.cyclops.everlastingabilities.api.AbilityType;
  */
 public class AbilityTypeDefault extends AbilityType {
 
-    private static final String PREFIX = "ability.abilities.everlastingabilities.";
+    private static final String PREFIX = "ability.everlastingabilities.";
 
     public AbilityTypeDefault(String id, Rarity rarity, int maxLevel, int baseXpPerLevel) {
-        super(PREFIX + id + ".name", PREFIX + id + ".info", rarity, maxLevel, baseXpPerLevel * GeneralConfig.abilityXpMultiplier);
+        super(PREFIX + id, PREFIX + id + ".info", rarity, maxLevel, baseXpPerLevel * GeneralConfig.abilityXpMultiplier);
     }
 
     public AbilityTypeDefault(String id, int rarity, int maxLevel, int baseXpPerLevel) {
