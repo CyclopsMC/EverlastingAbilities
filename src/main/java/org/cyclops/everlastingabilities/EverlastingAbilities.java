@@ -23,6 +23,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -58,7 +59,6 @@ import org.cyclops.everlastingabilities.proxy.CommonProxy;
 import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipeConfig;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 
@@ -318,6 +318,21 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         IMutableAbilityStore oldStore = event.getOriginal().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
         IMutableAbilityStore newStore = event.getPlayer().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
         newStore.setAbilities(Maps.newHashMap(oldStore.getAbilitiesRaw()));
+    }
+
+    @SubscribeEvent
+    public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
+        if (event.getEntityLiving() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getEntityLiving();
+            player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
+                for (Ability ability : abilityStore.getAbilities()) {
+                    if (event.getEntity().world.getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
+                        player.addExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
+                    }
+                    ability.getAbilityType().onTick(player, ability.getLevel());
+                }
+            });
+        }
     }
     
 }
