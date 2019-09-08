@@ -45,7 +45,7 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     @Nullable
     @Override
     public INamedContainerProvider getContainer(World world, PlayerEntity playerEntity, int itemIndex, Hand hand, ItemStack itemStack) {
-        return new NamedContainerProvider(itemIndex, hand);
+        return new NamedContainerProvider(itemIndex, hand, itemStack.getDisplayName());
     }
 
     @Override
@@ -90,15 +90,17 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
 
         private final int itemIndex;
         private final Hand hand;
+        private final ITextComponent title;
 
-        public NamedContainerProvider(int itemIndex, Hand hand) {
+        public NamedContainerProvider(int itemIndex, Hand hand, ITextComponent title) {
             this.itemIndex = itemIndex;
             this.hand = hand;
+            this.title = title;
         }
 
         @Override
         public ITextComponent getDisplayName() {
-            return new StringTextComponent("TODO"); // TODO
+            return this.title;
         }
 
         @Nullable

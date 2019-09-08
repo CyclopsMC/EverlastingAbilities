@@ -119,7 +119,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         }
 
         this.font.drawString(player.getDisplayName().getString(), 8, 6, -1);
-        this.font.drawString(getContainer().getItemStack(player).getDisplayName().toString(), 102, 6, -1);
+        this.font.drawString(getContainer().getItemStack(player).getDisplayName().getFormattedText(), 102, 6, -1);
 
         // Draw abilities
         drawAbilitiesTooltip(8, 83, getPlayerAbilities(), startIndexPlayer, mouseX, mouseY);
@@ -160,14 +160,14 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             return;
         }
 
-        buttonUp1.visible = startIndexPlayer > 0;
-        buttonDown1.visible = startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount());
-        buttonUp2.visible = startIndexItem > 0;
-        buttonDown2.visible = startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount());
+        buttonUp1.active = startIndexPlayer > 0;
+        buttonDown1.active = startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount());
+        buttonUp2.active = startIndexItem > 0;
+        buttonDown2.active = startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount());
 
-        buttonLeft.visible = canMoveToPlayer();
-        buttonRight.visible = canMoveFromPlayer();
-        buttonRight.visible = canMoveFromPlayerByItem();
+        buttonLeft.active = canMoveToPlayer();
+        buttonRight.active = canMoveFromPlayer();
+        buttonRight.active = canMoveFromPlayerByItem();
 
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 
