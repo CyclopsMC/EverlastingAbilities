@@ -32,13 +32,12 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     @OnlyIn(Dist.CLIENT)
     private ContainerScreenAbilityContainer gui;
 
-    public ContainerAbilityContainer(int id, PlayerInventory inventory, PacketBuffer data) {
-        this(id, inventory, data.getInt(0), data.getBoolean(0) ? Hand.MAIN_HAND : Hand.OFF_HAND);
+    public ContainerAbilityContainer(int id, PlayerInventory inventory, PacketBuffer packetBuffer) {
+        this(id, inventory, readItemIndex(packetBuffer), readHand(packetBuffer));
     }
 
     public ContainerAbilityContainer(int id, PlayerInventory inventory, int itemIndex, Hand hand) {
-        super(RegistryEntries.CONTAINER_ABILITYCONTAINER, id, inventory, (ItemGuiAbilityContainer) InventoryHelpers
-                .getItemFromIndex(inventory.player, itemIndex, hand).getItem(), itemIndex, hand);
+        super(RegistryEntries.CONTAINER_ABILITYCONTAINER, id, inventory, itemIndex, hand);
         addInventory(inventory, 0, 8, 195, 1, 9);
 
         // If level is not consistent with total experience count, fix it.
