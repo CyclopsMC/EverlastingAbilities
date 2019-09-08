@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.proxy;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,7 +40,7 @@ public class ClientProxy extends ClientProxyComponent {
 	@SubscribeEvent
 	public void onRenderLiving(RenderLivingEvent.Post event) {
 		LivingEntity entity = event.getEntity();
-		if (((GeneralConfig.showEntityParticles && entity instanceof AnimalEntity) // TODO AnimalEntity was IAnimal
+		if (((GeneralConfig.showEntityParticles && entity instanceof CreatureEntity) // TODO CreatureEntity was IAnimal
 				|| (GeneralConfig.showPlayerParticles && entity instanceof PlayerEntity))
 				&& !Minecraft.getInstance().isGamePaused()
 				&& entity.world.getGameTime() % 10 == 0) {

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -44,6 +45,7 @@ import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.ability.config.*;
 import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
@@ -60,6 +62,7 @@ import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipeConfig;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -118,21 +121,22 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 return MutableAbilityStoreConfig.CAPABILITY;
             }
         });
-        getCapabilityConstructorRegistry().registerInheritableEntity(AnimalEntity.class, new SimpleCapabilityConstructor<IMutableAbilityStore, AnimalEntity>() { // TODO: AnimalEntity was IAnimal
+        getCapabilityConstructorRegistry().registerInheritableEntity(CreatureEntity.class, new SimpleCapabilityConstructor<IMutableAbilityStore, CreatureEntity>() { // TODO: AnimalEntity was IAnimal
             @Nullable
             @Override
-            public ICapabilityProvider createProvider(AnimalEntity host) { // TODO: AnimalEntity was IAnimal
+            public ICapabilityProvider createProvider(CreatureEntity host) { // TODO: CreatureEntity was IAnimal
                 if (host instanceof Entity) {
                     Entity entity = (Entity) host;
                     IMutableAbilityStore store = new DefaultMutableAbilityStore();
-                    if (!MinecraftHelpers.isClientSide() && host instanceof LivingEntity) {
+                    if (!entity.getEntityWorld().isRemote && host instanceof LivingEntity) {
                         if (GeneralConfig.mobAbilityChance > 0
                                 && entity.getEntityId() % GeneralConfig.mobAbilityChance == 0
                                 && canMobHaveAbility((LivingEntity) host)) {
                             Random rand = new Random();
                             rand.setSeed(entity.getEntityId());
-                            Rarity rarity = AbilityHelpers.getRandomRarity(rand);
-                            AbilityHelpers.getRandomAbility(rand, rarity).ifPresent(
+                            List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn();
+                            Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, rand);
+                            AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity).ifPresent(
                                     abilityType -> store.addAbility(new Ability(abilityType, 1), true));
                         }
                     }
@@ -250,7 +254,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 World world = event.getPlayer().world;
                 PlayerEntity player = event.getPlayer();
                 Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
-                AbilityHelpers.getRandomAbilityUntil(world.rand, rarity, true).ifPresent(abilityType -> {
+                AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(), world.rand, rarity, true).ifPresent(abilityType -> {
                     ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
                     itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
                             .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
