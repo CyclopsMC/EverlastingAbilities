@@ -115,13 +115,4 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
         return getItemStack(player) != null && (getItem().canMoveFromPlayer() || !getItemAbilities().isEmpty());
     }
 
-    @Override
-    public String getGuiModId() {
-        return Reference.MOD_ID; // TODO: needed?
-    }
-
-    @Override
-    public int getGuiId() {
-        return 0; // TODO: needed?
-    }
 }
