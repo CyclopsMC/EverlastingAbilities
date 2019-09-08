@@ -18,8 +18,10 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
 
     private final Effect potion;
 
-    public AbilityTypePotionEffectSelf(String id, int rarity, int maxLevel, int baseXpPerLevel, Effect potion) {
-        super(id, rarity, maxLevel, baseXpPerLevel);
+    public AbilityTypePotionEffectSelf(String id, int rarity, int maxLevel, int baseXpPerLevel,
+                                       boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
+                                       boolean obtainableOnCraft, boolean obtainableOnLoot, Effect potion) {
+        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.potion = potion;
         if (this.potion == null) {
             EverlastingAbilities.clog(Level.WARN, "Tried to register a null potion for ability " + id + ". This is possibly caused by a mod forcefully removing the potion effect for this ability.");

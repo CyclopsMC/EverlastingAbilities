@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -63,11 +64,31 @@ public class AbilityHelpers {
         return i - 1;
     }
 
-    public static List<IAbilityType> getAbilityTypes(Rarity rarity) { // TODO: cache if needed
+    public static Predicate<IAbilityType> createRarityPredicate(Rarity rarity) {
+        return abilityType -> abilityType.getRarity() == rarity;
+    }
+
+    public static List<IAbilityType> getAbilityTypes(Predicate<IAbilityType> abilityFilter) {
         return AbilityTypes.REGISTRY.getValues()
                 .stream()
-                .filter(ability -> ability.getRarity() == rarity)
+                .filter(abilityFilter)
                 .collect(Collectors.toList());
+    }
+
+    public static List<IAbilityType> getAbilityTypesPlayerSpawn() {
+        return getAbilityTypes(IAbilityType::isObtainableOnPlayerSpawn);
+    }
+
+    public static List<IAbilityType> getAbilityTypesMobSpawn() {
+        return getAbilityTypes(IAbilityType::isObtainableOnMobSpawn);
+    }
+
+    public static List<IAbilityType> getAbilityTypesCrafting() {
+        return getAbilityTypes(IAbilityType::isObtainableOnCraft);
+    }
+
+    public static List<IAbilityType> getAbilityTypesLoot() {
+        return getAbilityTypes(IAbilityType::isObtainableOnLoot);
     }
 
     public static void onPlayerAbilityChanged(PlayerEntity player, IAbilityType abilityType, int oldLevel, int newLevel) {
@@ -181,19 +202,19 @@ public class AbilityHelpers {
         return mutableAbilityStore.removeAbility(ability, true);
     }
 
-    public static Optional<IAbilityType> getRandomAbility(Random random, Rarity rarity) {
-        List<IAbilityType> abilities = AbilityHelpers.getAbilityTypes(rarity);
-        if (abilities.size() > 0) {
-            return Optional.of(abilities.get(random.nextInt(abilities.size())));
+    public static Optional<IAbilityType> getRandomAbility(List<IAbilityType> abilityTypes, Random random, Rarity rarity) {
+        List<IAbilityType> filtered = abilityTypes.stream().filter(createRarityPredicate(rarity)).collect(Collectors.toList());
+        if (filtered.size() > 0) {
+            return Optional.of(filtered.get(random.nextInt(filtered.size())));
         }
         return Optional.empty();
     }
 
-    public static Optional<IAbilityType> getRandomAbilityUntil(Random random, Rarity rarity, boolean inclusive) {
-        NavigableSet<Rarity> validRarities = AbilityHelpers.getValidAbilityRarities().headSet(rarity, inclusive);
+    public static Optional<IAbilityType> getRandomAbilityUntilRarity(List<IAbilityType> abilityTypes, Random random, Rarity rarity, boolean inclusive) {
+        NavigableSet<Rarity> validRarities = AbilityHelpers.getValidAbilityRarities(abilityTypes).headSet(rarity, inclusive);
         Iterator<Rarity> it = validRarities.descendingIterator();
         while (it.hasNext()) {
-            Optional<IAbilityType> optional = getRandomAbility(random, it.next());
+            Optional<IAbilityType> optional = getRandomAbility(abilityTypes, random, it.next());
             if (optional.isPresent()) {
                 return optional;
             }
@@ -201,13 +222,13 @@ public class AbilityHelpers {
         return Optional.empty();
     }
 
-    public static Optional<ItemStack> getRandomTotem(Rarity rarity, Random rand) {
-        return getRandomAbility(rand, rarity).flatMap(
+    public static Optional<ItemStack> getRandomTotem(List<IAbilityType> abilityTypes, Rarity rarity, Random rand) {
+        return getRandomAbility(abilityTypes, rand, rarity).flatMap(
                 abilityType -> Optional.of(ItemAbilityTotem.getTotem(new Ability(abilityType, 1))));
     }
     
 
-    public static Rarity getRandomRarity(Random rand) {
+    public static Rarity getRandomRarity(List<IAbilityType> abilityTypes, Random rand) {
         int chance = rand.nextInt(50);
         Rarity rarity;
         if (chance >= 49) {
@@ -221,25 +242,25 @@ public class AbilityHelpers {
         }
 
         // Fallback to a random selection of a rarity that is guaranteed to exist in the registered abilities
-        if (!hasRarityAbilities(rarity)) {
-            int size = AbilityTypes.REGISTRY.getValues().size();
+        if (!hasRarityAbilities(abilityTypes, rarity)) {
+            int size = abilityTypes.size();
             if (size == 0) {
                 throw new IllegalStateException("No abilities were registered, at least one ability must be enabled for this mod to function correctly.");
             }
-            rarity = Iterables.get(AbilityTypes.REGISTRY.getValues(), rand.nextInt(size)).getRarity();
+            rarity = Iterables.get(abilityTypes, rand.nextInt(size)).getRarity();
         }
 
         return rarity;
     }
 
-    public static boolean hasRarityAbilities(Rarity rarity) {
-        return !AbilityHelpers.getAbilityTypes(rarity).isEmpty();
+    public static boolean hasRarityAbilities(List<IAbilityType> abilityTypes, Rarity rarity) {
+        return abilityTypes.stream().anyMatch(createRarityPredicate(rarity));
     }
 
-    public static NavigableSet<Rarity> getValidAbilityRarities() {
+    public static NavigableSet<Rarity> getValidAbilityRarities(List<IAbilityType> abilityTypes) {
         NavigableSet<Rarity> rarities = Sets.newTreeSet();
         for (Rarity rarity : Rarity.values()) {
-            if (!AbilityHelpers.getAbilityTypes(rarity).isEmpty()) {
+            if (hasRarityAbilities(abilityTypes, rarity)) {
                 rarities.add(rarity);
             }
         }

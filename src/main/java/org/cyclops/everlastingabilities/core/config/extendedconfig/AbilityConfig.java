@@ -18,8 +18,6 @@ import java.util.function.Function;
  */
 public abstract class AbilityConfig<T> extends ExtendedConfigForge<AbilityConfig<T>, IAbilityType> {
 
-    // TODO: add a way to disable abilities afterwards (i.e., don't allow them to occur in loot and spawn, just do this via loot tables?)
-
     public AbilityConfig(String namedId, Function<AbilityConfig<T>, ? extends IAbilityType> elementConstructor) {
         super(EverlastingAbilities._instance, namedId, elementConstructor);
     }

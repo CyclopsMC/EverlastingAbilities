@@ -18,6 +18,10 @@ public interface IAbilityType extends IForgeRegistryEntry<IAbilityType> {
         return getMaxLevel() < 0 ? Integer.MAX_VALUE : getMaxLevel();
     }
     public int getBaseXpPerLevel();
+    public boolean isObtainableOnPlayerSpawn();
+    public boolean isObtainableOnMobSpawn();
+    public boolean isObtainableOnCraft();
+    public boolean isObtainableOnLoot();
 
     public void onTick(PlayerEntity player, int level);
     public void onChangedLevel(PlayerEntity player, int oldLevel, int newLevel);

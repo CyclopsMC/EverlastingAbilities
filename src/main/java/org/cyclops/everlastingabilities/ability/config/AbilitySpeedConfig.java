@@ -23,9 +23,22 @@ public class AbilitySpeedConfig extends AbilityConfig<AbilityTypePotionEffectSel
     @ConfigurableProperty(category = "ability", comment = "The xp required per level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int xpPerLevel = 10;
 
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by initially spawning players.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnPlayerSpawn = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by spawning mobs.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnMobSpawn = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by combining totems in a crafting grid.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnCraft = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained in loot chests.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnLoot = true;
+
     public AbilitySpeedConfig() {
         super("speed",
-                eConfig -> new AbilityTypePotionEffectSelf("speed", rarity, maxLevel, xpPerLevel, Effects.SPEED));
+                eConfig -> new AbilityTypePotionEffectSelf("speed", rarity, maxLevel, xpPerLevel,
+                        obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot, Effects.SPEED));
     }
 
 }

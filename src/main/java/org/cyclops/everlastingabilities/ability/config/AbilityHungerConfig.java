@@ -23,9 +23,22 @@ public class AbilityHungerConfig extends AbilityConfig<AbilityTypePotionEffectRa
     @ConfigurableProperty(category = "ability", comment = "The xp required per level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int xpPerLevel = 70;
 
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by initially spawning players.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnPlayerSpawn = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by spawning mobs.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnMobSpawn = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by combining totems in a crafting grid.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnCraft = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained in loot chests.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnLoot = true;
+
     public AbilityHungerConfig() {
         super("hunger",
-                eConfig -> new AbilityTypePotionEffectRadius(eConfig.getNamedId(), rarity, maxLevel, xpPerLevel, Effects.HUNGER));
+                eConfig -> new AbilityTypePotionEffectRadius(eConfig.getNamedId(), rarity, maxLevel, xpPerLevel,
+                        obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot, Effects.HUNGER));
     }
 
 }

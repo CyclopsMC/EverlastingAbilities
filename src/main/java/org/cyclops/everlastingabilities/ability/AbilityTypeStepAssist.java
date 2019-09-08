@@ -12,8 +12,10 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
 
     private static final String PLAYER_NBT_KEY = Reference.MOD_ID + ":" + "stepAssist";
 
-    public AbilityTypeStepAssist(String id, int rarity, int maxLevel, int baseXpPerLevel) {
-        super(id, rarity, maxLevel, baseXpPerLevel);
+    public AbilityTypeStepAssist(String id, int rarity, int maxLevel, int baseXpPerLevel,
+                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
+                                 boolean obtainableOnCraft, boolean obtainableOnLoot) {
+        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }
 
     @Override

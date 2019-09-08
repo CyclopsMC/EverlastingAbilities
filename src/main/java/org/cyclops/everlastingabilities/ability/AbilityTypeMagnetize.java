@@ -22,8 +22,10 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 20;
 
-    public AbilityTypeMagnetize(String id, int rarity, int maxLevel, int baseXpPerLevel) {
-        super(id, rarity, maxLevel, baseXpPerLevel);
+    public AbilityTypeMagnetize(String id, int rarity, int maxLevel, int baseXpPerLevel,
+                                boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
+                                boolean obtainableOnCraft, boolean obtainableOnLoot) {
+        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }
 
     @Override

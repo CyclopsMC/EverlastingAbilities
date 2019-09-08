@@ -15,6 +15,8 @@ import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
+import java.util.List;
+
 /**
  * A loot function that sets a random into an item.
  * @author rubensworks
@@ -27,8 +29,9 @@ public class LootFunctionSetRandomAbility extends LootFunction {
 
     @Override
     public ItemStack doApply(ItemStack stack, LootContext context) {
-        Rarity rarity = AbilityHelpers.getRandomRarity(context.getRandom());
-        IAbilityType abilityType = AbilityHelpers.getRandomAbility(context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
+        List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesLoot();
+        Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, context.getRandom());
+        IAbilityType abilityType = AbilityHelpers.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
 
         stack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
                 .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));

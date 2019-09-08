@@ -11,11 +11,13 @@ import net.minecraft.world.World;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 
 public class TotemRecycleRecipe extends SpecialRecipe {
@@ -81,6 +83,7 @@ public class TotemRecycleRecipe extends SpecialRecipe {
         Rarity rarity = RegistryEntries.ITEM_ABILITY_TOTEM.getRarity(sortedStacks.get(inputTargetIndex));
 
         // 20% chance of a bump
+        List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesCrafting();
         if (rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent) {
             Rarity newRarity = rarity;
             // This loop ensures that the new rarity has at least one registered ability
@@ -92,14 +95,14 @@ public class TotemRecycleRecipe extends SpecialRecipe {
                     // By logical inference, this will have at least one rarity, i.e., the original ability.
                     newRarity = rarity;
                 }
-            } while (!AbilityHelpers.hasRarityAbilities(newRarity));
+            } while (!AbilityHelpers.hasRarityAbilities(abilityTypes, newRarity));
             rarity = newRarity;
         }
 
         // Set the rand seed so that the resulting ability will always be different
         // (but deterministic) for different input abilities
         rand.setSeed(sortedStacks.stream().mapToInt(ItemStackHelpers::getItemStackHashCode).sum());
-        return AbilityHelpers.getRandomTotem(rarity, rand).get(); // This optional should always be present
+        return AbilityHelpers.getRandomTotem(abilityTypes, rarity, rand).get(); // This optional should always be present
     }
 
     @Override

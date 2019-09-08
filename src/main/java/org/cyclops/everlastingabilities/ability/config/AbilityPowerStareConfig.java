@@ -25,9 +25,22 @@ public class AbilityPowerStareConfig extends AbilityConfig<AbilityTypePowerStare
     @ConfigurableProperty(category = "ability", comment = "Require sneak to activate.", configLocation = ModConfig.Type.SERVER)
     public static boolean requireSneak = true;
 
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by initially spawning players.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnPlayerSpawn = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by spawning mobs.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnMobSpawn = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by combining totems in a crafting grid.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnCraft = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained in loot chests.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnLoot = true;
+
     public AbilityPowerStareConfig() {
         super("power_stare",
-                eConfig -> new AbilityTypePowerStare(eConfig.getNamedId(), rarity, maxLevel, xpPerLevel));
+                eConfig -> new AbilityTypePowerStare(eConfig.getNamedId(), rarity, maxLevel, xpPerLevel,
+                        obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot));
     }
 
 }

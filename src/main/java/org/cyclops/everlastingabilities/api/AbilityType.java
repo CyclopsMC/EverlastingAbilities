@@ -15,14 +15,23 @@ public class AbilityType extends ForgeRegistryEntry<IAbilityType> implements IAb
     private final Rarity rarity;
     private final int maxLevel;
     private final int baseXpPerLevel;
+    private final boolean obtainableOnPlayerSpawn;
+    private final boolean obtainableOnMobSpawn;
+    private final boolean obtainableOnCraft;
+    private final boolean obtainableOnLoot;
 
-    public AbilityType(String translationKey, String unlocalizedDescription, Rarity rarity,
-                       int maxLevel, int baseXpPerLevel) {
+    public AbilityType(String translationKey, String unlocalizedDescription, Rarity rarity, int maxLevel,
+                       int baseXpPerLevel, boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
+                       boolean obtainableOnCraft, boolean obtainableOnLoot) {
         this.translationKey = translationKey;
         this.unlocalizedDescription = unlocalizedDescription;
         this.rarity = rarity;
         this.maxLevel = maxLevel;
         this.baseXpPerLevel = baseXpPerLevel;
+        this.obtainableOnPlayerSpawn = obtainableOnPlayerSpawn;
+        this.obtainableOnMobSpawn = obtainableOnMobSpawn;
+        this.obtainableOnCraft = obtainableOnCraft;
+        this.obtainableOnLoot = obtainableOnLoot;
     }
 
     @Override
@@ -48,6 +57,26 @@ public class AbilityType extends ForgeRegistryEntry<IAbilityType> implements IAb
     @Override
     public int getBaseXpPerLevel() {
         return baseXpPerLevel;
+    }
+
+    @Override
+    public boolean isObtainableOnPlayerSpawn() {
+        return obtainableOnPlayerSpawn;
+    }
+
+    @Override
+    public boolean isObtainableOnMobSpawn() {
+        return obtainableOnMobSpawn;
+    }
+
+    @Override
+    public boolean isObtainableOnCraft() {
+        return obtainableOnCraft;
+    }
+
+    @Override
+    public boolean isObtainableOnLoot() {
+        return obtainableOnLoot;
     }
 
     @Override

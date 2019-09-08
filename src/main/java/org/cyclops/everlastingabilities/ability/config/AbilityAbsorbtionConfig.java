@@ -24,9 +24,22 @@ public class AbilityAbsorbtionConfig extends AbilityConfig<AbilityTypePotionEffe
     @ConfigurableProperty(category = "ability", comment = "The xp required per level.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
     public static int xpPerLevel = 75;
 
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by initially spawning players.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnPlayerSpawn = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by spawning mobs.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnMobSpawn = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained by combining totems in a crafting grid.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnCraft = true;
+
+    @ConfigurableProperty(category = "ability", comment = "If this can be obtained in loot chests.", requiresMcRestart = true, configLocation = ModConfig.Type.SERVER)
+    public static boolean obtainableOnLoot = true;
+
     public AbilityAbsorbtionConfig() {
         super("absorbtion",
-                eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), rarity, maxLevel, xpPerLevel, Effects.ABSORPTION) {
+                eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), rarity, maxLevel, xpPerLevel,
+                        obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot, Effects.ABSORPTION) {
                     @Override
                     protected int getDuration(int tickModulus, int level) {
                         int maxLevel = getMaxLevel() == -1 ? 5 : getMaxLevel();

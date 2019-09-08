@@ -20,8 +20,10 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 4;
 
-    public AbilityTypePowerStare(String id, int rarity, int maxLevel, int baseXpPerLevel) {
-        super(id, rarity, maxLevel, baseXpPerLevel);
+    public AbilityTypePowerStare(String id, int rarity, int maxLevel, int baseXpPerLevel,
+                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
+                                 boolean obtainableOnCraft, boolean obtainableOnLoot) {
+        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }
 
     @Override
