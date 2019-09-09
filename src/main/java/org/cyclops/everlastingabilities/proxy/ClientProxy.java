@@ -58,7 +58,7 @@ public class ClientProxy extends ClientProxyComponent {
 				float ageMultiplier = (float) (rand.nextDouble() * 10D + 20D);
 
 				double x = entity.posX - 0.1D + rand.nextDouble() * 0.2D + (entity.getWidth() / 2 * (rand.nextBoolean() ? 1 : -1));
-				double y = entity.posY + entity.getHealth() - 0.2D + rand.nextDouble() * 0.4D;
+				double y = entity.posY + entity.getHeight() - 0.2D + rand.nextDouble() * 0.4D;
 				double z = entity.posZ - 0.1D + rand.nextDouble() * 0.2D + (entity.getWidth() / 2 * (rand.nextBoolean() ? 1 : -1));
 
 				double motionX = 0.02D - rand.nextDouble() * 0.04D;
