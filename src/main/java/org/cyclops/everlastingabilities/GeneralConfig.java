@@ -18,9 +18,6 @@ import java.util.List;
  */
 public class GeneralConfig extends DummyConfig {
 
-    @ConfigurableProperty(category = "core", comment = "Config version for " + Reference.MOD_NAME +".\nDO NOT EDIT MANUALLY!", configLocation = ModConfig.Type.SERVER, showInGui = false)
-    public static String version = Reference.MOD_VERSION;
-
     @ConfigurableProperty(category = "core", comment = "Set 'true' to enable development debug mode. This will result in a lower performance!", requiresMcRestart = true)
     public static boolean debug = false;
 

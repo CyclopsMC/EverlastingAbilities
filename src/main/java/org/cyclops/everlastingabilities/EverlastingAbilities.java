@@ -79,7 +79,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     public static EverlastingAbilities _instance;
 
     public EverlastingAbilities() {
-        super(Reference.MOD_ID, Reference.MOD_NAME, Reference.MOD_VERSION, (instance) -> _instance = instance);
+        super(Reference.MOD_ID, (instance) -> _instance = instance);
     }
 
     @Override

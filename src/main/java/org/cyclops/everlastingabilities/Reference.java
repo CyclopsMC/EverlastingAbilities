@@ -1,5 +1,7 @@
 package org.cyclops.everlastingabilities;
 
+import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+
 /**
  * Class that can hold basic static things that are better not hard-coded
  * like mod details, texture paths, ID's...
@@ -11,14 +13,8 @@ public class Reference {
 	
     // Mod info
     public static final String MOD_ID = "everlastingabilities";
-    public static final String MOD_NAME = "EverlastingAbilities";
-    public static final String MOD_VERSION = "@VERSION@";
-    public static final String MOD_BUILD_NUMBER = "@BUILD_NUMBER@";
-    public static final String MOD_CHANNEL = MOD_ID;
-    public static final String MOD_MC_VERSION = "@MC_VERSION@";
-    public static final String MOD_FINGERPRINT = "@FINGERPRINT@";
     public static final String GA_TRACKING_ID = "UA-65307010-9";
-    public static final String VERSION_URL = "https://raw.githubusercontent.com/CyclopsMC/Versions/master/1.12/EverlastingAbilities.txt";
+    public static final String VERSION_URL = "https://raw.githubusercontent.com/CyclopsMC/Versions/master/" + MinecraftHelpers.getMinecraftVersionMajorMinor() + "/EverlastingAbilities.txt";
     
     // Paths
     public static final String TEXTURE_PATH_GUI = "textures/gui/";
