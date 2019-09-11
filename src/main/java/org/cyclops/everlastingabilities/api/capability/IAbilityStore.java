@@ -1,5 +1,7 @@
 package org.cyclops.everlastingabilities.api.capability;
 
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentUtils;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
@@ -18,4 +20,8 @@ public interface IAbilityStore {
     public Collection<Ability> getAbilities();
     public Map<IAbilityType, Integer> getAbilitiesRaw();
     public Ability getAbility(IAbilityType abilityType);
+
+    public default ITextComponent getTextComponent() {
+        return TextComponentUtils.makeList(getAbilities(), Ability::getTextComponent);
+    }
 }

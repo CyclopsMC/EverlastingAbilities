@@ -42,7 +42,7 @@ public class CommandModifyAbilities implements Command<CommandSource> {
         IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
 
         if (action == Action.LIST) {
-            sender.sendMessage(new StringTextComponent(abilityStore.getAbilities().toString()));
+            sender.sendMessage(abilityStore.getTextComponent());
         } else {
             if (!this.checkAbility) {
                 throw new SimpleCommandExceptionType(new TranslationTextComponent(
