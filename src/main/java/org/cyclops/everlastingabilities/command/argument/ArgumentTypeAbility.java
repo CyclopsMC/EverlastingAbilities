@@ -1,4 +1,4 @@
-package org.cyclops.everlastingabilities.command;
+package org.cyclops.everlastingabilities.command.argument;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;

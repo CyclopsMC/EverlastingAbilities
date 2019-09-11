@@ -18,6 +18,7 @@ import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
+import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbility;
 
 /**
  * Command for modifying abilities to players.

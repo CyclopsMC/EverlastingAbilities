@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
+import net.minecraft.command.arguments.ArgumentSerializer;
+import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -32,6 +34,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Level;
+import org.cyclops.cyclopscore.command.argument.ArgumentTypeDebugPacket;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
@@ -52,6 +55,7 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
+import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbility;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainerConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
@@ -108,6 +112,11 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
         // Register loot functions
         LootFunctionManager.registerFunction(new LootFunctionSetRandomAbility.Serializer());
+
+        // Register argument types
+        ArgumentTypes.register(Reference.MOD_ID + ":" + "ability",
+                ArgumentTypeAbility.class,
+                new ArgumentSerializer<>(ArgumentTypeAbility::new));
 
         // Register capabilities
         getCapabilityConstructorRegistry().registerInheritableEntity(PlayerEntity.class, new SimpleCapabilityConstructor<IMutableAbilityStore, PlayerEntity>() {
