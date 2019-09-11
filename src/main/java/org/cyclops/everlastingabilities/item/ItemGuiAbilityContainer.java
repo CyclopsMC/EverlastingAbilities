@@ -10,7 +10,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
@@ -61,11 +63,15 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
             boolean empty = true;
             for (Ability ability : abilities) {
                 empty = false;
-                String name = L10NHelpers.localize(ability.getAbilityType().getTranslationKey());
-                tooltip.add(new StringTextComponent(TextFormatting.YELLOW + name + ": " + TextFormatting.RESET + ability.getLevel()));
+                tooltip.add(new TranslationTextComponent(ability.getAbilityType().getTranslationKey(), ability.getLevel())
+                        .setStyle(new Style()
+                                .setColor(TextFormatting.YELLOW)));
             }
             if (empty) {
-                tooltip.add(new StringTextComponent(TextFormatting.GRAY.toString() + TextFormatting.ITALIC + L10NHelpers.localize("general.everlastingabilities.empty")));
+                tooltip.add(new TranslationTextComponent("general.everlastingabilities.empty")
+                        .setStyle(new Style()
+                                .setColor(TextFormatting.GRAY)
+                                .setItalic(true)));
             }
         });
     }

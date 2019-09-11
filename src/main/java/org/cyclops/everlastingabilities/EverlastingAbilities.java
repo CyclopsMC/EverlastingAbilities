@@ -15,6 +15,7 @@ import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
@@ -241,8 +242,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     private static final String NBT_TOTEM_SPAWNED = Reference.MOD_ID + ":totemSpawned";
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (GeneralConfig.totemMaximumSpawnRarity >= 0
-                && EverlastingAbilities._instance.getConfigHandler().isConfigEnabled(ItemAbilityBottleConfig.class)) {
+        if (GeneralConfig.totemMaximumSpawnRarity >= 0) {
             CompoundNBT tag = event.getPlayer().getPersistantData();
             if (!tag.contains(PlayerEntity.PERSISTED_NBT_TAG)) {
                 tag.put(PlayerEntity.PERSISTED_NBT_TAG, new CompoundNBT());
@@ -285,12 +285,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                     toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
                 }
 
-                ItemStack itemStack = null;
-                IMutableAbilityStore itemStackStore = null;
-                if (EverlastingAbilities._instance.getConfigHandler().isConfigEnabled(ItemAbilityTotemConfig.class)) {
-                    itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
-                    itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
-                }
+                ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+                IMutableAbilityStore itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);;
 
                 Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
                 for (Ability ability : abilities) {
@@ -299,13 +295,14 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                         Ability removed = mutableAbilityStore.removeAbility(toRemove, true);
                         if (removed != null) {
                             toDrop -= removed.getLevel();
-                            if (itemStackStore != null) {
-                                itemStackStore.addAbility(removed, true);
-                            }
-                            entity.sendMessage(new TranslationTextComponent(L10NHelpers.localize("chat.everlastingabilities.playerLostAbility",
+                            itemStackStore.addAbility(removed, true);
+                            entity.sendMessage(new TranslationTextComponent("chat.everlastingabilities.playerLostAbility",
                                     entity.getName(),
-                                    removed.getAbilityType().getRarity().color.toString() + TextFormatting.BOLD + L10NHelpers.localize(removed.getAbilityType().getTranslationKey()) + TextFormatting.RESET,
-                                    removed.getLevel())));
+                                    new TranslationTextComponent(removed.getAbilityType().getTranslationKey())
+                                            .setStyle(new Style()
+                                                    .setColor(removed.getAbilityType().getRarity().color)
+                                                    .setBold(true)),
+                                    removed.getLevel()));
                         }
                     }
                 }

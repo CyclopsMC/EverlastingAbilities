@@ -30,7 +30,7 @@ public class Ability implements Comparable<Ability> {
 
     @Override
     public String toString() {
-        return String.format("[%s @ %s]", L10NHelpers.localize(abilityType.getTranslationKey()), level);
+        return String.format("[%s @ %s]",abilityType.getTranslationKey(), level);
     }
 
     @Override
