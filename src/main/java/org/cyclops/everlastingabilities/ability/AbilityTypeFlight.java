@@ -26,16 +26,16 @@ public class AbilityTypeFlight extends AbilityTypeDefault {
     public void onChangedLevel(PlayerEntity player, int oldLevel, int newLevel) {
         if (oldLevel > 0 && newLevel == 0) {
             boolean allowFlying = false;
-            if(player.getPersistantData().contains(PLAYER_NBT_KEY)) {
-                allowFlying = player.getPersistantData().getBoolean(PLAYER_NBT_KEY);
-                player.getPersistantData().remove(PLAYER_NBT_KEY);
+            if(player.getPersistentData().contains(PLAYER_NBT_KEY)) {
+                allowFlying = player.getPersistentData().getBoolean(PLAYER_NBT_KEY);
+                player.getPersistentData().remove(PLAYER_NBT_KEY);
             }
             player.abilities.allowFlying = allowFlying;
             if (!allowFlying) {
                 player.abilities.isFlying = false;
             }
         } else if (oldLevel == 0 && newLevel > 0) {
-            player.getPersistantData().putBoolean(PLAYER_NBT_KEY, player.abilities.allowFlying);
+            player.getPersistentData().putBoolean(PLAYER_NBT_KEY, player.abilities.allowFlying);
         }
     }
 }

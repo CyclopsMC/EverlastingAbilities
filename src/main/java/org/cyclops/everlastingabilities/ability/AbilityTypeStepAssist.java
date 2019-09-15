@@ -27,15 +27,15 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
     public void onChangedLevel(PlayerEntity player, int oldLevel, int newLevel) {
         if (oldLevel > 0 && newLevel == 0) {
             float stepHeight = 0.6F;
-            if(player.getPersistantData().contains(PLAYER_NBT_KEY)) {
+            if(player.getPersistentData().contains(PLAYER_NBT_KEY)) {
                 if (!AbilityStepAssistConfig.forceDefaultStepHeight) {
-                    stepHeight = player.getPersistantData().getFloat(PLAYER_NBT_KEY);
+                    stepHeight = player.getPersistentData().getFloat(PLAYER_NBT_KEY);
                 }
-                player.getPersistantData().remove(PLAYER_NBT_KEY);
+                player.getPersistentData().remove(PLAYER_NBT_KEY);
             }
             player.stepHeight = stepHeight;
         } else if (oldLevel == 0 && newLevel > 0) {
-            player.getPersistantData().putFloat(PLAYER_NBT_KEY, player.stepHeight);
+            player.getPersistentData().putFloat(PLAYER_NBT_KEY, player.stepHeight);
         }
     }
 }

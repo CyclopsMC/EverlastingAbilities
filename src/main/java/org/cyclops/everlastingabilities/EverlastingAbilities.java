@@ -247,7 +247,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (GeneralConfig.totemMaximumSpawnRarity >= 0) {
-            CompoundNBT tag = event.getPlayer().getPersistantData();
+            CompoundNBT tag = event.getPlayer().getPersistentData();
             if (!tag.contains(PlayerEntity.PERSISTED_NBT_TAG)) {
                 tag.put(PlayerEntity.PERSISTED_NBT_TAG, new CompoundNBT());
             }
