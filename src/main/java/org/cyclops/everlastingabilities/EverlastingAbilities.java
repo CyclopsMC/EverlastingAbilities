@@ -311,7 +311,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                     }
                 }
 
-                if (itemStack != null && !itemStackStore.getAbilities().isEmpty()) {
+                if (!itemStackStore.getAbilities().isEmpty()) {
                     ItemStackHelpers.spawnItemStack(entity.world, entity.getPosition(), itemStack);
                 }
             });
