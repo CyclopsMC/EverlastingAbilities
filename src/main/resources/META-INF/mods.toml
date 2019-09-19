@@ -14,7 +14,7 @@ Discover, share and conquer abilities that stick.
 [[dependencies.everlastingabilities]]
     modId="cyclopscore"
     mandatory=true
-    versionRange="[1.5.1,)"
+    versionRange="[1.5.2,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.everlastingabilities]]
