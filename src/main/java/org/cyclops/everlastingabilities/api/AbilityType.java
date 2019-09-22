@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Rarity;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import java.util.function.Supplier;
+
 /**
  * Default implementation of an ability type.
  * @author rubensworks
@@ -12,17 +14,17 @@ public class AbilityType extends ForgeRegistryEntry<IAbilityType> implements IAb
 
     private final String translationKey;
     private final String unlocalizedDescription;
-    private final Rarity rarity;
-    private final int maxLevel;
-    private final int baseXpPerLevel;
-    private final boolean obtainableOnPlayerSpawn;
-    private final boolean obtainableOnMobSpawn;
-    private final boolean obtainableOnCraft;
-    private final boolean obtainableOnLoot;
+    private final Supplier<Rarity> rarity;
+    private final Supplier<Integer> maxLevel;
+    private final Supplier<Integer> baseXpPerLevel;
+    private final Supplier<Boolean> obtainableOnPlayerSpawn;
+    private final Supplier<Boolean> obtainableOnMobSpawn;
+    private final Supplier<Boolean> obtainableOnCraft;
+    private final Supplier<Boolean> obtainableOnLoot;
 
-    public AbilityType(String translationKey, String unlocalizedDescription, Rarity rarity, int maxLevel,
-                       int baseXpPerLevel, boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
-                       boolean obtainableOnCraft, boolean obtainableOnLoot) {
+    public AbilityType(String translationKey, String unlocalizedDescription, Supplier<Rarity> rarity, Supplier<Integer> maxLevel,
+                       Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
+                       Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
         this.translationKey = translationKey;
         this.unlocalizedDescription = unlocalizedDescription;
         this.rarity = rarity;
@@ -46,37 +48,37 @@ public class AbilityType extends ForgeRegistryEntry<IAbilityType> implements IAb
 
     @Override
     public Rarity getRarity() {
-        return rarity;
+        return rarity.get();
     }
 
     @Override
     public int getMaxLevel() {
-        return maxLevel;
+        return maxLevel.get();
     }
 
     @Override
     public int getBaseXpPerLevel() {
-        return baseXpPerLevel;
+        return baseXpPerLevel.get();
     }
 
     @Override
     public boolean isObtainableOnPlayerSpawn() {
-        return obtainableOnPlayerSpawn;
+        return obtainableOnPlayerSpawn.get();
     }
 
     @Override
     public boolean isObtainableOnMobSpawn() {
-        return obtainableOnMobSpawn;
+        return obtainableOnMobSpawn.get();
     }
 
     @Override
     public boolean isObtainableOnCraft() {
-        return obtainableOnCraft;
+        return obtainableOnCraft.get();
     }
 
     @Override
     public boolean isObtainableOnLoot() {
-        return obtainableOnLoot;
+        return obtainableOnLoot.get();
     }
 
     @Override

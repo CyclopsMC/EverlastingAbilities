@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Rarity;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import java.util.function.Supplier;
+
 /**
  * An ability type.
  * @author rubensworks

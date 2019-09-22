@@ -13,6 +13,7 @@ import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.GeneralConfig;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Ability type for attracting items in the area.
@@ -22,9 +23,9 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 20;
 
-    public AbilityTypeMagnetize(String id, int rarity, int maxLevel, int baseXpPerLevel,
-                                boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
-                                boolean obtainableOnCraft, boolean obtainableOnLoot) {
+    public AbilityTypeMagnetize(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
+                                Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
+                                Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
         super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }
 

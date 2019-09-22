@@ -25,6 +25,7 @@ import java.util.NavigableSet;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -283,8 +284,11 @@ public class AbilityHelpers {
         return Triple.of(r / count, g / count, b / count);
     }
 
-    public static Rarity getSafeRarity(int rarity) {
-        return rarity < 0 ? Rarity.COMMON : (rarity >= Rarity.values().length ? Rarity.EPIC : Rarity.values()[rarity]);
+    public static Supplier<Rarity> getSafeRarity(Supplier<Integer> rarityGetter) {
+        return () -> {
+            Integer rarity = rarityGetter.get();
+            return rarity < 0 ? Rarity.COMMON : (rarity >= Rarity.values().length ? Rarity.EPIC : Rarity.values()[rarity]);
+        };
     }
 
 }

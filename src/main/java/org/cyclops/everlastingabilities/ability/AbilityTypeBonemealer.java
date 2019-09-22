@@ -10,6 +10,7 @@ import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.cyclopscore.helper.WorldHelpers;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * Ability type for fertility.
@@ -19,9 +20,9 @@ public class AbilityTypeBonemealer extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS;
 
-    public AbilityTypeBonemealer(String id, int rarity, int maxLevel, int baseXpPerLevel,
-                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
-                                 boolean obtainableOnCraft, boolean obtainableOnLoot) {
+    public AbilityTypeBonemealer(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
+                                 Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
+                                 Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
         super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }
 

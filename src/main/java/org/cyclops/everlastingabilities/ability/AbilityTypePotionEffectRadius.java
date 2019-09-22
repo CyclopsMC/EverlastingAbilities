@@ -16,6 +16,7 @@ import org.cyclops.everlastingabilities.GeneralConfig;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Ability type for potion effects in an area.
@@ -28,9 +29,9 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
     private final Effect potion;
     private boolean hostile;
 
-    public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel,
-                                         boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
-                                         boolean obtainableOnCraft, boolean obtainableOnLoot, Effect potion, boolean isHostile) {
+    public AbilityTypePotionEffectRadius(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
+                                         Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
+                                         Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot, Effect potion, boolean isHostile) {
         super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.potion = potion;
         this.hostile = isHostile;
@@ -38,9 +39,9 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
             EverlastingAbilities.clog(Level.WARN, "Tried to register a null potion for ability " + id + ". This is possibly caused by a mod forcefully removing the potion effect for this ability.");
         }
     }
-    public AbilityTypePotionEffectRadius(String id, int rarity, int maxLevel, int baseXpPerLevel,
-                                         boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
-                                         boolean obtainableOnCraft, boolean obtainableOnLoot, Effect potion) {
+    public AbilityTypePotionEffectRadius(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
+                                         Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
+                                         Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot, Effect potion) {
         this(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot, potion, true);
     }
 

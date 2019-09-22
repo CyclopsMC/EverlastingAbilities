@@ -11,6 +11,7 @@ import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.ability.config.AbilityPowerStareConfig;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Ability type for pushing in the direction your looking mobs away.
@@ -20,9 +21,9 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 4;
 
-    public AbilityTypePowerStare(String id, int rarity, int maxLevel, int baseXpPerLevel,
-                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
-                                 boolean obtainableOnCraft, boolean obtainableOnLoot) {
+    public AbilityTypePowerStare(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
+                                 Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
+                                 Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
         super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }
 

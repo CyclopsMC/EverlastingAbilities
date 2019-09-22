@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.ability.config.AbilityStepAssistConfig;
 
+import java.util.function.Supplier;
+
 /**
  * Ability type for flight.
  * @author rubensworks
@@ -12,9 +14,9 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
 
     private static final String PLAYER_NBT_KEY = Reference.MOD_ID + ":" + "stepAssist";
 
-    public AbilityTypeStepAssist(String id, int rarity, int maxLevel, int baseXpPerLevel,
-                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
-                                 boolean obtainableOnCraft, boolean obtainableOnLoot) {
+    public AbilityTypeStepAssist(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
+                                 Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
+                                 Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
         super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }
 

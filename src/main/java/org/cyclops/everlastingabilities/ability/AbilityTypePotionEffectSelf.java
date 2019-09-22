@@ -8,6 +8,8 @@ import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
 
+import java.util.function.Supplier;
+
 /**
  * Ability type for potion effects.
  * @author rubensworks
@@ -18,9 +20,9 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
 
     private final Effect potion;
 
-    public AbilityTypePotionEffectSelf(String id, int rarity, int maxLevel, int baseXpPerLevel,
-                                       boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
-                                       boolean obtainableOnCraft, boolean obtainableOnLoot, Effect potion) {
+    public AbilityTypePotionEffectSelf(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
+                                       Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
+                                       Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot, Effect potion) {
         super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.potion = potion;
         if (this.potion == null) {
