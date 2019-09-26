@@ -1,0 +1,11 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.5.3 or higher.
+
+Fixes:
+* Remove unneeded pushing of texture attributes during gui item rendering
+  This may potentially be a fix for #135
+* Improve handling of empty abilities to avoid NPEs
+  Just like ItemStack, Ability should not be null anymore,
+  but the isEmpty method should be checked.
+  Closes #136
+* Add missing attributes to deobf jar
