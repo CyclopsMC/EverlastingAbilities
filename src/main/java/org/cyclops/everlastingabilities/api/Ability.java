@@ -1,19 +1,20 @@
 package org.cyclops.everlastingabilities.api;
 
+import net.minecraft.item.Rarity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import org.cyclops.cyclopscore.helper.L10NHelpers;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
-import java.lang.Comparable;
 
 /**
  * An ability instance.
  * @author rubensworks
  */
 public class Ability implements Comparable<Ability> {
+
+    public static final Ability EMPTY = new Ability(new AbilityType("", "", () -> Rarity.COMMON, () -> 0, () -> 0, () -> true, () -> true, () -> true, () -> true), 0);
 
     private final IAbilityType abilityType;
     private final int level;
@@ -46,4 +47,9 @@ public class Ability implements Comparable<Ability> {
                 .appendSibling(new TranslationTextComponent(abilityType.getTranslationKey()))
                 .appendText(" @ " + level + "]");
     }
+
+    public boolean isEmpty() {
+        return getLevel() <= 0;
+    }
+
 }

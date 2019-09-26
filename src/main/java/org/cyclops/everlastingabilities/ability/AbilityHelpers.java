@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.ability;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import lombok.NonNull;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -104,9 +105,9 @@ public class AbilityHelpers {
      * @param modifyXp Whether to require player to have enough XP before adding
      * @return The ability part that was added.
      */
-    @Nullable
+    @NonNull
     public static Ability addPlayerAbility(PlayerEntity player, Ability ability, boolean doAdd, boolean modifyXp) {
-        return player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+        return player.getCapability(MutableAbilityStoreConfig.CAPABILITY)
                 .map(abilityStore -> {
                     int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
                             ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
@@ -114,7 +115,7 @@ public class AbilityHelpers {
                     // Check max ability count
                     if (GeneralConfig.maxPlayerAbilities >= 0 && oldLevel == 0
                             && GeneralConfig.maxPlayerAbilities <= abilityStore.getAbilities().size()) {
-                        return null;
+                        return Ability.EMPTY;
                     }
 
                     Ability result = abilityStore.addAbility(ability, doAdd);
@@ -122,12 +123,12 @@ public class AbilityHelpers {
                     if (result != null && modifyXp && getExperience(result) > currentXp) {
                         int maxLevels = player.experienceTotal / result.getAbilityType().getBaseXpPerLevel();
                         if (maxLevels == 0) {
-                            result = null;
+                            result = Ability.EMPTY;
                         } else {
                             result = new Ability(result.getAbilityType(), maxLevels);
                         }
                     }
-                    if (doAdd && result != null) {
+                    if (doAdd && !result.isEmpty()) {
                         player.experienceTotal -= getExperience(result);
                         // Fix xp bar
                         player.experienceLevel = getLevelForExperience(player.experienceTotal);
@@ -139,7 +140,7 @@ public class AbilityHelpers {
                     }
                     return result;
                 })
-                .orElse(null);
+                .orElse(Ability.EMPTY);
     }
 
     /**
@@ -150,14 +151,14 @@ public class AbilityHelpers {
      * @param modifyXp Whether to refund XP cost of ability
      * @return The ability part that was removed.
      */
-    @Nullable
+    @NonNull
     public static Ability removePlayerAbility(PlayerEntity player, Ability ability, boolean doRemove, boolean modifyXp) {
         return player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
                 .map(abilityStore -> {
                     int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
                             ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
                     Ability result = abilityStore.removeAbility(ability, doRemove);
-                    if (modifyXp && result != null) {
+                    if (modifyXp && !result.isEmpty()) {
                         player.giveExperiencePoints(getExperience(result));
                         int newLevel = abilityStore.hasAbilityType(result.getAbilityType())
                                 ? abilityStore.getAbility(result.getAbilityType()).getLevel() : 0;
@@ -165,34 +166,34 @@ public class AbilityHelpers {
                     }
                     return result;
                 })
-                .orElse(null);
+                .orElse(Ability.EMPTY);
     }
 
-    public static int getExperience(Ability ability) {
-        if (ability == null) {
+    public static int getExperience(@NonNull Ability ability) {
+        if (ability.isEmpty()) {
             return 0;
         }
         return ability.getAbilityType().getBaseXpPerLevel() * ability.getLevel();
     }
 
     public static void setPlayerAbilities(ServerPlayerEntity player, Map<IAbilityType, Integer> abilityTypes) {
-        player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+        player.getCapability(MutableAbilityStoreConfig.CAPABILITY)
                 .ifPresent(abilityStore -> abilityStore.setAbilities(abilityTypes));
     }
 
     public static boolean canInsert(Ability ability, IMutableAbilityStore mutableAbilityStore) {
         Ability added = mutableAbilityStore.addAbility(ability, false);
-        return added != null && added.getLevel() == ability.getLevel();
+        return added.getLevel() == ability.getLevel();
     }
 
     public static boolean canExtract(Ability ability, IMutableAbilityStore mutableAbilityStore) {
         Ability added = mutableAbilityStore.removeAbility(ability, false);
-        return added != null && added.getLevel() == ability.getLevel();
+        return added.getLevel() == ability.getLevel();
     }
 
     public static boolean canInsertToPlayer(Ability ability, PlayerEntity player) {
         Ability added = addPlayerAbility(player, ability, false, true);
-        return added != null && added.getLevel() == ability.getLevel();
+        return added.getLevel() == ability.getLevel();
     }
 
     public static Ability insert(Ability ability, IMutableAbilityStore mutableAbilityStore) {

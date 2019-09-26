@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities.api.capability;
 
+import lombok.NonNull;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentUtils;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -19,6 +20,7 @@ public interface IAbilityStore {
     public Collection<IAbilityType> getAbilityTypes();
     public Collection<Ability> getAbilities();
     public Map<IAbilityType, Integer> getAbilitiesRaw();
+    @NonNull
     public Ability getAbility(IAbilityType abilityType);
 
     public default ITextComponent getTextComponent() {

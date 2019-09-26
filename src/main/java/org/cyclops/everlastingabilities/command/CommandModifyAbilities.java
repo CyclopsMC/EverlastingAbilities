@@ -10,7 +10,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.cyclops.cyclopscore.command.argument.ArgumentTypeEnum;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
@@ -39,7 +38,7 @@ public class CommandModifyAbilities implements Command<CommandSource> {
         ServerPlayerEntity sender = context.getSource().asPlayer();
         Action action = ArgumentTypeEnum.getValue(context, "action", Action.class);
         ServerPlayerEntity player = EntityArgument.getPlayer(context, "player");
-        IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
+        IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY).orElse(null);
 
         if (action == Action.LIST) {
             sender.sendMessage(abilityStore.getTextComponent());

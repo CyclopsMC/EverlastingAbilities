@@ -9,9 +9,7 @@ import net.minecraft.util.Hand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
-import org.cyclops.cyclopscore.helper.InventoryHelpers;
 import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainer;
-import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -65,15 +63,15 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     }
 
     public LazyOptional<IMutableAbilityStore> getPlayerAbilityStore() {
-        return player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+        return player.getCapability(MutableAbilityStoreConfig.CAPABILITY);
     }
 
     public LazyOptional<IMutableAbilityStore> getItemAbilityStore() {
         ItemStack itemStack = getItemStack(player);
-        if (itemStack == null) {
-            return null;
+        if (itemStack.isEmpty()) {
+            return LazyOptional.empty();
         }
-        return itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null);
+        return itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY);
     }
 
     public List<Ability> getPlayerAbilities() {
@@ -91,7 +89,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     public void moveFromPlayer(Ability playerAbility) {
         getItemAbilityStore().ifPresent(abilityStore -> {
             Ability insertedAbility = AbilityHelpers.insert(playerAbility, abilityStore);
-            if (insertedAbility != null) {
+            if (!insertedAbility.isEmpty()) {
                 AbilityHelpers.removePlayerAbility(player, insertedAbility, true, true);
             }
         });
@@ -100,7 +98,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     public void moveToPlayer(Ability itemAbility) {
         getItemAbilityStore().ifPresent(abilityStore -> {
             Ability insertedAbility = AbilityHelpers.addPlayerAbility(player, itemAbility, true, true);
-            if (insertedAbility != null) {
+            if (!insertedAbility.isEmpty()) {
                 AbilityHelpers.extract(insertedAbility, abilityStore);
 
                 if(getItemAbilities().isEmpty() && !getItem().canMoveFromPlayer()) {
@@ -112,7 +110,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
 
     @Override
     public boolean canInteractWith(PlayerEntity player) {
-        return getItemStack(player) != null && (getItem().canMoveFromPlayer() || !getItemAbilities().isEmpty());
+        return !getItemStack(player).isEmpty() && (getItem().canMoveFromPlayer() || !getItemAbilities().isEmpty());
     }
 
 }

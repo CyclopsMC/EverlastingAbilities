@@ -387,7 +387,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
     public Ability getSelectedPlayerAbilitySingle() {
         Ability ability = getSelectedPlayerAbility();
-        if (ability != null) {
+        if (!ability.isEmpty()) {
             ability = new Ability(ability.getAbilityType(), 1);
         }
         return ability;
@@ -395,7 +395,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
     public Ability getSelectedItemAbilitySingle() {
         Ability ability = getSelectedItemAbility();
-        if (ability != null) {
+        if (!ability.isEmpty()) {
             ability = new Ability(ability.getAbilityType(), 1);
         }
         return ability;
@@ -406,7 +406,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         if (absoluteSelectedIndexPlayer >= 0 && absoluteSelectedIndexPlayer < abilities.size()) {
             return abilities.get(absoluteSelectedIndexPlayer);
         }
-        return null;
+        return Ability.EMPTY;
     }
 
     public Ability getSelectedItemAbility() {
@@ -414,15 +414,15 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         if (absoluteSelectedIndexItem >= 0 && absoluteSelectedIndexItem < abilities.size()) {
             return abilities.get(absoluteSelectedIndexItem);
         }
-        return null;
+        return Ability.EMPTY;
     }
 
     public boolean canMoveFromPlayer(Ability ability, PlayerEntity player, IMutableAbilityStore target) {
-        return ability != null && AbilityHelpers.canInsert(ability, target);
+        return !ability.isEmpty() && AbilityHelpers.canInsert(ability, target);
     }
 
     public boolean canMoveToPlayer(Ability ability, PlayerEntity player) {
-        return ability != null && AbilityHelpers.canInsertToPlayer(ability, player);
+        return !ability.isEmpty() && AbilityHelpers.canInsertToPlayer(ability, player);
     }
 
     public boolean canMoveFromPlayerByItem() {

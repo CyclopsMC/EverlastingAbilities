@@ -1,8 +1,7 @@
 package org.cyclops.everlastingabilities.api.capability;
 
+import lombok.NonNull;
 import org.cyclops.everlastingabilities.api.Ability;
-
-import javax.annotation.Nullable;
 
 /**
  * Extension of the {@link IAbilityStore} that allows insertion and deletion of abilities.
@@ -16,7 +15,8 @@ public interface IMutableAbilityStore extends IAbilityStore {
      * @param doAdd If the addition should actually be done.
      * @return The ability part that was added.
      */
-    public @Nullable Ability addAbility(Ability ability, boolean doAdd);
+    @NonNull
+    public Ability addAbility(Ability ability, boolean doAdd);
 
     /**
      * Remove the given ability.
@@ -24,6 +24,7 @@ public interface IMutableAbilityStore extends IAbilityStore {
      * @param doRemove If the removal should actually be done.
      * @return The ability part that was removed.
      */
-    public @Nullable Ability removeAbility(Ability ability, boolean doRemove);
+    @NonNull
+    public Ability removeAbility(Ability ability, boolean doRemove);
 
 }

@@ -58,7 +58,7 @@ public class DefaultAbilityStore implements IAbilityStore {
     @Override
     public Ability getAbility(IAbilityType abilityType) {
         if (!hasAbilityType(abilityType)) {
-            return null;
+            return Ability.EMPTY;
         }
         return new Ability(abilityType, abilityTypes.get(abilityType));
     }

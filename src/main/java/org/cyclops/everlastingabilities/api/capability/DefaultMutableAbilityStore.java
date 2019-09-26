@@ -26,7 +26,7 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
         int finalLevel = Math.min(currentLevel + toAddLevel, maxLevel);
         int addedLevel = finalLevel - currentLevel;
         Ability newAbility = new Ability(abilityType, finalLevel);
-        Ability addedAbility = addedLevel == 0 ? null : new Ability(abilityType, addedLevel);
+        Ability addedAbility = addedLevel == 0 ? Ability.EMPTY : new Ability(abilityType, addedLevel);
 
         if (doAdd) {
             if (newAbility.getLevel() == 0) {
@@ -46,7 +46,7 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
         int finalLevel = Math.max(currentLevel - toRemoveLevel, 0);
         int removedLevel = currentLevel - finalLevel;
         Ability newAbility = new Ability(abilityType, finalLevel);
-        Ability removedAbility = removedLevel == 0 ? null : new Ability(abilityType, removedLevel);
+        Ability removedAbility = removedLevel == 0 ? Ability.EMPTY : new Ability(abilityType, removedLevel);
 
         if (doRemove) {
             if (newAbility.getLevel() == 0) {

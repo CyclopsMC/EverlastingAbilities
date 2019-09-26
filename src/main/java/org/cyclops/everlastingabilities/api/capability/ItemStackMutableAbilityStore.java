@@ -1,16 +1,15 @@
 package org.cyclops.everlastingabilities.api.capability;
 
+import lombok.NonNull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
-import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -47,7 +46,7 @@ public class ItemStackMutableAbilityStore implements IMutableAbilityStore {
         return store;
     }
 
-    @Nullable
+    @NonNull
     @Override
     public Ability addAbility(Ability ability, boolean doAdd) {
         IMutableAbilityStore store = getInnerStore();
@@ -56,7 +55,7 @@ public class ItemStackMutableAbilityStore implements IMutableAbilityStore {
         return ret;
     }
 
-    @Nullable
+    @NonNull
     @Override
     public Ability removeAbility(Ability ability, boolean doRemove) {
         IMutableAbilityStore store = getInnerStore();
