@@ -333,7 +333,6 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         GlStateManager.rotatef(-(float)Math.atan((double)(mouseX / 40.0F)) * 40.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotatef(-((float)Math.atan((double)(mouseY / 20.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
 
-        GlStateManager.pushTextureAttributes();
         GlStateManager.pushLightingAttributes();
         RenderHelper.enableStandardItemLighting();
         RenderHelpers.renderItem(itemStack);
