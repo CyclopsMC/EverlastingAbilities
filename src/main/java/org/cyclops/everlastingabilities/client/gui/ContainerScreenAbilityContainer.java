@@ -369,7 +369,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
-        if (isPointInRegion( 8, 83,ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
+        if (isPointInRegion(8, 83, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
             if (scrollAmount > 0) {
                 if (startIndexPlayer > 0)
                     startIndexPlayer--;
@@ -378,7 +378,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                     startIndexPlayer++;
             }
             return true;
-        } else if (isPointInRegion( 105, 83,ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
+        } else if (isPointInRegion(105, 83, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
             if (scrollAmount > 0) {
                 if (startIndexItem > 0)
                     startIndexItem--;
