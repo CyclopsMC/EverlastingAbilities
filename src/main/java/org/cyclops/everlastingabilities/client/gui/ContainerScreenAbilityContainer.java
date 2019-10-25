@@ -366,7 +366,32 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
         return true;
     }
-
+    
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
+        if (isPointInRegion(8, 83, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
+            if (scrollAmount > 0) {
+                if (startIndexPlayer > 0)
+                    startIndexPlayer--;
+            } else if (scrollAmount < 0) {
+                if (startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount()))
+                    startIndexPlayer++;
+            }
+            return true;
+        } else if (isPointInRegion(105, 83, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
+            if (scrollAmount > 0) {
+                if (startIndexItem > 0)
+                    startIndexItem--;
+            } else if (scrollAmount < 0) {
+                if (startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount()))
+                    startIndexItem++;
+            }
+            return true;
+        }
+        
+        return false;
+    }
+    
     private int clickAbilities(int x, int y, List<Ability> abilities, int startIndex, int currentSelectedIndex,
                                double mouseX, double mouseY) {
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
