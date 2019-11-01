@@ -52,7 +52,7 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
             // Move all those items in the direction of the player.
             for(Entity moveEntity : entities) {
                 if((moveEntity instanceof EntityItem && !((EntityItem) moveEntity).cannotPickup()
-                        && canKineticateItem(((EntityItem) moveEntity).getItem())) ||
+                        && canKineticateItem(((EntityItem) moveEntity))) ||
                         (moveEntity instanceof EntityXPOrb)) {
                     double dx = moveEntity.posX - x;
                     double dy = moveEntity.posY - y + 1;
@@ -80,7 +80,11 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
         }
     }
 
-    protected boolean canKineticateItem(ItemStack entityItem) {
+    protected boolean canKineticateItem(EntityItem entityItem) {
+        // Demagnetize mod support
+        if(entityItem.getEntityData().hasKey("PreventRemoteMovement")){
+            return false;
+        }
         return true;
     }
 }
