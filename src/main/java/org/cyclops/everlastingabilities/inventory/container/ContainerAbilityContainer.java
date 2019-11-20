@@ -9,6 +9,7 @@ import net.minecraft.util.Hand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
+import org.cyclops.cyclopscore.helper.InventoryHelpers;
 import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainer;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
@@ -102,7 +103,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
                 AbilityHelpers.extract(insertedAbility, abilityStore);
 
                 if(getItemAbilities().isEmpty() && !getItem().canMoveFromPlayer()) {
-                    player.inventory.setInventorySlotContents(itemIndex, ItemStack.EMPTY);
+                    InventoryHelpers.setItemAtIndex(player, itemIndex, hand, ItemStack.EMPTY);
                 }
             }
         });
