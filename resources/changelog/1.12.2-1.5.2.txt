@@ -1,0 +1,8 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.6.0 or higher.
+
+Additions:
+* Add support for Demagnetize Mod, Closes #144
+
+Fixes:
+* Fix off-hand totem usage causing incorrect item slot to be cleared, Closes #146
