@@ -2,24 +2,21 @@ package org.cyclops.everlastingabilities.item;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import org.cyclops.cyclopscore.helper.L10NHelpers;
+import org.cyclops.cyclopscore.inventory.container.NamedContainerProviderItem;
 import org.cyclops.cyclopscore.item.ItemGui;
 import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityProvider;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.ItemStackMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
@@ -47,7 +44,7 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     @Nullable
     @Override
     public INamedContainerProvider getContainer(World world, PlayerEntity playerEntity, int itemIndex, Hand hand, ItemStack itemStack) {
-        return new NamedContainerProvider(itemIndex, hand, itemStack.getDisplayName());
+        return new NamedContainerProviderItem(itemIndex, hand, itemStack.getDisplayName(), ContainerAbilityContainer::new);
     }
 
     @Override
@@ -90,30 +87,6 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return oldStack == null || newStack == null || oldStack.getItem() != newStack.getItem();
-    }
-
-    public static class NamedContainerProvider implements INamedContainerProvider {
-
-        private final int itemIndex;
-        private final Hand hand;
-        private final ITextComponent title;
-
-        public NamedContainerProvider(int itemIndex, Hand hand, ITextComponent title) {
-            this.itemIndex = itemIndex;
-            this.hand = hand;
-            this.title = title;
-        }
-
-        @Override
-        public ITextComponent getDisplayName() {
-            return this.title;
-        }
-
-        @Nullable
-        @Override
-        public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player) {
-            return new ContainerAbilityContainer(id, playerInventory, itemIndex, hand);
-        }
     }
 
 }

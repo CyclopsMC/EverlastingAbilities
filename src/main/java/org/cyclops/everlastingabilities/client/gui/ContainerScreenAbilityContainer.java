@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.gui.component.button.ButtonArrow;
 import org.cyclops.cyclopscore.client.gui.container.ContainerScreenExtended;
@@ -283,25 +284,25 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             int boxY = y + i * ABILITY_BOX_HEIGHT;
             if(isPointInRegion(new Rectangle(x, boxY, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT), new Point(mouseX, mouseY))) {
                 Ability ability = abilities.get(i + startIndex);
-                List<String> lines = Lists.newLinkedList();
+                List<ITextComponent> lines = Lists.newLinkedList();
 
                 // Name
-                lines.add(ability.getAbilityType().getRarity().color
-                        + L10NHelpers.localize(ability.getAbilityType().getTranslationKey()));
+                lines.add(new TranslationTextComponent(ability.getAbilityType().getTranslationKey())
+                        .applyTextStyle(ability.getAbilityType().getRarity().color));
 
                 // Level
-                lines.add(L10NHelpers.localize("general.everlastingabilities.level", ability.getLevel(),
+                lines.add(new TranslationTextComponent("general.everlastingabilities.level", ability.getLevel(),
                         ability.getAbilityType().getMaxLevel() == -1 ? "Inf" : ability.getAbilityType().getMaxLevel()));
 
                 // Description
-                String localizedDescription = L10NHelpers.localize(ability.getAbilityType().getUnlocalizedDescription());
-                lines.addAll(StringHelpers.splitLines(localizedDescription, L10NHelpers.MAX_TOOLTIP_LINE_LENGTH,
-                        IInformationProvider.INFO_PREFIX));
+                lines.add(new TranslationTextComponent(ability.getAbilityType().getUnlocalizedDescription())
+                        .applyTextStyles(IInformationProvider.INFO_PREFIX_STYLES));
 
                 // Xp
-                lines.add(TextFormatting.DARK_GREEN + L10NHelpers.localize("general.everlastingabilities.xp",
+                lines.add(new TranslationTextComponent("general.everlastingabilities.xp",
                         ability.getAbilityType().getBaseXpPerLevel(),
-                        AbilityHelpers.getLevelForExperience(ability.getAbilityType().getBaseXpPerLevel())));
+                        AbilityHelpers.getLevelForExperience(ability.getAbilityType().getBaseXpPerLevel()))
+                        .applyTextStyle(TextFormatting.DARK_GREEN));
 
                 drawTooltip(lines, mouseX - this.guiLeft, mouseY - this.guiTop);
             }
