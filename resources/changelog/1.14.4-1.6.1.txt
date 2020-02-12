@@ -1,0 +1,6 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.6.1 or higher.
+
+Fixes:
+* Fix error during player cloning during respawn, Closes #154
+* Bump to CyclopsCore 1.6.1, Closes #152
