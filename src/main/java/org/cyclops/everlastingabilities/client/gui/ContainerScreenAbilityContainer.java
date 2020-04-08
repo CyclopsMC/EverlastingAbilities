@@ -1,13 +1,20 @@
 package org.cyclops.everlastingabilities.client.gui;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,7 +30,6 @@ import org.cyclops.cyclopscore.client.gui.container.ContainerScreenExtended;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.helper.RenderHelpers;
-import org.cyclops.cyclopscore.helper.StringHelpers;
 import org.cyclops.cyclopscore.item.IInformationProvider;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.Reference;
@@ -198,38 +204,38 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             b = color.getRight();
         }
 
-        GlStateManager.depthMask(false);
-        GlStateManager.depthFunc(514);
-        GlStateManager.disableLighting();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
+        RenderSystem.depthMask(false);
+        RenderSystem.depthFunc(514);
+        RenderSystem.disableLighting();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
         RenderHelpers.bindTexture(RES_ITEM_GLINT);
-        GlStateManager.matrixMode(5890);
-        GlStateManager.pushMatrix();
-        GlStateManager.scalef(8.0F, 8.0F, 8.0F);
+        RenderSystem.matrixMode(5890);
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(8.0F, 8.0F, 8.0F);
         float f = (float)(Util.milliTime() % 3000L) / 3000.0F / 8.0F;
-        GlStateManager.translatef(f, 0.0F, 0.0F);
-        GlStateManager.rotatef(-50.0F, 0.0F, 0.0F, 1.0F);
-        GlStateManager.enableBlend();
+        RenderSystem.translatef(f, 0.0F, 0.0F);
+        RenderSystem.rotatef(-50.0F, 0.0F, 0.0F, 1.0F);
+        RenderSystem.enableBlend();
         drawTexturedModalRectColor(x, y, 0, 0, width, height, r, g, b, 255);
-        GlStateManager.popMatrix();
-        GlStateManager.pushMatrix();
-        GlStateManager.scalef(8.0F, 8.0F, 8.0F);
+        RenderSystem.popMatrix();
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(8.0F, 8.0F, 8.0F);
         float f1 = (float)(Util.milliTime() % 4873L) / 4873.0F / 8.0F;
-        GlStateManager.translatef(-f1, 0.0F, 0.0F);
-        GlStateManager.rotatef(10.0F, 0.0F, 0.0F, 1.0F);
+        RenderSystem.translatef(-f1, 0.0F, 0.0F);
+        RenderSystem.rotatef(10.0F, 0.0F, 0.0F, 1.0F);
         float rotation = ((float) (Util.milliTime() / 100 % 3600)) / 10F;
-        GlStateManager.rotatef(rotation, 1.0F, 0.5F, 1.0F);
+        RenderSystem.rotatef(rotation, 1.0F, 0.5F, 1.0F);
         drawTexturedModalRectColor(x, y, 0, 0, width, height, r, g, b, 255);
-        GlStateManager.popMatrix();
-        GlStateManager.matrixMode(5888);
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.popMatrix();
+        RenderSystem.matrixMode(5888);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         //GlStateManager.enableLighting();
-        GlStateManager.depthFunc(515);
-        GlStateManager.depthMask(true);
-        GlStateManager.disableBlend();
+        RenderSystem.depthFunc(515);
+        RenderSystem.depthMask(true);
+        RenderSystem.disableBlend();
         RenderHelpers.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
-        GlStateManager.color4f(1, 1, 1, 1);
+        RenderSystem.color4f(1, 1, 1, 1);
     }
 
     protected void drawXp(int x, int y) {
@@ -315,38 +321,34 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        vertexbuffer.pos((double)(x + 0), (double)(y + height), (double)this.blitOffset).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + height) * f1)).color(r, g, b, a).endVertex();
-        vertexbuffer.pos((double)(x + width), (double)(y + height), (double)this.blitOffset).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).color(r, g, b, a).endVertex();
-        vertexbuffer.pos((double)(x + width), (double)(y + 0), (double)this.blitOffset).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + 0) * f1)).color(r, g, b, a).endVertex();
-        vertexbuffer.pos((double)(x + 0), (double)(y + 0), (double)this.blitOffset).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + 0) * f1)).color(r, g, b, a).endVertex();
+        vertexbuffer.pos(x + 0, y + height, this.getBlitOffset()).tex((textureX + 0) * f, (textureY + height) * f1).color(r, g, b, a).endVertex();
+        vertexbuffer.pos(x + width, y + height, this.getBlitOffset()).tex((textureX + width) * f, (textureY + height) * f1).color(r, g, b, a).endVertex();
+        vertexbuffer.pos(x + width, y + 0,this.getBlitOffset()).tex((textureX + width) * f, (textureY + 0) * f1).color(r, g, b, a).endVertex();
+        vertexbuffer.pos(x + 0, y + 0, this.getBlitOffset()).tex((textureX + 0) * f, (textureY + 0) * f1).color(r, g, b, a).endVertex();
         tessellator.draw();
     }
 
     public static void drawItemOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, ItemStack itemStack) {
-        GlStateManager.enableColorMaterial();
-
-        GlStateManager.pushMatrix();
-
-        GlStateManager.translatef((float)posX, (float)posY, 50.0F);
-        GlStateManager.scalef((float)(-scale), (float)scale, (float)scale);
-        GlStateManager.rotatef(180.0F, 0.0F, 0.0F, 1.0F);
-
-        GlStateManager.rotatef(-(float)Math.atan((double)(mouseX / 40.0F)) * 40.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotatef(-((float)Math.atan((double)(mouseY / 20.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
-
-        GlStateManager.pushLightingAttributes();
+        float lvt_6_1_ = (float)Math.atan((double)(mouseX / 40.0F));
+        float lvt_7_1_ = (float)Math.atan((double)(mouseY / 40.0F));
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef((float)posX, (float)posY, 1050.0F);
+        RenderSystem.scalef(1.0F, 1.0F, -1.0F);
+        MatrixStack matrixStack = new MatrixStack();
+        matrixStack.translate(0.0D, 0.0D, 1000.0D);
+        matrixStack.scale((float)scale, (float)scale, (float)scale);
+        Quaternion rotation = Vector3f.ZP.rotationDegrees(180.0F);
+        Quaternion cameraOrientationY = Vector3f.YP.rotationDegrees(- lvt_6_1_ * 40.0F);
+        Quaternion cameraOrientationX = Vector3f.XP.rotationDegrees(lvt_7_1_ * 20.0F);
+        rotation.multiply(cameraOrientationY);
+        rotation.multiply(cameraOrientationX);
+        matrixStack.rotate(rotation);
+        IRenderTypeBuffer.Impl renderTypeBuffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
         RenderHelper.enableStandardItemLighting();
-        RenderHelpers.renderItem(itemStack);
+        Minecraft.getInstance().getItemRenderer().renderItem(itemStack, ItemCameraTransforms.TransformType.FIXED, 15728880, OverlayTexture.NO_OVERLAY, matrixStack, renderTypeBuffer);
         RenderHelper.disableStandardItemLighting();
-        GlStateManager.popAttributes();
-        GlStateManager.enableLighting();
-        GlStateManager.popMatrix();
-
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.activeTexture(GLX.GL_TEXTURE1);
-        GlStateManager.disableTexture();
-        GlStateManager.activeTexture(GLX.GL_TEXTURE0);
+        renderTypeBuffer.finish();
+        RenderSystem.popMatrix();
     }
 
     @Override

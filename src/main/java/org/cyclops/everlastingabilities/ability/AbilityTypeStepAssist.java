@@ -22,7 +22,7 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
 
     @Override
     public void onTick(PlayerEntity player, int level) {
-        player.stepHeight = player.isSneaking() ? 0.5F : level;
+        player.stepHeight = player.isCrouching() ? 0.5F : level;
     }
 
     @Override

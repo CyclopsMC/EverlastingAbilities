@@ -6,6 +6,7 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.cyclopscore.helper.WorldHelpers;
 
@@ -33,7 +34,7 @@ public class AbilityTypeBonemealer extends AbilityTypeDefault {
     @Override
     public void onTick(PlayerEntity player, int level) {
         World world = player.world;
-        if (!world.isRemote && player.world.getGameTime() % (TICK_MODULUS / level) == 0) {
+        if (!world.isRemote() && player.world.getGameTime() % (TICK_MODULUS / level) == 0) {
             int radius = level * 2;
             WorldHelpers.foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.getPosition(), new WorldHelpers.WorldFoldingFunction<Void, Void>() {
                 @Nullable
@@ -41,7 +42,7 @@ public class AbilityTypeBonemealer extends AbilityTypeDefault {
                 public Void apply(Void from, World world, BlockPos pos) {
                     BlockState blockState = world.getBlockState(pos);
                     if (blockState.getBlock() instanceof IGrowable && !(blockState.getBlock() instanceof GrassBlock)) {
-                        blockState.tick(world, pos, world.rand);
+                        blockState.tick((ServerWorld) world, pos, world.rand);
                     }
                     return null;
                 }

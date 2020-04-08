@@ -45,30 +45,32 @@ public class ClientProxy extends ClientProxyComponent {
 				&& !Minecraft.getInstance().isGamePaused()
 				&& entity.world.getGameTime() % 10 == 0) {
 			entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent((abilityStore) -> {
-				Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
-				float r = abilityColors.getLeft() / 255F;
-				float g = abilityColors.getMiddle() / 255F;
-				float b = abilityColors.getRight() / 255F;
+				if (!abilityStore.getAbilities().isEmpty()) {
+					Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
+					float r = abilityColors.getLeft() / 255F;
+					float g = abilityColors.getMiddle() / 255F;
+					float b = abilityColors.getRight() / 255F;
 
-				Random rand = entity.world.rand;
-				float scale = 0.5F - rand.nextFloat() * 0.3F;
-				float red = Math.max(0, r - rand.nextFloat() * 0.1F);
-				float green = Math.max(0, g - rand.nextFloat() * 0.1F);
-				float blue = Math.max(0, b - rand.nextFloat() * 0.1F);
-				float ageMultiplier = (float) (rand.nextDouble() * 10D + 20D);
+					Random rand = entity.world.rand;
+					float scale = 0.5F - rand.nextFloat() * 0.3F;
+					float red = Math.max(0, r - rand.nextFloat() * 0.1F);
+					float green = Math.max(0, g - rand.nextFloat() * 0.1F);
+					float blue = Math.max(0, b - rand.nextFloat() * 0.1F);
+					float ageMultiplier = (float) (rand.nextDouble() * 10D + 20D);
 
-				double x = entity.posX - 0.1D + rand.nextDouble() * 0.2D + (entity.getWidth() / 2 * (rand.nextBoolean() ? 1 : -1));
-				double y = entity.posY + entity.getHeight() - 0.2D + rand.nextDouble() * 0.4D;
-				double z = entity.posZ - 0.1D + rand.nextDouble() * 0.2D + (entity.getWidth() / 2 * (rand.nextBoolean() ? 1 : -1));
+					double x = entity.getPosX() - 0.1D + rand.nextDouble() * 0.2D + (entity.getWidth() / 2 * (rand.nextBoolean() ? 1 : -1));
+					double y = entity.getPosY() + entity.getHeight() - 0.2D + rand.nextDouble() * 0.4D;
+					double z = entity.getPosZ() - 0.1D + rand.nextDouble() * 0.2D + (entity.getWidth() / 2 * (rand.nextBoolean() ? 1 : -1));
 
-				double motionX = 0.02D - rand.nextDouble() * 0.04D;
-				double motionY = 0.02D - rand.nextDouble() * 0.04D;
-				double motionZ = 0.02D - rand.nextDouble() * 0.04D;
+					double motionX = 0.02D - rand.nextDouble() * 0.04D;
+					double motionY = 0.02D - rand.nextDouble() * 0.04D;
+					double motionZ = 0.02D - rand.nextDouble() * 0.04D;
 
-				Minecraft.getInstance().worldRenderer.addParticle(
-						new ParticleBlurData(red, green, blue, scale, ageMultiplier), false,
-						x, y, z,
-						motionX, motionY, motionZ);
+					Minecraft.getInstance().worldRenderer.addParticle(
+							new ParticleBlurData(red, green, blue, scale, ageMultiplier), false,
+							x, y, z,
+							motionX, motionY, motionZ);
+				}
 			});
 		}
 	}

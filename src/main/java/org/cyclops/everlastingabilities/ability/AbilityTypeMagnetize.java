@@ -32,11 +32,11 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
     @Override
     public void onTick(PlayerEntity player, int level) {
         World world = player.world;
-        if (!world.isRemote && !player.isSneaking() && player.world.getGameTime() % TICK_MODULUS == 0) {
+        if (!world.isRemote && !player.isCrouching() && player.world.getGameTime() % TICK_MODULUS == 0) {
             // Center of the attraction
-            double x = player.posX;
-            double y = player.posY;
-            double z = player.posZ;
+            double x = player.getPosX();
+            double y = player.getPosY();
+            double z = player.getPosZ();
 
             // Get items in calculated area.
             int area = level * 2;
@@ -56,9 +56,9 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
                 if((moveEntity instanceof ItemEntity && !((ItemEntity) moveEntity).cannotPickup()
                         && canKineticateItem(((ItemEntity) moveEntity))) ||
                         (moveEntity instanceof ExperienceOrbEntity)) {
-                    double dx = moveEntity.posX - x;
-                    double dy = moveEntity.posY - y + 1;
-                    double dz = moveEntity.posZ - z;
+                    double dx = moveEntity.getPosX() - x;
+                    double dy = moveEntity.getPosY() - y + 1;
+                    double dz = moveEntity.getPosZ() - z;
                     double strength = -1;
 
                     double d = (double) MathHelper.sqrt(dx * dx + dy * dy + dz * dz);

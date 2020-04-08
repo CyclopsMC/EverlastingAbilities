@@ -30,7 +30,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
     @Override
     public void onTick(PlayerEntity player, int level) {
     
-        if ( AbilityPowerStareConfig.requireSneak && !player.isSneaking() ) {
+        if ( AbilityPowerStareConfig.requireSneak && !player.isCrouching() ) {
             return;
         }
 
@@ -39,7 +39,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
             int range = level * 10;
             double eyeHeight = player.getEyeHeight();
             Vec3d lookVec = player.getLookVec();
-            Vec3d origin = new Vec3d(player.posX, player.posY + eyeHeight, player.posZ);
+            Vec3d origin = new Vec3d(player.getPosX(), player.getPosY() + eyeHeight, player.getPosZ());
             Vec3d direction = origin.add(lookVec.x * range, lookVec.y * range, lookVec.z * range);
 
             List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(player,
@@ -69,9 +69,9 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
                     }
 
                     if (entity != null) {
-                        double dx = entity.posX - player.posX;
-                        double dy = entity.posY - player.posY;
-                        double dz = entity.posZ - player.posZ;
+                        double dx = entity.getPosX() - player.getPosX();
+                        double dy = entity.getPosY() - player.getPosY();
+                        double dz = entity.getPosZ() - player.getPosZ();
                         double d = MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
                         double m = 1 / (2 * (Math.max(1, d)));
                         dx *= m;
