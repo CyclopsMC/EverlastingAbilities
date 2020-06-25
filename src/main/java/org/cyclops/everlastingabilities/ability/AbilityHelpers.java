@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.everlastingabilities.GeneralConfig;
@@ -35,6 +36,12 @@ import java.util.stream.Collectors;
  * @author rubensworks
  */
 public class AbilityHelpers {
+
+    /**
+     * This value is synced with {@link GeneralConfig#maxPlayerAbilities} from the server.
+     * This is to ensure that clients can not hack around the ability limit.
+     */
+    public static int maxPlayerAbilitiesClient = -1;
 
     public static final int[] RARITY_COLORS = new int[] {
             Helpers.RGBToInt(255, 255, 255),
@@ -97,6 +104,10 @@ public class AbilityHelpers {
         abilityType.onChangedLevel(player, oldLevel, newLevel);
     }
 
+    public static int getMaxPlayerAbilities(World world) {
+        return world.isRemote() ? maxPlayerAbilitiesClient : GeneralConfig.maxPlayerAbilities;
+    }
+
     /**
      * Add the given ability.
      * @param player The player.
@@ -113,8 +124,8 @@ public class AbilityHelpers {
                             ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
 
                     // Check max ability count
-                    if (GeneralConfig.maxPlayerAbilities >= 0 && oldLevel == 0
-                            && GeneralConfig.maxPlayerAbilities <= abilityStore.getAbilities().size()) {
+                    if (getMaxPlayerAbilities(player.getEntityWorld()) >= 0 && oldLevel == 0
+                            && getMaxPlayerAbilities(player.getEntityWorld()) <= abilityStore.getAbilities().size()) {
                         return Ability.EMPTY;
                     }
 

@@ -11,10 +11,14 @@ import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.GeneralConfig;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
+import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
 /**
  * Packet from client to server to request an entity's ability store.
+ * Additionally, {@link GeneralConfig#maxPlayerAbilities} will be synced.
  * @author rubensworks
  *
  */
@@ -24,6 +28,8 @@ public class SendAbilityStorePacket extends PacketCodec {
 	private int entityId;
 	@CodecField
 	private CompoundNBT tag;
+	@CodecField
+	private int maxPlayerAbilities;
 
     public SendAbilityStorePacket() {
 
@@ -32,6 +38,7 @@ public class SendAbilityStorePacket extends PacketCodec {
 	public SendAbilityStorePacket(int entityId, CompoundNBT tag) {
 		this.entityId = entityId;
 		this.tag = tag;
+		this.maxPlayerAbilities = GeneralConfig.maxPlayerAbilities;
 	}
 
 	@Override
@@ -46,9 +53,13 @@ public class SendAbilityStorePacket extends PacketCodec {
 			if (world != null) {
 				Entity entity = world.getEntityByID(entityId);
 				if (entity != null) {
+					// Sync ability store
 					entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
 						MutableAbilityStoreConfig.CAPABILITY.readNBT(abilityStore, null, tag.get("contents"));
 					});
+
+					// Sync max abilities value
+					AbilityHelpers.maxPlayerAbilitiesClient = this.maxPlayerAbilities;
 				}
 			}
 		} catch (IllegalArgumentException e) {
