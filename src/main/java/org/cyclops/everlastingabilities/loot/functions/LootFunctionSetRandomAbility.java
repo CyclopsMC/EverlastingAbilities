@@ -5,10 +5,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
+import net.minecraft.loot.LootFunctionType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootFunction;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootFunction;
+import net.minecraft.loot.conditions.ILootCondition;
+import org.cyclops.cyclopscore.helper.LootHelpers;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -22,6 +24,7 @@ import java.util.List;
  * @author rubensworks
  */
 public class LootFunctionSetRandomAbility extends LootFunction {
+    public static final LootFunctionType TYPE = LootHelpers.registerFunction(new ResourceLocation(Reference.MOD_ID, "set_random_ability"), new LootFunctionSetRandomAbility.Serializer());
 
     public LootFunctionSetRandomAbility(ILootCondition[] conditionsIn) {
         super(conditionsIn);
@@ -38,11 +41,16 @@ public class LootFunctionSetRandomAbility extends LootFunction {
         return stack;
     }
 
-    public static class Serializer extends LootFunction.Serializer<LootFunctionSetRandomAbility> {
-        public Serializer() {
-            super(new ResourceLocation(Reference.MOD_ID, "set_random_ability"), LootFunctionSetRandomAbility.class);
-        }
+    @Override
+    public LootFunctionType getFunctionType() {
+        return TYPE;
+    }
 
+    public static void load() {
+        // Dummy call, to enforce class loading
+    }
+
+    public static class Serializer extends LootFunction.Serializer<LootFunctionSetRandomAbility> {
         @Override
         public void serialize(JsonObject object, LootFunctionSetRandomAbility functionClazz, JsonSerializationContext serializationContext) {
 

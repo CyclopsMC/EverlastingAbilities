@@ -5,7 +5,7 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.ability.config.AbilityPowerStareConfig;
@@ -38,9 +38,9 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
         if (!world.isRemote && player.world.getGameTime() % TICK_MODULUS == 0) {
             int range = level * 10;
             double eyeHeight = player.getEyeHeight();
-            Vec3d lookVec = player.getLookVec();
-            Vec3d origin = new Vec3d(player.getPosX(), player.getPosY() + eyeHeight, player.getPosZ());
-            Vec3d direction = origin.add(lookVec.x * range, lookVec.y * range, lookVec.z * range);
+            Vector3d lookVec = player.getLookVec();
+            Vector3d origin = new Vector3d(player.getPosX(), player.getPosY() + eyeHeight, player.getPosZ());
+            Vector3d direction = origin.add(lookVec.x * range, lookVec.y * range, lookVec.z * range);
 
             List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(player,
                     player.getBoundingBox().expand(lookVec.x * range, lookVec.y * range, lookVec.z * range)
@@ -51,7 +51,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
                     Entity entity = null;
                     float f10 = e.getCollisionBorderSize();
                     AxisAlignedBB axisalignedbb = e.getBoundingBox().expand((double) f10, (double) f10, (double) f10);
-                    Vec3d hitVec = axisalignedbb.rayTrace(origin, direction).orElse(null);
+                    Vector3d hitVec = axisalignedbb.rayTrace(origin, direction).orElse(null);
 
                     if (axisalignedbb.contains(origin)) {
                         entity = e;

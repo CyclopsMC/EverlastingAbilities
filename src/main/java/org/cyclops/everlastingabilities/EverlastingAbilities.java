@@ -13,14 +13,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
+import net.minecraft.loot.LootFunctionType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.functions.LootFunctionManager;
+import net.minecraft.loot.functions.LootFunctionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -35,6 +39,7 @@ import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
+import org.cyclops.cyclopscore.helper.LootHelpers;
 import org.cyclops.cyclopscore.init.ItemGroupMod;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.modcompat.capabilities.SerializableCapabilityProvider;
@@ -106,7 +111,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         super.setup(event);
 
         // Register loot functions
-        LootFunctionManager.registerFunction(new LootFunctionSetRandomAbility.Serializer());
+        LootFunctionSetRandomAbility.load();
 
         // Register argument types
         ArgumentTypes.register(Reference.MOD_ID + ":" + "ability",
@@ -303,10 +308,10 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                             entity.sendMessage(new TranslationTextComponent("chat.everlastingabilities.playerLostAbility",
                                     entity.getName(),
                                     new TranslationTextComponent(removed.getAbilityType().getTranslationKey())
-                                            .setStyle(new Style()
-                                                    .setColor(removed.getAbilityType().getRarity().color)
+                                            .setStyle(Style.EMPTY
+                                                    .setColor(Color.fromTextFormatting(removed.getAbilityType().getRarity().color))
                                                     .setBold(true)),
-                                    removed.getLevel()));
+                                    removed.getLevel()), Util.DUMMY_UUID);
                         }
                     }
                 }

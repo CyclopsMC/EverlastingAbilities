@@ -8,10 +8,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -21,7 +20,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Triple;
@@ -85,27 +87,27 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     public void init() {
         super.init();
 
-        addButton(buttonUp1 = new ButtonArrow(this.guiLeft + 73,  this.guiTop + 83, L10NHelpers.localize("gui.cyclopscore.up"), button -> {
+        addButton(buttonUp1 = new ButtonArrow(this.guiLeft + 73,  this.guiTop + 83, new TranslationTextComponent("gui.cyclopscore.up"), button -> {
             if (startIndexPlayer > 0) startIndexPlayer--;
         }, ButtonArrow.Direction.NORTH));
-        addButton(buttonDown1 = new ButtonArrow(this.guiLeft + 73,  this.guiTop + 174, L10NHelpers.localize("gui.cyclopscore.down"), button -> {
+        addButton(buttonDown1 = new ButtonArrow(this.guiLeft + 73,  this.guiTop + 174, new TranslationTextComponent("gui.cyclopscore.down"), button -> {
             if (startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount())) startIndexPlayer++;
         }, ButtonArrow.Direction.SOUTH));
-        addButton(buttonUp2 = new ButtonArrow(this.guiLeft + 88,  this.guiTop + 83, L10NHelpers.localize("gui.cyclopscore.up"), button -> {
+        addButton(buttonUp2 = new ButtonArrow(this.guiLeft + 88,  this.guiTop + 83, new TranslationTextComponent("gui.cyclopscore.up"), button -> {
             if (startIndexItem > 0) startIndexItem--;
         }, ButtonArrow.Direction.NORTH));
-        addButton(buttonDown2 = new ButtonArrow(this.guiLeft + 88,  this.guiTop + 174, L10NHelpers.localize("gui.cyclopscore.down"), button -> {
+        addButton(buttonDown2 = new ButtonArrow(this.guiLeft + 88,  this.guiTop + 174, new TranslationTextComponent("gui.cyclopscore.down"), button -> {
             if (startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount())) startIndexItem++;
         }, ButtonArrow.Direction.SOUTH));
 
-        addButton(buttonLeft = new ButtonArrow(this.guiLeft + 76,  this.guiTop + 130, L10NHelpers.localize("gui.cyclopscore.left"), button -> {
+        addButton(buttonLeft = new ButtonArrow(this.guiLeft + 76,  this.guiTop + 130, new TranslationTextComponent("gui.cyclopscore.left"), button -> {
             if (canMoveToPlayer()) {
                 EverlastingAbilities._instance.getPacketHandler().sendToServer(
                         new MoveAbilityPacket(getSelectedItemAbilitySingle(), MoveAbilityPacket.Movement.TO_PLAYER));
                 moveToPlayer();
             }
         }, ButtonArrow.Direction.WEST));
-        addButton(buttonRight = new ButtonArrow(this.guiLeft + 90,  this.guiTop + 130, L10NHelpers.localize("gui.cyclopscore.right"), button -> {
+        addButton(buttonRight = new ButtonArrow(this.guiLeft + 90,  this.guiTop + 130, new TranslationTextComponent("gui.cyclopscore.right"), button -> {
             if (canMoveFromPlayer()) {
                 EverlastingAbilities._instance.getPacketHandler().sendToServer(
                         new MoveAbilityPacket(getSelectedPlayerAbilitySingle(), MoveAbilityPacket.Movement.FROM_PLAYER));
@@ -120,13 +122,13 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
         if (getContainer().getItemStack(player) == null) {
             return;
         }
 
-        this.font.drawString(player.getDisplayName().getString(), 8, 6, -1);
-        this.font.drawString(getContainer().getItemStack(player).getDisplayName().getFormattedText(), 102, 6, -1);
+        this.font.drawString(matrixStack, player.getDisplayName().getString(), 8, 6, -1);
+        this.font.func_238407_a_(matrixStack, getContainer().getItemStack(player).getDisplayName().func_241878_f(), 102, 6, -1);
 
         // Draw abilities
         drawAbilitiesTooltip(8, 83, getPlayerAbilities(), startIndexPlayer, mouseX, mouseY);
@@ -162,7 +164,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         if (getContainer().getItemStack(player) == null) {
             return;
         }
@@ -176,20 +178,20 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         buttonRight.active = canMoveFromPlayer();
         buttonRight.active = canMoveFromPlayerByItem();
 
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
 
         int i = this.guiLeft;
         int j = this.guiTop;
         drawFancyBackground(i + 8, j + 17, 66, 61, getPlayerAbilityStore());
         InventoryScreen.drawEntityOnScreen(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.getMinecraft().player);
-        drawXp(i + 67, j + 70);
-        RenderHelpers.drawScaledCenteredString(font, "" + player.experienceTotal, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
+        drawXp(matrixStack, i + 67, j + 70);
+        RenderHelpers.drawScaledCenteredString(matrixStack, font, "" + player.experienceTotal, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         drawFancyBackground(i + 102, j + 17, 66, 61, getItemAbilityStore());
         drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.getMinecraft().player));
 
         // Draw abilities
-        drawAbilities(this.guiLeft + 8, this.guiTop + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
-        drawAbilities(this.guiLeft + 105, this.guiTop + 83, getItemAbilities(), startIndexItem, player.experienceTotal, absoluteSelectedIndexItem, mouseX, mouseY, true);
+        drawAbilities(matrixStack, this.guiLeft + 8, this.guiTop + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
+        drawAbilities(matrixStack, this.guiLeft + 105, this.guiTop + 83, getItemAbilities(), startIndexItem, player.experienceTotal, absoluteSelectedIndexItem, mouseX, mouseY, true);
     }
 
     public void drawFancyBackground(int x, int y, int width, int height, IAbilityStore abilityStore) {
@@ -238,12 +240,12 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         RenderSystem.color4f(1, 1, 1, 1);
     }
 
-    protected void drawXp(int x, int y) {
+    protected void drawXp(MatrixStack matrixStack, int x, int y) {
         RenderHelpers.bindTexture(texture);
-        blit(x, y, 0, 219, 5, 5);
+        blit(matrixStack, x, y, 0, 219, 5, 5);
     }
 
-    private void drawAbilities(int x, int y, List<Ability> abilities, int startIndex, int playerXp,
+    private void drawAbilities(MatrixStack matrixStack, int x, int y, List<Ability> abilities, int startIndex, int playerXp,
                                int currentSelectedIndex, int mouseX, int mouseY, boolean canEdit) {
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
@@ -260,12 +262,14 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             }
 
             // Name
-            RenderHelpers.drawScaledCenteredString(font,
-                    ability.getAbilityType().getRarity().color + L10NHelpers.localize(ability.getAbilityType().getTranslationKey()),
+            RenderHelpers.drawScaledCenteredString(matrixStack, font,
+                    new TranslationTextComponent(ability.getAbilityType().getTranslationKey())
+                            .setStyle(Style.EMPTY.setColor(Color.fromTextFormatting(ability.getAbilityType().getRarity().color)))
+                            .getString(),
                     x + 27, boxY + 7, 0, 1.0F, 50, -1);
 
             // Level
-            RenderHelpers.drawScaledCenteredString(font,
+            RenderHelpers.drawScaledCenteredString(matrixStack, font,
                     "" + ability.getLevel(),
                     x + 58, boxY + 5, 0, 0.8F, -1);
 
@@ -276,8 +280,8 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             } else {
                 GlStateManager.color4f(1, 1, 1, 1);
             }
-            drawXp(x + 57, boxY + 10);
-            RenderHelpers.drawScaledCenteredString(font,
+            drawXp(matrixStack, x + 57, boxY + 10);
+            RenderHelpers.drawScaledCenteredString(matrixStack, font,
                     "" + requiredXp,
                     x + 53, boxY + 13, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         }
@@ -294,7 +298,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Name
                 lines.add(new TranslationTextComponent(ability.getAbilityType().getTranslationKey())
-                        .applyTextStyle(ability.getAbilityType().getRarity().color));
+                        .setStyle(Style.EMPTY.setColor(Color.fromTextFormatting(ability.getAbilityType().getRarity().color))));
 
                 // Level
                 lines.add(new TranslationTextComponent("general.everlastingabilities.level", ability.getLevel(),
@@ -302,13 +306,13 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Description
                 lines.add(new TranslationTextComponent(ability.getAbilityType().getUnlocalizedDescription())
-                        .applyTextStyles(IInformationProvider.INFO_PREFIX_STYLES));
+                        .setStyle(Style.EMPTY.createStyleFromFormattings(IInformationProvider.INFO_PREFIX_STYLES)));
 
                 // Xp
                 lines.add(new TranslationTextComponent("general.everlastingabilities.xp",
                         ability.getAbilityType().getBaseXpPerLevel(),
                         AbilityHelpers.getLevelForExperience(ability.getAbilityType().getBaseXpPerLevel()))
-                        .applyTextStyle(TextFormatting.DARK_GREEN));
+                        .setStyle(Style.EMPTY.setColor(Color.fromTextFormatting(TextFormatting.DARK_GREEN))));
 
                 drawTooltip(lines, mouseX - this.guiLeft, mouseY - this.guiTop);
             }

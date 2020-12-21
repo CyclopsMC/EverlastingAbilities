@@ -10,6 +10,7 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.cyclops.cyclopscore.command.argument.ArgumentTypeEnum;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
@@ -41,7 +42,7 @@ public class CommandModifyAbilities implements Command<CommandSource> {
         IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY).orElse(null);
 
         if (action == Action.LIST) {
-            sender.sendMessage(abilityStore.getTextComponent());
+            sender.sendMessage(abilityStore.getTextComponent(), Util.DUMMY_UUID);
         } else {
             if (!this.checkAbility) {
                 throw new SimpleCommandExceptionType(new TranslationTextComponent(
@@ -59,7 +60,7 @@ public class CommandModifyAbilities implements Command<CommandSource> {
                 Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                sender.sendMessage(new TranslationTextComponent("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility));
+                sender.sendMessage(new TranslationTextComponent("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility), Util.DUMMY_UUID);
             } else {
                 level = Math.max(1, level);
                 Ability ability = new Ability(abilityType, level);
@@ -67,7 +68,7 @@ public class CommandModifyAbilities implements Command<CommandSource> {
                 Ability removedAbility = AbilityHelpers.removePlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                sender.sendMessage(new TranslationTextComponent("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility));
+                sender.sendMessage(new TranslationTextComponent("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility), Util.DUMMY_UUID);
             }
         }
         return 0;

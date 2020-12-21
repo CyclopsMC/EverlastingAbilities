@@ -7,6 +7,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
@@ -61,13 +62,13 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
             for (Ability ability : abilities) {
                 empty = false;
                 tooltip.add(new TranslationTextComponent(ability.getAbilityType().getTranslationKey(), ability.getLevel())
-                        .setStyle(new Style()
-                                .setColor(TextFormatting.YELLOW)));
+                        .setStyle(Style.EMPTY
+                                .setColor(Color.fromTextFormatting(TextFormatting.YELLOW))));
             }
             if (empty) {
                 tooltip.add(new TranslationTextComponent("general.everlastingabilities.empty")
-                        .setStyle(new Style()
-                                .setColor(TextFormatting.GRAY)
+                        .setStyle(Style.EMPTY
+                                .setColor(Color.fromTextFormatting(TextFormatting.GRAY))
                                 .setItalic(true)));
             }
         });

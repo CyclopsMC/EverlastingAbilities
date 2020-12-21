@@ -24,6 +24,6 @@ public interface IAbilityStore {
     public Ability getAbility(IAbilityType abilityType);
 
     public default ITextComponent getTextComponent() {
-        return TextComponentUtils.makeList(getAbilities(), Ability::getTextComponent);
+        return TextComponentUtils.makeSortedList(getAbilities(), Ability::getTextComponent);
     }
 }

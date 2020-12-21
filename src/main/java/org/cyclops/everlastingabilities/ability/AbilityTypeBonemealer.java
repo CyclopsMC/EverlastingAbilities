@@ -36,7 +36,7 @@ public class AbilityTypeBonemealer extends AbilityTypeDefault {
         World world = player.world;
         if (!world.isRemote() && player.world.getGameTime() % (TICK_MODULUS / level) == 0) {
             int radius = level * 2;
-            WorldHelpers.foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.getPosition(), new WorldHelpers.WorldFoldingFunction<Void, Void>() {
+            WorldHelpers.foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.getPosition(), new WorldHelpers.WorldFoldingFunction<Void, Void, World>() {
                 @Nullable
                 @Override
                 public Void apply(Void from, World world, BlockPos pos) {
