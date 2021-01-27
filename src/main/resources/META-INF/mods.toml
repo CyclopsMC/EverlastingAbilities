@@ -9,6 +9,7 @@ authors="rubensworks (aka kroeser)"
 modId="everlastingabilities"
 version="${file.jarVersion}"
 displayName="EverlastingAbilities"
+updateJSONURL="https://raw.githubusercontent.com/CyclopsMC/Versions/master/forge_update/everlastingabilities.json"
 description='''
 Discover, share and conquer abilities that stick.
 '''
