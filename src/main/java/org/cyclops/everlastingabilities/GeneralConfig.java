@@ -109,6 +109,9 @@ public class GeneralConfig extends DummyConfig {
     @ConfigurableProperty(category = "general", comment = "If potion abilities should show particle effects. This will also make them appear as in-game symbols.", configLocation = ModConfig.Type.CLIENT, isCommandable = true)
     public static boolean showPotionEffectParticles = false;
 
+    @ConfigurableProperty(category = "general", comment = "If ability effects should apply. Disable this if you don't want any abilities to work. Useful for debugging.", configLocation = ModConfig.Type.SERVER, isCommandable = true)
+    public static boolean tickAbilities = true;
+
     /**
      * Create a new instance.
      */
