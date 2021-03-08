@@ -61,7 +61,8 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
             boolean empty = true;
             for (Ability ability : abilities) {
                 empty = false;
-                tooltip.add(new TranslationTextComponent(ability.getAbilityType().getTranslationKey(), ability.getLevel())
+                tooltip.add(new TranslationTextComponent(ability.getAbilityType().getTranslationKey())
+                        .appendString(" " + ability.getLevel())
                         .setStyle(Style.EMPTY
                                 .setColor(Color.fromTextFormatting(TextFormatting.YELLOW))));
             }
