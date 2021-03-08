@@ -53,7 +53,7 @@ public class TotemRecycleRecipe extends SpecialRecipe {
     
     @Override
     public ItemStack getCraftingResult(CraftingInventory invCrafting) {
-        // Item is being taken out of crafting grid.
+        // Crafting is simulated
 
         // Select one of the inputs at random, and use its rarity for the rarity of the output.
         rand.setSeed(seed);
@@ -74,7 +74,7 @@ public class TotemRecycleRecipe extends SpecialRecipe {
                 }
             }
         }
-        Collections.sort(sortedStacks, Comparator.comparingInt(ItemStackHelpers::getItemStackHashCode));
+        Collections.sort(sortedStacks, Comparator.comparingInt(itemStack -> itemStack.getTag().hashCode()));
 
         if (inputTargetIndex >= sortedStacks.size()) {
             // Should not be able to happen, unless some mod is doing funky stuff.
@@ -82,7 +82,7 @@ public class TotemRecycleRecipe extends SpecialRecipe {
         }
         Rarity rarity = RegistryEntries.ITEM_ABILITY_TOTEM.getRarity(sortedStacks.get(inputTargetIndex));
 
-        // 20% chance of a bump
+        // A chance of a bump
         List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesCrafting();
         if (rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent) {
             Rarity newRarity = rarity;
@@ -101,7 +101,7 @@ public class TotemRecycleRecipe extends SpecialRecipe {
 
         // Set the rand seed so that the resulting ability will always be different
         // (but deterministic) for different input abilities
-        rand.setSeed(sortedStacks.stream().mapToInt(ItemStackHelpers::getItemStackHashCode).sum());
+        rand.setSeed(seed + sortedStacks.stream().mapToInt(itemStack -> itemStack.getTag().hashCode()).sum());
         return AbilityHelpers.getRandomTotem(abilityTypes, rarity, rand).get(); // This optional should always be present
     }
 
@@ -117,6 +117,8 @@ public class TotemRecycleRecipe extends SpecialRecipe {
     
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
+        // Item is being taken out of crafting grid.
+
         seed++;
 
         // Code below is copied from IRecipe
