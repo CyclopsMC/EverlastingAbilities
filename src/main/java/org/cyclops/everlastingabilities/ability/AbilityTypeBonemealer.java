@@ -42,7 +42,7 @@ public class AbilityTypeBonemealer extends AbilityTypeDefault {
                 public Void apply(Void from, World world, BlockPos pos) {
                     BlockState blockState = world.getBlockState(pos);
                     if (blockState.getBlock() instanceof IGrowable && !(blockState.getBlock() instanceof GrassBlock)) {
-                        blockState.tick((ServerWorld) world, pos, world.rand);
+                        blockState.randomTick((ServerWorld) world, pos, world.rand);
                     }
                     return null;
                 }
