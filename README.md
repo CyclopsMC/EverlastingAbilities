@@ -9,7 +9,7 @@ Discover, share and conquer abilities that stick.
 
 All stable releases (including deobfuscated builds) can be found on [CurseForge](https://minecraft.curseforge.com/projects/everlastingabilities).
 
-[Development builds](https://oss.jfrog.org/artifactory/simple/libs-release/org/cyclops/everlastingabilities/EverlastingAbilities/) are hosted by [JFrog Artifactory](https://www.jfrog.com/artifactory/).
+[Development builds](https://github.com/CyclopsMC/packages/packages/) are hosted as GitHub packages.
 
 ### Contributing
 * Before submitting a pull request containing a new feature, please discuss this first with one of the lead developers.
