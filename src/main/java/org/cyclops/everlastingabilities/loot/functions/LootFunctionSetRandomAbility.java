@@ -3,13 +3,13 @@ package org.cyclops.everlastingabilities.loot.functions;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.loot.LootFunctionType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootFunction;
-import net.minecraft.loot.conditions.ILootCondition;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.cyclops.cyclopscore.helper.LootHelpers;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
@@ -23,10 +23,10 @@ import java.util.List;
  * A loot function that sets a random into an item.
  * @author rubensworks
  */
-public class LootFunctionSetRandomAbility extends LootFunction {
-    public static final LootFunctionType TYPE = LootHelpers.registerFunction(new ResourceLocation(Reference.MOD_ID, "set_random_ability"), new LootFunctionSetRandomAbility.Serializer());
+public class LootFunctionSetRandomAbility extends LootItemConditionalFunction {
+    public static final LootItemFunctionType TYPE = LootHelpers.registerFunction(new ResourceLocation(Reference.MOD_ID, "set_random_ability"), new LootFunctionSetRandomAbility.Serializer());
 
-    public LootFunctionSetRandomAbility(ILootCondition[] conditionsIn) {
+    public LootFunctionSetRandomAbility(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
     }
 
@@ -42,7 +42,7 @@ public class LootFunctionSetRandomAbility extends LootFunction {
     }
 
     @Override
-    public LootFunctionType getType() {
+    public LootItemFunctionType getType() {
         return TYPE;
     }
 
@@ -50,14 +50,14 @@ public class LootFunctionSetRandomAbility extends LootFunction {
         // Dummy call, to enforce class loading
     }
 
-    public static class Serializer extends LootFunction.Serializer<LootFunctionSetRandomAbility> {
+    public static class Serializer extends LootItemConditionalFunction.Serializer<LootFunctionSetRandomAbility> {
         @Override
         public void serialize(JsonObject object, LootFunctionSetRandomAbility functionClazz, JsonSerializationContext serializationContext) {
 
         }
 
         @Override
-        public LootFunctionSetRandomAbility deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditionsIn) {
+        public LootFunctionSetRandomAbility deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootItemCondition[] conditionsIn) {
             return new LootFunctionSetRandomAbility(conditionsIn);
         }
     }

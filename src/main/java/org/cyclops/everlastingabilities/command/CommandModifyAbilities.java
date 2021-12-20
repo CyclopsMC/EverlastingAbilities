@@ -6,12 +6,12 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.Util;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.cyclops.cyclopscore.command.argument.ArgumentTypeEnum;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -24,7 +24,7 @@ import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbility;
  * Command for modifying abilities to players.
  * @author rubensworks
  */
-public class CommandModifyAbilities implements Command<CommandSource> {
+public class CommandModifyAbilities implements Command<CommandSourceStack> {
 
     private final boolean checkAbility;
     private final boolean checkLevel;
@@ -35,17 +35,17 @@ public class CommandModifyAbilities implements Command<CommandSource> {
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity sender = context.getSource().getPlayerOrException();
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer sender = context.getSource().getPlayerOrException();
         Action action = ArgumentTypeEnum.getValue(context, "action", Action.class);
-        ServerPlayerEntity player = EntityArgument.getPlayer(context, "player");
+        ServerPlayer player = EntityArgument.getPlayer(context, "player");
         IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY).orElse(null);
 
         if (action == Action.LIST) {
             sender.sendMessage(abilityStore.getTextComponent(), Util.NIL_UUID);
         } else {
             if (!this.checkAbility) {
-                throw new SimpleCommandExceptionType(new TranslationTextComponent(
+                throw new SimpleCommandExceptionType(new TranslatableComponent(
                         "chat.everlastingabilities.command.invalidAbility", "null")).create();
             }
             // Determine the ability
@@ -60,7 +60,7 @@ public class CommandModifyAbilities implements Command<CommandSource> {
                 Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                sender.sendMessage(new TranslationTextComponent("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility), Util.NIL_UUID);
+                sender.sendMessage(new TranslatableComponent("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility), Util.NIL_UUID);
             } else {
                 level = Math.max(1, level);
                 Ability ability = new Ability(abilityType, level);
@@ -68,13 +68,13 @@ public class CommandModifyAbilities implements Command<CommandSource> {
                 Ability removedAbility = AbilityHelpers.removePlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                sender.sendMessage(new TranslationTextComponent("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility), Util.NIL_UUID);
+                sender.sendMessage(new TranslatableComponent("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility), Util.NIL_UUID);
             }
         }
         return 0;
     }
 
-    public static LiteralArgumentBuilder<CommandSource> make() {
+    public static LiteralArgumentBuilder<CommandSourceStack> make() {
         return Commands.literal("abilities")
                 .requires((commandSource) -> commandSource.hasPermission(2))
                 .then(Commands.argument("action", new ArgumentTypeEnum<>(Action.class))

@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.item.Rarity;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
@@ -38,7 +38,7 @@ public class AbilityNightVisionConfig extends AbilityConfig<AbilityTypePotionEff
     public AbilityNightVisionConfig() {
         super("night_vision",
                 eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.NIGHT_VISION) {
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, MobEffects.NIGHT_VISION) {
                     @Override
                     protected int getDuration(int tickModulus, int level) {
                         return tickModulus * 27;

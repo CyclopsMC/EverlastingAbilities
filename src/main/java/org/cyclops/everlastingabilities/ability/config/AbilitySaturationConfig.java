@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.item.Rarity;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
@@ -39,7 +39,7 @@ public class AbilitySaturationConfig extends AbilityConfig<AbilityTypePotionEffe
     public AbilitySaturationConfig() {
         super("saturation",
                 eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.SATURATION) {
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, MobEffects.SATURATION) {
                     @Override
                     protected int getDuration(int tickModulus, int level) {
                         return 1;

@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.ability.config.AbilityStepAssistConfig;
 
@@ -21,12 +21,12 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(PlayerEntity player, int level) {
+    public void onTick(Player player, int level) {
         player.maxUpStep = player.isCrouching() ? 0.5F : level;
     }
 
     @Override
-    public void onChangedLevel(PlayerEntity player, int oldLevel, int newLevel) {
+    public void onChangedLevel(Player player, int oldLevel, int newLevel) {
         if (oldLevel > 0 && newLevel == 0) {
             float stepHeight = 0.6F;
             if(player.getPersistentData().contains(PLAYER_NBT_KEY)) {

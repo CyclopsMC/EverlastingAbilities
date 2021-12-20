@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import org.cyclops.everlastingabilities.Reference;
 
 import java.util.function.Supplier;
@@ -20,24 +20,24 @@ public class AbilityTypeFlight extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(PlayerEntity player, int level) {
-        player.abilities.mayfly = true;
+    public void onTick(Player player, int level) {
+        player.getAbilities().mayfly = true;
     }
 
     @Override
-    public void onChangedLevel(PlayerEntity player, int oldLevel, int newLevel) {
+    public void onChangedLevel(Player player, int oldLevel, int newLevel) {
         if (oldLevel > 0 && newLevel == 0) {
             boolean allowFlying = false;
             if(player.getPersistentData().contains(PLAYER_NBT_KEY)) {
                 allowFlying = player.getPersistentData().getBoolean(PLAYER_NBT_KEY);
                 player.getPersistentData().remove(PLAYER_NBT_KEY);
             }
-            player.abilities.mayfly = allowFlying;
+            player.getAbilities().mayfly = allowFlying;
             if (!allowFlying) {
-                player.abilities.flying = false;
+                player.getAbilities().flying = false;
             }
         } else if (oldLevel == 0 && newLevel > 0) {
-            player.getPersistentData().putBoolean(PLAYER_NBT_KEY, player.abilities.mayfly);
+            player.getPersistentData().putBoolean(PLAYER_NBT_KEY, player.getAbilities().mayfly);
         }
     }
 }

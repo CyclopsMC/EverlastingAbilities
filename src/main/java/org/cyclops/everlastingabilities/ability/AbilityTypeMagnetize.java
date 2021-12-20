@@ -1,14 +1,13 @@
 package org.cyclops.everlastingabilities.ability;
 
 import com.google.common.base.Predicate;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.GeneralConfig;
 
@@ -30,8 +29,8 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(PlayerEntity player, int level) {
-        World world = player.level;
+    public void onTick(Player player, int level) {
+        Level world = player.level;
         if (!world.isClientSide && !player.isCrouching() && player.level.getGameTime() % TICK_MODULUS == 0) {
             // Center of the attraction
             double x = player.getX();
@@ -40,13 +39,13 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
 
             // Get items in calculated area.
             int area = level * 2;
-            AxisAlignedBB box = new AxisAlignedBB(x, y, z, x, y, z).inflate(area, area, area);
+            AABB box = new AABB(x, y, z, x, y, z).inflate(area, area, area);
             List<Entity> entities = world.getEntities(player, box, new Predicate<Entity>() {
 
                 @Override
                 public boolean apply(Entity entity) {
                     return entity instanceof ItemEntity
-                            || (GeneralConfig.magnetizeMoveXp && entity instanceof ExperienceOrbEntity);
+                            || (GeneralConfig.magnetizeMoveXp && entity instanceof ExperienceOrb);
                 }
 
             });
@@ -55,13 +54,13 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
             for(Entity moveEntity : entities) {
                 if((moveEntity instanceof ItemEntity && !((ItemEntity) moveEntity).hasPickUpDelay()
                         && canKineticateItem(((ItemEntity) moveEntity))) ||
-                        (moveEntity instanceof ExperienceOrbEntity)) {
+                        (moveEntity instanceof ExperienceOrb)) {
                     double dx = moveEntity.getX() - x;
                     double dy = moveEntity.getY() - y + 1;
                     double dz = moveEntity.getZ() - z;
                     double strength = -1;
 
-                    double d = (double) MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
+                    double d = Mth.sqrt((float) (dx * dx + dy * dy + dz * dz));
                     if(d > 0.5D) {
                         double m = 1 / (2 * (Math.max(1, d)));
                         dx *= m;

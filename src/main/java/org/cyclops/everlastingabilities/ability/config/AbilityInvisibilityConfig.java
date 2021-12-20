@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.item.Rarity;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
@@ -38,7 +38,7 @@ public class AbilityInvisibilityConfig extends AbilityConfig<AbilityTypePotionEf
     public AbilityInvisibilityConfig() {
         super("invisibility",
                 eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.INVISIBILITY));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, MobEffects.INVISIBILITY));
     }
 
 }

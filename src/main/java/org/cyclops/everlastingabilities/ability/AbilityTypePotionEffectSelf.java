@@ -1,8 +1,8 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
@@ -18,11 +18,11 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 2;
 
-    private final Effect potion;
+    private final MobEffect potion;
 
     public AbilityTypePotionEffectSelf(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
                                        Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
-                                       Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot, Effect potion) {
+                                       Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot, MobEffect potion) {
         super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.potion = potion;
         if (this.potion == null) {
@@ -43,10 +43,10 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(PlayerEntity player, int level) {
+    public void onTick(Player player, int level) {
         if (potion != null && player.level.getGameTime() % getTickModulus(level) == 0) {
             player.addEffect(
-                    new EffectInstance(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
+                    new MobEffectInstance(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
         }
     }
 }

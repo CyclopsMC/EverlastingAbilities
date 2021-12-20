@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.item.Rarity;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectSelf;
@@ -38,7 +38,7 @@ public class AbilitySpeedConfig extends AbilityConfig<AbilityTypePotionEffectSel
     public AbilitySpeedConfig() {
         super("speed",
                 eConfig -> new AbilityTypePotionEffectSelf("speed", () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.MOVEMENT_SPEED));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, MobEffects.MOVEMENT_SPEED));
     }
 
 }

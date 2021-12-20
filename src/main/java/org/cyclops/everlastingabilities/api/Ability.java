@@ -1,9 +1,9 @@
 package org.cyclops.everlastingabilities.api;
 
-import net.minecraft.item.Rarity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -42,9 +42,9 @@ public class Ability implements Comparable<Ability> {
         return this.toString().compareTo(other.toString());
     }
 
-    public ITextComponent getTextComponent() {
-        return new StringTextComponent("[")
-                .append(new TranslationTextComponent(abilityType.getTranslationKey()))
+    public Component getTextComponent() {
+        return new TextComponent("[")
+                .append(new TranslatableComponent(abilityType.getTranslationKey()))
                 .append(" @ " + level + "]");
     }
 

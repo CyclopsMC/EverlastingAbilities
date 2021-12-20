@@ -1,8 +1,8 @@
 package org.cyclops.everlastingabilities.api.capability;
 
 import lombok.NonNull;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
@@ -23,7 +23,7 @@ public interface IAbilityStore {
     @NonNull
     public Ability getAbility(IAbilityType abilityType);
 
-    public default ITextComponent getTextComponent() {
-        return TextComponentUtils.formatAndSortList(getAbilities(), Ability::getTextComponent);
+    public default Component getTextComponent() {
+        return ComponentUtils.formatAndSortList(getAbilities(), Ability::getTextComponent);
     }
 }

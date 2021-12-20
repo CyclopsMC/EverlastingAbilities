@@ -1,8 +1,8 @@
 package org.cyclops.everlastingabilities.item;
 
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.loot.LootTables;
+import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
@@ -39,14 +39,14 @@ public class ItemAbilityTotemConfig extends ItemConfig {
 
         if (lootChests) {
             LootHelpers.injectLootTable(new ResourceLocation(Reference.MOD_ID, "inject/chests/ability_totem"),
-                    LootTables.SPAWN_BONUS_CHEST,
-                    LootTables.VILLAGE_TOOLSMITH,
-                    LootTables.VILLAGE_WEAPONSMITH,
-                    LootTables.VILLAGE_SHEPHERD,
-                    LootTables.NETHER_BRIDGE,
-                    LootTables.SIMPLE_DUNGEON,
-                    LootTables.ABANDONED_MINESHAFT,
-                    LootTables.JUNGLE_TEMPLE);
+                    BuiltInLootTables.SPAWN_BONUS_CHEST,
+                    BuiltInLootTables.VILLAGE_TOOLSMITH,
+                    BuiltInLootTables.VILLAGE_WEAPONSMITH,
+                    BuiltInLootTables.VILLAGE_SHEPHERD,
+                    BuiltInLootTables.NETHER_BRIDGE,
+                    BuiltInLootTables.SIMPLE_DUNGEON,
+                    BuiltInLootTables.ABANDONED_MINESHAFT,
+                    BuiltInLootTables.JUNGLE_TEMPLE);
         }
     }
 }

@@ -7,10 +7,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -30,7 +29,7 @@ public class ArgumentTypeAbility implements ArgumentType<IAbilityType> {
         ResourceLocation id = ResourceLocation.read(reader);
         IAbilityType abilityType = AbilityTypes.REGISTRY.getValue(id);
         if (abilityType == null) {
-            throw new SimpleCommandExceptionType(new TranslationTextComponent("chat.everlastingabilities.command.invalidAbility", id)).create();
+            throw new SimpleCommandExceptionType(new TranslatableComponent("chat.everlastingabilities.command.invalidAbility", id)).create();
         }
         return abilityType;
     }
@@ -45,7 +44,7 @@ public class ArgumentTypeAbility implements ArgumentType<IAbilityType> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggest(getExamples(), builder);
+        return SharedSuggestionProvider.suggest(getExamples(), builder);
     }
 
 }

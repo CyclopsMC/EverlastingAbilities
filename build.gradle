@@ -37,8 +37,9 @@ group = "org.cyclops.everlastingabilities"
 archivesBaseName = "EverlastingAbilities"
 
 // Set Java details
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+compileJava.options.compilerArgs << "-Xmaxerrs" << "9999"
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 // Load secrets
 def getSecrets() {
@@ -217,6 +218,7 @@ curseforge {
     project {
         id = "248353" // my project url is http://minecraft.curseforge.com/mc-mods/248353/
         releaseType = project.project.release_type
+        addGameVersion project.minecraft_version
         mainArtifact(jar) {
             relations {
                 requiredDependency 'cyclops-core'

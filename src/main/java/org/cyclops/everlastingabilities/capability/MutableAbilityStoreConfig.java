@@ -1,11 +1,10 @@
 package org.cyclops.everlastingabilities.capability;
 
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import org.cyclops.cyclopscore.config.extendedconfig.CapabilityConfig;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
-import org.cyclops.everlastingabilities.api.capability.AbilityStoreStorage;
-import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 
 /**
@@ -20,8 +19,7 @@ public class MutableAbilityStoreConfig extends CapabilityConfig {
      */
     public static MutableAbilityStoreConfig _instance;
 
-    @CapabilityInject(IMutableAbilityStore.class)
-    public static Capability<IMutableAbilityStore> CAPABILITY = null;
+    public static Capability<IMutableAbilityStore> CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     /**
      * Make a new instance.
@@ -29,8 +27,6 @@ public class MutableAbilityStoreConfig extends CapabilityConfig {
     public MutableAbilityStoreConfig() {
         super(EverlastingAbilities._instance,
                 "mutableAbilityStore",
-                IMutableAbilityStore.class,
-                new AbilityStoreStorage(),
-                DefaultMutableAbilityStore::new);
+                IMutableAbilityStore.class);
     }
 }

@@ -1,18 +1,18 @@
 package org.cyclops.everlastingabilities.item;
 
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.cyclops.cyclopscore.inventory.container.NamedContainerProviderItem;
 import org.cyclops.cyclopscore.item.ItemGui;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.item.Item.Properties;
+import net.minecraft.world.item.Item.Properties;
 
 /**
  * Base class for items with abilities.
@@ -40,18 +40,18 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     }
 
     @Override
-    public Class<? extends Container> getContainerClass(World world, PlayerEntity playerEntity, ItemStack itemStack) {
+    public Class<? extends AbstractContainerMenu> getContainerClass(Level world, Player playerEntity, ItemStack itemStack) {
         return ContainerAbilityContainer.class;
     }
 
     @Nullable
     @Override
-    public INamedContainerProvider getContainer(World world, PlayerEntity playerEntity, int itemIndex, Hand hand, ItemStack itemStack) {
+    public MenuProvider getContainer(Level world, Player playerEntity, int itemIndex, InteractionHand hand, ItemStack itemStack) {
         return new NamedContainerProviderItem(itemIndex, hand, itemStack.getHoverName(), ContainerAbilityContainer::new);
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack itemStack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(itemStack, worldIn, tooltip, flagIn);
 
         itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
@@ -63,22 +63,22 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
             boolean empty = true;
             for (Ability ability : abilities) {
                 empty = false;
-                tooltip.add(new TranslationTextComponent(ability.getAbilityType().getTranslationKey())
+                tooltip.add(new TranslatableComponent(ability.getAbilityType().getTranslationKey())
                         .append(" " + ability.getLevel())
                         .setStyle(Style.EMPTY
-                                .withColor(Color.fromLegacyFormat(TextFormatting.YELLOW))));
+                                .withColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW))));
             }
             if (empty) {
-                tooltip.add(new TranslationTextComponent("general.everlastingabilities.empty")
+                tooltip.add(new TranslatableComponent("general.everlastingabilities.empty")
                         .setStyle(Style.EMPTY
-                                .withColor(Color.fromLegacyFormat(TextFormatting.GRAY))
+                                .withColor(TextColor.fromLegacyFormat(ChatFormatting.GRAY))
                                 .withItalic(true)));
             }
         });
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
         // TODO: restore when Forge fixed that bug (backwards compat is already taken care of, because data is stored twice (in stacktag and capdata))
         //return new SerializableCapabilityProvider<IMutableAbilityStore>(MutableAbilityStoreConfig.CAPABILITY,
         //        new DefaultMutableAbilityStore());

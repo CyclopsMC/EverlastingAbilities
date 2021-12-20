@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.item.Rarity;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
@@ -39,7 +39,7 @@ public class AbilityAbsorbtionConfig extends AbilityConfig<AbilityTypePotionEffe
     public AbilityAbsorbtionConfig() {
         super("absorbtion",
                 eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.ABSORPTION) {
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, MobEffects.ABSORPTION) {
                     @Override
                     protected int getDuration(int tickModulus, int level) {
                         int maxLevel = getMaxLevel() == -1 ? 5 : getMaxLevel();

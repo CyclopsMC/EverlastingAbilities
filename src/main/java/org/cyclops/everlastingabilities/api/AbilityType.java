@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.api;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Rarity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.function.Supplier;
@@ -82,12 +82,12 @@ public class AbilityType extends ForgeRegistryEntry<IAbilityType> implements IAb
     }
 
     @Override
-    public void onTick(PlayerEntity player, int level) {
+    public void onTick(Player player, int level) {
 
     }
 
     @Override
-    public void onChangedLevel(PlayerEntity player, int oldLevel, int newLevel) {
+    public void onChangedLevel(Player player, int oldLevel, int newLevel) {
 
     }
 }

@@ -1,15 +1,19 @@
 package org.cyclops.everlastingabilities.inventory.container;
 
-import net.minecraft.client.gui.IHasContainer;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.IContainerFactory;
 import org.cyclops.cyclopscore.client.gui.ScreenFactorySafe;
 import org.cyclops.cyclopscore.config.extendedconfig.GuiConfig;
 import org.cyclops.cyclopscore.inventory.container.ContainerTypeData;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.client.gui.ContainerScreenAbilityContainer;
+import org.cyclops.everlastingabilities.item.ItemGuiAbilityContainer;
 
 /**
  * Config for {@link ContainerAbilityContainer}.
@@ -25,7 +29,7 @@ public class ContainerAbilityContainerConfig extends GuiConfig<ContainerAbilityC
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public <U extends Screen & IHasContainer<ContainerAbilityContainer>> ScreenManager.IScreenFactory<ContainerAbilityContainer, U> getScreenFactory() {
+    public <U extends Screen & MenuAccess<ContainerAbilityContainer>> MenuScreens.ScreenConstructor<ContainerAbilityContainer, U> getScreenFactory() {
         return new ScreenFactorySafe<>(ContainerScreenAbilityContainer::new);
     }
 

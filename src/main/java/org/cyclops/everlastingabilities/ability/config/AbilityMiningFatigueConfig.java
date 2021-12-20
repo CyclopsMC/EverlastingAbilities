@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.item.Rarity;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.everlastingabilities.ability.AbilityTypePotionEffectRadius;
@@ -38,7 +38,7 @@ public class AbilityMiningFatigueConfig extends AbilityConfig<AbilityTypePotionE
     public AbilityMiningFatigueConfig() {
         super("mining_fatigue",
                 eConfig -> new AbilityTypePotionEffectRadius(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.DIG_SLOWDOWN));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, MobEffects.DIG_SLOWDOWN));
     }
 
 }

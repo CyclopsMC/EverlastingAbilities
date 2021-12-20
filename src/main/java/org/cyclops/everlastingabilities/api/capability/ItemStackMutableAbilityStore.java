@@ -1,14 +1,13 @@
 package org.cyclops.everlastingabilities.api.capability;
 
 import lombok.NonNull;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
 import java.util.Collection;
 import java.util.Map;
@@ -30,18 +29,18 @@ public class ItemStackMutableAbilityStore implements IMutableAbilityStore {
 
     protected IMutableAbilityStore getInnerStore() {
         IMutableAbilityStore store = new DefaultMutableAbilityStore();
-        CompoundNBT root = itemStack.getOrCreateTag();
+        CompoundTag root = itemStack.getOrCreateTag();
         if (!root.contains(NBT_STORE)) {
-            root.put(NBT_STORE, new ListNBT());
+            root.put(NBT_STORE, new ListTag());
         }
-        INBT nbt = root.get(NBT_STORE);
-        MutableAbilityStoreConfig.CAPABILITY.readNBT(store, null, nbt);
+        Tag nbt = root.get(NBT_STORE);
+        AbilityStoreCapabilityProvider.deserializeNBTStatic(store, nbt);
         return store;
     }
 
     protected IMutableAbilityStore setInnerStore(IMutableAbilityStore store) {
-        CompoundNBT root = itemStack.getOrCreateTag();
-        INBT nbt = MutableAbilityStoreConfig.CAPABILITY.writeNBT(store, null);
+        CompoundTag root = itemStack.getOrCreateTag();
+        Tag nbt = AbilityStoreCapabilityProvider.serializeNBTStatic(store);
         root.put(NBT_STORE, nbt);
         return store;
     }

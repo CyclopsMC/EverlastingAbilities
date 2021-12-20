@@ -1,11 +1,11 @@
 package org.cyclops.everlastingabilities.inventory.container;
 
 import com.google.common.collect.Lists;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Hand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.InteractionHand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
@@ -31,11 +31,11 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     @OnlyIn(Dist.CLIENT)
     private ContainerScreenAbilityContainer gui;
 
-    public ContainerAbilityContainer(int id, PlayerInventory inventory, PacketBuffer packetBuffer) {
+    public ContainerAbilityContainer(int id, Inventory inventory, FriendlyByteBuf packetBuffer) {
         this(id, inventory, readItemIndex(packetBuffer), readHand(packetBuffer));
     }
 
-    public ContainerAbilityContainer(int id, PlayerInventory inventory, int itemIndex, Hand hand) {
+    public ContainerAbilityContainer(int id, Inventory inventory, int itemIndex, InteractionHand hand) {
         super(RegistryEntries.CONTAINER_ABILITYCONTAINER, id, inventory, itemIndex, hand);
         addInventory(inventory, 0, 8, 195, 1, 9);
 
@@ -110,7 +110,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return !getItemStack(player).isEmpty() && (getItem().canMoveFromPlayer() || !getItemAbilities().isEmpty());
     }
 

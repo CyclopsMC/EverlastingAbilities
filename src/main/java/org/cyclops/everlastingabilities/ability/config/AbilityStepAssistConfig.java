@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.ability.config;
 
-import net.minecraft.item.Rarity;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.fml.config.ModConfig;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.everlastingabilities.ability.AbilityTypeStepAssist;

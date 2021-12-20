@@ -3,28 +3,25 @@ package org.cyclops.everlastingabilities;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.arguments.ArgumentSerializer;
-import net.minecraft.command.arguments.ArgumentTypes;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.loot.LootFunctionType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.loot.functions.LootFunctionManager;
+import net.minecraft.Util;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.synchronization.ArgumentTypes;
+import net.minecraft.commands.synchronization.EmptyArgumentSerializer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -35,14 +32,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
-import org.cyclops.cyclopscore.helper.LootHelpers;
 import org.cyclops.cyclopscore.init.ItemGroupMod;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
-import org.cyclops.cyclopscore.modcompat.capabilities.SerializableCapabilityProvider;
 import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
@@ -50,6 +44,7 @@ import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.ability.config.*;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+import org.cyclops.everlastingabilities.api.capability.AbilityStoreCapabilityProvider;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
@@ -88,8 +83,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     }
 
     @Override
-    protected LiteralArgumentBuilder<CommandSource> constructBaseCommand() {
-        LiteralArgumentBuilder<CommandSource> root = super.constructBaseCommand();
+    protected LiteralArgumentBuilder<CommandSourceStack> constructBaseCommand() {
+        LiteralArgumentBuilder<CommandSourceStack> root = super.constructBaseCommand();
 
         root.then(CommandModifyAbilities.make());
 
@@ -116,14 +111,14 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         // Register argument types
         ArgumentTypes.register(Reference.MOD_ID + ":" + "ability",
                 ArgumentTypeAbility.class,
-                new ArgumentSerializer<>(ArgumentTypeAbility::new));
+                new EmptyArgumentSerializer<>(ArgumentTypeAbility::new));
 
         // Register capabilities
-        getCapabilityConstructorRegistry().registerInheritableEntity(PlayerEntity.class, new SimpleCapabilityConstructor<IMutableAbilityStore, PlayerEntity>() {
+        getCapabilityConstructorRegistry().registerInheritableEntity(Player.class, new SimpleCapabilityConstructor<IMutableAbilityStore, Player>() {
             @Nullable
             @Override
-            public ICapabilityProvider createProvider(PlayerEntity host) {
-                return new SerializableCapabilityProvider<>(this, new DefaultMutableAbilityStore());
+            public ICapabilityProvider createProvider(Player host) {
+                return new AbilityStoreCapabilityProvider<>(this, new DefaultMutableAbilityStore());
             }
 
             @Override
@@ -131,10 +126,10 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 return MutableAbilityStoreConfig.CAPABILITY;
             }
         });
-        getCapabilityConstructorRegistry().registerInheritableEntity(CreatureEntity.class, new SimpleCapabilityConstructor<IMutableAbilityStore, CreatureEntity>() { // TODO: AnimalEntity was IAnimal
+        getCapabilityConstructorRegistry().registerInheritableEntity(PathfinderMob.class, new SimpleCapabilityConstructor<IMutableAbilityStore, PathfinderMob>() { // TODO: AnimalEntity was IAnimal
             @Nullable
             @Override
-            public ICapabilityProvider createProvider(CreatureEntity host) { // TODO: CreatureEntity was IAnimal
+            public ICapabilityProvider createProvider(PathfinderMob host) { // TODO: CreatureEntity was IAnimal
                 if (host instanceof Entity) {
                     Entity entity = (Entity) host;
                     IMutableAbilityStore store = new DefaultMutableAbilityStore();
@@ -150,7 +145,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                                     abilityType -> store.addAbility(new Ability(abilityType, 1), true));
                         }
                     }
-                    return new SerializableCapabilityProvider<>(this, store);
+                    return new AbilityStoreCapabilityProvider<>(this, store);
                 }
                 return null;
             }
@@ -168,7 +163,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     }
 
     @Override
-    public ItemGroup constructDefaultItemGroup() {
+    public CreativeModeTab constructDefaultCreativeModeTab() {
         return new ItemGroupMod(this, () -> RegistryEntries.ITEM_ABILITY_BOTTLE);
     }
 
@@ -229,7 +224,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
      * @param message The message to show.
      */
     public static void clog(String message) {
-        clog(Level.INFO, message);
+        clog(org.apache.logging.log4j.Level.INFO, message);
     }
     
     /**
@@ -237,7 +232,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
      * @param level The level in which the message must be shown.
      * @param message The message to show.
      */
-    public static void clog(Level level, String message) {
+    public static void clog(org.apache.logging.log4j.Level level, String message) {
         EverlastingAbilities._instance.getLoggerHelper().log(level, message);
     }
 
@@ -252,16 +247,16 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (GeneralConfig.totemMaximumSpawnRarity >= 0) {
-            CompoundNBT tag = event.getPlayer().getPersistentData();
-            if (!tag.contains(PlayerEntity.PERSISTED_NBT_TAG)) {
-                tag.put(PlayerEntity.PERSISTED_NBT_TAG, new CompoundNBT());
+            CompoundTag tag = event.getPlayer().getPersistentData();
+            if (!tag.contains(Player.PERSISTED_NBT_TAG)) {
+                tag.put(Player.PERSISTED_NBT_TAG, new CompoundTag());
             }
-            CompoundNBT playerTag = tag.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+            CompoundTag playerTag = tag.getCompound(Player.PERSISTED_NBT_TAG);
             if (!playerTag.contains(NBT_TOTEM_SPAWNED)) {
                 playerTag.putBoolean(NBT_TOTEM_SPAWNED, true);
 
-                World world = event.getPlayer().level;
-                PlayerEntity player = event.getPlayer();
+                Level world = event.getPlayer().level;
+                Player player = event.getPlayer();
                 Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
                 AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(), world.random, rarity, true).ifPresent(abilityType -> {
                     ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
@@ -279,18 +274,18 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     public void onLivingDeath(LivingDeathEvent event) {
         boolean doMobLoot = event.getEntityLiving().level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
         if (!event.getEntityLiving().level.isClientSide
-                && (event.getEntityLiving() instanceof PlayerEntity
+                && (event.getEntityLiving() instanceof Player
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
                         && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getEntity() instanceof PlayerEntity))
+                        && event.getSource().getEntity() instanceof Player))
                     : (doMobLoot && (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getEntity() instanceof PlayerEntity))) {
+                        && event.getSource().getEntity() instanceof Player))) {
             LivingEntity entity = event.getEntityLiving();
             entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(mutableAbilityStore -> {
                 int toDrop = 1;
-                if (event.getEntityLiving() instanceof PlayerEntity
+                if (event.getEntityLiving() instanceof Player
                         && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getEntity() instanceof PlayerEntity)) {
+                        && event.getSource().getEntity() instanceof Player)) {
                     toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
                 }
 
@@ -305,11 +300,11 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                         if (removed != null) {
                             toDrop -= removed.getLevel();
                             itemStackStore.addAbility(removed, true);
-                            entity.sendMessage(new TranslationTextComponent("chat.everlastingabilities.playerLostAbility",
+                            entity.sendMessage(new TranslatableComponent("chat.everlastingabilities.playerLostAbility",
                                     entity.getName(),
-                                    new TranslationTextComponent(removed.getAbilityType().getTranslationKey())
+                                    new TranslatableComponent(removed.getAbilityType().getTranslationKey())
                                             .setStyle(Style.EMPTY
-                                                    .withColor(Color.fromLegacyFormat(removed.getAbilityType().getRarity().color))
+                                                    .withColor(TextColor.fromLegacyFormat(removed.getAbilityType().getRarity().color))
                                                     .withBold(true)),
                                     removed.getLevel()), Util.NIL_UUID);
                         }
@@ -334,8 +329,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (GeneralConfig.tickAbilities && event.getEntityLiving() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) event.getEntityLiving();
+        if (GeneralConfig.tickAbilities && event.getEntityLiving() instanceof Player) {
+            Player player = (Player) event.getEntityLiving();
             player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
                 for (Ability ability : abilityStore.getAbilities()) {
                     if (event.getEntity().level.getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {

@@ -1,12 +1,12 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.GrassBlock;
-import net.minecraft.block.IGrowable;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.GrassBlock;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.cyclopscore.helper.WorldHelpers;
 
@@ -32,17 +32,17 @@ public class AbilityTypeBonemealer extends AbilityTypeDefault {
     }
 
     @Override
-    public void onTick(PlayerEntity player, int level) {
-        World world = player.level;
+    public void onTick(Player player, int level) {
+        Level world = player.level;
         if (!world.isClientSide() && player.level.getGameTime() % (TICK_MODULUS / level) == 0) {
             int radius = level * 2;
-            WorldHelpers.foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.blockPosition(), new WorldHelpers.WorldFoldingFunction<Void, Void, World>() {
+            WorldHelpers.foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.blockPosition(), new WorldHelpers.WorldFoldingFunction<Void, Void, Level>() {
                 @Nullable
                 @Override
-                public Void apply(Void from, World world, BlockPos pos) {
+                public Void apply(Void from, Level world, BlockPos pos) {
                     BlockState blockState = world.getBlockState(pos);
-                    if (blockState.getBlock() instanceof IGrowable && !(blockState.getBlock() instanceof GrassBlock)) {
-                        blockState.randomTick((ServerWorld) world, pos, world.random);
+                    if (blockState.getBlock() instanceof BonemealableBlock && !(blockState.getBlock() instanceof GrassBlock)) {
+                        blockState.randomTick((ServerLevel) world, pos, world.random);
                     }
                     return null;
                 }

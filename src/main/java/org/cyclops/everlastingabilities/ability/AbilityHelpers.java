@@ -3,11 +3,11 @@ package org.cyclops.everlastingabilities.ability;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import lombok.NonNull;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.everlastingabilities.GeneralConfig;
@@ -100,11 +100,11 @@ public class AbilityHelpers {
         return getAbilityTypes(IAbilityType::isObtainableOnLoot);
     }
 
-    public static void onPlayerAbilityChanged(PlayerEntity player, IAbilityType abilityType, int oldLevel, int newLevel) {
+    public static void onPlayerAbilityChanged(Player player, IAbilityType abilityType, int oldLevel, int newLevel) {
         abilityType.onChangedLevel(player, oldLevel, newLevel);
     }
 
-    public static int getMaxPlayerAbilities(World world) {
+    public static int getMaxPlayerAbilities(Level world) {
         return world.isClientSide() ? maxPlayerAbilitiesClient : GeneralConfig.maxPlayerAbilities;
     }
 
@@ -117,7 +117,7 @@ public class AbilityHelpers {
      * @return The ability part that was added.
      */
     @NonNull
-    public static Ability addPlayerAbility(PlayerEntity player, Ability ability, boolean doAdd, boolean modifyXp) {
+    public static Ability addPlayerAbility(Player player, Ability ability, boolean doAdd, boolean modifyXp) {
         return player.getCapability(MutableAbilityStoreConfig.CAPABILITY)
                 .map(abilityStore -> {
                     int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
@@ -163,7 +163,7 @@ public class AbilityHelpers {
      * @return The ability part that was removed.
      */
     @NonNull
-    public static Ability removePlayerAbility(PlayerEntity player, Ability ability, boolean doRemove, boolean modifyXp) {
+    public static Ability removePlayerAbility(Player player, Ability ability, boolean doRemove, boolean modifyXp) {
         return player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
                 .map(abilityStore -> {
                     int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
@@ -187,7 +187,7 @@ public class AbilityHelpers {
         return ability.getAbilityType().getBaseXpPerLevel() * ability.getLevel();
     }
 
-    public static void setPlayerAbilities(ServerPlayerEntity player, Map<IAbilityType, Integer> abilityTypes) {
+    public static void setPlayerAbilities(ServerPlayer player, Map<IAbilityType, Integer> abilityTypes) {
         player.getCapability(MutableAbilityStoreConfig.CAPABILITY)
                 .ifPresent(abilityStore -> abilityStore.setAbilities(abilityTypes));
     }
@@ -202,7 +202,7 @@ public class AbilityHelpers {
         return added.getLevel() == ability.getLevel();
     }
 
-    public static boolean canInsertToPlayer(Ability ability, PlayerEntity player) {
+    public static boolean canInsertToPlayer(Ability ability, Player player) {
         Ability added = addPlayerAbility(player, ability, false, true);
         return added.getLevel() == ability.getLevel();
     }

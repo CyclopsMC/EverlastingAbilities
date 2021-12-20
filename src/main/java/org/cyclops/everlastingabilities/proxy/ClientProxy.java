@@ -1,10 +1,9 @@
 package org.cyclops.everlastingabilities.proxy;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,8 +39,8 @@ public class ClientProxy extends ClientProxyComponent {
 	@SubscribeEvent
 	public void onRenderLiving(RenderLivingEvent.Post event) {
 		LivingEntity entity = event.getEntity();
-		if (((GeneralConfig.showEntityParticles && entity instanceof CreatureEntity) // TODO CreatureEntity was IAnimal
-				|| (GeneralConfig.showPlayerParticles && entity instanceof PlayerEntity))
+		if (((GeneralConfig.showEntityParticles && entity instanceof PathfinderMob) // TODO CreatureEntity was IAnimal
+				|| (GeneralConfig.showPlayerParticles && entity instanceof Player))
 				&& !Minecraft.getInstance().isPaused()
 				&& entity.level.getGameTime() % 10 == 0) {
 			entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent((abilityStore) -> {

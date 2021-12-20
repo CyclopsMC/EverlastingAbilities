@@ -1,13 +1,13 @@
 package org.cyclops.everlastingabilities.recipe;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-public class TotemRecycleRecipe extends SpecialRecipe {
+public class TotemRecycleRecipe extends CustomRecipe {
 
     private final Random rand = new Random();
     private long seed = rand.nextLong();
@@ -30,7 +30,7 @@ public class TotemRecycleRecipe extends SpecialRecipe {
     }
 
     @Override
-    public boolean matches(CraftingInventory invCrafting, World world) {
+    public boolean matches(CraftingContainer invCrafting, Level world) {
         if (ItemAbilityTotemConfig.totemCraftingCount <= 0) {
             return false;
         }
@@ -52,7 +52,7 @@ public class TotemRecycleRecipe extends SpecialRecipe {
     }
     
     @Override
-    public ItemStack assemble(CraftingInventory invCrafting) {
+    public ItemStack assemble(CraftingContainer invCrafting) {
         // Crafting is simulated
 
         // Select one of the inputs at random, and use its rarity for the rarity of the output.
@@ -116,7 +116,7 @@ public class TotemRecycleRecipe extends SpecialRecipe {
     }
     
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         // Item is being taken out of crafting grid.
 
         seed++;
@@ -135,7 +135,7 @@ public class TotemRecycleRecipe extends SpecialRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return RegistryEntries.RECIPESERIALIZER_TOTEM_RECYCLE;
     }
 }
