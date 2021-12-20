@@ -29,7 +29,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
 
     @Override
     public void onTick(Player player, int level) {
-    
+
         if ( AbilityPowerStareConfig.requireSneak && !player.isCrouching() ) {
             return;
         }

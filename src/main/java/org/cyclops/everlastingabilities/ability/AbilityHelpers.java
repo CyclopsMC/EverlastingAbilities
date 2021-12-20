@@ -19,7 +19,6 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 
-import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -239,7 +238,7 @@ public class AbilityHelpers {
         return getRandomAbility(abilityTypes, rand, rarity).flatMap(
                 abilityType -> Optional.of(ItemAbilityTotem.getTotem(new Ability(abilityType, 1))));
     }
-    
+
 
     public static Rarity getRandomRarity(List<IAbilityType> abilityTypes, Random rand) {
         int chance = rand.nextInt(50);

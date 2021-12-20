@@ -8,7 +8,6 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -50,7 +49,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
         }
         return inputCount == ItemAbilityTotemConfig.totemCraftingCount;
     }
-    
+
     @Override
     public ItemStack assemble(CraftingContainer invCrafting) {
         // Crafting is simulated
@@ -114,7 +113,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
     public ItemStack getResultItem() {
         return new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
     }
-    
+
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         // Item is being taken out of crafting grid.
@@ -139,4 +138,3 @@ public class TotemRecycleRecipe extends CustomRecipe {
         return RegistryEntries.RECIPESERIALIZER_TOTEM_RECYCLE;
     }
 }
-

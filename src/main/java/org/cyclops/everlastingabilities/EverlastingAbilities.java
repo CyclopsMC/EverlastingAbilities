@@ -72,7 +72,7 @@ import java.util.Random;
  */
 @Mod(Reference.MOD_ID)
 public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilities> {
-    
+
     /**
      * The unique instance of this mod.
      */
@@ -226,7 +226,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     public static void clog(String message) {
         clog(org.apache.logging.log4j.Level.INFO, message);
     }
-    
+
     /**
      * Log a new message of the given level for this mod.
      * @param level The level in which the message must be shown.
@@ -341,5 +341,5 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             });
         }
     }
-    
+
 }

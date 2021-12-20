@@ -20,9 +20,9 @@ import java.util.Random;
 
 /**
  * Proxy for the client side.
- * 
+ *
  * @author rubensworks
- * 
+ *
  */
 public class ClientProxy extends ClientProxyComponent {
 
@@ -73,5 +73,5 @@ public class ClientProxy extends ClientProxyComponent {
 			});
 		}
 	}
-    
+
 }

@@ -1,32 +1,20 @@
 package org.cyclops.everlastingabilities.client.gui;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import com.mojang.math.Quaternion;
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +30,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.gui.component.button.ButtonArrow;
 import org.cyclops.cyclopscore.client.gui.container.ContainerScreenExtended;
 import org.cyclops.cyclopscore.helper.Helpers;
-import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.helper.RenderHelpers;
 import org.cyclops.cyclopscore.item.IInformationProvider;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
@@ -363,7 +350,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
         return true;
     }
-    
+
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
         if (isHovering(8, 83, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
@@ -385,10 +372,10 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             }
             return true;
         }
-        
+
         return false;
     }
-    
+
     private int clickAbilities(int x, int y, List<Ability> abilities, int startIndex, int currentSelectedIndex,
                                double mouseX, double mouseY) {
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);

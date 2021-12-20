@@ -63,5 +63,5 @@ public class RequestAbilityStorePacket extends PacketCodec {
 			EverlastingAbilities.clog(org.apache.logging.log4j.Level.ERROR, e.getMessage());
 		}
 	}
-	
+
 }

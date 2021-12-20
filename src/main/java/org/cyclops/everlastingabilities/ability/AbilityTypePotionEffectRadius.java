@@ -13,7 +13,6 @@ import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 

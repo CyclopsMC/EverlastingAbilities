@@ -70,5 +70,5 @@ public class SendAbilityStorePacket extends PacketCodec {
 	public void actionServer(Level world, ServerPlayer player) {
 
 	}
-	
+
 }

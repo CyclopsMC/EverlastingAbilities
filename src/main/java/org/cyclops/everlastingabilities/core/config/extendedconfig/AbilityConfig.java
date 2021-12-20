@@ -21,7 +21,7 @@ public abstract class AbilityConfig<T> extends ExtendedConfigForge<AbilityConfig
     public AbilityConfig(String namedId, Function<AbilityConfig<T>, ? extends IAbilityType> elementConstructor) {
         super(EverlastingAbilities._instance, namedId, elementConstructor);
     }
-    
+
     @Override
 	public String getTranslationKey() {
 		return "ability." + getNamedId();

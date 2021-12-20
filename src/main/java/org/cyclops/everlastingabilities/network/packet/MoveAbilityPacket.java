@@ -78,5 +78,5 @@ public class MoveAbilityPacket extends PacketCodec {
 	public static enum Movement {
 		TO_PLAYER, FROM_PLAYER
 	}
-	
+
 }
