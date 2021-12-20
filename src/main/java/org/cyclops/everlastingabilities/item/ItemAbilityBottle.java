@@ -1,5 +1,7 @@
 package org.cyclops.everlastingabilities.item;
 
+import net.minecraft.item.Item.Properties;
+
 /**
  * A bottle with abilities.
  * @author rubensworks

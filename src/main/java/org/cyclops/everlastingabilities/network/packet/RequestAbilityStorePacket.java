@@ -50,13 +50,13 @@ public class RequestAbilityStorePacket extends PacketCodec {
 	public void actionServer(World world, ServerPlayerEntity player) {
 		try {
 			UUID uuid = UUID.fromString(entityUuid);
-			Entity entity = ((ServerWorld) world).getEntityByUuid(uuid);
+			Entity entity = ((ServerWorld) world).getEntity(uuid);
 			if (entity != null) {
 				entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
 					INBT contents = MutableAbilityStoreConfig.CAPABILITY.writeNBT(abilityStore, null);
 					CompoundNBT tag = new CompoundNBT();
 					tag.put("contents", contents);
-					EverlastingAbilities._instance.getPacketHandler().sendToPlayer(new SendAbilityStorePacket(entity.getEntityId(), tag), player);
+					EverlastingAbilities._instance.getPacketHandler().sendToPlayer(new SendAbilityStorePacket(entity.getId(), tag), player);
 				});
 			}
 		} catch (IllegalArgumentException e) {

@@ -51,8 +51,8 @@ public class MoveAbilityPacket extends PacketCodec {
 
 	@Override
 	public void actionServer(World world, ServerPlayerEntity player) {
-		if (player.openContainer instanceof ContainerAbilityContainer) {
-			ContainerAbilityContainer container = (ContainerAbilityContainer) player.openContainer;
+		if (player.containerMenu instanceof ContainerAbilityContainer) {
+			ContainerAbilityContainer container = (ContainerAbilityContainer) player.containerMenu;
 			IAbilityType abilityType = AbilityTypes.REGISTRY.getValue(new ResourceLocation(abilityName));
 			if (abilityType != null) {
 				Ability ability = new Ability(abilityType, abilityLevel);

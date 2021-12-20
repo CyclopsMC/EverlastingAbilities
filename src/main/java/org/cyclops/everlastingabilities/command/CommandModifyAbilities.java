@@ -36,13 +36,13 @@ public class CommandModifyAbilities implements Command<CommandSource> {
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity sender = context.getSource().asPlayer();
+        ServerPlayerEntity sender = context.getSource().getPlayerOrException();
         Action action = ArgumentTypeEnum.getValue(context, "action", Action.class);
         ServerPlayerEntity player = EntityArgument.getPlayer(context, "player");
         IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY).orElse(null);
 
         if (action == Action.LIST) {
-            sender.sendMessage(abilityStore.getTextComponent(), Util.DUMMY_UUID);
+            sender.sendMessage(abilityStore.getTextComponent(), Util.NIL_UUID);
         } else {
             if (!this.checkAbility) {
                 throw new SimpleCommandExceptionType(new TranslationTextComponent(
@@ -60,7 +60,7 @@ public class CommandModifyAbilities implements Command<CommandSource> {
                 Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                sender.sendMessage(new TranslationTextComponent("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility), Util.DUMMY_UUID);
+                sender.sendMessage(new TranslationTextComponent("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility), Util.NIL_UUID);
             } else {
                 level = Math.max(1, level);
                 Ability ability = new Ability(abilityType, level);
@@ -68,7 +68,7 @@ public class CommandModifyAbilities implements Command<CommandSource> {
                 Ability removedAbility = AbilityHelpers.removePlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                sender.sendMessage(new TranslationTextComponent("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility), Util.DUMMY_UUID);
+                sender.sendMessage(new TranslationTextComponent("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility), Util.NIL_UUID);
             }
         }
         return 0;
@@ -76,7 +76,7 @@ public class CommandModifyAbilities implements Command<CommandSource> {
 
     public static LiteralArgumentBuilder<CommandSource> make() {
         return Commands.literal("abilities")
-                .requires((commandSource) -> commandSource.hasPermissionLevel(2))
+                .requires((commandSource) -> commandSource.hasPermission(2))
                 .then(Commands.argument("action", new ArgumentTypeEnum<>(Action.class))
                         .then(Commands.argument("player", EntityArgument.player())
                                 .executes(new CommandModifyAbilities(false, false))

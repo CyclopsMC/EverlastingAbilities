@@ -51,7 +51,7 @@ public class SendAbilityStorePacket extends PacketCodec {
 	public void actionClient(World world, PlayerEntity player) {
 		try {
 			if (world != null) {
-				Entity entity = world.getEntityByID(entityId);
+				Entity entity = world.getEntity(entityId);
 				if (entity != null) {
 					// Sync ability store
 					entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {

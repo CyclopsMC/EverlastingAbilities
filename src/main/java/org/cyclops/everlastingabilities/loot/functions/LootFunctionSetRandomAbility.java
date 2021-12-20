@@ -31,7 +31,7 @@ public class LootFunctionSetRandomAbility extends LootFunction {
     }
 
     @Override
-    public ItemStack doApply(ItemStack stack, LootContext context) {
+    public ItemStack run(ItemStack stack, LootContext context) {
         List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesLoot();
         Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, context.getRandom());
         IAbilityType abilityType = AbilityHelpers.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
@@ -42,7 +42,7 @@ public class LootFunctionSetRandomAbility extends LootFunction {
     }
 
     @Override
-    public LootFunctionType getFunctionType() {
+    public LootFunctionType getType() {
         return TYPE;
     }
 

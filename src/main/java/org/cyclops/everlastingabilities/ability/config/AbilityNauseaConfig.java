@@ -38,7 +38,7 @@ public class AbilityNauseaConfig extends AbilityConfig<AbilityTypePotionEffectRa
     public AbilityNauseaConfig() {
         super("nausea",
                 eConfig -> new AbilityTypePotionEffectRadius(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.NAUSEA));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.CONFUSION));
     }
 
 }

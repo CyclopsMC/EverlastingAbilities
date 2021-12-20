@@ -38,7 +38,7 @@ public class AbilitySlownessConfig extends AbilityConfig<AbilityTypePotionEffect
     public AbilitySlownessConfig() {
         super("slowness",
                 eConfig -> new AbilityTypePotionEffectRadius(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.SLOWNESS));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.MOVEMENT_SLOWDOWN));
     }
 
 }

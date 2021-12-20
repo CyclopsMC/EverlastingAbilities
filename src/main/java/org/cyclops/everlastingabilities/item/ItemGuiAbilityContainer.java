@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 /**
  * Base class for items with abilities.
  * @author rubensworks
@@ -45,12 +47,12 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     @Nullable
     @Override
     public INamedContainerProvider getContainer(World world, PlayerEntity playerEntity, int itemIndex, Hand hand, ItemStack itemStack) {
-        return new NamedContainerProviderItem(itemIndex, hand, itemStack.getDisplayName(), ContainerAbilityContainer::new);
+        return new NamedContainerProviderItem(itemIndex, hand, itemStack.getHoverName(), ContainerAbilityContainer::new);
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(itemStack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack itemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(itemStack, worldIn, tooltip, flagIn);
 
         itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
             List<Ability> abilities = new ArrayList<Ability>(abilityStore.getAbilities());
@@ -62,15 +64,15 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
             for (Ability ability : abilities) {
                 empty = false;
                 tooltip.add(new TranslationTextComponent(ability.getAbilityType().getTranslationKey())
-                        .appendString(" " + ability.getLevel())
+                        .append(" " + ability.getLevel())
                         .setStyle(Style.EMPTY
-                                .setColor(Color.fromTextFormatting(TextFormatting.YELLOW))));
+                                .withColor(Color.fromLegacyFormat(TextFormatting.YELLOW))));
             }
             if (empty) {
                 tooltip.add(new TranslationTextComponent("general.everlastingabilities.empty")
                         .setStyle(Style.EMPTY
-                                .setColor(Color.fromTextFormatting(TextFormatting.GRAY))
-                                .setItalic(true)));
+                                .withColor(Color.fromLegacyFormat(TextFormatting.GRAY))
+                                .withItalic(true)));
             }
         });
     }

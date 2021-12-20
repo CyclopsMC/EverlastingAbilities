@@ -38,7 +38,7 @@ public class AbilityJumpBoostConfig extends AbilityConfig<AbilityTypePotionEffec
     public AbilityJumpBoostConfig() {
         super("jump_boost",
                 eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.JUMP_BOOST));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.JUMP));
     }
 
 }

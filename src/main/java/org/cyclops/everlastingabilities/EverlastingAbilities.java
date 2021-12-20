@@ -138,12 +138,12 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 if (host instanceof Entity) {
                     Entity entity = (Entity) host;
                     IMutableAbilityStore store = new DefaultMutableAbilityStore();
-                    if (!entity.getEntityWorld().isRemote && host instanceof LivingEntity) {
+                    if (!entity.getCommandSenderWorld().isClientSide && host instanceof LivingEntity) {
                         if (GeneralConfig.mobAbilityChance > 0
-                                && entity.getEntityId() % GeneralConfig.mobAbilityChance == 0
+                                && entity.getId() % GeneralConfig.mobAbilityChance == 0
                                 && canMobHaveAbility((LivingEntity) host)) {
                             Random rand = new Random();
-                            rand.setSeed(entity.getEntityId());
+                            rand.setSeed(entity.getId());
                             List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn();
                             Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, rand);
                             AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity).ifPresent(
@@ -243,8 +243,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getWorld().isRemote && event.getEntity().getCapability(MutableAbilityStoreConfig.CAPABILITY).isPresent()) {
-            getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUniqueID().toString()));
+        if (event.getWorld().isClientSide && event.getEntity().getCapability(MutableAbilityStoreConfig.CAPABILITY).isPresent()) {
+            getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
         }
     }
 
@@ -260,15 +260,15 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             if (!playerTag.contains(NBT_TOTEM_SPAWNED)) {
                 playerTag.putBoolean(NBT_TOTEM_SPAWNED, true);
 
-                World world = event.getPlayer().world;
+                World world = event.getPlayer().level;
                 PlayerEntity player = event.getPlayer();
                 Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
-                AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(), world.rand, rarity, true).ifPresent(abilityType -> {
+                AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(), world.random, rarity, true).ifPresent(abilityType -> {
                     ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
                     itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
                             .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
 
-                    ItemStackHelpers.spawnItemStackToPlayer(world, player.getPosition(), itemStack, player);
+                    ItemStackHelpers.spawnItemStackToPlayer(world, player.blockPosition(), itemStack, player);
                     EntityHelpers.spawnXpAtPlayer(world, player, abilityType.getBaseXpPerLevel());
                 });
             }
@@ -277,20 +277,20 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        boolean doMobLoot = event.getEntityLiving().world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT);
-        if (!event.getEntityLiving().world.isRemote
+        boolean doMobLoot = event.getEntityLiving().level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
+        if (!event.getEntityLiving().level.isClientSide
                 && (event.getEntityLiving() instanceof PlayerEntity
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
                         && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getTrueSource() instanceof PlayerEntity))
+                        && event.getSource().getEntity() instanceof PlayerEntity))
                     : (doMobLoot && (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getTrueSource() instanceof PlayerEntity))) {
+                        && event.getSource().getEntity() instanceof PlayerEntity))) {
             LivingEntity entity = event.getEntityLiving();
             entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(mutableAbilityStore -> {
                 int toDrop = 1;
                 if (event.getEntityLiving() instanceof PlayerEntity
                         && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getTrueSource() instanceof PlayerEntity)) {
+                        && event.getSource().getEntity() instanceof PlayerEntity)) {
                     toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
                 }
 
@@ -309,15 +309,15 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                                     entity.getName(),
                                     new TranslationTextComponent(removed.getAbilityType().getTranslationKey())
                                             .setStyle(Style.EMPTY
-                                                    .setColor(Color.fromTextFormatting(removed.getAbilityType().getRarity().color))
-                                                    .setBold(true)),
-                                    removed.getLevel()), Util.DUMMY_UUID);
+                                                    .withColor(Color.fromLegacyFormat(removed.getAbilityType().getRarity().color))
+                                                    .withBold(true)),
+                                    removed.getLevel()), Util.NIL_UUID);
                         }
                     }
                 }
 
                 if (!itemStackStore.getAbilities().isEmpty()) {
-                    ItemStackHelpers.spawnItemStack(entity.world, entity.getPosition(), itemStack);
+                    ItemStackHelpers.spawnItemStack(entity.level, entity.blockPosition(), itemStack);
                 }
             });
         }
@@ -338,8 +338,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
                 for (Ability ability : abilityStore.getAbilities()) {
-                    if (event.getEntity().world.getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
-                        player.addExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
+                    if (event.getEntity().level.getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
+                        player.causeFoodExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
                     }
                     ability.getAbilityType().onTick(player, ability.getLevel());
                 }

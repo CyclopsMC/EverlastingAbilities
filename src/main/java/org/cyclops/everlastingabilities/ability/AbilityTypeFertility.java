@@ -29,11 +29,11 @@ public class AbilityTypeFertility extends AbilityTypeDefault {
 
     @Override
     public void onTick(PlayerEntity player, int level) {
-        World world = player.world;
-        if (!world.isRemote && player.world.getGameTime() % TICK_MODULUS == 0) {
+        World world = player.level;
+        if (!world.isClientSide && player.level.getGameTime() % TICK_MODULUS == 0) {
             int radius = level * 2;
-            List<AnimalEntity> mobs = world.getEntitiesWithinAABB(AnimalEntity.class,
-                    player.getBoundingBox().grow(radius, radius, radius), EntityPredicates.NOT_SPECTATING);
+            List<AnimalEntity> mobs = world.getEntitiesOfClass(AnimalEntity.class,
+                    player.getBoundingBox().inflate(radius, radius, radius), EntityPredicates.NO_SPECTATORS);
             for (AnimalEntity animal : mobs) {
                 animal.setInLove(player);
             }

@@ -38,7 +38,7 @@ public class AbilityStrengthConfig extends AbilityConfig<AbilityTypePotionEffect
     public AbilityStrengthConfig() {
         super("strength",
                 eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.STRENGTH));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.DAMAGE_BOOST));
     }
 
 }

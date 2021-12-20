@@ -45,7 +45,7 @@ public class Ability implements Comparable<Ability> {
     public ITextComponent getTextComponent() {
         return new StringTextComponent("[")
                 .append(new TranslationTextComponent(abilityType.getTranslationKey()))
-                .appendString(" @ " + level + "]");
+                .append(" @ " + level + "]");
     }
 
     public boolean isEmpty() {

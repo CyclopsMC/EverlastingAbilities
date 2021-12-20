@@ -59,14 +59,14 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
 
     @Override
     public void onTick(PlayerEntity player, int level) {
-        World world = player.world;
-        if (potion != null && !world.isRemote && player.world.getGameTime() % getTickModulus(level) == 0) {
+        World world = player.level;
+        if (potion != null && !world.isClientSide && player.level.getGameTime() % getTickModulus(level) == 0) {
             int radius = level * 2;
-            List<LivingEntity> mobs = world.getEntitiesWithinAABB(LivingEntity.class,
-                    player.getBoundingBox().grow(radius, radius, radius), EntityPredicates.NOT_SPECTATING);
+            List<LivingEntity> mobs = world.getEntitiesOfClass(LivingEntity.class,
+                    player.getBoundingBox().inflate(radius, radius, radius), EntityPredicates.NO_SPECTATORS);
             for (LivingEntity mob : mobs) {
                 if (!(this.hostile && isFriendlyMob(mob, player))) {
-                    mob.addPotionEffect(new EffectInstance(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
+                    mob.addEffect(new EffectInstance(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
                 }
             }
         }
@@ -77,7 +77,7 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
                 ? new ResourceLocation("player") : ForgeRegistries.ENTITIES.getKey(mob.getType());
         String mobName = resourceLocation == null ? "null" : resourceLocation.toString();
         return (mob == player ||
-                player.isOnSameTeam(mob) ||
+                player.isAlliedTo(mob) ||
                 // TODO TameableEntity was IEntityOwnable
                 (mob instanceof TameableEntity && ((TameableEntity) mob).getOwner() == player) ||
                 GeneralConfig.friendlyMobs.stream().anyMatch(mobName::matches));

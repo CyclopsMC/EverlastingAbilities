@@ -36,8 +36,8 @@ public class TotemRecycleRecipe extends SpecialRecipe {
         }
 
         int inputCount = 0;
-        for (int i = 0; i < invCrafting.getSizeInventory(); i++) {
-            ItemStack slot = invCrafting.getStackInSlot(i);
+        for (int i = 0; i < invCrafting.getContainerSize(); i++) {
+            ItemStack slot = invCrafting.getItem(i);
             if (!slot.isEmpty()) {
                 if (slot.getItem() instanceof ItemAbilityTotem) {
                     inputCount++;
@@ -52,7 +52,7 @@ public class TotemRecycleRecipe extends SpecialRecipe {
     }
     
     @Override
-    public ItemStack getCraftingResult(CraftingInventory invCrafting) {
+    public ItemStack assemble(CraftingInventory invCrafting) {
         // Crafting is simulated
 
         // Select one of the inputs at random, and use its rarity for the rarity of the output.
@@ -61,11 +61,11 @@ public class TotemRecycleRecipe extends SpecialRecipe {
 
         // Sort our input stacks, so we can deterministically select one specific one to determine the output rarity.
         NonNullList<ItemStack> sortedStacks = NonNullList.create();
-        for (int i = 0; i < invCrafting.getSizeInventory(); i++) {
-            ItemStack slot = invCrafting.getStackInSlot(i);
+        for (int i = 0; i < invCrafting.getContainerSize(); i++) {
+            ItemStack slot = invCrafting.getItem(i);
             if (!slot.isEmpty()) {
                 if (slot.getItem() instanceof ItemAbilityTotem) {
-                    sortedStacks.add(invCrafting.getStackInSlot(i));
+                    sortedStacks.add(invCrafting.getItem(i));
                 } else {
                     // non-totem item found in recipe
                     // this should never happen because matches() will return false.
@@ -106,12 +106,12 @@ public class TotemRecycleRecipe extends SpecialRecipe {
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height >= ItemAbilityTotemConfig.totemCraftingCount;
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
     }
     
@@ -122,10 +122,10 @@ public class TotemRecycleRecipe extends SpecialRecipe {
         seed++;
 
         // Code below is copied from IRecipe
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
         for(int i = 0; i < nonnulllist.size(); ++i) {
-            ItemStack item = inv.getStackInSlot(i);
+            ItemStack item = inv.getItem(i);
             if (item.hasContainerItem()) {
                 nonnulllist.set(i, item.getContainerItem());
             }

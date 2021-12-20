@@ -38,7 +38,7 @@ public class AbilitySpeedConfig extends AbilityConfig<AbilityTypePotionEffectSel
     public AbilitySpeedConfig() {
         super("speed",
                 eConfig -> new AbilityTypePotionEffectSelf("speed", () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.SPEED));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.MOVEMENT_SPEED));
     }
 
 }

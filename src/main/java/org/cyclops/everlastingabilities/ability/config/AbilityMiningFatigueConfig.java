@@ -38,7 +38,7 @@ public class AbilityMiningFatigueConfig extends AbilityConfig<AbilityTypePotionE
     public AbilityMiningFatigueConfig() {
         super("mining_fatigue",
                 eConfig -> new AbilityTypePotionEffectRadius(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.MINING_FATIGUE));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.DIG_SLOWDOWN));
     }
 
 }

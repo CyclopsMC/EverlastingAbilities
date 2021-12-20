@@ -14,8 +14,8 @@ public class ItemAbilityBottleConfig extends ItemConfig {
         super(EverlastingAbilities._instance,
                 "ability_bottle",
                 (eConfig) -> new ItemAbilityBottle(new Item.Properties()
-                        .maxStackSize(1)
-                        .group(EverlastingAbilities._instance.getDefaultItemGroup())));
+                        .stacksTo(1)
+                        .tab(EverlastingAbilities._instance.getDefaultItemGroup())));
     }
 
 }

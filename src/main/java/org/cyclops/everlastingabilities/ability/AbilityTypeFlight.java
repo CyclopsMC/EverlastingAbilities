@@ -21,7 +21,7 @@ public class AbilityTypeFlight extends AbilityTypeDefault {
 
     @Override
     public void onTick(PlayerEntity player, int level) {
-        player.abilities.allowFlying = true;
+        player.abilities.mayfly = true;
     }
 
     @Override
@@ -32,12 +32,12 @@ public class AbilityTypeFlight extends AbilityTypeDefault {
                 allowFlying = player.getPersistentData().getBoolean(PLAYER_NBT_KEY);
                 player.getPersistentData().remove(PLAYER_NBT_KEY);
             }
-            player.abilities.allowFlying = allowFlying;
+            player.abilities.mayfly = allowFlying;
             if (!allowFlying) {
-                player.abilities.isFlying = false;
+                player.abilities.flying = false;
             }
         } else if (oldLevel == 0 && newLevel > 0) {
-            player.getPersistentData().putBoolean(PLAYER_NBT_KEY, player.abilities.allowFlying);
+            player.getPersistentData().putBoolean(PLAYER_NBT_KEY, player.abilities.mayfly);
         }
     }
 }

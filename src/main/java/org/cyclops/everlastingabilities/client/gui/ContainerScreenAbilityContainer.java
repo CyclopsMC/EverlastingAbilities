@@ -87,27 +87,27 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     public void init() {
         super.init();
 
-        addButton(buttonUp1 = new ButtonArrow(this.guiLeft + 73,  this.guiTop + 83, new TranslationTextComponent("gui.cyclopscore.up"), button -> {
+        addButton(buttonUp1 = new ButtonArrow(this.leftPos + 73,  this.topPos + 83, new TranslationTextComponent("gui.cyclopscore.up"), button -> {
             if (startIndexPlayer > 0) startIndexPlayer--;
         }, ButtonArrow.Direction.NORTH));
-        addButton(buttonDown1 = new ButtonArrow(this.guiLeft + 73,  this.guiTop + 174, new TranslationTextComponent("gui.cyclopscore.down"), button -> {
+        addButton(buttonDown1 = new ButtonArrow(this.leftPos + 73,  this.topPos + 174, new TranslationTextComponent("gui.cyclopscore.down"), button -> {
             if (startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount())) startIndexPlayer++;
         }, ButtonArrow.Direction.SOUTH));
-        addButton(buttonUp2 = new ButtonArrow(this.guiLeft + 88,  this.guiTop + 83, new TranslationTextComponent("gui.cyclopscore.up"), button -> {
+        addButton(buttonUp2 = new ButtonArrow(this.leftPos + 88,  this.topPos + 83, new TranslationTextComponent("gui.cyclopscore.up"), button -> {
             if (startIndexItem > 0) startIndexItem--;
         }, ButtonArrow.Direction.NORTH));
-        addButton(buttonDown2 = new ButtonArrow(this.guiLeft + 88,  this.guiTop + 174, new TranslationTextComponent("gui.cyclopscore.down"), button -> {
+        addButton(buttonDown2 = new ButtonArrow(this.leftPos + 88,  this.topPos + 174, new TranslationTextComponent("gui.cyclopscore.down"), button -> {
             if (startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount())) startIndexItem++;
         }, ButtonArrow.Direction.SOUTH));
 
-        addButton(buttonLeft = new ButtonArrow(this.guiLeft + 76,  this.guiTop + 130, new TranslationTextComponent("gui.cyclopscore.left"), button -> {
+        addButton(buttonLeft = new ButtonArrow(this.leftPos + 76,  this.topPos + 130, new TranslationTextComponent("gui.cyclopscore.left"), button -> {
             if (canMoveToPlayer()) {
                 EverlastingAbilities._instance.getPacketHandler().sendToServer(
                         new MoveAbilityPacket(getSelectedItemAbilitySingle(), MoveAbilityPacket.Movement.TO_PLAYER));
                 moveToPlayer();
             }
         }, ButtonArrow.Direction.WEST));
-        addButton(buttonRight = new ButtonArrow(this.guiLeft + 90,  this.guiTop + 130, new TranslationTextComponent("gui.cyclopscore.right"), button -> {
+        addButton(buttonRight = new ButtonArrow(this.leftPos + 90,  this.topPos + 130, new TranslationTextComponent("gui.cyclopscore.right"), button -> {
             if (canMoveFromPlayer()) {
                 EverlastingAbilities._instance.getPacketHandler().sendToServer(
                         new MoveAbilityPacket(getSelectedPlayerAbilitySingle(), MoveAbilityPacket.Movement.FROM_PLAYER));
@@ -122,13 +122,13 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
-        if (getContainer().getItemStack(player) == null) {
+    protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
+        if (getMenu().getItemStack(player) == null) {
             return;
         }
 
-        this.font.drawString(matrixStack, player.getDisplayName().getString(), 8, 6, -1);
-        this.font.func_238407_a_(matrixStack, getContainer().getItemStack(player).getDisplayName().func_241878_f(), 102, 6, -1);
+        this.font.draw(matrixStack, player.getDisplayName().getString(), 8, 6, -1);
+        this.font.drawShadow(matrixStack, getMenu().getItemStack(player).getHoverName().getVisualOrderText(), 102, 6, -1);
 
         // Draw abilities
         drawAbilitiesTooltip(8, 83, getPlayerAbilities(), startIndexPlayer, mouseX, mouseY);
@@ -136,23 +136,23 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     protected List<Ability> getPlayerAbilities() {
-        List<Ability> abilities = getContainer().getPlayerAbilities();
+        List<Ability> abilities = getMenu().getPlayerAbilities();
         Collections.sort(abilities);
         return abilities;
     }
 
     protected List<Ability> getItemAbilities() {
-        List<Ability> abilities = getContainer().getItemAbilities();
+        List<Ability> abilities = getMenu().getItemAbilities();
         Collections.sort(abilities);
         return abilities;
     }
 
     protected IMutableAbilityStore getPlayerAbilityStore() {
-        return getContainer().getPlayerAbilityStore().orElse(null);
+        return getMenu().getPlayerAbilityStore().orElse(null);
     }
 
     protected IMutableAbilityStore getItemAbilityStore() {
-        return getContainer().getItemAbilityStore().orElse(null);
+        return getMenu().getItemAbilityStore().orElse(null);
     }
 
     protected int getPlayerAbilitiesCount() {
@@ -164,8 +164,8 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-        if (getContainer().getItemStack(player) == null) {
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        if (getMenu().getItemStack(player) == null) {
             return;
         }
 
@@ -178,20 +178,20 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         buttonRight.active = canMoveFromPlayer();
         buttonRight.active = canMoveFromPlayerByItem();
 
-        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
+        //super.renderBg(matrixStack, partialTicks, mouseX, mouseY); // TODO
 
-        int i = this.guiLeft;
-        int j = this.guiTop;
+        int i = this.leftPos;
+        int j = this.topPos;
         drawFancyBackground(i + 8, j + 17, 66, 61, getPlayerAbilityStore());
-        InventoryScreen.drawEntityOnScreen(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.getMinecraft().player);
+        InventoryScreen.renderEntityInInventory(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.getMinecraft().player);
         drawXp(matrixStack, i + 67, j + 70);
-        RenderHelpers.drawScaledCenteredString(matrixStack, font, "" + player.experienceTotal, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
+        RenderHelpers.drawScaledCenteredString(matrixStack, font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         drawFancyBackground(i + 102, j + 17, 66, 61, getItemAbilityStore());
-        drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getContainer().getItemStack(this.getMinecraft().player));
+        drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getMenu().getItemStack(this.getMinecraft().player));
 
         // Draw abilities
-        drawAbilities(matrixStack, this.guiLeft + 8, this.guiTop + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
-        drawAbilities(matrixStack, this.guiLeft + 105, this.guiTop + 83, getItemAbilities(), startIndexItem, player.experienceTotal, absoluteSelectedIndexItem, mouseX, mouseY, true);
+        drawAbilities(matrixStack, this.leftPos + 8, this.topPos + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
+        drawAbilities(matrixStack, this.leftPos + 105, this.topPos + 83, getItemAbilities(), startIndexItem, player.totalExperience, absoluteSelectedIndexItem, mouseX, mouseY, true);
     }
 
     public void drawFancyBackground(int x, int y, int width, int height, IAbilityStore abilityStore) {
@@ -214,7 +214,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         RenderSystem.matrixMode(5890);
         RenderSystem.pushMatrix();
         RenderSystem.scalef(8.0F, 8.0F, 8.0F);
-        float f = (float)(Util.milliTime() % 3000L) / 3000.0F / 8.0F;
+        float f = (float)(Util.getMillis() % 3000L) / 3000.0F / 8.0F;
         RenderSystem.translatef(f, 0.0F, 0.0F);
         RenderSystem.rotatef(-50.0F, 0.0F, 0.0F, 1.0F);
         RenderSystem.enableBlend();
@@ -222,10 +222,10 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         RenderSystem.popMatrix();
         RenderSystem.pushMatrix();
         RenderSystem.scalef(8.0F, 8.0F, 8.0F);
-        float f1 = (float)(Util.milliTime() % 4873L) / 4873.0F / 8.0F;
+        float f1 = (float)(Util.getMillis() % 4873L) / 4873.0F / 8.0F;
         RenderSystem.translatef(-f1, 0.0F, 0.0F);
         RenderSystem.rotatef(10.0F, 0.0F, 0.0F, 1.0F);
-        float rotation = ((float) (Util.milliTime() / 100 % 3600)) / 10F;
+        float rotation = ((float) (Util.getMillis() / 100 % 3600)) / 10F;
         RenderSystem.rotatef(rotation, 1.0F, 0.5F, 1.0F);
         drawTexturedModalRectColor(x, y, 0, 0, width, height, r, g, b, 255);
         RenderSystem.popMatrix();
@@ -235,7 +235,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         RenderSystem.depthFunc(515);
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
-        RenderHelpers.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+        RenderHelpers.bindTexture(AtlasTexture.LOCATION_BLOCKS);
 
         RenderSystem.color4f(1, 1, 1, 1);
     }
@@ -255,7 +255,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             // select box (+hover)
             if (canEdit) {
                 boolean active = currentSelectedIndex == i + startIndex;
-                boolean showActive = active || isPointInRegion(new Rectangle(x - this.guiLeft, boxY - this.guiTop, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT), new Point(mouseX, mouseY));
+                boolean showActive = active || isPointInRegion(new Rectangle(x - this.leftPos, boxY - this.topPos, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT), new Point(mouseX, mouseY));
                 if (showActive) {
                     drawFancyBackground(x, boxY - 1, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT, null);
                 }
@@ -264,7 +264,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             // Name
             RenderHelpers.drawScaledCenteredString(matrixStack, font,
                     new TranslationTextComponent(ability.getAbilityType().getTranslationKey())
-                            .setStyle(Style.EMPTY.setColor(Color.fromTextFormatting(ability.getAbilityType().getRarity().color)))
+                            .setStyle(Style.EMPTY.withColor(Color.fromLegacyFormat(ability.getAbilityType().getRarity().color)))
                             .getString(),
                     x + 27, boxY + 7, 0, 1.0F, 50, -1);
 
@@ -276,16 +276,16 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             // XP
             int requiredXp = ability.getAbilityType().getBaseXpPerLevel();
             if (playerXp < requiredXp) {
-                GlStateManager.color4f(0.3F, 0.3F, 0.3F, 1);
+                GlStateManager._color4f(0.3F, 0.3F, 0.3F, 1);
             } else {
-                GlStateManager.color4f(1, 1, 1, 1);
+                GlStateManager._color4f(1, 1, 1, 1);
             }
             drawXp(matrixStack, x + 57, boxY + 10);
             RenderHelpers.drawScaledCenteredString(matrixStack, font,
                     "" + requiredXp,
                     x + 53, boxY + 13, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         }
-        GlStateManager.color4f(1, 1, 1, 1);
+        GlStateManager._color4f(1, 1, 1, 1);
     }
 
     private void drawAbilitiesTooltip(int x, int y, List<Ability> abilities, int startIndex, int mouseX, int mouseY) {
@@ -298,7 +298,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Name
                 lines.add(new TranslationTextComponent(ability.getAbilityType().getTranslationKey())
-                        .setStyle(Style.EMPTY.setColor(Color.fromTextFormatting(ability.getAbilityType().getRarity().color))));
+                        .setStyle(Style.EMPTY.withColor(Color.fromLegacyFormat(ability.getAbilityType().getRarity().color))));
 
                 // Level
                 lines.add(new TranslationTextComponent("general.everlastingabilities.level", ability.getLevel(),
@@ -306,15 +306,15 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Description
                 lines.add(new TranslationTextComponent(ability.getAbilityType().getUnlocalizedDescription())
-                        .setStyle(Style.EMPTY.createStyleFromFormattings(IInformationProvider.INFO_PREFIX_STYLES)));
+                        .setStyle(Style.EMPTY.applyFormats(IInformationProvider.INFO_PREFIX_STYLES)));
 
                 // Xp
                 lines.add(new TranslationTextComponent("general.everlastingabilities.xp",
                         ability.getAbilityType().getBaseXpPerLevel(),
                         AbilityHelpers.getLevelForExperience(ability.getAbilityType().getBaseXpPerLevel()))
-                        .setStyle(Style.EMPTY.setColor(Color.fromTextFormatting(TextFormatting.DARK_GREEN))));
+                        .setStyle(Style.EMPTY.withColor(Color.fromLegacyFormat(TextFormatting.DARK_GREEN))));
 
-                drawTooltip(lines, mouseX - this.guiLeft, mouseY - this.guiTop);
+                drawTooltip(lines, mouseX - this.leftPos, mouseY - this.topPos);
             }
         }
     }
@@ -323,13 +323,13 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         float f = 0.00390625F;
         float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuilder();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        vertexbuffer.pos(x + 0, y + height, this.getBlitOffset()).tex((textureX + 0) * f, (textureY + height) * f1).color(r, g, b, a).endVertex();
-        vertexbuffer.pos(x + width, y + height, this.getBlitOffset()).tex((textureX + width) * f, (textureY + height) * f1).color(r, g, b, a).endVertex();
-        vertexbuffer.pos(x + width, y + 0,this.getBlitOffset()).tex((textureX + width) * f, (textureY + 0) * f1).color(r, g, b, a).endVertex();
-        vertexbuffer.pos(x + 0, y + 0, this.getBlitOffset()).tex((textureX + 0) * f, (textureY + 0) * f1).color(r, g, b, a).endVertex();
-        tessellator.draw();
+        vertexbuffer.vertex(x + 0, y + height, this.getBlitOffset()).uv((textureX + 0) * f, (textureY + height) * f1).color(r, g, b, a).endVertex();
+        vertexbuffer.vertex(x + width, y + height, this.getBlitOffset()).uv((textureX + width) * f, (textureY + height) * f1).color(r, g, b, a).endVertex();
+        vertexbuffer.vertex(x + width, y + 0,this.getBlitOffset()).uv((textureX + width) * f, (textureY + 0) * f1).color(r, g, b, a).endVertex();
+        vertexbuffer.vertex(x + 0, y + 0, this.getBlitOffset()).uv((textureX + 0) * f, (textureY + 0) * f1).color(r, g, b, a).endVertex();
+        tessellator.end();
     }
 
     public static void drawItemOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, ItemStack itemStack) {
@@ -344,14 +344,14 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         Quaternion rotation = Vector3f.ZP.rotationDegrees(180.0F);
         Quaternion cameraOrientationY = Vector3f.YP.rotationDegrees(- lvt_6_1_ * 40.0F);
         Quaternion cameraOrientationX = Vector3f.XP.rotationDegrees(lvt_7_1_ * 20.0F);
-        rotation.multiply(cameraOrientationY);
-        rotation.multiply(cameraOrientationX);
-        matrixStack.rotate(rotation);
-        IRenderTypeBuffer.Impl renderTypeBuffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-        RenderHelper.enableStandardItemLighting();
-        Minecraft.getInstance().getItemRenderer().renderItem(itemStack, ItemCameraTransforms.TransformType.FIXED, 15728880, OverlayTexture.NO_OVERLAY, matrixStack, renderTypeBuffer);
-        RenderHelper.disableStandardItemLighting();
-        renderTypeBuffer.finish();
+        rotation.mul(cameraOrientationY);
+        rotation.mul(cameraOrientationX);
+        matrixStack.mulPose(rotation);
+        IRenderTypeBuffer.Impl renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
+        RenderHelper.turnBackOn();
+        Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemCameraTransforms.TransformType.FIXED, 15728880, OverlayTexture.NO_OVERLAY, matrixStack, renderTypeBuffer);
+        RenderHelper.turnOff();
+        renderTypeBuffer.endBatch();
         RenderSystem.popMatrix();
     }
 
@@ -376,7 +376,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
-        if (isPointInRegion(8, 83, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
+        if (isHovering(8, 83, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
             if (scrollAmount > 0) {
                 if (startIndexPlayer > 0)
                     startIndexPlayer--;
@@ -385,7 +385,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                     startIndexPlayer++;
             }
             return true;
-        } else if (isPointInRegion(105, 83, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
+        } else if (isHovering(105, 83, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
             if (scrollAmount > 0) {
                 if (startIndexItem > 0)
                     startIndexItem--;
@@ -457,7 +457,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     public boolean canMoveFromPlayerByItem() {
-        return getContainer().getItem().canMoveFromPlayer();
+        return getMenu().getItem().canMoveFromPlayer();
     }
 
     public boolean canMoveFromPlayer() {
@@ -474,10 +474,10 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     public void moveFromPlayer() {
-        getContainer().moveFromPlayer(getSelectedPlayerAbilitySingle());
+        getMenu().moveFromPlayer(getSelectedPlayerAbilitySingle());
     }
 
     public void moveToPlayer() {
-        getContainer().moveToPlayer(getSelectedItemAbilitySingle());
+        getMenu().moveToPlayer(getSelectedItemAbilitySingle());
     }
 }

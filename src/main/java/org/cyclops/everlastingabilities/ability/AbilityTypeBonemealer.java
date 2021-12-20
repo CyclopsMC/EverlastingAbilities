@@ -33,16 +33,16 @@ public class AbilityTypeBonemealer extends AbilityTypeDefault {
 
     @Override
     public void onTick(PlayerEntity player, int level) {
-        World world = player.world;
-        if (!world.isRemote() && player.world.getGameTime() % (TICK_MODULUS / level) == 0) {
+        World world = player.level;
+        if (!world.isClientSide() && player.level.getGameTime() % (TICK_MODULUS / level) == 0) {
             int radius = level * 2;
-            WorldHelpers.foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.getPosition(), new WorldHelpers.WorldFoldingFunction<Void, Void, World>() {
+            WorldHelpers.foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.blockPosition(), new WorldHelpers.WorldFoldingFunction<Void, Void, World>() {
                 @Nullable
                 @Override
                 public Void apply(Void from, World world, BlockPos pos) {
                     BlockState blockState = world.getBlockState(pos);
                     if (blockState.getBlock() instanceof IGrowable && !(blockState.getBlock() instanceof GrassBlock)) {
-                        blockState.randomTick((ServerWorld) world, pos, world.rand);
+                        blockState.randomTick((ServerWorld) world, pos, world.random);
                     }
                     return null;
                 }

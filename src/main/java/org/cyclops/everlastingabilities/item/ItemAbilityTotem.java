@@ -10,6 +10,8 @@ import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
+import net.minecraft.item.Item.Properties;
+
 /**
  * A totem with abilities.
  * @author rubensworks
@@ -46,8 +48,8 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.isInGroup(group)) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        if (this.allowdedIn(group)) {
             for (IAbilityType abilityType : AbilityTypes.REGISTRY.getValues()) {
                 for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
                     Ability ability = new Ability(abilityType, level);

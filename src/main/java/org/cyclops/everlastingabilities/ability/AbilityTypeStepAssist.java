@@ -22,7 +22,7 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
 
     @Override
     public void onTick(PlayerEntity player, int level) {
-        player.stepHeight = player.isCrouching() ? 0.5F : level;
+        player.maxUpStep = player.isCrouching() ? 0.5F : level;
     }
 
     @Override
@@ -35,9 +35,9 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
                 }
                 player.getPersistentData().remove(PLAYER_NBT_KEY);
             }
-            player.stepHeight = stepHeight;
+            player.maxUpStep = stepHeight;
         } else if (oldLevel == 0 && newLevel > 0) {
-            player.getPersistentData().putFloat(PLAYER_NBT_KEY, player.stepHeight);
+            player.getPersistentData().putFloat(PLAYER_NBT_KEY, player.maxUpStep);
         }
     }
 }

@@ -31,17 +31,17 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
 
     @Override
     public void onTick(PlayerEntity player, int level) {
-        World world = player.world;
-        if (!world.isRemote && !player.isCrouching() && player.world.getGameTime() % TICK_MODULUS == 0) {
+        World world = player.level;
+        if (!world.isClientSide && !player.isCrouching() && player.level.getGameTime() % TICK_MODULUS == 0) {
             // Center of the attraction
-            double x = player.getPosX();
-            double y = player.getPosY();
-            double z = player.getPosZ();
+            double x = player.getX();
+            double y = player.getY();
+            double z = player.getZ();
 
             // Get items in calculated area.
             int area = level * 2;
-            AxisAlignedBB box = new AxisAlignedBB(x, y, z, x, y, z).grow(area, area, area);
-            List<Entity> entities = world.getEntitiesInAABBexcluding(player, box, new Predicate<Entity>() {
+            AxisAlignedBB box = new AxisAlignedBB(x, y, z, x, y, z).inflate(area, area, area);
+            List<Entity> entities = world.getEntities(player, box, new Predicate<Entity>() {
 
                 @Override
                 public boolean apply(Entity entity) {
@@ -53,12 +53,12 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
 
             // Move all those items in the direction of the player.
             for(Entity moveEntity : entities) {
-                if((moveEntity instanceof ItemEntity && !((ItemEntity) moveEntity).cannotPickup()
+                if((moveEntity instanceof ItemEntity && !((ItemEntity) moveEntity).hasPickUpDelay()
                         && canKineticateItem(((ItemEntity) moveEntity))) ||
                         (moveEntity instanceof ExperienceOrbEntity)) {
-                    double dx = moveEntity.getPosX() - x;
-                    double dy = moveEntity.getPosY() - y + 1;
-                    double dz = moveEntity.getPosZ() - z;
+                    double dx = moveEntity.getX() - x;
+                    double dy = moveEntity.getY() - y + 1;
+                    double dz = moveEntity.getZ() - z;
                     double strength = -1;
 
                     double d = (double) MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
@@ -68,9 +68,9 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
                         dy *= m;
                         dz *= m;
                         if (moveEntity instanceof ItemEntity && d < 5.0D) {
-                            ((ItemEntity) moveEntity).setPickupDelay(0);
+                            ((ItemEntity) moveEntity).setPickUpDelay(0);
                         }
-                        moveEntity.setMotion(dx * strength, moveEntity.collidedHorizontally ? 0.3 : dy * strength, dz * strength);
+                        moveEntity.setDeltaMovement(dx * strength, moveEntity.horizontalCollision ? 0.3 : dy * strength, dz * strength);
                     }
                 }
             }

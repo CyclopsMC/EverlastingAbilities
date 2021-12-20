@@ -38,7 +38,7 @@ public class AbilityStoreStorage implements Capability.IStorage<IAbilityStore> {
     public void readNBT(Capability<IAbilityStore> capability, IAbilityStore instance, Direction side, INBT nbt) {
         Map<IAbilityType, Integer> abilityTypes = Maps.newHashMap();
         if (nbt instanceof ListNBT) {
-            if (((ListNBT) nbt).getTagType() == Constants.NBT.TAG_COMPOUND) {
+            if (((ListNBT) nbt).getElementType() == Constants.NBT.TAG_COMPOUND) {
                 ListNBT list = (ListNBT) nbt;
                 for (int i = 0; i < list.size(); i++) {
                     CompoundNBT tag = list.getCompound(i);

@@ -29,8 +29,8 @@ public class ItemAbilityTotemConfig extends ItemConfig {
         super(EverlastingAbilities._instance,
                 "ability_totem",
                 (eConfig) -> new ItemAbilityTotem(new Item.Properties()
-                        .maxStackSize(1)
-                        .group(EverlastingAbilities._instance.getDefaultItemGroup())));
+                        .stacksTo(1)
+                        .tab(EverlastingAbilities._instance.getDefaultItemGroup())));
     }
 
     @Override
@@ -39,14 +39,14 @@ public class ItemAbilityTotemConfig extends ItemConfig {
 
         if (lootChests) {
             LootHelpers.injectLootTable(new ResourceLocation(Reference.MOD_ID, "inject/chests/ability_totem"),
-                    LootTables.CHESTS_SPAWN_BONUS_CHEST,
-                    LootTables.CHESTS_VILLAGE_VILLAGE_TOOLSMITH,
-                    LootTables.CHESTS_VILLAGE_VILLAGE_WEAPONSMITH,
-                    LootTables.CHESTS_VILLAGE_VILLAGE_SHEPHERD,
-                    LootTables.CHESTS_NETHER_BRIDGE,
-                    LootTables.CHESTS_SIMPLE_DUNGEON,
-                    LootTables.CHESTS_ABANDONED_MINESHAFT,
-                    LootTables.CHESTS_JUNGLE_TEMPLE);
+                    LootTables.SPAWN_BONUS_CHEST,
+                    LootTables.VILLAGE_TOOLSMITH,
+                    LootTables.VILLAGE_WEAPONSMITH,
+                    LootTables.VILLAGE_SHEPHERD,
+                    LootTables.NETHER_BRIDGE,
+                    LootTables.SIMPLE_DUNGEON,
+                    LootTables.ABANDONED_MINESHAFT,
+                    LootTables.JUNGLE_TEMPLE);
         }
     }
 }

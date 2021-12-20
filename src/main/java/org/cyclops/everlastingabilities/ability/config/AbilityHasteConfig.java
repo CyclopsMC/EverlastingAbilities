@@ -38,7 +38,7 @@ public class AbilityHasteConfig extends AbilityConfig<AbilityTypePotionEffectSel
     public AbilityHasteConfig() {
         super("haste",
                 eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.HASTE));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.DIG_SPEED));
     }
 
 }

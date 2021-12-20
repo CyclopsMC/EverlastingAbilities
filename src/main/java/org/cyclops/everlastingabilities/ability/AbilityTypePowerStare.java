@@ -34,31 +34,31 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
             return;
         }
 
-        World world = player.world;
-        if (!world.isRemote && player.world.getGameTime() % TICK_MODULUS == 0) {
+        World world = player.level;
+        if (!world.isClientSide && player.level.getGameTime() % TICK_MODULUS == 0) {
             int range = level * 10;
             double eyeHeight = player.getEyeHeight();
-            Vector3d lookVec = player.getLookVec();
-            Vector3d origin = new Vector3d(player.getPosX(), player.getPosY() + eyeHeight, player.getPosZ());
+            Vector3d lookVec = player.getLookAngle();
+            Vector3d origin = new Vector3d(player.getX(), player.getY() + eyeHeight, player.getZ());
             Vector3d direction = origin.add(lookVec.x * range, lookVec.y * range, lookVec.z * range);
 
-            List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(player,
-                    player.getBoundingBox().expand(lookVec.x * range, lookVec.y * range, lookVec.z * range)
-                            .grow((double) range));
+            List<Entity> list = world.getEntities(player,
+                    player.getBoundingBox().expandTowards(lookVec.x * range, lookVec.y * range, lookVec.z * range)
+                            .inflate((double) range));
             for (Entity e : list) {
                 // TODO TameableEntity was IEntityOwnable
-                if (e.canBeCollidedWith() && (!(e instanceof TameableEntity) || ((TameableEntity) e).getOwner() != player) && !player.isOnSameTeam(e)) {
+                if (e.isPickable() && (!(e instanceof TameableEntity) || ((TameableEntity) e).getOwner() != player) && !player.isAlliedTo(e)) {
                     Entity entity = null;
-                    float f10 = e.getCollisionBorderSize();
-                    AxisAlignedBB axisalignedbb = e.getBoundingBox().expand((double) f10, (double) f10, (double) f10);
-                    Vector3d hitVec = axisalignedbb.rayTrace(origin, direction).orElse(null);
+                    float f10 = e.getPickRadius();
+                    AxisAlignedBB axisalignedbb = e.getBoundingBox().expandTowards((double) f10, (double) f10, (double) f10);
+                    Vector3d hitVec = axisalignedbb.clip(origin, direction).orElse(null);
 
                     if (axisalignedbb.contains(origin)) {
                         entity = e;
                     } else if (hitVec != null) {
                         double distance = origin.distanceTo(hitVec);
                         if (distance < range || range == 0.0D) {
-                            if (e == player.getRidingEntity() && !player.canRiderInteract()) {
+                            if (e == player.getVehicle() && !player.canRiderInteract()) {
                                 if (range == 0.0D) {
                                     entity = e;
                                 }
@@ -69,9 +69,9 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
                     }
 
                     if (entity != null) {
-                        double dx = entity.getPosX() - player.getPosX();
-                        double dy = entity.getPosY() - player.getPosY();
-                        double dz = entity.getPosZ() - player.getPosZ();
+                        double dx = entity.getX() - player.getX();
+                        double dy = entity.getY() - player.getY();
+                        double dz = entity.getZ() - player.getZ();
                         double d = MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
                         double m = 1 / (2 * (Math.max(1, d)));
                         dx *= m;
@@ -80,7 +80,7 @@ public class AbilityTypePowerStare extends AbilityTypeDefault {
 
                         double strength = 3F;
 
-                        entity.setMotion(dx * strength, dy * strength, dz * strength);
+                        entity.setDeltaMovement(dx * strength, dy * strength, dz * strength);
                         break;
                     }
                 }

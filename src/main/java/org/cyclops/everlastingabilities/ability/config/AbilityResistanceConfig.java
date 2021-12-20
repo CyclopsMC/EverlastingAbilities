@@ -38,7 +38,7 @@ public class AbilityResistanceConfig extends AbilityConfig<AbilityTypePotionEffe
     public AbilityResistanceConfig() {
         super("resistance",
                 eConfig -> new AbilityTypePotionEffectSelf(eConfig.getNamedId(), () -> rarity, () -> maxLevel, () -> xpPerLevel,
-                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.RESISTANCE));
+                        () -> obtainableOnPlayerSpawn, () -> obtainableOnMobSpawn, () -> obtainableOnCraft, () -> obtainableOnLoot, Effects.DAMAGE_RESISTANCE));
     }
 
 }

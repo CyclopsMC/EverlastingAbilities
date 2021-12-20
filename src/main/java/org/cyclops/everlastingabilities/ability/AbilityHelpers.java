@@ -105,7 +105,7 @@ public class AbilityHelpers {
     }
 
     public static int getMaxPlayerAbilities(World world) {
-        return world.isRemote() ? maxPlayerAbilitiesClient : GeneralConfig.maxPlayerAbilities;
+        return world.isClientSide() ? maxPlayerAbilitiesClient : GeneralConfig.maxPlayerAbilities;
     }
 
     /**
@@ -124,15 +124,15 @@ public class AbilityHelpers {
                             ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
 
                     // Check max ability count
-                    if (getMaxPlayerAbilities(player.getEntityWorld()) >= 0 && oldLevel == 0
-                            && getMaxPlayerAbilities(player.getEntityWorld()) <= abilityStore.getAbilities().size()) {
+                    if (getMaxPlayerAbilities(player.getCommandSenderWorld()) >= 0 && oldLevel == 0
+                            && getMaxPlayerAbilities(player.getCommandSenderWorld()) <= abilityStore.getAbilities().size()) {
                         return Ability.EMPTY;
                     }
 
                     Ability result = abilityStore.addAbility(ability, doAdd);
-                    int currentXp = player.experienceTotal;
+                    int currentXp = player.totalExperience;
                     if (result != null && modifyXp && getExperience(result) > currentXp) {
-                        int maxLevels = player.experienceTotal / result.getAbilityType().getBaseXpPerLevel();
+                        int maxLevels = player.totalExperience / result.getAbilityType().getBaseXpPerLevel();
                         if (maxLevels == 0) {
                             result = Ability.EMPTY;
                         } else {
@@ -140,11 +140,11 @@ public class AbilityHelpers {
                         }
                     }
                     if (doAdd && !result.isEmpty()) {
-                        player.experienceTotal -= getExperience(result);
+                        player.totalExperience -= getExperience(result);
                         // Fix xp bar
-                        player.experienceLevel = getLevelForExperience(player.experienceTotal);
+                        player.experienceLevel = getLevelForExperience(player.totalExperience);
                         int xpForLevel = getExperienceForLevel(player.experienceLevel);
-                        player.experience = (float)(player.experienceTotal - xpForLevel) / (float)player.xpBarCap();
+                        player.experienceProgress = (float)(player.totalExperience - xpForLevel) / (float)player.getXpNeededForNextLevel();
 
                         int newLevel = abilityStore.getAbility(result.getAbilityType()).getLevel();
                         onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
