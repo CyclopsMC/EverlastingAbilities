@@ -320,6 +320,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
     @SubscribeEvent
     public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
+        event.getOriginal().reviveCaps(); // This is needed to enable capability retrieval
         IMutableAbilityStore oldStore = event.getOriginal().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
         IMutableAbilityStore newStore = event.getPlayer().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
         if (oldStore != null && newStore != null) {
