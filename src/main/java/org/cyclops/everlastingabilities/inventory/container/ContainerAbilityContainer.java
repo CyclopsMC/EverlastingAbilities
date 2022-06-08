@@ -1,15 +1,14 @@
 package org.cyclops.everlastingabilities.inventory.container;
 
 import com.google.common.collect.Lists;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
-import org.cyclops.cyclopscore.helper.InventoryHelpers;
+import org.cyclops.cyclopscore.inventory.ItemLocation;
 import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainer;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
@@ -32,11 +31,11 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     private ContainerScreenAbilityContainer gui;
 
     public ContainerAbilityContainer(int id, Inventory inventory, FriendlyByteBuf packetBuffer) {
-        this(id, inventory, readItemIndex(packetBuffer), readHand(packetBuffer));
+        this(id, inventory, ItemLocation.readFromPacketBuffer(packetBuffer));
     }
 
-    public ContainerAbilityContainer(int id, Inventory inventory, int itemIndex, InteractionHand hand) {
-        super(RegistryEntries.CONTAINER_ABILITYCONTAINER, id, inventory, itemIndex, hand);
+    public ContainerAbilityContainer(int id, Inventory inventory, ItemLocation itemLocation) {
+        super(RegistryEntries.CONTAINER_ABILITYCONTAINER, id, inventory, itemLocation);
         addInventory(inventory, 0, 8, 195, 1, 9);
 
         // If level is not consistent with total experience count, fix it.
@@ -103,7 +102,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
                 AbilityHelpers.extract(insertedAbility, abilityStore);
 
                 if(getItemAbilities().isEmpty() && !getItem().canMoveFromPlayer()) {
-                    InventoryHelpers.setItemAtIndex(player, itemIndex, hand, ItemStack.EMPTY);
+                    this.itemLocation.setItemStack(player, ItemStack.EMPTY);
                 }
             }
         });
