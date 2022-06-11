@@ -9,9 +9,8 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.Util;
-import net.minecraft.network.chat.TranslatableComponent;
 import org.cyclops.cyclopscore.command.argument.ArgumentTypeEnum;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -42,10 +41,10 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
         IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY).orElse(null);
 
         if (action == Action.LIST) {
-            sender.sendMessage(abilityStore.getTextComponent(), Util.NIL_UUID);
+            sender.sendSystemMessage(abilityStore.getTextComponent());
         } else {
             if (!this.checkAbility) {
-                throw new SimpleCommandExceptionType(new TranslatableComponent(
+                throw new SimpleCommandExceptionType(Component.translatable(
                         "chat.everlastingabilities.command.invalidAbility", "null")).create();
             }
             // Determine the ability
@@ -60,7 +59,7 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
                 Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                sender.sendMessage(new TranslatableComponent("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility), Util.NIL_UUID);
+                sender.sendSystemMessage(Component.translatable("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility));
             } else {
                 level = Math.max(1, level);
                 Ability ability = new Ability(abilityType, level);
@@ -68,7 +67,7 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
                 Ability removedAbility = AbilityHelpers.removePlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                sender.sendMessage(new TranslatableComponent("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility), Util.NIL_UUID);
+                sender.sendSystemMessage(Component.translatable("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility));
             }
         }
         return 0;

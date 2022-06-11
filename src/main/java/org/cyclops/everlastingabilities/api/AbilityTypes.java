@@ -19,8 +19,7 @@ public class AbilityTypes {
     @SubscribeEvent
     public static void onRegistriesCreate(NewRegistryEvent event) {
         event.create(new RegistryBuilder<IAbilityType>()
-                .setName(new ResourceLocation("everlastingabilities", "abilities"))
-                .setType(IAbilityType.class),
+                .setName(new ResourceLocation("everlastingabilities", "abilities")),
                 registry -> REGISTRY = registry);
     }
 

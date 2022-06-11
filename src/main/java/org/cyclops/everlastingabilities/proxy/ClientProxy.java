@@ -1,8 +1,9 @@
 package org.cyclops.everlastingabilities.proxy;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,8 +16,6 @@ import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
-
-import java.util.Random;
 
 /**
  * Proxy for the client side.
@@ -50,7 +49,7 @@ public class ClientProxy extends ClientProxyComponent {
 					float g = abilityColors.getMiddle() / 255F;
 					float b = abilityColors.getRight() / 255F;
 
-					Random rand = entity.level.random;
+					RandomSource rand = entity.level.random;
 					float scale = 0.5F - rand.nextFloat() * 0.3F;
 					float red = Math.max(0, r - rand.nextFloat() * 0.1F);
 					float green = Math.max(0, g - rand.nextFloat() * 0.1F);

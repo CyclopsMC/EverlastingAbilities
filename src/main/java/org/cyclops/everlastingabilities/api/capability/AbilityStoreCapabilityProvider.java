@@ -40,7 +40,7 @@ public class AbilityStoreCapabilityProvider<T extends IMutableAbilityStore> exte
         ListTag list = new ListTag();
         for (Ability ability : capability.getAbilities()) {
             CompoundTag tag = new CompoundTag();
-            tag.putString("name", ability.getAbilityType().getRegistryName().toString());
+            tag.putString("name", AbilityTypes.REGISTRY.getKey(ability.getAbilityType()).toString());
             tag.putInt("level", ability.getLevel());
             list.add(tag);
         }

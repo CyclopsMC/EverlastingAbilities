@@ -8,9 +8,8 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
@@ -29,7 +28,7 @@ public class ArgumentTypeAbility implements ArgumentType<IAbilityType> {
         ResourceLocation id = ResourceLocation.read(reader);
         IAbilityType abilityType = AbilityTypes.REGISTRY.getValue(id);
         if (abilityType == null) {
-            throw new SimpleCommandExceptionType(new TranslatableComponent("chat.everlastingabilities.command.invalidAbility", id)).create();
+            throw new SimpleCommandExceptionType(Component.translatable("chat.everlastingabilities.command.invalidAbility", id)).create();
         }
         return abilityType;
     }
@@ -37,7 +36,7 @@ public class ArgumentTypeAbility implements ArgumentType<IAbilityType> {
     @Override
     public Collection<String> getExamples() {
         return AbilityTypes.REGISTRY.getValues().stream()
-                .map(IForgeRegistryEntry::getRegistryName)
+                .map(ability -> AbilityTypes.REGISTRY.getKey(ability))
                 .map(ResourceLocation::toString)
                 .collect(Collectors.toList());
     }

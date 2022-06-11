@@ -1,31 +1,30 @@
 package org.cyclops.everlastingabilities.client.gui;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
-import com.mojang.math.Quaternion;
-import com.mojang.blaze3d.platform.Lighting;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.Util;
-import com.mojang.math.Vector3f;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.gui.component.button.ButtonArrow;
 import org.cyclops.cyclopscore.client.gui.container.ContainerScreenExtended;
@@ -86,27 +85,27 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     public void init() {
         super.init();
 
-        addRenderableWidget(buttonUp1 = new ButtonArrow(this.leftPos + 73,  this.topPos + 83, new TranslatableComponent("gui.cyclopscore.up"), button -> {
+        addRenderableWidget(buttonUp1 = new ButtonArrow(this.leftPos + 73,  this.topPos + 83, Component.translatable("gui.cyclopscore.up"), button -> {
             if (startIndexPlayer > 0) startIndexPlayer--;
         }, ButtonArrow.Direction.NORTH));
-        addRenderableWidget(buttonDown1 = new ButtonArrow(this.leftPos + 73,  this.topPos + 174, new TranslatableComponent("gui.cyclopscore.down"), button -> {
+        addRenderableWidget(buttonDown1 = new ButtonArrow(this.leftPos + 73,  this.topPos + 174, Component.translatable("gui.cyclopscore.down"), button -> {
             if (startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount())) startIndexPlayer++;
         }, ButtonArrow.Direction.SOUTH));
-        addRenderableWidget(buttonUp2 = new ButtonArrow(this.leftPos + 88,  this.topPos + 83, new TranslatableComponent("gui.cyclopscore.up"), button -> {
+        addRenderableWidget(buttonUp2 = new ButtonArrow(this.leftPos + 88,  this.topPos + 83, Component.translatable("gui.cyclopscore.up"), button -> {
             if (startIndexItem > 0) startIndexItem--;
         }, ButtonArrow.Direction.NORTH));
-        addRenderableWidget(buttonDown2 = new ButtonArrow(this.leftPos + 88,  this.topPos + 174, new TranslatableComponent("gui.cyclopscore.down"), button -> {
+        addRenderableWidget(buttonDown2 = new ButtonArrow(this.leftPos + 88,  this.topPos + 174, Component.translatable("gui.cyclopscore.down"), button -> {
             if (startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount())) startIndexItem++;
         }, ButtonArrow.Direction.SOUTH));
 
-        addRenderableWidget(buttonLeft = new ButtonArrow(this.leftPos + 76,  this.topPos + 130, new TranslatableComponent("gui.cyclopscore.left"), button -> {
+        addRenderableWidget(buttonLeft = new ButtonArrow(this.leftPos + 76,  this.topPos + 130, Component.translatable("gui.cyclopscore.left"), button -> {
             if (canMoveToPlayer()) {
                 EverlastingAbilities._instance.getPacketHandler().sendToServer(
                         new MoveAbilityPacket(getSelectedItemAbilitySingle(), MoveAbilityPacket.Movement.TO_PLAYER));
                 moveToPlayer();
             }
         }, ButtonArrow.Direction.WEST));
-        addRenderableWidget(buttonRight = new ButtonArrow(this.leftPos + 90,  this.topPos + 130, new TranslatableComponent("gui.cyclopscore.right"), button -> {
+        addRenderableWidget(buttonRight = new ButtonArrow(this.leftPos + 90,  this.topPos + 130, Component.translatable("gui.cyclopscore.right"), button -> {
             if (canMoveFromPlayer()) {
                 EverlastingAbilities._instance.getPacketHandler().sendToServer(
                         new MoveAbilityPacket(getSelectedPlayerAbilitySingle(), MoveAbilityPacket.Movement.FROM_PLAYER));
@@ -241,7 +240,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
             // Name
             RenderHelpers.drawScaledCenteredString(poseStack, font,
-                    new TranslatableComponent(ability.getAbilityType().getTranslationKey())
+                    Component.translatable(ability.getAbilityType().getTranslationKey())
                             .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ability.getAbilityType().getRarity().color)))
                             .getString(),
                     x + 27, boxY + 7, 0, 1.0F, 50, -1);
@@ -275,19 +274,19 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                 List<Component> lines = Lists.newLinkedList();
 
                 // Name
-                lines.add(new TranslatableComponent(ability.getAbilityType().getTranslationKey())
+                lines.add(Component.translatable(ability.getAbilityType().getTranslationKey())
                         .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ability.getAbilityType().getRarity().color))));
 
                 // Level
-                lines.add(new TranslatableComponent("general.everlastingabilities.level", ability.getLevel(),
+                lines.add(Component.translatable("general.everlastingabilities.level", ability.getLevel(),
                         ability.getAbilityType().getMaxLevel() == -1 ? "Inf" : ability.getAbilityType().getMaxLevel()));
 
                 // Description
-                lines.add(new TranslatableComponent(ability.getAbilityType().getUnlocalizedDescription())
+                lines.add(Component.translatable(ability.getAbilityType().getUnlocalizedDescription())
                         .setStyle(Style.EMPTY.applyFormats(IInformationProvider.INFO_PREFIX_STYLES)));
 
                 // Xp
-                lines.add(new TranslatableComponent("general.everlastingabilities.xp",
+                lines.add(Component.translatable("general.everlastingabilities.xp",
                         ability.getAbilityType().getBaseXpPerLevel(),
                         AbilityHelpers.getLevelForExperience(ability.getAbilityType().getBaseXpPerLevel()))
                         .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GREEN))));

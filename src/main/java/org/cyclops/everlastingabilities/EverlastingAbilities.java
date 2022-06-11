@@ -3,15 +3,13 @@ package org.cyclops.everlastingabilities;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.synchronization.ArgumentTypes;
-import net.minecraft.commands.synchronization.EmptyArgumentSerializer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +48,7 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
-import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbility;
+import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbilityConfig;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainerConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
@@ -63,7 +61,6 @@ import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipeConfig;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 /**
  * The main mod class of this mod.
@@ -108,11 +105,6 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         // Register loot functions
         LootFunctionSetRandomAbility.load();
 
-        // Register argument types
-        ArgumentTypes.register(Reference.MOD_ID + ":" + "ability",
-                ArgumentTypeAbility.class,
-                new EmptyArgumentSerializer<>(ArgumentTypeAbility::new));
-
         // Register capabilities
         getCapabilityConstructorRegistry().registerInheritableEntity(Player.class, new SimpleCapabilityConstructor<IMutableAbilityStore, Player>() {
             @Nullable
@@ -137,7 +129,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                         if (GeneralConfig.mobAbilityChance > 0
                                 && entity.getId() % GeneralConfig.mobAbilityChance == 0
                                 && canMobHaveAbility((LivingEntity) host)) {
-                            Random rand = new Random();
+                            RandomSource rand = RandomSource.create();
                             rand.setSeed(entity.getId());
                             List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn();
                             Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, rand);
@@ -171,6 +163,9 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     protected void onConfigsRegister(ConfigHandler configHandler) {
         super.onConfigsRegister(configHandler);
         configHandler.addConfigurable(new GeneralConfig());
+
+        // Argument types
+        configHandler.addConfigurable(new ArgumentTypeAbilityConfig());
 
         // Capabilities
         configHandler.addConfigurable(new AbilityStoreConfig());
@@ -300,13 +295,13 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                         if (removed != null) {
                             toDrop -= removed.getLevel();
                             itemStackStore.addAbility(removed, true);
-                            entity.sendMessage(new TranslatableComponent("chat.everlastingabilities.playerLostAbility",
+                            entity.sendSystemMessage(Component.translatable("chat.everlastingabilities.playerLostAbility",
                                     entity.getName(),
-                                    new TranslatableComponent(removed.getAbilityType().getTranslationKey())
+                                    Component.translatable(removed.getAbilityType().getTranslationKey())
                                             .setStyle(Style.EMPTY
                                                     .withColor(TextColor.fromLegacyFormat(removed.getAbilityType().getRarity().color))
                                                     .withBold(true)),
-                                    removed.getLevel()), Util.NIL_UUID);
+                                    removed.getLevel()));
                         }
                     }
                 }

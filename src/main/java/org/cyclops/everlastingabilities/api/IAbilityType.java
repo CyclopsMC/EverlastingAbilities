@@ -2,14 +2,13 @@ package org.cyclops.everlastingabilities.api;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 
 /**
  * An ability type.
  * @author rubensworks
  */
-public interface IAbilityType extends IForgeRegistryEntry<IAbilityType> {
+public interface IAbilityType {
 
     public String getTranslationKey();
     public String getUnlocalizedDescription();

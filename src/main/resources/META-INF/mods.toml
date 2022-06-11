@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[40,)"
+loaderVersion="[41,)"
 issueTrackerURL="https://github.com/CyclopsMC/EverlastingAbilities/issues"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/everlastingabilities"
 license="MIT"
@@ -22,12 +22,12 @@ Discover, share and conquer abilities that stick.
 [[dependencies.everlastingabilities]]
     modId="forge"
     mandatory=true
-    versionRange="[40,)"
+    versionRange="[41,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.everlastingabilities]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2,]"
+    versionRange="[1.19,]"
     ordering="NONE"
     side="BOTH"

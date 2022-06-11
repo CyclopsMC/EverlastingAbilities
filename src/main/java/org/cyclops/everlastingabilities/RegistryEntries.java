@@ -13,15 +13,15 @@ import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
  */
 public class RegistryEntries {
 
-    @ObjectHolder("everlastingabilities:ability_bottle")
+    @ObjectHolder(registryName = "item", value = "everlastingabilities:ability_bottle")
     public static final Item ITEM_ABILITY_BOTTLE = null;
-    @ObjectHolder("everlastingabilities:ability_totem")
+    @ObjectHolder(registryName = "item", value = "everlastingabilities:ability_totem")
     public static final Item ITEM_ABILITY_TOTEM = null;
 
-    @ObjectHolder("everlastingabilities:ability_container")
+    @ObjectHolder(registryName = "menu", value = "everlastingabilities:ability_container")
     public static final MenuType<ContainerAbilityContainer> CONTAINER_ABILITYCONTAINER = null;
 
-    @ObjectHolder("everlastingabilities:crafting_special_totem_recycle")
+    @ObjectHolder(registryName = "recipe_serializer", value = "everlastingabilities:crafting_special_totem_recycle")
     public static final SimpleRecipeSerializer<TotemRecycleRecipe> RECIPESERIALIZER_TOTEM_RECYCLE = null;
 
 }

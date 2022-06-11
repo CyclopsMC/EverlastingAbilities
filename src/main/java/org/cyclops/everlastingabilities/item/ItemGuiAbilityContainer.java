@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -61,13 +60,13 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
             boolean empty = true;
             for (Ability ability : abilities) {
                 empty = false;
-                tooltip.add(new TranslatableComponent(ability.getAbilityType().getTranslationKey())
+                tooltip.add(Component.translatable(ability.getAbilityType().getTranslationKey())
                         .append(" " + ability.getLevel())
                         .setStyle(Style.EMPTY
                                 .withColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW))));
             }
             if (empty) {
-                tooltip.add(new TranslatableComponent("general.everlastingabilities.empty")
+                tooltip.add(Component.translatable("general.everlastingabilities.empty")
                         .setStyle(Style.EMPTY
                                 .withColor(TextColor.fromLegacyFormat(ChatFormatting.GRAY))
                                 .withItalic(true)));

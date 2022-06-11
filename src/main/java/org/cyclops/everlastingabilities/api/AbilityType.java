@@ -2,7 +2,6 @@ package org.cyclops.everlastingabilities.api;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.function.Supplier;
 
@@ -10,7 +9,7 @@ import java.util.function.Supplier;
  * Default implementation of an ability type.
  * @author rubensworks
  */
-public class AbilityType extends ForgeRegistryEntry<IAbilityType> implements IAbilityType {
+public class AbilityType implements IAbilityType {
 
     private final String translationKey;
     private final String unlocalizedDescription;

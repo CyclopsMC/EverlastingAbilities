@@ -1,12 +1,13 @@
 package org.cyclops.everlastingabilities.recipe;
 
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
@@ -17,11 +18,10 @@ import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
 public class TotemRecycleRecipe extends CustomRecipe {
 
-    private final Random rand = new Random();
+    private final RandomSource rand = RandomSource.create();
     private long seed = rand.nextLong();
 
     public TotemRecycleRecipe(ResourceLocation id) {

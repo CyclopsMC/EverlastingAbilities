@@ -3,8 +3,9 @@ package org.cyclops.everlastingabilities.ability;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import lombok.NonNull;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
@@ -24,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Optional;
-import java.util.Random;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -214,7 +214,7 @@ public class AbilityHelpers {
         return mutableAbilityStore.removeAbility(ability, true);
     }
 
-    public static Optional<IAbilityType> getRandomAbility(List<IAbilityType> abilityTypes, Random random, Rarity rarity) {
+    public static Optional<IAbilityType> getRandomAbility(List<IAbilityType> abilityTypes, RandomSource random, Rarity rarity) {
         List<IAbilityType> filtered = abilityTypes.stream().filter(createRarityPredicate(rarity)).collect(Collectors.toList());
         if (filtered.size() > 0) {
             return Optional.of(filtered.get(random.nextInt(filtered.size())));
@@ -222,7 +222,7 @@ public class AbilityHelpers {
         return Optional.empty();
     }
 
-    public static Optional<IAbilityType> getRandomAbilityUntilRarity(List<IAbilityType> abilityTypes, Random random, Rarity rarity, boolean inclusive) {
+    public static Optional<IAbilityType> getRandomAbilityUntilRarity(List<IAbilityType> abilityTypes, RandomSource random, Rarity rarity, boolean inclusive) {
         NavigableSet<Rarity> validRarities = AbilityHelpers.getValidAbilityRarities(abilityTypes).headSet(rarity, inclusive);
         Iterator<Rarity> it = validRarities.descendingIterator();
         while (it.hasNext()) {
@@ -234,13 +234,13 @@ public class AbilityHelpers {
         return Optional.empty();
     }
 
-    public static Optional<ItemStack> getRandomTotem(List<IAbilityType> abilityTypes, Rarity rarity, Random rand) {
+    public static Optional<ItemStack> getRandomTotem(List<IAbilityType> abilityTypes, Rarity rarity, RandomSource rand) {
         return getRandomAbility(abilityTypes, rand, rarity).flatMap(
                 abilityType -> Optional.of(ItemAbilityTotem.getTotem(new Ability(abilityType, 1))));
     }
 
 
-    public static Rarity getRandomRarity(List<IAbilityType> abilityTypes, Random rand) {
+    public static Rarity getRandomRarity(List<IAbilityType> abilityTypes, RandomSource rand) {
         int chance = rand.nextInt(50);
         Rarity rarity;
         if (chance >= 49) {
