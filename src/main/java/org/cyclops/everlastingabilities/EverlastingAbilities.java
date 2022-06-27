@@ -212,6 +212,10 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         configHandler.addConfigurable(new AbilityBonemealerConfig());
         configHandler.addConfigurable(new AbilityPowerStareConfig());
         configHandler.addConfigurable(new AbilityMagnetizeConfig());
+        configHandler.addConfigurable(new AbilityBadOmenConfig());
+        configHandler.addConfigurable(new AbilitySlowFallingConfig());
+        configHandler.addConfigurable(new AbilityConduitPowerConfig());
+        configHandler.addConfigurable(new AbilityDolphinsGraceConfig());
     }
 
     /**
