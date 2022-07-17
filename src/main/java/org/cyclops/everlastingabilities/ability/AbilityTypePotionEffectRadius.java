@@ -72,7 +72,7 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
 
     static boolean isFriendlyMob(LivingEntity mob, Player player) {
         ResourceLocation resourceLocation = mob instanceof Player
-                ? new ResourceLocation("player") : ForgeRegistries.ENTITIES.getKey(mob.getType());
+                ? new ResourceLocation("player") : ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
         String mobName = resourceLocation == null ? "null" : resourceLocation.toString();
         return (mob == player ||
                 player.isAlliedTo(mob) ||

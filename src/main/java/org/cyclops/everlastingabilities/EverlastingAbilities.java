@@ -22,7 +22,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -150,7 +150,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     }
 
     private static boolean canMobHaveAbility(LivingEntity mob) {
-        ResourceLocation mobName = ForgeRegistries.ENTITIES.getKey(mob.getType());
+        ResourceLocation mobName = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
         return mobName != null && GeneralConfig.mobDropBlacklist.stream().noneMatch(mobName.toString()::matches);
     }
 
@@ -236,8 +236,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     }
 
     @SubscribeEvent
-    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getWorld().isClientSide && event.getEntity().getCapability(MutableAbilityStoreConfig.CAPABILITY).isPresent()) {
+    public void onEntityJoinWorld(EntityJoinLevelEvent event) {
+        if (event.getLevel().isClientSide && event.getEntity().getCapability(MutableAbilityStoreConfig.CAPABILITY).isPresent()) {
             getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
         }
     }
@@ -246,7 +246,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (GeneralConfig.totemMaximumSpawnRarity >= 0) {
-            CompoundTag tag = event.getPlayer().getPersistentData();
+            CompoundTag tag = event.getEntity().getPersistentData();
             if (!tag.contains(Player.PERSISTED_NBT_TAG)) {
                 tag.put(Player.PERSISTED_NBT_TAG, new CompoundTag());
             }
@@ -254,8 +254,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             if (!playerTag.contains(NBT_TOTEM_SPAWNED)) {
                 playerTag.putBoolean(NBT_TOTEM_SPAWNED, true);
 
-                Level world = event.getPlayer().level;
-                Player player = event.getPlayer();
+                Level world = event.getEntity().level;
+                Player player = event.getEntity();
                 Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
                 AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(), world.random, rarity, true).ifPresent(abilityType -> {
                     ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
@@ -271,18 +271,18 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        boolean doMobLoot = event.getEntityLiving().level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
-        if (!event.getEntityLiving().level.isClientSide
-                && (event.getEntityLiving() instanceof Player
+        boolean doMobLoot = event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
+        if (!event.getEntity().level.isClientSide
+                && (event.getEntity() instanceof Player
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
                         && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
                         && event.getSource().getEntity() instanceof Player))
                     : (doMobLoot && (event.getSource() instanceof EntityDamageSource)
                         && event.getSource().getEntity() instanceof Player))) {
-            LivingEntity entity = event.getEntityLiving();
+            LivingEntity entity = event.getEntity();
             entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(mutableAbilityStore -> {
                 int toDrop = 1;
-                if (event.getEntityLiving() instanceof Player
+                if (event.getEntity() instanceof Player
                         && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
                         && event.getSource().getEntity() instanceof Player)) {
                     toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
@@ -321,16 +321,16 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
         event.getOriginal().reviveCaps(); // This is needed to enable capability retrieval
         IMutableAbilityStore oldStore = event.getOriginal().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
-        IMutableAbilityStore newStore = event.getPlayer().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
+        IMutableAbilityStore newStore = event.getEntity().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
         if (oldStore != null && newStore != null) {
             newStore.setAbilities(Maps.newHashMap(oldStore.getAbilitiesRaw()));
         }
     }
 
     @SubscribeEvent
-    public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (GeneralConfig.tickAbilities && event.getEntityLiving() instanceof Player) {
-            Player player = (Player) event.getEntityLiving();
+    public void onLivingUpdate(LivingEvent.LivingTickEvent event) {
+        if (GeneralConfig.tickAbilities && event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
             player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
                 for (Ability ability : abilityStore.getAbilities()) {
                     if (event.getEntity().level.getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
