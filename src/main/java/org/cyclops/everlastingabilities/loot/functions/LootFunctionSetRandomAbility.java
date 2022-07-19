@@ -3,12 +3,12 @@ package org.cyclops.everlastingabilities.loot.functions;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.cyclops.cyclopscore.helper.LootHelpers;
 import org.cyclops.everlastingabilities.Reference;
@@ -32,13 +32,17 @@ public class LootFunctionSetRandomAbility extends LootItemConditionalFunction {
 
     @Override
     public ItemStack run(ItemStack stack, LootContext context) {
-        List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesLoot();
-        Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, context.getRandom());
-        IAbilityType abilityType = AbilityHelpers.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
+        try {
+            List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesLoot();
+            Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, context.getRandom());
+            IAbilityType abilityType = AbilityHelpers.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
 
-        stack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
-                .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
-        return stack;
+            stack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+                    .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
+            return stack;
+        } catch (IllegalStateException e) {
+            return ItemStack.EMPTY;
+        }
     }
 
     @Override
