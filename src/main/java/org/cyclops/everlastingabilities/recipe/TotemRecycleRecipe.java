@@ -6,6 +6,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -24,8 +25,8 @@ public class TotemRecycleRecipe extends CustomRecipe {
     private final RandomSource rand = RandomSource.create();
     private long seed = rand.nextLong();
 
-    public TotemRecycleRecipe(ResourceLocation id) {
-        super(id);
+    public TotemRecycleRecipe(ResourceLocation id, CraftingBookCategory craftingBookCategory) {
+        super(id, craftingBookCategory);
     }
 
     @Override

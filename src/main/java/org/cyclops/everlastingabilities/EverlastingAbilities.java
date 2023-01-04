@@ -33,7 +33,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
-import org.cyclops.cyclopscore.init.ItemGroupMod;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
@@ -155,8 +154,9 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     }
 
     @Override
-    public CreativeModeTab constructDefaultCreativeModeTab() {
-        return new ItemGroupMod(this, () -> RegistryEntries.ITEM_ABILITY_BOTTLE);
+    protected CreativeModeTab.Builder constructDefaultCreativeModeTab(CreativeModeTab.Builder builder) {
+        return super.constructDefaultCreativeModeTab(builder)
+                .icon(() -> new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE));
     }
 
     @Override

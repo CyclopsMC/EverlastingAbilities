@@ -1,13 +1,9 @@
 package org.cyclops.everlastingabilities.item;
 
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.AbilityTypes;
-import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
 /**
@@ -43,18 +39,6 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
         itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
                 .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(ability, true));
         return itemStack;
-    }
-
-    @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (this.allowedIn(group)) {
-            for (IAbilityType abilityType : AbilityTypes.REGISTRY.getValues()) {
-                for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
-                    Ability ability = new Ability(abilityType, level);
-                    items.add(getTotem(ability));
-                }
-            }
-        }
     }
 
 }
