@@ -1,11 +1,11 @@
 package org.cyclops.everlastingabilities.item;
 
+import com.google.common.collect.Lists;
 import net.minecraft.world.item.Item;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraftforge.fml.config.ModConfig;
-import org.apache.commons.compress.utils.Lists;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
 import org.cyclops.cyclopscore.helper.LootHelpers;
