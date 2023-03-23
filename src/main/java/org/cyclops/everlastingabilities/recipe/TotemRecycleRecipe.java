@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.recipe;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -52,7 +53,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer invCrafting) {
+    public ItemStack assemble(CraftingContainer invCrafting, RegistryAccess registryAccess) {
         // Crafting is simulated
 
         // Select one of the inputs at random, and use its rarity for the rarity of the output.
@@ -111,7 +112,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
     }
 

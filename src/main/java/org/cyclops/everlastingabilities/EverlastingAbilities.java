@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -275,16 +274,13 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         if (!event.getEntity().level.isClientSide
                 && (event.getEntity() instanceof Player
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
-                        && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getEntity() instanceof Player))
-                    : (doMobLoot && (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getEntity() instanceof Player))) {
+                        && (GeneralConfig.alwaysDropAbilities || event.getSource().getEntity() instanceof Player))
+                    : (doMobLoot && event.getSource().getEntity() instanceof Player))) {
             LivingEntity entity = event.getEntity();
             entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(mutableAbilityStore -> {
                 int toDrop = 1;
                 if (event.getEntity() instanceof Player
-                        && (GeneralConfig.alwaysDropAbilities || (event.getSource() instanceof EntityDamageSource)
-                        && event.getSource().getEntity() instanceof Player)) {
+                        && (GeneralConfig.alwaysDropAbilities || event.getSource().getEntity() instanceof Player)) {
                     toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
                 }
 

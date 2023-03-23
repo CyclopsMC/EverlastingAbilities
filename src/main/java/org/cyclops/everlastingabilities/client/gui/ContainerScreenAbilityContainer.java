@@ -14,7 +14,6 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -23,6 +22,7 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.gui.component.button.ButtonArrow;
@@ -50,7 +50,7 @@ import java.util.List;
  */
 public class ContainerScreenAbilityContainer extends ContainerScreenExtended<ContainerAbilityContainer> {
 
-    private static final ResourceLocation RES_ITEM_GLINT = ItemRenderer.ENCHANT_GLINT_LOCATION;
+    private static final ResourceLocation RES_ITEM_GLINT = ItemRenderer.ENCHANTED_GLINT_ITEM;
     protected static final int ABILITY_LIST_SIZE = 6;
     protected static final int ABILITY_BOX_HEIGHT = 18;
     protected static final int ABILITY_BOX_WIDTH = 63;
@@ -181,7 +181,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         int i = this.leftPos;
         int j = this.topPos;
         drawFancyBackground(poseStack, i + 8, j + 17, 66, 61, getPlayerAbilityStore());
-        InventoryScreen.renderEntityInInventory(i + 41, j + 74, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.getMinecraft().player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(poseStack, i + 41, j + 75, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.getMinecraft().player);
         drawXp(poseStack, i + 67, j + 70);
         RenderHelpers.drawScaledCenteredString(poseStack, font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40));
         drawFancyBackground(poseStack, i + 102, j + 17, 66, 61, getItemAbilityStore());
@@ -322,7 +322,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
         MultiBufferSource.BufferSource renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
         Lighting.setupFor3DItems();
-        Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemTransforms.TransformType.FIXED, 15728880, OverlayTexture.NO_OVERLAY, posestack1, renderTypeBuffer, 0);
+        Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemDisplayContext.FIXED, 15728880, OverlayTexture.NO_OVERLAY, posestack1, renderTypeBuffer, null, 0);
         Lighting.setupForFlatItems();
         renderTypeBuffer.endBatch();
 

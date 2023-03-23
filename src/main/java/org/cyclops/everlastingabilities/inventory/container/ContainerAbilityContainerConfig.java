@@ -1,8 +1,9 @@
 package org.cyclops.everlastingabilities.inventory.container;
 
-import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.client.gui.ScreenFactorySafe;
@@ -20,7 +21,7 @@ public class ContainerAbilityContainerConfig extends GuiConfig<ContainerAbilityC
     public ContainerAbilityContainerConfig() {
         super(EverlastingAbilities._instance,
                 "ability_container",
-                eConfig -> new ContainerTypeData<>(ContainerAbilityContainer::new));
+                eConfig -> new ContainerTypeData<>(ContainerAbilityContainer::new, FeatureFlags.VANILLA_SET));
     }
 
     @OnlyIn(Dist.CLIENT)
