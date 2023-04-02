@@ -1,0 +1,8 @@
+{
+  "type": "everlastingabilities:potion_effect_self",
+  "name": "ability.everlastingabilities.fire_resistance",
+  "rarity": "uncommon",
+  "max_level": 1,
+  "xp_per_level": 20,
+  "potion_effect": "minecraft:fire_resistance"
+}

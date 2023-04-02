@@ -1,22 +1,29 @@
 package org.cyclops.everlastingabilities.ability;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Rarity;
 import org.cyclops.everlastingabilities.Reference;
-
-import java.util.function.Supplier;
+import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 
 /**
  * Ability type for flight.
  * @author rubensworks
  */
-public class AbilityTypeFlight extends AbilityTypeDefault {
+public class AbilityTypeFlight extends AbilityTypeAdapter {
 
     private static final String PLAYER_NBT_KEY = Reference.MOD_ID + ":" + "lastFlight";
 
-    public AbilityTypeFlight(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
-                             Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
-                             Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
-        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+    public AbilityTypeFlight(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
+        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+    }
+
+    @Override
+    public Codec<? extends IAbilityType> codec() {
+        return RegistryEntries.ABILITYSERIALIZER_FLIGHT;
     }
 
     @Override

@@ -1,0 +1,8 @@
+{
+  "type": "everlastingabilities:potion_effect_radius",
+  "name": "ability.everlastingabilities.poison",
+  "rarity": "epic",
+  "max_level": 3,
+  "xp_per_level": 100,
+  "potion_effect": "minecraft:poison"
+}

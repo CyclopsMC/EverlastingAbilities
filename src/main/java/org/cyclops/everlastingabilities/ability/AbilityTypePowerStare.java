@@ -1,36 +1,50 @@
 package org.cyclops.everlastingabilities.ability;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.everlastingabilities.ability.config.AbilityPowerStareConfig;
+import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Ability type for pushing in the direction your looking mobs away.
  * @author rubensworks
  */
-public class AbilityTypePowerStare extends AbilityTypeDefault {
+public class AbilityTypePowerStare extends AbilityTypeAdapter {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 4;
 
-    public AbilityTypePowerStare(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
-                                 Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
-                                 Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
-        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+    private final boolean requireSneak;
+
+    public AbilityTypePowerStare(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
+                                 boolean requireSneak) {
+        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+        this.requireSneak = requireSneak;
+    }
+
+    @Override
+    public Codec<? extends IAbilityType> codec() {
+        return RegistryEntries.ABILITYSERIALIZER_POWER_STARE;
+    }
+
+    public boolean isRequireSneak() {
+        return requireSneak;
     }
 
     @Override
     public void onTick(Player player, int level) {
-
-        if ( AbilityPowerStareConfig.requireSneak && !player.isCrouching() ) {
+        if (isRequireSneak() && !player.isCrouching()) {
             return;
         }
 

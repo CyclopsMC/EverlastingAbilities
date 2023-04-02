@@ -1,0 +1,8 @@
+{
+  "type": "everlastingabilities:potion_effect_self",
+  "name": "ability.everlastingabilities.dolphins_grace",
+  "rarity": "uncommon",
+  "max_level": 1,
+  "xp_per_level": 50,
+  "potion_effect": "minecraft:dolphins_grace"
+}

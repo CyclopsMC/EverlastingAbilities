@@ -1,46 +1,59 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.player.Player;
+import com.mojang.serialization.Codec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
+import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Ability type for potion effects in an area.
  * @author rubensworks
  */
-public class AbilityTypePotionEffectRadius extends AbilityTypeDefault {
+public class AbilityTypePotionEffectRadius extends AbilityTypeAdapter {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 2;
 
+    private final String potionEffectId;
     private final MobEffect potion;
-    private boolean hostile;
+    private final boolean hostile;
 
-    public AbilityTypePotionEffectRadius(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
-                                         Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
-                                         Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot, MobEffect potion, boolean isHostile) {
-        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
-        this.potion = potion;
+    public AbilityTypePotionEffectRadius(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                         boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
+                                         String potionEffectId, boolean isHostile) {
+        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+        this.potionEffectId = potionEffectId;
+        this.potion = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(potionEffectId));
         this.hostile = isHostile;
         if (this.potion == null) {
-            EverlastingAbilities.clog(org.apache.logging.log4j.Level.WARN, "Tried to register a null potion for ability " + id + ". This is possibly caused by a mod forcefully removing the potion effect for this ability.");
+            throw new IllegalArgumentException("No potion effect was found with id: " + potionEffectId);
         }
     }
-    public AbilityTypePotionEffectRadius(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
-                                         Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
-                                         Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot, MobEffect potion) {
-        this(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot, potion, true);
+
+    public String getPotionEffectId() {
+        return potionEffectId;
+    }
+
+    @Override
+    public Codec<? extends IAbilityType> codec() {
+        return RegistryEntries.ABILITYSERIALIZER_POTION_EFFECT_RADIUS;
+    }
+
+    public boolean isHostile() {
+        return hostile;
     }
 
     protected int getDuration(int tickModulus, int level) {

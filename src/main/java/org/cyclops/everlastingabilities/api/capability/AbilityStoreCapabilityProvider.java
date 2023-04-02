@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.api.capability;
 
 import com.google.common.collect.Maps;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -8,8 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.cyclops.cyclopscore.modcompat.capabilities.ICapabilityTypeGetter;
 import org.cyclops.cyclopscore.modcompat.capabilities.SerializableCapabilityProvider;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.Map;
@@ -28,26 +29,26 @@ public class AbilityStoreCapabilityProvider<T extends IMutableAbilityStore> exte
 
     @Override
     protected Tag serializeNBT(IMutableAbilityStore capability) {
-        return serializeNBTStatic(capability);
+        return serializeNBTStatic(AbilityHelpers.getRegistryServer(), capability);
     }
 
     @Override
     protected void deserializeNBT(IMutableAbilityStore capability, Tag nbt) {
-        deserializeNBTStatic(capability, nbt);
+        deserializeNBTStatic(AbilityHelpers.getRegistryServer(), capability, nbt);
     }
 
-    public static Tag serializeNBTStatic(IMutableAbilityStore capability) {
+    public static Tag serializeNBTStatic(Registry<IAbilityType> registry, IMutableAbilityStore capability) {
         ListTag list = new ListTag();
         for (Ability ability : capability.getAbilities()) {
             CompoundTag tag = new CompoundTag();
-            tag.putString("name", AbilityTypes.REGISTRY.getKey(ability.getAbilityType()).toString());
+            tag.putString("name", registry.getKey(ability.getAbilityType()).toString());
             tag.putInt("level", ability.getLevel());
             list.add(tag);
         }
         return list;
     }
 
-    public static void deserializeNBTStatic(IMutableAbilityStore capability, Tag nbt) {
+    public static void deserializeNBTStatic(Registry<IAbilityType> registry, IMutableAbilityStore capability, Tag nbt) {
         Map<IAbilityType, Integer> abilityTypes = Maps.newHashMap();
         if (nbt instanceof ListTag) {
             if (((ListTag) nbt).getElementType() == Tag.TAG_COMPOUND) {
@@ -56,7 +57,7 @@ public class AbilityStoreCapabilityProvider<T extends IMutableAbilityStore> exte
                     CompoundTag tag = list.getCompound(i);
                     String name = tag.getString("name");
                     int level = tag.getInt("level");
-                    IAbilityType abilityType = AbilityTypes.REGISTRY.getValue(new ResourceLocation(name));
+                    IAbilityType abilityType = registry.get(new ResourceLocation(name));
                     if (abilityType != null) {
                         abilityTypes.put(abilityType, level);
                     } else {

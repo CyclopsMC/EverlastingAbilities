@@ -33,7 +33,7 @@ public class LootFunctionSetRandomAbility extends LootItemConditionalFunction {
     @Override
     public ItemStack run(ItemStack stack, LootContext context) {
         try {
-            List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesLoot();
+            List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesLoot(AbilityHelpers.getRegistry(context.getLevel().registryAccess()));
             Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, context.getRandom());
             IAbilityType abilityType = AbilityHelpers.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
 

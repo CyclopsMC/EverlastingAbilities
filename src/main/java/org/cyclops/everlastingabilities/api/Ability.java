@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities.api;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Rarity;
 
@@ -12,7 +13,12 @@ import java.util.Objects;
  */
 public class Ability implements Comparable<Ability> {
 
-    public static final Ability EMPTY = new Ability(new AbilityType("", "", () -> Rarity.COMMON, () -> 0, () -> 0, () -> true, () -> true, () -> true, () -> true), 0);
+    public static final Ability EMPTY = new Ability(new AbilityTypeAdapter("", Rarity.COMMON, 0, 0, true, true, true, true) {
+        @Override
+        public Codec<? extends IAbilityType> codec() {
+            return null;
+        }
+    }, 0);
 
     private final IAbilityType abilityType;
     private final int level;

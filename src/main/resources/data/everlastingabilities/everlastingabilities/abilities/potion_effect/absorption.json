@@ -1,0 +1,11 @@
+{
+  "type": "everlastingabilities:potion_effect_self",
+  "name": "ability.everlastingabilities.absorption",
+  "rarity": "rare",
+  "max_level": 5,
+  "xp_per_level": 75,
+  "potion_effect": "minecraft:absorption",
+  "tick_modulus": 200,
+  "amplifier_factor": 0.5,
+  "level_based_duration": true
+}

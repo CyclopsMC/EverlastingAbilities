@@ -1,23 +1,36 @@
 package org.cyclops.everlastingabilities.ability;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Rarity;
 import org.cyclops.everlastingabilities.Reference;
-import org.cyclops.everlastingabilities.ability.config.AbilityStepAssistConfig;
-
-import java.util.function.Supplier;
+import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 
 /**
  * Ability type for flight.
  * @author rubensworks
  */
-public class AbilityTypeStepAssist extends AbilityTypeDefault {
+public class AbilityTypeStepAssist extends AbilityTypeAdapter {
 
     private static final String PLAYER_NBT_KEY = Reference.MOD_ID + ":" + "stepAssist";
+    private final boolean forceDefaultStepHeight;
 
-    public AbilityTypeStepAssist(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
-                                 Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
-                                 Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
-        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+    public AbilityTypeStepAssist(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
+                                 boolean forceDefaultStepHeight) {
+        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+        this.forceDefaultStepHeight = forceDefaultStepHeight;
+    }
+
+    @Override
+    public Codec<? extends IAbilityType> codec() {
+        return RegistryEntries.ABILITYSERIALIZER_STEP_ASSIST;
+    }
+
+    public boolean isForceDefaultStepHeight() {
+        return forceDefaultStepHeight;
     }
 
     @Override
@@ -30,7 +43,7 @@ public class AbilityTypeStepAssist extends AbilityTypeDefault {
         if (oldLevel > 0 && newLevel == 0) {
             float stepHeight = 0.6F;
             if(player.getPersistentData().contains(PLAYER_NBT_KEY)) {
-                if (!AbilityStepAssistConfig.forceDefaultStepHeight) {
+                if (!this.isForceDefaultStepHeight()) {
                     stepHeight = player.getPersistentData().getFloat(PLAYER_NBT_KEY);
                 }
                 player.getPersistentData().remove(PLAYER_NBT_KEY);

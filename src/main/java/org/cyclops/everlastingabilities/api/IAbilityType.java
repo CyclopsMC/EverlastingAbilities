@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities.api;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 
@@ -10,6 +11,8 @@ import net.minecraft.world.item.Rarity;
  */
 public interface IAbilityType {
 
+    public Codec<? extends IAbilityType> codec();
+
     public String getTranslationKey();
     public String getUnlocalizedDescription();
     public Rarity getRarity();
@@ -17,7 +20,7 @@ public interface IAbilityType {
     public default int getMaxLevelInfinitySafe() {
         return getMaxLevel() < 0 ? Integer.MAX_VALUE : getMaxLevel();
     }
-    public int getBaseXpPerLevel();
+    public int getXpPerLevel();
     public boolean isObtainableOnPlayerSpawn();
     public boolean isObtainableOnMobSpawn();
     public boolean isObtainableOnCraft();

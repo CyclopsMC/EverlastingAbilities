@@ -1,0 +1,8 @@
+{
+  "type": "everlastingabilities:potion_effect_self",
+  "name": "ability.everlastingabilities.luck",
+  "rarity": "rare",
+  "max_level": 3,
+  "xp_per_level": 40,
+  "potion_effect": "minecraft:luck"
+}

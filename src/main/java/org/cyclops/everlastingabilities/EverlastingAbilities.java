@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -29,6 +30,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
@@ -39,8 +41,16 @@ import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructo
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.ability.config.*;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeBonemealerSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeFertilitySerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeFlightSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeMagnetizeSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypePotionEffectRadiusSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypePotionEffectSelfSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypePowerStareSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeStepAssistSerializerConfig;
 import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.AbilityStoreCapabilityProvider;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
@@ -77,6 +87,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
     public EverlastingAbilities() {
         super(Reference.MOD_ID, (instance) -> _instance = instance);
+
+        AbilityTypes.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @Override
@@ -131,7 +143,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                                 && canMobHaveAbility((LivingEntity) host)) {
                             RandomSource rand = RandomSource.create();
                             rand.setSeed(entity.getId());
-                            List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn();
+                            Registry<IAbilityType> registry = AbilityHelpers.getRegistry(host.level.registryAccess());
+                            List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn(registry);
                             Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, rand);
                             AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity).ifPresent(
                                     abilityType -> store.addAbility(new Ability(abilityType, 1), true));
@@ -181,41 +194,15 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         configHandler.addConfigurable(new ItemAbilityTotemConfig());
         configHandler.addConfigurable(new ItemAbilityBottleConfig());
 
-        // Abilities
-        configHandler.addConfigurable(new AbilitySpeedConfig());
-        configHandler.addConfigurable(new AbilityHasteConfig());
-        configHandler.addConfigurable(new AbilityStrengthConfig());
-        configHandler.addConfigurable(new AbilityJumpBoostConfig());
-        configHandler.addConfigurable(new AbilityRegenerationConfig());
-        configHandler.addConfigurable(new AbilityResistanceConfig());
-        configHandler.addConfigurable(new AbilityFireResistanceConfig());
-        configHandler.addConfigurable(new AbilityWaterBreathingConfig());
-        configHandler.addConfigurable(new AbilityInvisibilityConfig());
-        configHandler.addConfigurable(new AbilityNightVisionConfig());
-        configHandler.addConfigurable(new AbilityAbsorbtionConfig());
-        configHandler.addConfigurable(new AbilitySaturationConfig());
-        configHandler.addConfigurable(new AbilityLuckConfig());
-        configHandler.addConfigurable(new AbilitySlownessConfig());
-        configHandler.addConfigurable(new AbilityMiningFatigueConfig());
-        configHandler.addConfigurable(new AbilityNauseaConfig());
-        configHandler.addConfigurable(new AbilityBlindnessConfig());
-        configHandler.addConfigurable(new AbilityHungerConfig());
-        configHandler.addConfigurable(new AbilityWeaknessConfig());
-        configHandler.addConfigurable(new AbilityPoisonConfig());
-        configHandler.addConfigurable(new AbilityWitherConfig());
-        configHandler.addConfigurable(new AbilityGlowingConfig());
-        configHandler.addConfigurable(new AbilityLevitationConfig());
-        configHandler.addConfigurable(new AbilityUnluckConfig());
-        configHandler.addConfigurable(new AbilityFlightConfig());
-        configHandler.addConfigurable(new AbilityStepAssistConfig());
-        configHandler.addConfigurable(new AbilityFertilityConfig());
-        configHandler.addConfigurable(new AbilityBonemealerConfig());
-        configHandler.addConfigurable(new AbilityPowerStareConfig());
-        configHandler.addConfigurable(new AbilityMagnetizeConfig());
-        configHandler.addConfigurable(new AbilityBadOmenConfig());
-        configHandler.addConfigurable(new AbilitySlowFallingConfig());
-        configHandler.addConfigurable(new AbilityConduitPowerConfig());
-        configHandler.addConfigurable(new AbilityDolphinsGraceConfig());
+        // Ability serializers
+        configHandler.addConfigurable(new AbilityTypeBonemealerSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeFertilitySerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeFlightSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeMagnetizeSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypePotionEffectRadiusSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypePotionEffectSelfSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypePowerStareSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeStepAssistSerializerConfig());
     }
 
     /**
@@ -257,13 +244,13 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 Level world = event.getEntity().level;
                 Player player = event.getEntity();
                 Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
-                AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(), world.random, rarity, true).ifPresent(abilityType -> {
+                AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(AbilityHelpers.getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
                     ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
                     itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
                             .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
 
                     ItemStackHelpers.spawnItemStackToPlayer(world, player.blockPosition(), itemStack, player);
-                    EntityHelpers.spawnXpAtPlayer(world, player, abilityType.getBaseXpPerLevel());
+                    EntityHelpers.spawnXpAtPlayer(world, player, abilityType.getXpPerLevel());
                 });
             }
         }

@@ -1,9 +1,11 @@
 package org.cyclops.everlastingabilities;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraftforge.registries.ObjectHolder;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
 
@@ -23,5 +25,22 @@ public class RegistryEntries {
 
     @ObjectHolder(registryName = "recipe_serializer", value = "everlastingabilities:crafting_special_totem_recycle")
     public static final SimpleRecipeSerializer<TotemRecycleRecipe> RECIPESERIALIZER_TOTEM_RECYCLE = null;
+
+    @ObjectHolder(registryName = "everlastingabilities:ability_serializer", value = "everlastingabilities:bonemealer")
+    public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_BONEMEALER = null;
+    @ObjectHolder(registryName = "everlastingabilities:ability_serializer", value = "everlastingabilities:fertility")
+    public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_FERTILITY = null;
+    @ObjectHolder(registryName = "everlastingabilities:ability_serializer", value = "everlastingabilities:flight")
+    public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_FLIGHT = null;
+    @ObjectHolder(registryName = "everlastingabilities:ability_serializer", value = "everlastingabilities:magnetize")
+    public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_MAGNETIZE = null;
+    @ObjectHolder(registryName = "everlastingabilities:ability_serializer", value = "everlastingabilities:potion_effect_radius")
+    public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_POTION_EFFECT_RADIUS = null;
+    @ObjectHolder(registryName = "everlastingabilities:ability_serializer", value = "everlastingabilities:potion_effect_self")
+    public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_POTION_EFFECT_SELF = null;
+    @ObjectHolder(registryName = "everlastingabilities:ability_serializer", value = "everlastingabilities:power_stare")
+    public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_POWER_STARE = null;
+    @ObjectHolder(registryName = "everlastingabilities:ability_serializer", value = "everlastingabilities:step_assist")
+    public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_STEP_ASSIST = null;
 
 }

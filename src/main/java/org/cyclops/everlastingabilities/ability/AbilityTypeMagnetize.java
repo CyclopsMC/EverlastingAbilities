@@ -1,31 +1,46 @@
 package org.cyclops.everlastingabilities.ability;
 
 import com.google.common.base.Predicate;
+import com.mojang.serialization.Codec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.GeneralConfig;
+import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Ability type for attracting items in the area.
  * @author rubensworks
  */
-public class AbilityTypeMagnetize extends AbilityTypeDefault {
+public class AbilityTypeMagnetize extends AbilityTypeAdapter {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 20;
+    private final boolean moveXp;
 
-    public AbilityTypeMagnetize(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
-                                Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
-                                Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
-        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+    public AbilityTypeMagnetize(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
+                                boolean moveXp) {
+        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+        this.moveXp = moveXp;
+    }
+
+    @Override
+    public Codec<? extends IAbilityType> codec() {
+        return RegistryEntries.ABILITYSERIALIZER_MAGNETIZE;
+    }
+
+    public boolean isMoveXp() {
+        return moveXp;
     }
 
     @Override
@@ -45,7 +60,7 @@ public class AbilityTypeMagnetize extends AbilityTypeDefault {
                 @Override
                 public boolean apply(Entity entity) {
                     return entity instanceof ItemEntity
-                            || (GeneralConfig.magnetizeMoveXp && entity instanceof ExperienceOrb);
+                            || (isMoveXp() && entity instanceof ExperienceOrb);
                 }
 
             });

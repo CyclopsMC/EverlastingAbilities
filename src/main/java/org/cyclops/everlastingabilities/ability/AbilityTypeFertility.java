@@ -1,26 +1,34 @@
 package org.cyclops.everlastingabilities.ability;
 
+import com.mojang.serialization.Codec;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Ability type for fertility.
  * @author rubensworks
  */
-public class AbilityTypeFertility extends AbilityTypeDefault {
+public class AbilityTypeFertility extends AbilityTypeAdapter {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS;
 
-    public AbilityTypeFertility(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
-                                Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
-                                Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
-        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+    public AbilityTypeFertility(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
+        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+    }
+
+    @Override
+    public Codec<? extends IAbilityType> codec() {
+        return RegistryEntries.ABILITYSERIALIZER_FERTILITY;
     }
 
     protected int getDurationMultiplier() {

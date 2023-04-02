@@ -1,45 +1,87 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.world.entity.player.Player;
+import com.mojang.serialization.Codec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Rarity;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
-
-import java.util.function.Supplier;
+import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 
 /**
  * Ability type for potion effects.
  * @author rubensworks
  */
-public class AbilityTypePotionEffectSelf extends AbilityTypeDefault {
+public class AbilityTypePotionEffectSelf extends AbilityTypeAdapter {
 
-    private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 2;
-
+    private final String potionEffectId;
     private final MobEffect potion;
+    private final int tickModulus;
+    private final double amplifierFactor;
+    private final boolean levelBasedDuration;
+    private final double durationFactor;
 
-    public AbilityTypePotionEffectSelf(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
-                                       Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
-                                       Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot, MobEffect potion) {
-        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
-        this.potion = potion;
+    public AbilityTypePotionEffectSelf(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                       boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
+                                       String potionEffectId, int tickModulus, double amplifierFactor, boolean levelBasedDuration, double durationFactor) {
+        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+        this.potionEffectId = potionEffectId;
+        this.potion = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(potionEffectId));
         if (this.potion == null) {
-            EverlastingAbilities.clog(Level.WARN, "Tried to register a null potion for ability " + id + ". This is possibly caused by a mod forcefully removing the potion effect for this ability.");
+            throw new IllegalArgumentException("No potion effect was found with id: " + potionEffectId);
         }
+        this.tickModulus = tickModulus;
+        this.amplifierFactor = amplifierFactor;
+        this.levelBasedDuration = levelBasedDuration;
+        this.durationFactor = durationFactor;
+    }
+
+    public String getPotionEffectId() {
+        return potionEffectId;
+    }
+
+    public int getTickModulus() {
+        return this.tickModulus;
+    }
+
+    public double getAmplifierFactor() {
+        return amplifierFactor;
+    }
+
+    public boolean isLevelBasedDuration() {
+        return levelBasedDuration;
+    }
+
+    public double getDurationFactor() {
+        return durationFactor;
+    }
+
+    @Override
+    public Codec<? extends IAbilityType> codec() {
+        return RegistryEntries.ABILITYSERIALIZER_POTION_EFFECT_SELF;
     }
 
     protected int getDuration(int tickModulus, int level) {
-        return tickModulus * 5;
+        if (isLevelBasedDuration()) {
+            int maxLevel = getMaxLevel() == -1 ? 5 : getMaxLevel();
+            return (int) (MinecraftHelpers.SECOND_IN_TICKS * ((float) level / maxLevel * 20F) * getDurationFactor());
+        }
+        return (int) (tickModulus * getDurationFactor());
     }
 
     protected int getTickModulus(int level) {
-        return TICK_MODULUS;
+        return getTickModulus();
     }
 
     protected int getAmplifier(int level) {
-        return level - 1;
+        return (int) ((level - 1) * this.getAmplifierFactor());
     }
 
     @Override

@@ -1,0 +1,8 @@
+{
+  "type": "everlastingabilities:potion_effect_self",
+  "name": "ability.everlastingabilities.regeneration",
+  "rarity": "rare",
+  "max_level": 3,
+  "xp_per_level": 50,
+  "potion_effect": "minecraft:regeneration"
+}

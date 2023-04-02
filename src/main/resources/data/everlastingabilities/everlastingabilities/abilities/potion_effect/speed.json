@@ -1,0 +1,8 @@
+{
+  "type": "everlastingabilities:potion_effect_self",
+  "name": "ability.everlastingabilities.speed",
+  "rarity": "common",
+  "max_level": 5,
+  "xp_per_level": 10,
+  "potion_effect": "minecraft:speed"
+}

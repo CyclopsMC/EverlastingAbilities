@@ -1,11 +1,14 @@
 package org.cyclops.everlastingabilities.api;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
+
+import java.util.function.Supplier;
 
 /**
  * Holder class for the ability registry.
@@ -14,13 +17,9 @@ import net.minecraftforge.registries.RegistryBuilder;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AbilityTypes {
 
-    public static IForgeRegistry<IAbilityType> REGISTRY;
+    public static final ResourceKey<Registry<IAbilityType>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(("everlastingabilities:abilities")));
 
-    @SubscribeEvent
-    public static void onRegistriesCreate(NewRegistryEvent event) {
-        event.create(new RegistryBuilder<IAbilityType>()
-                .setName(new ResourceLocation("everlastingabilities", "abilities")),
-                registry -> REGISTRY = registry);
-    }
+    public static final DeferredRegister<IAbilityType> REGISTRY = DeferredRegister.create(REGISTRY_KEY, "everlastingabilities");
+    public static final Supplier<IForgeRegistry<IAbilityType>> REGISTRY_BUILTIN = REGISTRY.makeRegistry(() -> new RegistryBuilder<IAbilityType>().disableSaving().dataPackRegistry(AbilityTypeSerializers.DIRECT_CODEC, AbilityTypeSerializers.DIRECT_CODEC));
 
 }

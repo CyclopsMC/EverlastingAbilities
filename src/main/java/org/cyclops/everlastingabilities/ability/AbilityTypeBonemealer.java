@@ -1,30 +1,38 @@
 package org.cyclops.everlastingabilities.ability;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.GrassBlock;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.entity.player.Player;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.GrassBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.cyclopscore.helper.WorldHelpers;
+import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 /**
  * Ability type for fertility.
  * @author rubensworks
  */
-public class AbilityTypeBonemealer extends AbilityTypeDefault {
+public class AbilityTypeBonemealer extends AbilityTypeAdapter {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS;
 
-    public AbilityTypeBonemealer(String id, Supplier<Integer> rarity, Supplier<Integer> maxLevel,
-                                 Supplier<Integer> baseXpPerLevel, Supplier<Boolean> obtainableOnPlayerSpawn, Supplier<Boolean> obtainableOnMobSpawn,
-                                 Supplier<Boolean> obtainableOnCraft, Supplier<Boolean> obtainableOnLoot) {
-        super(id, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+    public AbilityTypeBonemealer(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
+        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+    }
+
+    @Override
+    public Codec<? extends IAbilityType> codec() {
+        return RegistryEntries.ABILITYSERIALIZER_BONEMEALER;
     }
 
     protected int getDurationMultiplier() {
