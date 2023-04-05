@@ -3,7 +3,6 @@ package org.cyclops.everlastingabilities.ability.serializer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.ability.AbilityTypeFlight;
 import org.cyclops.everlastingabilities.ability.AbilityTypeMagnetize;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilitySerializerConfig;
