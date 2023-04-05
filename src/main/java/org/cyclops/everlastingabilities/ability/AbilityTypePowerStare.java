@@ -15,6 +15,7 @@ import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Ability type for pushing in the direction your looking mobs away.
@@ -35,7 +36,7 @@ public class AbilityTypePowerStare extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return RegistryEntries.ABILITYSERIALIZER_POWER_STARE;
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_POWER_STARE);
     }
 
     public boolean isRequireSneak() {

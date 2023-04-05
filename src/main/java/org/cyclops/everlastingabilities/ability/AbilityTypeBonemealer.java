@@ -16,6 +16,7 @@ import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Ability type for fertility.
@@ -32,7 +33,7 @@ public class AbilityTypeBonemealer extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return RegistryEntries.ABILITYSERIALIZER_BONEMEALER;
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_BONEMEALER);
     }
 
     protected int getDurationMultiplier() {

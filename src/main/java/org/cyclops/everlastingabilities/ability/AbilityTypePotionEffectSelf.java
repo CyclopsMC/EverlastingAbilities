@@ -7,13 +7,13 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+
+import java.util.Objects;
 
 /**
  * Ability type for potion effects.
@@ -65,7 +65,7 @@ public class AbilityTypePotionEffectSelf extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return RegistryEntries.ABILITYSERIALIZER_POTION_EFFECT_SELF;
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_POTION_EFFECT_SELF);
     }
 
     protected int getDuration(int tickModulus, int level) {

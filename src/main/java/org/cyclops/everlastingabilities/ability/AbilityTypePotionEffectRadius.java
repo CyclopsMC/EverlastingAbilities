@@ -18,6 +18,7 @@ import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Ability type for potion effects in an area.
@@ -49,7 +50,7 @@ public class AbilityTypePotionEffectRadius extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return RegistryEntries.ABILITYSERIALIZER_POTION_EFFECT_RADIUS;
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_POTION_EFFECT_RADIUS);
     }
 
     public boolean isHostile() {

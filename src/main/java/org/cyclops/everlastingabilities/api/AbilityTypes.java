@@ -19,7 +19,11 @@ public class AbilityTypes {
 
     public static final ResourceKey<Registry<IAbilityType>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(("everlastingabilities:abilities")));
 
-    public static final DeferredRegister<IAbilityType> REGISTRY = DeferredRegister.create(REGISTRY_KEY, "everlastingabilities");
-    public static final Supplier<IForgeRegistry<IAbilityType>> REGISTRY_BUILTIN = REGISTRY.makeRegistry(() -> new RegistryBuilder<IAbilityType>().disableSaving().dataPackRegistry(AbilityTypeSerializers.DIRECT_CODEC, AbilityTypeSerializers.DIRECT_CODEC));
+    public static final DeferredRegister<IAbilityType> REGISTRY = DeferredRegister
+            .create(REGISTRY_KEY, "everlastingabilities");
+    public static final Supplier<IForgeRegistry<IAbilityType>> REGISTRY_BUILTIN = REGISTRY
+            .makeRegistry(() -> new RegistryBuilder<IAbilityType>()
+                    .disableSaving()
+                    .dataPackRegistry(AbilityTypeSerializers.DIRECT_CODEC, AbilityTypeSerializers.DIRECT_CODEC));
 
 }

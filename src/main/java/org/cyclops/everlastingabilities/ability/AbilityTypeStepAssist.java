@@ -8,6 +8,8 @@ import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
+import java.util.Objects;
+
 /**
  * Ability type for flight.
  * @author rubensworks
@@ -26,7 +28,7 @@ public class AbilityTypeStepAssist extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return RegistryEntries.ABILITYSERIALIZER_STEP_ASSIST;
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_STEP_ASSIST);
     }
 
     public boolean isForceDefaultStepHeight() {

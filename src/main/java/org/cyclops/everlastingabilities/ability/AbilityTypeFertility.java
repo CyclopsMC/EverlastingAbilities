@@ -12,6 +12,7 @@ import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Ability type for fertility.
@@ -28,7 +29,7 @@ public class AbilityTypeFertility extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return RegistryEntries.ABILITYSERIALIZER_FERTILITY;
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_FERTILITY);
     }
 
     protected int getDurationMultiplier() {

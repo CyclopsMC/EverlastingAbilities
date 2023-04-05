@@ -11,12 +11,12 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Ability type for attracting items in the area.
@@ -36,7 +36,7 @@ public class AbilityTypeMagnetize extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return RegistryEntries.ABILITYSERIALIZER_MAGNETIZE;
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_MAGNETIZE);
     }
 
     public boolean isMoveXp() {

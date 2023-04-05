@@ -8,6 +8,8 @@ import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
+import java.util.Objects;
+
 /**
  * Ability type for flight.
  * @author rubensworks
@@ -23,7 +25,7 @@ public class AbilityTypeFlight extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return RegistryEntries.ABILITYSERIALIZER_FLIGHT;
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_FLIGHT);
     }
 
     @Override
