@@ -15,7 +15,7 @@ public class WorldHelpers {
      * @return The current level client-side, or the overworld server-side.
      */
     public static Level getActiveLevel() {
-        return DistExecutor.safeRunForDist(()->WorldHelpersClient::getActiveLevel, ()->WorldHelpersServer::getActiveLevel);
+        return DistExecutor.unsafeRunForDist(()->WorldHelpersClient::getActiveLevel, ()->WorldHelpersServer::getActiveLevel);
     }
 
 }
