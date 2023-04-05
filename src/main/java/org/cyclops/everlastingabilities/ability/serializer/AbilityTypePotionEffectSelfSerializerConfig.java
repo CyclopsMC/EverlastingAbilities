@@ -17,7 +17,7 @@ public class AbilityTypePotionEffectSelfSerializerConfig extends AbilitySerializ
                         Codec.STRING.fieldOf("name").forGetter(AbilityTypePotionEffectSelf::getTranslationKey),
                         AbilityHelpers.CODEC_RARITY.fieldOf("rarity").forGetter(AbilityTypePotionEffectSelf::getRarity),
                         Codec.INT.fieldOf("max_level").forGetter(AbilityTypePotionEffectSelf::getMaxLevel),
-                        Codec.INT.fieldOf("xp_per_level").forGetter(AbilityTypePotionEffectSelf::getXpPerLevel),
+                        Codec.INT.fieldOf("xp_per_level").forGetter(AbilityTypePotionEffectSelf::getXpPerLevelRaw),
                         Codec.BOOL.optionalFieldOf("obtainable_on_player_spawn", true).forGetter(AbilityTypePotionEffectSelf::isObtainableOnPlayerSpawn),
                         Codec.BOOL.optionalFieldOf("obtainable_on_mob_spawn", true).forGetter(AbilityTypePotionEffectSelf::isObtainableOnMobSpawn),
                         Codec.BOOL.optionalFieldOf("obtainable_on_craft", true).forGetter(AbilityTypePotionEffectSelf::isObtainableOnCraft),

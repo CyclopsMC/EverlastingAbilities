@@ -53,8 +53,13 @@ public abstract class AbilityTypeAdapter implements IAbilityType {
     }
 
     @Override
-    public int getXpPerLevel() {
-        return xpPerLevel * GeneralConfig.abilityXpMultiplier;
+    public int getXpPerLevelRaw() {
+        return xpPerLevel;
+    }
+
+    @Override
+    public int getXpPerLevelScaled() {
+        return getXpPerLevelRaw() * GeneralConfig.abilityXpMultiplier;
     }
 
     @Override

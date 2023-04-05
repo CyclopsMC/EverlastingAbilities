@@ -250,7 +250,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                             .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
 
                     ItemStackHelpers.spawnItemStackToPlayer(world, player.blockPosition(), itemStack, player);
-                    EntityHelpers.spawnXpAtPlayer(world, player, abilityType.getXpPerLevel());
+                    EntityHelpers.spawnXpAtPlayer(world, player, abilityType.getXpPerLevelScaled());
                 });
             }
         }

@@ -17,7 +17,7 @@ public class AbilityTypePotionEffectRadiusSerializerConfig extends AbilitySerial
                         Codec.STRING.fieldOf("name").forGetter(AbilityTypePotionEffectRadius::getTranslationKey),
                         AbilityHelpers.CODEC_RARITY.fieldOf("rarity").forGetter(AbilityTypePotionEffectRadius::getRarity),
                         Codec.INT.fieldOf("max_level").forGetter(AbilityTypePotionEffectRadius::getMaxLevel),
-                        Codec.INT.fieldOf("xp_per_level").forGetter(AbilityTypePotionEffectRadius::getXpPerLevel),
+                        Codec.INT.fieldOf("xp_per_level").forGetter(AbilityTypePotionEffectRadius::getXpPerLevelRaw),
                         Codec.BOOL.optionalFieldOf("obtainable_on_player_spawn", true).forGetter(AbilityTypePotionEffectRadius::isObtainableOnPlayerSpawn),
                         Codec.BOOL.optionalFieldOf("obtainable_on_mob_spawn", true).forGetter(AbilityTypePotionEffectRadius::isObtainableOnMobSpawn),
                         Codec.BOOL.optionalFieldOf("obtainable_on_craft", true).forGetter(AbilityTypePotionEffectRadius::isObtainableOnCraft),

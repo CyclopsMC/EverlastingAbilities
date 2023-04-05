@@ -20,7 +20,8 @@ public interface IAbilityType {
     public default int getMaxLevelInfinitySafe() {
         return getMaxLevel() < 0 ? Integer.MAX_VALUE : getMaxLevel();
     }
-    public int getXpPerLevel();
+    public int getXpPerLevelRaw();
+    public int getXpPerLevelScaled();
     public boolean isObtainableOnPlayerSpawn();
     public boolean isObtainableOnMobSpawn();
     public boolean isObtainableOnCraft();

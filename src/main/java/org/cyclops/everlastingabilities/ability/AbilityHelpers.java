@@ -156,7 +156,7 @@ public class AbilityHelpers {
                     Ability result = abilityStore.addAbility(ability, doAdd);
                     int currentXp = player.totalExperience;
                     if (result != null && modifyXp && getExperience(result) > currentXp) {
-                        int maxLevels = player.totalExperience / result.getAbilityType().getXpPerLevel();
+                        int maxLevels = player.totalExperience / result.getAbilityType().getXpPerLevelScaled();
                         if (maxLevels == 0) {
                             result = Ability.EMPTY;
                         } else {
@@ -208,7 +208,7 @@ public class AbilityHelpers {
         if (ability.isEmpty()) {
             return 0;
         }
-        return ability.getAbilityType().getXpPerLevel() * ability.getLevel();
+        return ability.getAbilityType().getXpPerLevelScaled() * ability.getLevel();
     }
 
     public static void setPlayerAbilities(ServerPlayer player, Map<IAbilityType, Integer> abilityTypes) {

@@ -254,7 +254,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                     x + 58, boxY + 5, 0, 0.8F, -1);
 
             // XP
-            int requiredXp = ability.getAbilityType().getXpPerLevel();
+            int requiredXp = ability.getAbilityType().getXpPerLevelScaled();
             if (playerXp < requiredXp) {
                 RenderSystem.setShaderColor(0.3F, 0.3F, 0.3F, 1);
             } else {
@@ -290,8 +290,8 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Xp
                 lines.add(Component.translatable("general.everlastingabilities.xp",
-                        ability.getAbilityType().getXpPerLevel(),
-                        AbilityHelpers.getLevelForExperience(ability.getAbilityType().getXpPerLevel()))
+                        ability.getAbilityType().getXpPerLevelScaled(),
+                        AbilityHelpers.getLevelForExperience(ability.getAbilityType().getXpPerLevelScaled()))
                         .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GREEN))));
 
                 drawTooltip(lines, poseStack, mouseX - this.leftPos, mouseY - this.topPos);

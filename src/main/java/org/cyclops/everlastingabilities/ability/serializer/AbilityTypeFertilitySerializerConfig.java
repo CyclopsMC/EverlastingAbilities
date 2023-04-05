@@ -18,7 +18,7 @@ public class AbilityTypeFertilitySerializerConfig extends AbilitySerializerConfi
                         Codec.STRING.fieldOf("name").forGetter(IAbilityType::getTranslationKey),
                         AbilityHelpers.CODEC_RARITY.fieldOf("rarity").forGetter(IAbilityType::getRarity),
                         Codec.INT.fieldOf("max_level").forGetter(IAbilityType::getMaxLevel),
-                        Codec.INT.fieldOf("xp_per_level").forGetter(IAbilityType::getXpPerLevel),
+                        Codec.INT.fieldOf("xp_per_level").forGetter(IAbilityType::getXpPerLevelRaw),
                         Codec.BOOL.optionalFieldOf("obtainable_on_player_spawn", true).forGetter(IAbilityType::isObtainableOnPlayerSpawn),
                         Codec.BOOL.optionalFieldOf("obtainable_on_mob_spawn", true).forGetter(IAbilityType::isObtainableOnMobSpawn),
                         Codec.BOOL.optionalFieldOf("obtainable_on_craft", true).forGetter(IAbilityType::isObtainableOnCraft),
