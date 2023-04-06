@@ -1,8 +1,9 @@
 {
-  "type": "everlastingabilities:potion_effect_radius",
+  "type": "everlastingabilities:effect",
+  "target": "radius",
   "name": "ability.everlastingabilities.weakness",
   "rarity": "rare",
   "max_level": 3,
   "xp_per_level": 80,
-  "potion_effect": "minecraft:weakness"
+  "effect": "minecraft:weakness"
 }

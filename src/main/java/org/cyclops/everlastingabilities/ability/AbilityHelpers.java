@@ -2,12 +2,10 @@ package org.cyclops.everlastingabilities.ability;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.mojang.serialization.Codec;
 import lombok.NonNull;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +25,6 @@ import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Optional;
@@ -41,17 +38,6 @@ import java.util.stream.Collectors;
  * @author rubensworks
  */
 public class AbilityHelpers {
-
-    public static final Codec<Rarity> CODEC_RARITY = ExtraCodecs.orCompressed(
-            ExtraCodecs.stringResolverCodec(
-                    rarity -> rarity.name().toLowerCase(Locale.ROOT),
-                    name -> Rarity.valueOf(name.toUpperCase(Locale.ROOT))
-            ),
-            ExtraCodecs.idResolverCodec(
-                    Enum::ordinal,
-                    (id) -> id >= 0 && id < Rarity.values().length ? Rarity.values()[id] : null, -1
-            )
-    );
 
     /**
      * This value is synced with {@link GeneralConfig#maxPlayerAbilities} from the server.

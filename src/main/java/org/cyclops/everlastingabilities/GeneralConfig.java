@@ -60,7 +60,8 @@ public class GeneralConfig extends DummyConfig {
     public static double exhaustionPerAbilityTick = 0.01;
 
     @ConfigurableProperty(category = "general", comment = "These mobs will not be affected by hostile area potion effects such as poison or weakness. (Java regular expressions are allowed)", configLocation = ModConfig.Type.SERVER)
-    public static List<String> friendlyMobs = Lists.newArrayList("minecraft:armor_stand",
+    public static List<String> friendlyMobs = Lists.newArrayList(
+            "minecraft:armor_stand",
             "minecraft:bat",
             "minecraft:bee",
             "minecraft:boat",
