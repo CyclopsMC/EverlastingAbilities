@@ -1,5 +1,5 @@
 {
-  "type": "everlastingabilities:fertility",
+  "type": "everlastingabilities:special_fertility",
   "name": "ability.everlastingabilities.fertility",
   "rarity": "uncommon",
   "max_level": 3,

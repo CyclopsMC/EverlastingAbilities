@@ -3,17 +3,17 @@ package org.cyclops.everlastingabilities.ability.serializer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.cyclops.everlastingabilities.ability.AbilityTypeEffect;
-import org.cyclops.everlastingabilities.ability.AbilityTypeStepAssist;
+import org.cyclops.everlastingabilities.ability.AbilityTypeSpecialFertility;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilitySerializerConfig;
 
 /**
  * @author rubensworks
  */
-public class AbilityTypeStepAssistSerializerConfig extends AbilitySerializerConfig<AbilityTypeStepAssist> {
+public class AbilityTypeSpecialFertilitySerializerConfig extends AbilitySerializerConfig<AbilityTypeSpecialFertility> {
 
-    public AbilityTypeStepAssistSerializerConfig() {
-        super("step_assist", (eConfig) -> RecordCodecBuilder.create(builder -> builder
+    public AbilityTypeSpecialFertilitySerializerConfig() {
+        super("special_fertility", (eConfig) -> RecordCodecBuilder.create(builder -> builder
                 .group(
                         Codec.STRING.fieldOf("name").forGetter(IAbilityType::getTranslationKey),
                         AbilityTypeEffect.CODEC_RARITY.fieldOf("rarity").forGetter(IAbilityType::getRarity),
@@ -22,9 +22,8 @@ public class AbilityTypeStepAssistSerializerConfig extends AbilitySerializerConf
                         Codec.BOOL.optionalFieldOf("obtainable_on_player_spawn", true).forGetter(IAbilityType::isObtainableOnPlayerSpawn),
                         Codec.BOOL.optionalFieldOf("obtainable_on_mob_spawn", true).forGetter(IAbilityType::isObtainableOnMobSpawn),
                         Codec.BOOL.optionalFieldOf("obtainable_on_craft", true).forGetter(IAbilityType::isObtainableOnCraft),
-                        Codec.BOOL.optionalFieldOf("obtainable_on_loot", true).forGetter(IAbilityType::isObtainableOnLoot),
-                        Codec.BOOL.optionalFieldOf("force_default_step_height", true).forGetter(AbilityTypeStepAssist::isForceDefaultStepHeight))
-                .apply(builder, AbilityTypeStepAssist::new))
+                        Codec.BOOL.optionalFieldOf("obtainable_on_loot", true).forGetter(IAbilityType::isObtainableOnLoot))
+                .apply(builder, AbilityTypeSpecialFertility::new))
         );
     }
 }

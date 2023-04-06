@@ -22,21 +22,21 @@ import java.util.Objects;
  * Ability type for attracting items in the area.
  * @author rubensworks
  */
-public class AbilityTypeMagnetize extends AbilityTypeAdapter {
+public class AbilityTypeSpecialMagnetize extends AbilityTypeAdapter {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 20;
     private final boolean moveXp;
 
-    public AbilityTypeMagnetize(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
-                                boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
-                                boolean moveXp) {
+    public AbilityTypeSpecialMagnetize(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                       boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
+                                       boolean moveXp) {
         super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.moveXp = moveXp;
     }
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_MAGNETIZE);
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_MAGNETIZE);
     }
 
     public boolean isMoveXp() {

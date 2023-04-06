@@ -1,5 +1,5 @@
 {
-  "type": "everlastingabilities:magnetize",
+  "type": "everlastingabilities:special_magnetize",
   "name": "ability.everlastingabilities.magnetize",
   "rarity": "uncommon",
   "max_level": 5,

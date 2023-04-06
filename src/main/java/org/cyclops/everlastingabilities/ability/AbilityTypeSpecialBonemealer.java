@@ -22,18 +22,18 @@ import java.util.Objects;
  * Ability type for fertility.
  * @author rubensworks
  */
-public class AbilityTypeBonemealer extends AbilityTypeAdapter {
+public class AbilityTypeSpecialBonemealer extends AbilityTypeAdapter {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS;
 
-    public AbilityTypeBonemealer(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
-                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
+    public AbilityTypeSpecialBonemealer(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                        boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
         super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_BONEMEALER);
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_BONEMEALER);
     }
 
     protected int getDurationMultiplier() {

@@ -14,45 +14,39 @@ import java.util.Objects;
  * Ability type for flight.
  * @author rubensworks
  */
-public class AbilityTypeStepAssist extends AbilityTypeAdapter {
+public class AbilityTypeSpecialFlight extends AbilityTypeAdapter {
 
-    private static final String PLAYER_NBT_KEY = Reference.MOD_ID + ":" + "stepAssist";
-    private final boolean forceDefaultStepHeight;
+    private static final String PLAYER_NBT_KEY = Reference.MOD_ID + ":" + "lastFlight";
 
-    public AbilityTypeStepAssist(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
-                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
-                                 boolean forceDefaultStepHeight) {
+    public AbilityTypeSpecialFlight(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                    boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
         super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
-        this.forceDefaultStepHeight = forceDefaultStepHeight;
     }
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_STEP_ASSIST);
-    }
-
-    public boolean isForceDefaultStepHeight() {
-        return forceDefaultStepHeight;
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_FLIGHT);
     }
 
     @Override
     public void onTick(Player player, int level) {
-        player.maxUpStep = player.isCrouching() ? 0.5F : level;
+        player.getAbilities().mayfly = true;
     }
 
     @Override
     public void onChangedLevel(Player player, int oldLevel, int newLevel) {
         if (oldLevel > 0 && newLevel == 0) {
-            float stepHeight = 0.6F;
+            boolean allowFlying = false;
             if(player.getPersistentData().contains(PLAYER_NBT_KEY)) {
-                if (!this.isForceDefaultStepHeight()) {
-                    stepHeight = player.getPersistentData().getFloat(PLAYER_NBT_KEY);
-                }
+                allowFlying = player.getPersistentData().getBoolean(PLAYER_NBT_KEY);
                 player.getPersistentData().remove(PLAYER_NBT_KEY);
             }
-            player.maxUpStep = stepHeight;
+            player.getAbilities().mayfly = allowFlying;
+            if (!allowFlying) {
+                player.getAbilities().flying = false;
+            }
         } else if (oldLevel == 0 && newLevel > 0) {
-            player.getPersistentData().putFloat(PLAYER_NBT_KEY, player.maxUpStep);
+            player.getPersistentData().putBoolean(PLAYER_NBT_KEY, player.getAbilities().mayfly);
         }
     }
 }

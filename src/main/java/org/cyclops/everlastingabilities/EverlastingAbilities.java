@@ -41,13 +41,13 @@ import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructo
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeBonemealerSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialBonemealerSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeEffectSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeFertilitySerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeFlightSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeMagnetizeSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypePowerStareSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeStepAssistSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFertilitySerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFlightSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialMagnetizeSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialPowerStareSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialStepAssistSerializerConfig;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -195,12 +195,12 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
         // Ability serializers
         configHandler.addConfigurable(new AbilityTypeEffectSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeBonemealerSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeFertilitySerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeFlightSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeMagnetizeSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypePowerStareSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeStepAssistSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeSpecialBonemealerSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeSpecialFertilitySerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeSpecialFlightSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeSpecialMagnetizeSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeSpecialPowerStareSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeSpecialStepAssistSerializerConfig());
     }
 
     /**

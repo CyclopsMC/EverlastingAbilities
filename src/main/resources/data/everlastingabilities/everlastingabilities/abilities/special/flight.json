@@ -1,5 +1,5 @@
 {
-  "type": "everlastingabilities:flight",
+  "type": "everlastingabilities:special_flight",
   "name": "ability.everlastingabilities.flight",
   "rarity": "epic",
   "max_level": 1,

@@ -1,5 +1,5 @@
 {
-  "type": "everlastingabilities:step_assist",
+  "type": "everlastingabilities:special_step_assist",
   "name": "ability.everlastingabilities.step_assist",
   "rarity": "common",
   "max_level": 3,

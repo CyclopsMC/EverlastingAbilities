@@ -21,22 +21,22 @@ import java.util.Objects;
  * Ability type for pushing in the direction your looking mobs away.
  * @author rubensworks
  */
-public class AbilityTypePowerStare extends AbilityTypeAdapter {
+public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 4;
 
     private final boolean requireSneak;
 
-    public AbilityTypePowerStare(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
-                                 boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
-                                 boolean requireSneak) {
+    public AbilityTypeSpecialPowerStare(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+                                        boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
+                                        boolean requireSneak) {
         super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.requireSneak = requireSneak;
     }
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_POWER_STARE);
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_POWER_STARE);
     }
 
     public boolean isRequireSneak() {
