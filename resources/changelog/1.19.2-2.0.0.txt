@@ -1,0 +1,9 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.17.0 or higher.
+
+Changes:
+* Refactor abilities via datapacks
+  * Abilities can be added, changed, and removed via custom datapacks.
+  * Read more on https://github.com/CyclopsMC/EverlastingAbilities/wiki/Ability-datapacks
+  * This change is fully backwards-compatible with existing worlds.
+
