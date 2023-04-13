@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.17.0 or higher.
+
+Fixes:
+* Fix singleplayer crash when starting new world, Closes #219
+* Fix crash on invalid backwards-compatibility names
+
