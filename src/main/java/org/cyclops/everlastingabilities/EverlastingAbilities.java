@@ -41,8 +41,8 @@ import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructo
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialBonemealerSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeEffectSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialBonemealerSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFertilitySerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFlightSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialMagnetizeSerializerConfig;
@@ -54,6 +54,7 @@ import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.AbilityStoreCapabilityProvider;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStoreRegistryAccess;
 import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
@@ -245,7 +246,10 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(AbilityHelpers.getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
                     ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
                     itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
-                            .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
+                            .ifPresent(mutableAbilityStore -> {
+                                ((IMutableAbilityStoreRegistryAccess) mutableAbilityStore).setRegistryAccess(world.registryAccess());
+                                mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
+                            });
 
                     ItemStackHelpers.spawnItemStackToPlayer(world, player.blockPosition(), itemStack, player);
                     EntityHelpers.spawnXpAtPlayer(world, player, abilityType.getXpPerLevelScaled());
@@ -274,7 +278,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 }
 
                 ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
-                IMutableAbilityStore itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);;
+                IMutableAbilityStore itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
+                ((IMutableAbilityStoreRegistryAccess) itemStackStore).setRegistryAccess(event.getEntity().getLevel().registryAccess());
 
                 Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
                 for (Ability ability : abilities) {

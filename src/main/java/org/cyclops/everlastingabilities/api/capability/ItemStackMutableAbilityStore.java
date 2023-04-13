@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.api.capability;
 
 import lombok.NonNull;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -12,6 +13,7 @@ import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.core.helper.WorldHelpers;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -20,18 +22,25 @@ import java.util.Map;
  * TODO: This is just to avoid a Forge bug where cap NBT is not always sent to the client.
  * @author rubensworks
  */
-public class ItemStackMutableAbilityStore implements IMutableAbilityStore {
+public class ItemStackMutableAbilityStore implements IMutableAbilityStoreRegistryAccess {
 
     private static final String NBT_STORE = Reference.MOD_ID + ":abilityStoreStack";
 
     private final ItemStack itemStack;
+    @Nullable
+    private RegistryAccess registryAccess;
 
     public ItemStackMutableAbilityStore(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
+    @Override
+    public void setRegistryAccess(RegistryAccess registryAccess) {
+        this.registryAccess = registryAccess;
+    }
+
     protected Registry<IAbilityType> getRegistry() {
-         return AbilityHelpers.getRegistry(WorldHelpers.getActiveLevel().registryAccess());
+         return AbilityHelpers.getRegistry(this.registryAccess != null ? this.registryAccess : WorldHelpers.getActiveLevel().registryAccess());
     }
 
     protected IMutableAbilityStore getInnerStore() {
