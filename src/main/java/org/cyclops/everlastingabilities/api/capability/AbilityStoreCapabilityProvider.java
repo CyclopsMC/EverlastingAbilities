@@ -14,6 +14,7 @@ import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -109,11 +110,16 @@ public class AbilityStoreCapabilityProvider<T extends IMutableAbilityStore> exte
         capability.setAbilities(abilityTypes);
     }
 
+    @Nullable
     public static IAbilityType getAbilityBackwardsCompatible(Registry<IAbilityType> registry, String name) {
         IAbilityType abilityType = registry.get(new ResourceLocation(name));
         if (abilityType != null) {
             return abilityType;
         }
-        return registry.get(new ResourceLocation(BACKWARDS_COMPATIBLE_MAPPING.get(name)));
+        String backwardsCompatibleMapping = BACKWARDS_COMPATIBLE_MAPPING.get(name);
+        if (backwardsCompatibleMapping != null) {
+            return registry.get(new ResourceLocation(backwardsCompatibleMapping));
+        }
+        return null;
     }
 }
