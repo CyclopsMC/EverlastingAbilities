@@ -26,7 +26,7 @@ public class ArgumentTypeAbility implements ArgumentType<IAbilityType> {
     @Override
     public IAbilityType parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
-        IAbilityType abilityType = AbilityHelpers.getRegistryServer().get(id);
+        IAbilityType abilityType = AbilityHelpers.getRegistry().get(id);
         if (abilityType == null) {
             throw new SimpleCommandExceptionType(Component.translatable("chat.everlastingabilities.command.invalidAbility", id)).create();
         }
@@ -35,8 +35,8 @@ public class ArgumentTypeAbility implements ArgumentType<IAbilityType> {
 
     @Override
     public Collection<String> getExamples() {
-        return AbilityHelpers.getRegistryServer().stream()
-                .map(ability -> AbilityHelpers.getRegistryServer().getKey(ability))
+        return AbilityHelpers.getRegistry().stream()
+                .map(ability -> AbilityHelpers.getRegistry().getKey(ability))
                 .map(ResourceLocation::toString)
                 .collect(Collectors.toList());
     }

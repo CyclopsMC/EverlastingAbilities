@@ -11,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.everlastingabilities.GeneralConfig;
@@ -21,6 +20,7 @@ import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
+import org.cyclops.everlastingabilities.core.helper.WorldHelpers;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 
 import java.util.Iterator;
@@ -56,8 +56,8 @@ public class AbilityHelpers {
         return registryAccess.registryOrThrow(AbilityTypes.REGISTRY_KEY);
     }
 
-    public static Registry<IAbilityType> getRegistryServer() {
-        return getRegistry(ServerLifecycleHooks.getCurrentServer().registryAccess());
+    public static Registry<IAbilityType> getRegistry() {
+        return getRegistry(WorldHelpers.getActiveLevel().registryAccess());
     }
 
     public static int getExperienceForLevel(int level) {

@@ -68,12 +68,12 @@ public class AbilityStoreCapabilityProvider<T extends IMutableAbilityStore> exte
 
     @Override
     protected Tag serializeNBT(IMutableAbilityStore capability) {
-        return serializeNBTStatic(AbilityHelpers.getRegistryServer(), capability);
+        return serializeNBTStatic(AbilityHelpers.getRegistry(), capability);
     }
 
     @Override
     protected void deserializeNBT(IMutableAbilityStore capability, Tag nbt) {
-        deserializeNBTStatic(AbilityHelpers.getRegistryServer(), capability, nbt);
+        deserializeNBTStatic(AbilityHelpers.getRegistry(), capability, nbt);
     }
 
     public static Tag serializeNBTStatic(Registry<IAbilityType> registry, IMutableAbilityStore capability) {
