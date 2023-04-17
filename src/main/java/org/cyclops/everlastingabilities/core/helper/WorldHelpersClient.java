@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.core.helper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.level.Level;
+import net.minecraft.core.RegistryAccess;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -11,8 +11,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class WorldHelpersClient {
 
     @OnlyIn(Dist.CLIENT)
-    public static Level getActiveLevel() {
-        return Minecraft.getInstance().level;
+    public static RegistryAccess getRegistryAccess() {
+        return Minecraft.getInstance().level.registryAccess();
     }
 
 }

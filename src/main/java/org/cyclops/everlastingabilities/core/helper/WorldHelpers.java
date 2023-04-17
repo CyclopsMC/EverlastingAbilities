@@ -1,7 +1,8 @@
 package org.cyclops.everlastingabilities.core.helper;
 
-import net.minecraft.world.level.Level;
+import net.minecraft.core.RegistryAccess;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 /**
  * Helpers for world related logic.
@@ -12,10 +13,13 @@ import net.minecraftforge.fml.DistExecutor;
 public class WorldHelpers {
 
     /**
-     * @return The current level client-side, or the overworld server-side.
+     * @return The registry access client-side server-side.
      */
-    public static Level getActiveLevel() {
-        return DistExecutor.unsafeRunForDist(()->WorldHelpersClient::getActiveLevel, ()->WorldHelpersServer::getActiveLevel);
+    public static RegistryAccess getRegistryAccess() {
+        if (ServerLifecycleHooks.getCurrentServer() != null) {
+            return ServerLifecycleHooks.getCurrentServer().registryAccess();
+        }
+        return DistExecutor.unsafeRunForDist(()->WorldHelpersClient::getRegistryAccess, ()->WorldHelpersServer::getRegistryAccess);
     }
 
 }

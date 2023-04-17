@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.core.helper;
 
-import net.minecraft.world.level.Level;
+import net.minecraft.core.RegistryAccess;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 /**
@@ -8,8 +8,8 @@ import net.minecraftforge.server.ServerLifecycleHooks;
  */
 public class WorldHelpersServer {
 
-    public static Level getActiveLevel() {
-        return ServerLifecycleHooks.getCurrentServer().getLevel(Level.OVERWORLD);
+    public static RegistryAccess getRegistryAccess() {
+        return ServerLifecycleHooks.getCurrentServer().registryAccess();
     }
 
 }

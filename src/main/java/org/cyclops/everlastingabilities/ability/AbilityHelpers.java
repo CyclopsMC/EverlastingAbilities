@@ -57,7 +57,7 @@ public class AbilityHelpers {
     }
 
     public static Registry<IAbilityType> getRegistry() {
-        return getRegistry(WorldHelpers.getActiveLevel().registryAccess());
+        return getRegistry(WorldHelpers.getRegistryAccess());
     }
 
     public static int getExperienceForLevel(int level) {

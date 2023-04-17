@@ -40,7 +40,7 @@ public class ItemStackMutableAbilityStore implements IMutableAbilityStoreRegistr
     }
 
     protected Registry<IAbilityType> getRegistry() {
-         return AbilityHelpers.getRegistry(this.registryAccess != null ? this.registryAccess : WorldHelpers.getActiveLevel().registryAccess());
+         return AbilityHelpers.getRegistry(this.registryAccess != null ? this.registryAccess : WorldHelpers.getRegistryAccess());
     }
 
     protected IMutableAbilityStore getInnerStore() {
