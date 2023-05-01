@@ -1,6 +1,6 @@
 org.cyclops.everlastingabilities
 org.cyclops.everlastingabilities.ability
-org.cyclops.everlastingabilities.ability.serializer
+org.cyclops.everlastingabilities.ability.config
 org.cyclops.everlastingabilities.api
 org.cyclops.everlastingabilities.api.capability
 org.cyclops.everlastingabilities.capability
@@ -10,7 +10,6 @@ org.cyclops.everlastingabilities.command.argument
 org.cyclops.everlastingabilities.core.config
 org.cyclops.everlastingabilities.core.config.configurabletypeaction
 org.cyclops.everlastingabilities.core.config.extendedconfig
-org.cyclops.everlastingabilities.core.helper
 org.cyclops.everlastingabilities.inventory.container
 org.cyclops.everlastingabilities.item
 org.cyclops.everlastingabilities.loot.functions
