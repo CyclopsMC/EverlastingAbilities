@@ -1,0 +1,8 @@
+{
+  "type": "everlastingabilities:special_step_assist",
+  "name": "ability.everlastingabilities.step_assist",
+  "rarity": "common",
+  "max_level": 3,
+  "xp_per_level": 25,
+  "force_default_step_height": true
+}

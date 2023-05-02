@@ -40,5 +40,4 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
                 .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(ability, true));
         return itemStack;
     }
-
 }

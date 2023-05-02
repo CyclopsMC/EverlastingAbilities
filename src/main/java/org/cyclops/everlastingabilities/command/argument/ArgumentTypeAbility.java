@@ -10,7 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.cyclops.everlastingabilities.api.AbilityTypes;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.Collection;
@@ -26,7 +26,7 @@ public class ArgumentTypeAbility implements ArgumentType<IAbilityType> {
     @Override
     public IAbilityType parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
-        IAbilityType abilityType = AbilityTypes.REGISTRY.getValue(id);
+        IAbilityType abilityType = AbilityHelpers.getRegistry().get(id);
         if (abilityType == null) {
             throw new SimpleCommandExceptionType(Component.translatable("chat.everlastingabilities.command.invalidAbility", id)).create();
         }
@@ -35,8 +35,8 @@ public class ArgumentTypeAbility implements ArgumentType<IAbilityType> {
 
     @Override
     public Collection<String> getExamples() {
-        return AbilityTypes.REGISTRY.getValues().stream()
-                .map(ability -> AbilityTypes.REGISTRY.getKey(ability))
+        return AbilityHelpers.getRegistry().stream()
+                .map(ability -> AbilityHelpers.getRegistry().getKey(ability))
                 .map(ResourceLocation::toString)
                 .collect(Collectors.toList());
     }

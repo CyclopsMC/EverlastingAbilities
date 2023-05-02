@@ -1,0 +1,9 @@
+{
+  "type": "everlastingabilities:effect",
+  "target": "radius",
+  "name": "ability.everlastingabilities.unluck",
+  "rarity": "rare",
+  "max_level": 3,
+  "xp_per_level": 50,
+  "effect": "minecraft:unluck"
+}

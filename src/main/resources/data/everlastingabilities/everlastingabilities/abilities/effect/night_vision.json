@@ -1,0 +1,10 @@
+{
+  "type": "everlastingabilities:effect",
+  "target": "self",
+  "name": "ability.everlastingabilities.night_vision",
+  "rarity": "uncommon",
+  "max_level": 1,
+  "xp_per_level": 15,
+  "effect": "minecraft:night_vision",
+  "duration_factor": 27
+}

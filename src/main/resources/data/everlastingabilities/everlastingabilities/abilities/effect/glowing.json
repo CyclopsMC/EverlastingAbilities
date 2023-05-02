@@ -1,0 +1,10 @@
+{
+  "type": "everlastingabilities:effect",
+  "target": "radius",
+  "name": "ability.everlastingabilities.glowing",
+  "rarity": "uncommon",
+  "max_level": 3,
+  "xp_per_level": 50,
+  "effect": "minecraft:glowing",
+  "targets_friendly_mobs": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "everlastingabilities:effect",
+  "target": "radius",
+  "name": "ability.everlastingabilities.mining_fatigue",
+  "rarity": "uncommon",
+  "max_level": 3,
+  "xp_per_level": 40,
+  "effect": "minecraft:mining_fatigue"
+}

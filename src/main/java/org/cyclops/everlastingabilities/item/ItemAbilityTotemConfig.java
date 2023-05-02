@@ -1,22 +1,25 @@
 package org.cyclops.everlastingabilities.item;
 
 import com.google.common.collect.Lists;
-import net.minecraft.world.item.Item;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
 import org.cyclops.cyclopscore.helper.LootHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.Reference;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Config for the ability totem.
@@ -38,18 +41,24 @@ public class ItemAbilityTotemConfig extends ItemConfig {
                 "ability_totem",
                 (eConfig) -> new ItemAbilityTotem(new Item.Properties()
                         .stacksTo(1)));
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCreativeModeTabBuildContents);
     }
 
     @Override
     protected Collection<ItemStack> getDefaultCreativeTabEntries() {
-        List<ItemStack> itemStacks = Lists.newArrayList();
-        for (IAbilityType abilityType : AbilityTypes.REGISTRY.getValues()) {
-            for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
-                Ability ability = new Ability(abilityType, level);
-                itemStacks.add(ItemAbilityTotem.getTotem(ability));
-            }
+        return Lists.newArrayList();
+    }
+
+    protected void onCreativeModeTabBuildContents(CreativeModeTabEvent.BuildContents event) {
+        if (event.getTab() == this.getMod().getDefaultCreativeTab()) {
+            Registry<IAbilityType> registry = AbilityHelpers.getRegistry(Minecraft.getInstance().level.registryAccess());
+            registry.forEach(abilityType -> {
+                for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
+                    Ability ability = new Ability(abilityType, level);
+                    event.accept(ItemAbilityTotem.getTotem(ability));
+                }
+            });
         }
-        return itemStacks;
     }
 
     @Override

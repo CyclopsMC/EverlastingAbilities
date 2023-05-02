@@ -44,9 +44,6 @@ public class GeneralConfig extends DummyConfig {
     @ConfigurableProperty(category = "general", comment = "1/x chance for mobs to have abilities.", configLocation = ModConfig.Type.SERVER, isCommandable = true)
     public static int mobAbilityChance = 50;
 
-    @ConfigurableProperty(category = "general", comment = "If the magnetize ability should move xp.", configLocation = ModConfig.Type.SERVER, isCommandable = true)
-    public static boolean magnetizeMoveXp = true;
-
     @ConfigurableProperty(category = "general", comment = "The multiplier for ability XP requirement", configLocation = ModConfig.Type.SERVER, isCommandable = true)
     public static int abilityXpMultiplier = 10;
 
@@ -63,7 +60,8 @@ public class GeneralConfig extends DummyConfig {
     public static double exhaustionPerAbilityTick = 0.01;
 
     @ConfigurableProperty(category = "general", comment = "These mobs will not be affected by hostile area potion effects such as poison or weakness. (Java regular expressions are allowed)", configLocation = ModConfig.Type.SERVER)
-    public static List<String> friendlyMobs = Lists.newArrayList("minecraft:armor_stand",
+    public static List<String> friendlyMobs = Lists.newArrayList(
+            "minecraft:armor_stand",
             "minecraft:bat",
             "minecraft:bee",
             "minecraft:boat",

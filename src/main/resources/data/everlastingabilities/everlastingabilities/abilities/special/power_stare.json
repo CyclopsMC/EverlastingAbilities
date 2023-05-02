@@ -1,0 +1,8 @@
+{
+  "type": "everlastingabilities:special_power_stare",
+  "name": "ability.everlastingabilities.power_stare",
+  "rarity": "uncommon",
+  "max_level": 5,
+  "xp_per_level": 50,
+  "require_sneak": true
+}

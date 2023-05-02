@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -34,6 +35,7 @@ import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
@@ -98,17 +100,18 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             if (startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount())) startIndexItem++;
         }, ButtonArrow.Direction.SOUTH));
 
+        Registry<IAbilityType> registry = AbilityHelpers.getRegistry(player.level.registryAccess());
         addRenderableWidget(buttonLeft = new ButtonArrow(this.leftPos + 76,  this.topPos + 130, Component.translatable("gui.cyclopscore.left"), button -> {
             if (canMoveToPlayer()) {
                 EverlastingAbilities._instance.getPacketHandler().sendToServer(
-                        new MoveAbilityPacket(getSelectedItemAbilitySingle(), MoveAbilityPacket.Movement.TO_PLAYER));
+                        new MoveAbilityPacket(registry, getSelectedItemAbilitySingle(), MoveAbilityPacket.Movement.TO_PLAYER));
                 moveToPlayer();
             }
         }, ButtonArrow.Direction.WEST));
         addRenderableWidget(buttonRight = new ButtonArrow(this.leftPos + 90,  this.topPos + 130, Component.translatable("gui.cyclopscore.right"), button -> {
             if (canMoveFromPlayer()) {
                 EverlastingAbilities._instance.getPacketHandler().sendToServer(
-                        new MoveAbilityPacket(getSelectedPlayerAbilitySingle(), MoveAbilityPacket.Movement.FROM_PLAYER));
+                        new MoveAbilityPacket(registry, getSelectedPlayerAbilitySingle(), MoveAbilityPacket.Movement.FROM_PLAYER));
                 moveFromPlayer();
             }
         }, ButtonArrow.Direction.EAST));
@@ -251,7 +254,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                     x + 58, boxY + 5, 0, 0.8F, -1);
 
             // XP
-            int requiredXp = ability.getAbilityType().getBaseXpPerLevel();
+            int requiredXp = ability.getAbilityType().getXpPerLevelScaled();
             if (playerXp < requiredXp) {
                 RenderSystem.setShaderColor(0.3F, 0.3F, 0.3F, 1);
             } else {
@@ -287,8 +290,8 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Xp
                 lines.add(Component.translatable("general.everlastingabilities.xp",
-                        ability.getAbilityType().getBaseXpPerLevel(),
-                        AbilityHelpers.getLevelForExperience(ability.getAbilityType().getBaseXpPerLevel()))
+                        ability.getAbilityType().getXpPerLevelScaled(),
+                        AbilityHelpers.getLevelForExperience(ability.getAbilityType().getXpPerLevelScaled()))
                         .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GREEN))));
 
                 drawTooltip(lines, poseStack, mouseX - this.leftPos, mouseY - this.topPos);

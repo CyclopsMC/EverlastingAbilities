@@ -3,6 +3,8 @@ package org.cyclops.everlastingabilities.ability;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import lombok.NonNull;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +20,7 @@ import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
+import org.cyclops.everlastingabilities.core.helper.WorldHelpers;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 
 import java.util.Iterator;
@@ -49,6 +52,14 @@ public class AbilityHelpers {
             Helpers.RGBToInt(255, 0, 255),
     };
 
+    public static Registry<IAbilityType> getRegistry(RegistryAccess registryAccess) {
+        return registryAccess.registryOrThrow(AbilityTypes.REGISTRY_KEY);
+    }
+
+    public static Registry<IAbilityType> getRegistry() {
+        return getRegistry(WorldHelpers.getRegistryAccess());
+    }
+
     public static int getExperienceForLevel(int level) {
         if (level == 0) {
             return 0;
@@ -76,27 +87,27 @@ public class AbilityHelpers {
         return abilityType -> abilityType.getRarity() == rarity;
     }
 
-    public static List<IAbilityType> getAbilityTypes(Predicate<IAbilityType> abilityFilter) {
-        return AbilityTypes.REGISTRY.getValues()
+    public static List<IAbilityType> getAbilityTypes(Registry<IAbilityType> registry, Predicate<IAbilityType> abilityFilter) {
+        return registry
                 .stream()
                 .filter(abilityFilter)
                 .collect(Collectors.toList());
     }
 
-    public static List<IAbilityType> getAbilityTypesPlayerSpawn() {
-        return getAbilityTypes(IAbilityType::isObtainableOnPlayerSpawn);
+    public static List<IAbilityType> getAbilityTypesPlayerSpawn(Registry<IAbilityType> registry) {
+        return getAbilityTypes(registry, IAbilityType::isObtainableOnPlayerSpawn);
     }
 
-    public static List<IAbilityType> getAbilityTypesMobSpawn() {
-        return getAbilityTypes(IAbilityType::isObtainableOnMobSpawn);
+    public static List<IAbilityType> getAbilityTypesMobSpawn(Registry<IAbilityType> registry) {
+        return getAbilityTypes(registry, IAbilityType::isObtainableOnMobSpawn);
     }
 
-    public static List<IAbilityType> getAbilityTypesCrafting() {
-        return getAbilityTypes(IAbilityType::isObtainableOnCraft);
+    public static List<IAbilityType> getAbilityTypesCrafting(Registry<IAbilityType> registry) {
+        return getAbilityTypes(registry, IAbilityType::isObtainableOnCraft);
     }
 
-    public static List<IAbilityType> getAbilityTypesLoot() {
-        return getAbilityTypes(IAbilityType::isObtainableOnLoot);
+    public static List<IAbilityType> getAbilityTypesLoot(Registry<IAbilityType> registry) {
+        return getAbilityTypes(registry, IAbilityType::isObtainableOnLoot);
     }
 
     public static void onPlayerAbilityChanged(Player player, IAbilityType abilityType, int oldLevel, int newLevel) {
@@ -131,7 +142,7 @@ public class AbilityHelpers {
                     Ability result = abilityStore.addAbility(ability, doAdd);
                     int currentXp = player.totalExperience;
                     if (result != null && modifyXp && getExperience(result) > currentXp) {
-                        int maxLevels = player.totalExperience / result.getAbilityType().getBaseXpPerLevel();
+                        int maxLevels = player.totalExperience / result.getAbilityType().getXpPerLevelScaled();
                         if (maxLevels == 0) {
                             result = Ability.EMPTY;
                         } else {
@@ -183,7 +194,7 @@ public class AbilityHelpers {
         if (ability.isEmpty()) {
             return 0;
         }
-        return ability.getAbilityType().getBaseXpPerLevel() * ability.getLevel();
+        return ability.getAbilityType().getXpPerLevelScaled() * ability.getLevel();
     }
 
     public static void setPlayerAbilities(ServerPlayer player, Map<IAbilityType, Integer> abilityTypes) {

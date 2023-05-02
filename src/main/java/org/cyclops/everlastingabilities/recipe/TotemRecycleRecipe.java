@@ -84,7 +84,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
         Rarity rarity = RegistryEntries.ITEM_ABILITY_TOTEM.getRarity(sortedStacks.get(inputTargetIndex));
 
         // A chance of a bump
-        List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesCrafting();
+        List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesCrafting(AbilityHelpers.getRegistry(registryAccess));
         if (rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent) {
             Rarity newRarity = rarity;
             // This loop ensures that the new rarity has at least one registered ability

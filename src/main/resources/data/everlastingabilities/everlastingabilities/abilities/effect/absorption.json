@@ -1,0 +1,13 @@
+{
+  "type": "everlastingabilities:effect",
+  "target": "self",
+  "name": "ability.everlastingabilities.absorption",
+  "rarity": "rare",
+  "max_level": 5,
+  "xp_per_level": 75,
+  "effect": "minecraft:absorption",
+  "tick_modulus": 200,
+  "amplifier_factor": 0.5,
+  "level_based_duration": true,
+  "duration_factor": 1
+}

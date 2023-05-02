@@ -1,0 +1,11 @@
+{
+  "type": "everlastingabilities:effect",
+  "target": "self",
+  "name": "ability.everlastingabilities.saturation",
+  "rarity": "epic",
+  "max_level": 3,
+  "xp_per_level": 50,
+  "effect": "minecraft:saturation",
+  "tick_modulus": 200,
+  "duration_factor": 1
+}

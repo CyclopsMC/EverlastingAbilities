@@ -54,7 +54,7 @@ public class SendAbilityStorePacket extends PacketCodec {
 				if (entity != null) {
 					// Sync ability store
 					entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
-						AbilityStoreCapabilityProvider.deserializeNBTStatic(abilityStore, tag.get("contents"));
+						AbilityStoreCapabilityProvider.deserializeNBTStatic(AbilityHelpers.getRegistry(world.registryAccess()), abilityStore, tag.get("contents"));
 					});
 
 					// Sync max abilities value

@@ -1,0 +1,8 @@
+{
+  "type": "everlastingabilities:special_magnetize",
+  "name": "ability.everlastingabilities.magnetize",
+  "rarity": "uncommon",
+  "max_level": 5,
+  "xp_per_level": 20,
+  "move_xp": true
+}

@@ -1,0 +1,9 @@
+{
+  "type": "everlastingabilities:effect",
+  "target": "self",
+  "name": "ability.everlastingabilities.haste",
+  "rarity": "common",
+  "max_level": 5,
+  "xp_per_level": 15,
+  "effect": "minecraft:haste"
+}

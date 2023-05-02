@@ -1,0 +1,9 @@
+{
+  "type": "everlastingabilities:effect",
+  "target": "radius",
+  "name": "ability.everlastingabilities.weakness",
+  "rarity": "rare",
+  "max_level": 3,
+  "xp_per_level": 80,
+  "effect": "minecraft:weakness"
+}

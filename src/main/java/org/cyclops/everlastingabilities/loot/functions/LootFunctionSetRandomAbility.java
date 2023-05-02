@@ -15,6 +15,7 @@ import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStoreRegistryAccess;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
 import java.util.List;
@@ -33,12 +34,15 @@ public class LootFunctionSetRandomAbility extends LootItemConditionalFunction {
     @Override
     public ItemStack run(ItemStack stack, LootContext context) {
         try {
-            List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesLoot();
+            List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesLoot(AbilityHelpers.getRegistry(context.getLevel().registryAccess()));
             Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, context.getRandom());
             IAbilityType abilityType = AbilityHelpers.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
 
             stack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
-                    .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
+                    .ifPresent(mutableAbilityStore -> {
+                        ((IMutableAbilityStoreRegistryAccess) mutableAbilityStore).setRegistryAccess(context.getLevel().registryAccess());
+                        mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
+                    });
             return stack;
         } catch (IllegalStateException e) {
             return ItemStack.EMPTY;

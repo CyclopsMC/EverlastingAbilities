@@ -12,6 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.capability.AbilityStoreCapabilityProvider;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
@@ -53,7 +54,7 @@ public class RequestAbilityStorePacket extends PacketCodec {
 			Entity entity = ((ServerLevel) world).getEntity(uuid);
 			if (entity != null) {
 				entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
-					Tag contents = AbilityStoreCapabilityProvider.serializeNBTStatic(abilityStore);
+					Tag contents = AbilityStoreCapabilityProvider.serializeNBTStatic(AbilityHelpers.getRegistry(world.registryAccess()), abilityStore);
 					CompoundTag tag = new CompoundTag();
 					tag.put("contents", contents);
 					EverlastingAbilities._instance.getPacketHandler().sendToPlayer(new SendAbilityStorePacket(entity.getId(), tag), player);

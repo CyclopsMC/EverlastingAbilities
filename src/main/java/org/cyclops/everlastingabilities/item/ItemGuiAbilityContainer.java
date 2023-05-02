@@ -17,6 +17,7 @@ import org.cyclops.cyclopscore.inventory.container.NamedContainerProviderItem;
 import org.cyclops.cyclopscore.item.ItemGui;
 import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityProvider;
 import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStoreRegistryAccess;
 import org.cyclops.everlastingabilities.api.capability.ItemStackMutableAbilityStore;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
@@ -52,6 +53,9 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
         super.appendHoverText(itemStack, worldIn, tooltip, flagIn);
 
         itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
+            if (worldIn != null) {
+                ((IMutableAbilityStoreRegistryAccess) abilityStore).setRegistryAccess(worldIn.registryAccess());
+            }
             List<Ability> abilities = new ArrayList<Ability>(abilityStore.getAbilities());
             Collections.sort(abilities);
 

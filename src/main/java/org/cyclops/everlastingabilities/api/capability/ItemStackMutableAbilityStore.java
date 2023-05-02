@@ -1,14 +1,19 @@
 package org.cyclops.everlastingabilities.api.capability;
 
 import lombok.NonNull;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import org.cyclops.everlastingabilities.Reference;
+import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+import org.cyclops.everlastingabilities.core.helper.WorldHelpers;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -17,14 +22,25 @@ import java.util.Map;
  * TODO: This is just to avoid a Forge bug where cap NBT is not always sent to the client.
  * @author rubensworks
  */
-public class ItemStackMutableAbilityStore implements IMutableAbilityStore {
+public class ItemStackMutableAbilityStore implements IMutableAbilityStoreRegistryAccess {
 
     private static final String NBT_STORE = Reference.MOD_ID + ":abilityStoreStack";
 
     private final ItemStack itemStack;
+    @Nullable
+    private RegistryAccess registryAccess;
 
     public ItemStackMutableAbilityStore(ItemStack itemStack) {
         this.itemStack = itemStack;
+    }
+
+    @Override
+    public void setRegistryAccess(RegistryAccess registryAccess) {
+        this.registryAccess = registryAccess;
+    }
+
+    protected Registry<IAbilityType> getRegistry() {
+         return AbilityHelpers.getRegistry(this.registryAccess != null ? this.registryAccess : WorldHelpers.getRegistryAccess());
     }
 
     protected IMutableAbilityStore getInnerStore() {
@@ -34,13 +50,13 @@ public class ItemStackMutableAbilityStore implements IMutableAbilityStore {
             root.put(NBT_STORE, new ListTag());
         }
         Tag nbt = root.get(NBT_STORE);
-        AbilityStoreCapabilityProvider.deserializeNBTStatic(store, nbt);
+        AbilityStoreCapabilityProvider.deserializeNBTStatic(getRegistry(), store, nbt);
         return store;
     }
 
     protected IMutableAbilityStore setInnerStore(IMutableAbilityStore store) {
         CompoundTag root = itemStack.getOrCreateTag();
-        Tag nbt = AbilityStoreCapabilityProvider.serializeNBTStatic(store);
+        Tag nbt = AbilityStoreCapabilityProvider.serializeNBTStatic(getRegistry(), store);
         root.put(NBT_STORE, nbt);
         return store;
     }
