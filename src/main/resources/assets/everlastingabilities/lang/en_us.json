@@ -44,6 +44,8 @@
     "ability.everlastingabilities.conduit_power.info": "Gain underwater bonuses",
     "ability.everlastingabilities.dolphins_grace": "Dolphins Grace",
     "ability.everlastingabilities.dolphins_grace.info": "Gain a higher swimming speed when a dolphin is nearby",
+    "ability.everlastingabilities.bad_omen_self": "Bad Omen (self)",
+    "ability.everlastingabilities.bad_omen_self.info": "Trigger raids in villages",
 
     "ability.everlastingabilities.slowness": "Slowness",
     "ability.everlastingabilities.slowness.info": "Entities in the area move slower",
@@ -67,7 +69,7 @@
     "ability.everlastingabilities.levitation.info": "Entities in the area start levitating",
     "ability.everlastingabilities.unluck": "Unluck",
     "ability.everlastingabilities.unluck.info": "Entities in the area have a lower chance on good loot",
-    "ability.everlastingabilities.bad_omen": "Bad Omen",
+    "ability.everlastingabilities.bad_omen": "Bad Omen (others)",
     "ability.everlastingabilities.bad_omen.info": "Entities in the area can trigger raids to appear in villages",
 
     "ability.everlastingabilities.flight": "Flight",

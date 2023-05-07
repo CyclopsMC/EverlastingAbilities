@@ -1,0 +1,9 @@
+{
+  "type": "everlastingabilities:effect",
+  "target": "self",
+  "name": "ability.everlastingabilities.bad_omen_self",
+  "rarity": "epic",
+  "max_level": 4,
+  "xp_per_level": 250,
+  "effect": "minecraft:bad_omen"
+}
