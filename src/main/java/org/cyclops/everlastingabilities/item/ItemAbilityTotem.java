@@ -49,7 +49,7 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (this.allowedIn(group)) {
+        if (this.allowedIn(group) && Minecraft.getInstance().level != null) { // Level can be null during game loading
             Registry<IAbilityType> registry = AbilityHelpers.getRegistry(Minecraft.getInstance().level.registryAccess());
             registry.forEach(abilityType -> {
                 for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
