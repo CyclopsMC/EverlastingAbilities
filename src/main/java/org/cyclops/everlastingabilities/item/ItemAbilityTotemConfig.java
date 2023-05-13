@@ -50,7 +50,7 @@ public class ItemAbilityTotemConfig extends ItemConfig {
     }
 
     protected void onCreativeModeTabBuildContents(CreativeModeTabEvent.BuildContents event) {
-        if (event.getTab() == this.getMod().getDefaultCreativeTab()) {
+        if (event.getTab() == this.getMod().getDefaultCreativeTab() && Minecraft.getInstance().level != null) { // Level can be null during game loading
             Registry<IAbilityType> registry = AbilityHelpers.getRegistry(Minecraft.getInstance().level.registryAccess());
             registry.forEach(abilityType -> {
                 for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
