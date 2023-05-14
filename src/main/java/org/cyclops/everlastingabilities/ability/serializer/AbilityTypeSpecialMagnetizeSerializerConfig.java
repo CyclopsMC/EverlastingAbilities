@@ -2,10 +2,11 @@ package org.cyclops.everlastingabilities.ability.serializer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import org.cyclops.everlastingabilities.ability.AbilityTypeEffect;
+import net.minecraftforge.common.crafting.conditions.TrueCondition;
 import org.cyclops.everlastingabilities.ability.AbilityTypeSpecialMagnetize;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilitySerializerConfig;
+import org.cyclops.everlastingabilities.core.helper.CodecHelpers;
 
 /**
  * @author rubensworks
@@ -15,8 +16,9 @@ public class AbilityTypeSpecialMagnetizeSerializerConfig extends AbilitySerializ
     public AbilityTypeSpecialMagnetizeSerializerConfig() {
         super("special_magnetize", (eConfig) -> RecordCodecBuilder.create(builder -> builder
                 .group(
+                        CodecHelpers.CODEC_CONDITION.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(IAbilityType::getTranslationKey),
-                        AbilityTypeEffect.CODEC_RARITY.fieldOf("rarity").forGetter(IAbilityType::getRarity),
+                        CodecHelpers.CODEC_RARITY.fieldOf("rarity").forGetter(IAbilityType::getRarity),
                         Codec.INT.fieldOf("max_level").forGetter(IAbilityType::getMaxLevel),
                         Codec.INT.fieldOf("xp_per_level").forGetter(IAbilityType::getXpPerLevelRaw),
                         Codec.BOOL.optionalFieldOf("obtainable_on_player_spawn", true).forGetter(IAbilityType::isObtainableOnPlayerSpawn),

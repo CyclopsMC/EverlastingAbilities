@@ -294,6 +294,13 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                         AbilityHelpers.getLevelForExperience(ability.getAbilityType().getXpPerLevelScaled()))
                         .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GREEN))));
 
+                if (!AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(ability.getAbilityType())) {
+                    lines.add(Component.translatable("general.everlastingabilities.disabled")
+                            .setStyle(Style.EMPTY
+                                    .withColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_RED))
+                                    .withBold(true)));
+                }
+
                 drawTooltip(lines, poseStack, mouseX - this.leftPos, mouseY - this.topPos);
             }
         }

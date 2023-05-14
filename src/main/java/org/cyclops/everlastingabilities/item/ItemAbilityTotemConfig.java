@@ -55,7 +55,9 @@ public class ItemAbilityTotemConfig extends ItemConfig {
             registry.forEach(abilityType -> {
                 for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
                     Ability ability = new Ability(abilityType, level);
-                    event.accept(ItemAbilityTotem.getTotem(ability));
+                    if (AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(abilityType)) {
+                        event.accept(ItemAbilityTotem.getTotem(ability));
+                    }
                 }
             });
         }

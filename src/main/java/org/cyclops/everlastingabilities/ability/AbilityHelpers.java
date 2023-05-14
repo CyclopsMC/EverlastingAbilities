@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.crafting.conditions.ICondition;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.everlastingabilities.GeneralConfig;
@@ -51,6 +52,8 @@ public class AbilityHelpers {
             Helpers.RGBToInt(0, 255, 255),
             Helpers.RGBToInt(255, 0, 255),
     };
+
+    public static Predicate<IAbilityType> PREDICATE_ABILITY_ENABLED = ability -> ability.getCondition().test(ICondition.IContext.EMPTY);
 
     public static Registry<IAbilityType> getRegistry(RegistryAccess registryAccess) {
         return registryAccess.registryOrThrow(AbilityTypes.REGISTRY_KEY);
@@ -95,19 +98,19 @@ public class AbilityHelpers {
     }
 
     public static List<IAbilityType> getAbilityTypesPlayerSpawn(Registry<IAbilityType> registry) {
-        return getAbilityTypes(registry, IAbilityType::isObtainableOnPlayerSpawn);
+        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(IAbilityType::isObtainableOnPlayerSpawn));
     }
 
     public static List<IAbilityType> getAbilityTypesMobSpawn(Registry<IAbilityType> registry) {
-        return getAbilityTypes(registry, IAbilityType::isObtainableOnMobSpawn);
+        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(IAbilityType::isObtainableOnMobSpawn));
     }
 
     public static List<IAbilityType> getAbilityTypesCrafting(Registry<IAbilityType> registry) {
-        return getAbilityTypes(registry, IAbilityType::isObtainableOnCraft);
+        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(IAbilityType::isObtainableOnCraft));
     }
 
     public static List<IAbilityType> getAbilityTypesLoot(Registry<IAbilityType> registry) {
-        return getAbilityTypes(registry, IAbilityType::isObtainableOnLoot);
+        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(IAbilityType::isObtainableOnLoot));
     }
 
     public static void onPlayerAbilityChanged(Player player, IAbilityType abilityType, int oldLevel, int newLevel) {

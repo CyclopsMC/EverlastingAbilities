@@ -3,6 +3,7 @@ package org.cyclops.everlastingabilities.ability;
 import com.mojang.serialization.Codec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
+import net.minecraftforge.common.crafting.conditions.ICondition;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
@@ -19,10 +20,10 @@ public class AbilityTypeSpecialStepAssist extends AbilityTypeAdapter {
     private static final String PLAYER_NBT_KEY = Reference.MOD_ID + ":" + "stepAssist";
     private final boolean forceDefaultStepHeight;
 
-    public AbilityTypeSpecialStepAssist(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+    public AbilityTypeSpecialStepAssist(ICondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                                         boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
                                         boolean forceDefaultStepHeight) {
-        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+        super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.forceDefaultStepHeight = forceDefaultStepHeight;
     }
 
