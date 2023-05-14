@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.crafting.conditions.ICondition;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
@@ -27,10 +28,10 @@ public class AbilityTypeSpecialMagnetize extends AbilityTypeAdapter {
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 20;
     private final boolean moveXp;
 
-    public AbilityTypeSpecialMagnetize(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+    public AbilityTypeSpecialMagnetize(ICondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                                        boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
                                        boolean moveXp) {
-        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+        super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.moveXp = moveXp;
     }
 

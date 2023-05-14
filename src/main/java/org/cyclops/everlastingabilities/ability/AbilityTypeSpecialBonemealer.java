@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.GrassBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.crafting.conditions.ICondition;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.cyclopscore.helper.WorldHelpers;
 import org.cyclops.everlastingabilities.RegistryEntries;
@@ -26,9 +27,9 @@ public class AbilityTypeSpecialBonemealer extends AbilityTypeAdapter {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS;
 
-    public AbilityTypeSpecialBonemealer(String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+    public AbilityTypeSpecialBonemealer(ICondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                                         boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
-        super(name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
+        super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }
 
     @Override
