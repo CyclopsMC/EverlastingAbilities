@@ -323,10 +323,12 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             Player player = (Player) event.getEntity();
             player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
                 for (Ability ability : abilityStore.getAbilities()) {
-                    if (event.getEntity().level.getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
-                        player.causeFoodExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
+                    if (AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(ability.getAbilityType())) {
+                        if (event.getEntity().level.getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
+                            player.causeFoodExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
+                        }
+                        ability.getAbilityType().onTick(player, ability.getLevel());
                     }
-                    ability.getAbilityType().onTick(player, ability.getLevel());
                 }
             });
         }

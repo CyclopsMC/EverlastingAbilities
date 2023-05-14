@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.api;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
+import net.minecraftforge.common.crafting.conditions.ICondition;
 import org.cyclops.everlastingabilities.GeneralConfig;
 
 /**
@@ -10,6 +11,7 @@ import org.cyclops.everlastingabilities.GeneralConfig;
  */
 public abstract class AbilityTypeAdapter implements IAbilityType {
 
+    private ICondition condition;
     private final String name;
     private final Rarity rarity;
     private final int maxLevel;
@@ -19,9 +21,10 @@ public abstract class AbilityTypeAdapter implements IAbilityType {
     private final boolean obtainableOnCraft;
     private final boolean obtainableOnLoot;
 
-    public AbilityTypeAdapter(String name, Rarity rarity, int maxLevel,
+    public AbilityTypeAdapter(ICondition condition, String name, Rarity rarity, int maxLevel,
                               int xpPerLevel, boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn,
                               boolean obtainableOnCraft, boolean obtainableOnLoot) {
+        this.condition = condition;
         this.name = name;
         this.rarity = rarity;
         this.maxLevel = maxLevel;
@@ -30,6 +33,15 @@ public abstract class AbilityTypeAdapter implements IAbilityType {
         this.obtainableOnMobSpawn = obtainableOnMobSpawn;
         this.obtainableOnCraft = obtainableOnCraft;
         this.obtainableOnLoot = obtainableOnLoot;
+    }
+
+    @Override
+    public ICondition getCondition() {
+        return condition;
+    }
+
+    protected void setCondition(ICondition condition) {
+        this.condition = condition;
     }
 
     @Override

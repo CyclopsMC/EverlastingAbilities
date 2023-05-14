@@ -54,7 +54,9 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
             registry.forEach(abilityType -> {
                 for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
                     Ability ability = new Ability(abilityType, level);
-                    items.add(getTotem(ability));
+                    if (AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(abilityType)) {
+                        items.add(getTotem(ability));
+                    }
                 }
             });
         }
