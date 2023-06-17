@@ -41,7 +41,7 @@ public class ClientProxy extends ClientProxyComponent {
 		if (((GeneralConfig.showEntityParticles && entity instanceof PathfinderMob) // TODO CreatureEntity was IAnimal
 				|| (GeneralConfig.showPlayerParticles && entity instanceof Player))
 				&& !Minecraft.getInstance().isPaused()
-				&& entity.level.getGameTime() % 10 == 0) {
+				&& entity.level().getGameTime() % 10 == 0) {
 			entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent((abilityStore) -> {
 				if (!abilityStore.getAbilities().isEmpty()) {
 					Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
@@ -49,7 +49,7 @@ public class ClientProxy extends ClientProxyComponent {
 					float g = abilityColors.getMiddle() / 255F;
 					float b = abilityColors.getRight() / 255F;
 
-					RandomSource rand = entity.level.random;
+					RandomSource rand = entity.level().random;
 					float scale = 0.5F - rand.nextFloat() * 0.3F;
 					float red = Math.max(0, r - rand.nextFloat() * 0.1F);
 					float green = Math.max(0, g - rand.nextFloat() * 0.1F);

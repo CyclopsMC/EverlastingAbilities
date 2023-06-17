@@ -46,8 +46,8 @@ public class AbilityTypeSpecialMagnetize extends AbilityTypeAdapter {
 
     @Override
     public void onTick(Player player, int level) {
-        Level world = player.level;
-        if (!world.isClientSide && !player.isCrouching() && player.level.getGameTime() % TICK_MODULUS == 0) {
+        Level world = player.level();
+        if (!world.isClientSide && !player.isCrouching() && world.getGameTime() % TICK_MODULUS == 0) {
             // Center of the attraction
             double x = player.getX();
             double y = player.getY();

@@ -43,8 +43,8 @@ public class AbilityTypeSpecialBonemealer extends AbilityTypeAdapter {
 
     @Override
     public void onTick(Player player, int level) {
-        Level world = player.level;
-        if (!world.isClientSide() && player.level.getGameTime() % (TICK_MODULUS / level) == 0) {
+        Level world = player.level();
+        if (!world.isClientSide() && world.getGameTime() % (TICK_MODULUS / level) == 0) {
             int radius = level * 2;
             WorldHelpers.foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.blockPosition(), new WorldHelpers.WorldFoldingFunction<Void, Void, Level>() {
                 @Nullable

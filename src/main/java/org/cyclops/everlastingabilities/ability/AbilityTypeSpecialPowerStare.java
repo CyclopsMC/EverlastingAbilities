@@ -50,8 +50,8 @@ public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
             return;
         }
 
-        Level world = player.level;
-        if (!world.isClientSide && player.level.getGameTime() % TICK_MODULUS == 0) {
+        Level world = player.level();
+        if (!world.isClientSide && world.getGameTime() % TICK_MODULUS == 0) {
             int range = level * 10;
             double eyeHeight = player.getEyeHeight();
             Vec3 lookVec = player.getLookAngle();

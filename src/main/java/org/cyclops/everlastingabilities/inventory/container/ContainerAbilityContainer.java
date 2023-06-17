@@ -74,7 +74,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
         }
         return itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY)
                 .lazyMap(store -> {
-                    ((IMutableAbilityStoreRegistryAccess) store).setRegistryAccess(this.player.level.registryAccess());
+                    ((IMutableAbilityStoreRegistryAccess) store).setRegistryAccess(this.player.level().registryAccess());
                     return store;
                 });
     }

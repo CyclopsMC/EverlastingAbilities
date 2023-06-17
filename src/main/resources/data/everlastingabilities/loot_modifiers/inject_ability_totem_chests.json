@@ -1,0 +1,20 @@
+{
+  "type": "everlastingabilities:inject_ability_totem",
+  "conditions": [
+    {
+      "condition": "random_chance",
+      "chance": 0.5
+    }
+  ],
+  "loot_tables": [
+    "minecraft:chests/spawn_bonus_chest",
+    "minecraft:chests/village/village_toolsmith",
+    "minecraft:chests/village/village_weaponsmith",
+    "minecraft:chests/village/village_shepherd",
+    "minecraft:chests/nether_bridge",
+    "minecraft:chests/simple_dungeon",
+    "minecraft:chests/abandoned_mineshaft",
+    "minecraft:chests/jungle_temple",
+    "minecraft:chests/ancient_city"
+  ]
+}

@@ -61,6 +61,7 @@ import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityCont
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
 import org.cyclops.everlastingabilities.loot.functions.LootFunctionSetRandomAbility;
+import org.cyclops.everlastingabilities.loot.modifier.LootModifierInjectAbilityTotemConfig;
 import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket;
 import org.cyclops.everlastingabilities.proxy.ClientProxy;
 import org.cyclops.everlastingabilities.proxy.CommonProxy;
@@ -141,7 +142,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                                 && canMobHaveAbility((LivingEntity) host)) {
                             RandomSource rand = RandomSource.create();
                             rand.setSeed(entity.getId());
-                            Registry<IAbilityType> registry = AbilityHelpers.getRegistry(host.level.registryAccess());
+                            Registry<IAbilityType> registry = AbilityHelpers.getRegistry(host.level().registryAccess());
                             List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn(registry);
                             Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, rand);
                             AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity).ifPresent(
@@ -201,6 +202,9 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         configHandler.addConfigurable(new AbilityTypeSpecialMagnetizeSerializerConfig());
         configHandler.addConfigurable(new AbilityTypeSpecialPowerStareSerializerConfig());
         configHandler.addConfigurable(new AbilityTypeSpecialStepAssistSerializerConfig());
+
+        // Loot modifiers
+        configHandler.addConfigurable(new LootModifierInjectAbilityTotemConfig());
     }
 
     /**
@@ -239,7 +243,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             if (!playerTag.contains(NBT_TOTEM_SPAWNED)) {
                 playerTag.putBoolean(NBT_TOTEM_SPAWNED, true);
 
-                Level world = event.getEntity().level;
+                Level world = event.getEntity().level();
                 Player player = event.getEntity();
                 Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
                 AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(AbilityHelpers.getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
@@ -259,8 +263,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        boolean doMobLoot = event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
-        if (!event.getEntity().level.isClientSide
+        boolean doMobLoot = event.getEntity().level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
+        if (!event.getEntity().level().isClientSide
                 && (event.getEntity() instanceof Player
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
                         && (GeneralConfig.alwaysDropAbilities || event.getSource().getEntity() instanceof Player))
@@ -275,7 +279,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
                 ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
                 IMutableAbilityStore itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
-                ((IMutableAbilityStoreRegistryAccess) itemStackStore).setRegistryAccess(event.getEntity().getLevel().registryAccess());
+                ((IMutableAbilityStoreRegistryAccess) itemStackStore).setRegistryAccess(event.getEntity().level().registryAccess());
 
                 Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
                 for (Ability ability : abilities) {
@@ -297,7 +301,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 }
 
                 if (!itemStackStore.getAbilities().isEmpty()) {
-                    ItemStackHelpers.spawnItemStack(entity.level, entity.blockPosition(), itemStack);
+                    ItemStackHelpers.spawnItemStack(entity.level(), entity.blockPosition(), itemStack);
                 }
             });
         }
@@ -320,7 +324,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
                 for (Ability ability : abilityStore.getAbilities()) {
                     if (AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(ability.getAbilityType())) {
-                        if (event.getEntity().level.getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
+                        if (event.getEntity().level().getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
                             player.causeFoodExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
                         }
                         ability.getAbilityType().onTick(player, ability.getLevel());

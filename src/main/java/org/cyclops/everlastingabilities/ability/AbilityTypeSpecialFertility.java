@@ -39,8 +39,8 @@ public class AbilityTypeSpecialFertility extends AbilityTypeAdapter {
 
     @Override
     public void onTick(Player player, int level) {
-        Level world = player.level;
-        if (!world.isClientSide && player.level.getGameTime() % TICK_MODULUS == 0) {
+        Level world = player.level();
+        if (!world.isClientSide && world.getGameTime() % TICK_MODULUS == 0) {
             int radius = level * 2;
             List<Animal> mobs = world.getEntitiesOfClass(Animal.class,
                     player.getBoundingBox().inflate(radius, radius, radius), EntitySelector.NO_SPECTATORS);
