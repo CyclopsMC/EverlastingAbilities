@@ -14,6 +14,7 @@ org.cyclops.everlastingabilities.core.helper
 org.cyclops.everlastingabilities.inventory.container
 org.cyclops.everlastingabilities.item
 org.cyclops.everlastingabilities.loot.functions
+org.cyclops.everlastingabilities.loot.modifier
 org.cyclops.everlastingabilities.network.packet
 org.cyclops.everlastingabilities.proxy
 org.cyclops.everlastingabilities.recipe
