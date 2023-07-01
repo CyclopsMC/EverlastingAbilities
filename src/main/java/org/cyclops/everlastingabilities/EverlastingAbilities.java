@@ -61,7 +61,6 @@ import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityCont
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
 import org.cyclops.everlastingabilities.loot.functions.LootFunctionSetRandomAbility;
-import org.cyclops.everlastingabilities.loot.modifier.LootModifierInjectAbilityTotemConfig;
 import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket;
 import org.cyclops.everlastingabilities.proxy.ClientProxy;
 import org.cyclops.everlastingabilities.proxy.CommonProxy;
@@ -202,9 +201,6 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         configHandler.addConfigurable(new AbilityTypeSpecialMagnetizeSerializerConfig());
         configHandler.addConfigurable(new AbilityTypeSpecialPowerStareSerializerConfig());
         configHandler.addConfigurable(new AbilityTypeSpecialStepAssistSerializerConfig());
-
-        // Loot modifiers
-        configHandler.addConfigurable(new LootModifierInjectAbilityTotemConfig());
     }
 
     /**
