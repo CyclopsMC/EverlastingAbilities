@@ -1,0 +1,9 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.18.4 or higher.
+
+Fixes:
+* Revert "Use loot modifier injector from CyclopsCore"
+  This reverts commit 087e190f0b7dd51a6c93679a0a902feadb2bc2c5
+  because it causes empty totems to be generated.
+  Closes #231
+* Fix crash when using step assist ability, Closes #230
