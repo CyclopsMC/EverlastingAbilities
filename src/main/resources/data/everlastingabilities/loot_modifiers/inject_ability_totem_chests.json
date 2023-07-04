@@ -1,12 +1,11 @@
 {
-  "type": "cyclopscore:inject_item",
+  "type": "everlastingabilities:inject_ability_totem",
   "conditions": [
     {
       "condition": "random_chance",
       "chance": 0.5
     }
   ],
-  "item": { "id": "everlastingabilities:ability_totem", "Count": 1 },
   "loot_tables": [
     "minecraft:chests/spawn_bonus_chest",
     "minecraft:chests/village/village_toolsmith",

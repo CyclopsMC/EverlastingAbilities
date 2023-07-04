@@ -24,7 +24,7 @@ import java.util.List;
  * A loot function that sets a random into an item.
  * @author rubensworks
  */
-@Deprecated // Deprecated in favor of cyclopscore:inject_item
+@Deprecated // Deprecated in favor of LootModifierInjectAbilityTotem
 public class LootFunctionSetRandomAbility extends LootItemConditionalFunction {
     public static final LootItemFunctionType TYPE = LootHelpers.registerFunction(new ResourceLocation(Reference.MOD_ID, "set_random_ability"), new LootFunctionSetRandomAbility.Serializer());
 
