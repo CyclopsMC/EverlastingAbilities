@@ -38,7 +38,7 @@ public class AbilityTypeSpecialStepAssist extends AbilityTypeAdapter {
 
     @Override
     public void onTick(Player player, int level) {
-        player.maxUpStep = player.isCrouching() ? 0.5F : level;
+        player.setMaxUpStep(player.isCrouching() ? 0.5F : level);
     }
 
     @Override
@@ -51,9 +51,9 @@ public class AbilityTypeSpecialStepAssist extends AbilityTypeAdapter {
                 }
                 player.getPersistentData().remove(PLAYER_NBT_KEY);
             }
-            player.maxUpStep = stepHeight;
+            player.setMaxUpStep(stepHeight);
         } else if (oldLevel == 0 && newLevel > 0) {
-            player.getPersistentData().putFloat(PLAYER_NBT_KEY, player.maxUpStep);
+            player.getPersistentData().putFloat(PLAYER_NBT_KEY, player.maxUpStep());
         }
     }
 }
