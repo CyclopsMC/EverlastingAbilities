@@ -140,9 +140,9 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                             Random rand = new Random();
                             rand.setSeed(entity.getId());
                             List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn();
-                            Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, rand);
-                            AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity).ifPresent(
-                                    abilityType -> store.addAbility(new Ability(abilityType, 1), true));
+                            AbilityHelpers.getRandomRarity(abilityTypes, rand)
+                                    .flatMap(rarity -> AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity))
+                                    .ifPresent(abilityType -> store.addAbility(new Ability(abilityType, 1), true));
                         }
                     }
                     return new AbilityStoreCapabilityProvider<>(this, store);
