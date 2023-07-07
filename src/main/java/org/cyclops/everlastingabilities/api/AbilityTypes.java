@@ -10,6 +10,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 
 import java.util.function.Supplier;
 
+
 /**
  * Holder class for the ability registry.
  * @author rubensworks
@@ -23,7 +24,7 @@ public class AbilityTypes {
             .create(REGISTRY_KEY, "everlastingabilities");
     public static final Supplier<IForgeRegistry<IAbilityType>> REGISTRY_BUILTIN = REGISTRY
             .makeRegistry(() -> new RegistryBuilder<IAbilityType>()
-                    .disableSaving()
+                    .allowModification()
                     .dataPackRegistry(AbilityTypeSerializers.DIRECT_CODEC, AbilityTypeSerializers.DIRECT_CODEC));
 
 }
