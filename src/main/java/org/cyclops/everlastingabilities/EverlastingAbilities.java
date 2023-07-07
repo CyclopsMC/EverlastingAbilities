@@ -121,6 +121,9 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             @Nullable
             @Override
             public ICapabilityProvider createProvider(Player host) {
+                if (host.level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isEmpty()) {
+                    return null;
+                }
                 return new AbilityStoreCapabilityProvider<>(this, new DefaultMutableAbilityStore());
             }
 
@@ -133,6 +136,9 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             @Nullable
             @Override
             public ICapabilityProvider createProvider(PathfinderMob host) { // TODO: CreatureEntity was IAnimal
+                if (host.level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isEmpty()) {
+                    return null;
+                }
                 if (host instanceof Entity) {
                     Entity entity = (Entity) host;
                     IMutableAbilityStore store = new DefaultMutableAbilityStore();
@@ -144,9 +150,9 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                             rand.setSeed(entity.getId());
                             Registry<IAbilityType> registry = AbilityHelpers.getRegistry(host.level().registryAccess());
                             List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn(registry);
-                            Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, rand);
-                            AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity).ifPresent(
-                                    abilityType -> store.addAbility(new Ability(abilityType, 1), true));
+                            AbilityHelpers.getRandomRarity(abilityTypes, rand)
+                                    .flatMap(rarity -> AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity))
+                                    .ifPresent(abilityType -> store.addAbility(new Ability(abilityType, 1), true));
                         }
                     }
                     return new AbilityStoreCapabilityProvider<>(this, store);
@@ -234,7 +240,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     private static final String NBT_TOTEM_SPAWNED = Reference.MOD_ID + ":totemSpawned";
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (GeneralConfig.totemMaximumSpawnRarity >= 0) {
+        if (event.getEntity().level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isPresent() && GeneralConfig.totemMaximumSpawnRarity >= 0) {
             CompoundTag tag = event.getEntity().getPersistentData();
             if (!tag.contains(Player.PERSISTED_NBT_TAG)) {
                 tag.put(Player.PERSISTED_NBT_TAG, new CompoundTag());

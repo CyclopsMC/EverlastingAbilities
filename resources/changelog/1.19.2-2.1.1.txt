@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.17.0 or higher.
+
+Fixes:
+* Fix abilities not being added in existing worlds, #233
+* Fix crash when ability registry is empty, Closes #233, Closes #234
+

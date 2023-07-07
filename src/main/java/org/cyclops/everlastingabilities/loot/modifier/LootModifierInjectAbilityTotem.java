@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
@@ -45,16 +44,17 @@ public class LootModifierInjectAbilityTotem extends LootModifier {
         if (getLootTables().contains(context.getQueriedLootTableId().toString())) {
             try {
                 List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesLoot(AbilityHelpers.getRegistry(context.getLevel().registryAccess()));
-                Rarity rarity = AbilityHelpers.getRandomRarity(abilityTypes, context.getRandom());
-                IAbilityType abilityType = AbilityHelpers.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
+                AbilityHelpers.getRandomRarity(abilityTypes, context.getRandom()).ifPresent(rarity -> {
+                    IAbilityType abilityType = AbilityHelpers.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
 
-                ItemStack stack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
-                stack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
-                        .ifPresent(mutableAbilityStore -> {
-                            ((IMutableAbilityStoreRegistryAccess) mutableAbilityStore).setRegistryAccess(context.getLevel().registryAccess());
-                            mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
-                        });
-                generatedLoot.add(stack);
+                    ItemStack stack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+                    stack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+                            .ifPresent(mutableAbilityStore -> {
+                                ((IMutableAbilityStoreRegistryAccess) mutableAbilityStore).setRegistryAccess(context.getLevel().registryAccess());
+                                mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
+                            });
+                    generatedLoot.add(stack);
+                });
             } catch (IllegalStateException e) {
                 // Do nothing on empty ability registry
             }

@@ -12,6 +12,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 
 import java.util.function.Supplier;
 
+
 /**
  * Holder class for the ability registry.
  * @author rubensworks
@@ -24,7 +25,7 @@ public class AbilityTypes {
     public static final DeferredRegister<IAbilityType> REGISTRY = DeferredRegister
             .create(REGISTRY_KEY, "everlastingabilities");
     public static final Supplier<IForgeRegistry<IAbilityType>> REGISTRY_BUILTIN = REGISTRY
-            .makeRegistry(() -> new RegistryBuilder<IAbilityType>().disableSaving());
+            .makeRegistry(() -> new RegistryBuilder<IAbilityType>().allowModification());
 
     @SubscribeEvent
     public static void onDatapackRegistryCreate(DataPackRegistryEvent.NewRegistry event) {

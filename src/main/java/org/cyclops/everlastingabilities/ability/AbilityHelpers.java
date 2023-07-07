@@ -254,7 +254,7 @@ public class AbilityHelpers {
     }
 
 
-    public static Rarity getRandomRarity(List<IAbilityType> abilityTypes, RandomSource rand) {
+    public static Optional<Rarity> getRandomRarity(List<IAbilityType> abilityTypes, RandomSource rand) {
         int chance = rand.nextInt(50);
         Rarity rarity;
         if (chance >= 49) {
@@ -271,12 +271,12 @@ public class AbilityHelpers {
         if (!hasRarityAbilities(abilityTypes, rarity)) {
             int size = abilityTypes.size();
             if (size == 0) {
-                throw new IllegalStateException("No abilities were registered, at least one ability must be enabled for this mod to function correctly.");
+                return Optional.empty();
             }
             rarity = Iterables.get(abilityTypes, rand.nextInt(size)).getRarity();
         }
 
-        return rarity;
+        return Optional.of(rarity);
     }
 
     public static boolean hasRarityAbilities(List<IAbilityType> abilityTypes, Rarity rarity) {
