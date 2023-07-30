@@ -52,8 +52,8 @@ public class LootModifierInjectAbilityTotem extends LootModifier {
                             .ifPresent(mutableAbilityStore -> {
                                 ((IMutableAbilityStoreRegistryAccess) mutableAbilityStore).setRegistryAccess(context.getLevel().registryAccess());
                                 mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
+                                generatedLoot.add(stack);
                             });
-                    generatedLoot.add(stack);
                 });
             } catch (IllegalStateException e) {
                 // Do nothing on empty ability registry
