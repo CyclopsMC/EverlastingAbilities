@@ -1,0 +1,9 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.15.0 or higher.
+
+Fixes:
+* Fix crash when ability registry is empty
+  Closes #233
+  Closes #234
+  Closes #236
+
