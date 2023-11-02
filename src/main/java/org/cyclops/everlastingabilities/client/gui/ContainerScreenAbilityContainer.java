@@ -172,14 +172,16 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             return;
         }
 
-        buttonUp1.active = startIndexPlayer > 0;
-        buttonDown1.active = startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount());
-        buttonUp2.active = startIndexItem > 0;
-        buttonDown2.active = startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount());
+        if (buttonUp1 != null) {
+            buttonUp1.active = startIndexPlayer > 0;
+            buttonDown1.active = startIndexPlayer + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getPlayerAbilitiesCount());
+            buttonUp2.active = startIndexItem > 0;
+            buttonDown2.active = startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount());
 
-        buttonLeft.active = canMoveToPlayer();
-        buttonRight.active = canMoveFromPlayer();
-        buttonRight.active = canMoveFromPlayerByItem();
+            buttonLeft.active = canMoveToPlayer();
+            buttonRight.active = canMoveFromPlayer();
+            buttonRight.active = canMoveFromPlayerByItem();
+        }
 
         super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
 
