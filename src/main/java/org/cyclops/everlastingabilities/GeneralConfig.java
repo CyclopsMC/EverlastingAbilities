@@ -53,7 +53,7 @@ public class GeneralConfig extends DummyConfig {
     @ConfigurableProperty(category = "general", comment = "If on-player entities should have particle effects for the abilities they carry.", configLocation = ModConfig.Type.CLIENT, isCommandable = true)
     public static boolean showEntityParticles = true;
 
-    @ConfigurableProperty(category = "general", comment = "The maximum amount of abilities a player can have, -1 is infinite.", configLocation = ModConfig.Type.SERVER, isCommandable = true)
+    @ConfigurableProperty(category = "general", comment = "The maximum amount of abilities a player can have, -1 is infinite.", configLocation = ModConfig.Type.SERVER, requiresMcRestart = true)
     public static int maxPlayerAbilities = -1;
 
     @ConfigurableProperty(category = "general", comment = "The amount of exhaustion that should by applied to the player per active ability per second.", configLocation = ModConfig.Type.SERVER, isCommandable = true)
