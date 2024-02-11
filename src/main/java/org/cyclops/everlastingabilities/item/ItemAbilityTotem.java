@@ -1,8 +1,8 @@
 package org.cyclops.everlastingabilities.item;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -11,6 +11,7 @@ import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
+import org.cyclops.everlastingabilities.core.helper.WorldHelpers;
 
 /**
  * A totem with abilities.
@@ -49,8 +50,9 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (this.allowedIn(group) && Minecraft.getInstance().level != null) { // Level can be null during game loading
-            Registry<IAbilityType> registry = AbilityHelpers.getRegistry(Minecraft.getInstance().level.registryAccess());
+        RegistryAccess registryAccess = WorldHelpers.getRegistryAccess();
+        if (this.allowedIn(group) && registryAccess != null) { // Level can be null during game loading
+            Registry<IAbilityType> registry = AbilityHelpers.getRegistry(registryAccess);
             registry.forEach(abilityType -> {
                 for (int level = 1; level <= abilityType.getMaxLevel(); level++) {
                     Ability ability = new Ability(abilityType, level);
