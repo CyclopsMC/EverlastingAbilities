@@ -5,37 +5,37 @@ import com.google.common.collect.Maps;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.BaseCapability;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
-import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
+import org.cyclops.cyclopscore.modcompat.capabilities.ICapabilityConstructor;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
@@ -49,27 +49,23 @@ import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialSte
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
-import org.cyclops.everlastingabilities.api.capability.AbilityStoreCapabilityProvider;
-import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.CompoundTagMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStoreRegistryAccess;
-import org.cyclops.everlastingabilities.capability.AbilityStoreConfig;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
 import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbilityConfig;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainerConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
-import org.cyclops.everlastingabilities.loot.functions.LootFunctionSetRandomAbility;
 import org.cyclops.everlastingabilities.loot.modifier.LootModifierInjectAbilityTotemConfig;
 import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket;
 import org.cyclops.everlastingabilities.proxy.ClientProxy;
 import org.cyclops.everlastingabilities.proxy.CommonProxy;
 import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipeConfig;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The main mod class of this mod.
@@ -84,10 +80,71 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
      */
     public static EverlastingAbilities _instance;
 
-    public EverlastingAbilities() {
-        super(Reference.MOD_ID, (instance) -> _instance = instance);
+    public EverlastingAbilities(IEventBus modEventBus) {
+        super(Reference.MOD_ID, (instance) -> _instance = instance, modEventBus);
 
-        AbilityTypes.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
+        AbilityTypes.REGISTRY.register(modEventBus);
+
+        // Register capabilities
+        getCapabilityConstructorRegistry().registerEntity(() -> EntityType.PLAYER, new ICapabilityConstructor<Player, Void, IMutableAbilityStore, EntityType<Player>>() {
+            @Override
+            public BaseCapability<IMutableAbilityStore, Void> getCapability() {
+                return Capabilities.MutableAbilityStore.ENTITY;
+            }
+
+            @Override
+            public ICapabilityProvider<Player, Void, IMutableAbilityStore> createProvider(EntityType<Player> host) {
+                return (player, context) -> {
+                    if (player.level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isEmpty()) {
+                        return null;
+                    }
+                    CompoundTagMutableAbilityStore store = new CompoundTagMutableAbilityStore(player::getPersistentData);
+                    store.setRegistryAccess(player.level().registryAccess());
+                    return store;
+                };
+            }
+        });
+        ICapabilityConstructor<Mob, Void, IMutableAbilityStore, EntityType<?>> capCtor = new ICapabilityConstructor<>() {
+            @Override
+            public ICapabilityProvider<Mob, Void, IMutableAbilityStore> createProvider(EntityType<?> key) {
+                return (host, context) -> {
+                    if (host.level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isEmpty()) {
+                        return null;
+                    }
+                    CompoundTagMutableAbilityStore store = new CompoundTagMutableAbilityStore(host::getPersistentData);
+                    store.setRegistryAccess(host.level().registryAccess());
+                    if (!host.getCommandSenderWorld().isClientSide
+                            && !store.isInitialized()
+                            && GeneralConfig.mobAbilityChance > 0
+                            && host.getId() % GeneralConfig.mobAbilityChance == 0
+                            && canMobHaveAbility(host)) {
+                        RandomSource rand = RandomSource.create();
+                        rand.setSeed(host.getId());
+                        Registry<IAbilityType> registry = AbilityHelpers.getRegistry(host.level().registryAccess());
+                        List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn(registry);
+                        AbilityHelpers.getRandomRarity(abilityTypes, rand)
+                                .flatMap(rarity -> AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity))
+                                .ifPresent(abilityType -> store.addAbility(new Ability(abilityType, 1), true));
+                    }
+                    return store;
+                };
+            }
+
+            @Override
+            public BaseCapability<IMutableAbilityStore, Void> getCapability() {
+                return Capabilities.MutableAbilityStore.ENTITY;
+            }
+        };
+        getCapabilityConstructorRegistry().registerMobCategoryEntity(MobCategory.MONSTER, capCtor);
+        getCapabilityConstructorRegistry().registerMobCategoryEntity(MobCategory.CREATURE, capCtor);
+        getCapabilityConstructorRegistry().registerMobCategoryEntity(MobCategory.UNDERGROUND_WATER_CREATURE, capCtor);
+        getCapabilityConstructorRegistry().registerMobCategoryEntity(MobCategory.WATER_CREATURE, capCtor);
+
+        NeoForge.EVENT_BUS.addListener(this::onEntityJoinWorld);
+        NeoForge.EVENT_BUS.addListener(this::onPlayerLoggedIn);
+        NeoForge.EVENT_BUS.addListener(this::onLivingDeath);
+        NeoForge.EVENT_BUS.addListener(this::onPlayerClone);
+        NeoForge.EVENT_BUS.addListener(this::onLivingUpdate);
     }
 
     @Override
@@ -109,66 +166,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         return new CommonProxy();
     }
 
-    @Override
-    protected void setup(FMLCommonSetupEvent event) {
-        super.setup(event);
-
-        // Register loot functions
-        LootFunctionSetRandomAbility.load();
-
-        // Register capabilities
-        getCapabilityConstructorRegistry().registerInheritableEntity(Player.class, new SimpleCapabilityConstructor<IMutableAbilityStore, Player>() {
-            @Nullable
-            @Override
-            public ICapabilityProvider createProvider(Player host) {
-                if (host.level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isEmpty()) {
-                    return null;
-                }
-                return new AbilityStoreCapabilityProvider<>(this, new DefaultMutableAbilityStore());
-            }
-
-            @Override
-            public Capability<IMutableAbilityStore> getCapability() {
-                return MutableAbilityStoreConfig.CAPABILITY;
-            }
-        });
-        getCapabilityConstructorRegistry().registerInheritableEntity(PathfinderMob.class, new SimpleCapabilityConstructor<IMutableAbilityStore, PathfinderMob>() { // TODO: AnimalEntity was IAnimal
-            @Nullable
-            @Override
-            public ICapabilityProvider createProvider(PathfinderMob host) { // TODO: CreatureEntity was IAnimal
-                if (host.level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isEmpty()) {
-                    return null;
-                }
-                if (host instanceof Entity) {
-                    Entity entity = (Entity) host;
-                    IMutableAbilityStore store = new DefaultMutableAbilityStore();
-                    if (!entity.getCommandSenderWorld().isClientSide && host instanceof LivingEntity) {
-                        if (GeneralConfig.mobAbilityChance > 0
-                                && entity.getId() % GeneralConfig.mobAbilityChance == 0
-                                && canMobHaveAbility((LivingEntity) host)) {
-                            RandomSource rand = RandomSource.create();
-                            rand.setSeed(entity.getId());
-                            Registry<IAbilityType> registry = AbilityHelpers.getRegistry(host.level().registryAccess());
-                            List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn(registry);
-                            AbilityHelpers.getRandomRarity(abilityTypes, rand)
-                                    .flatMap(rarity -> AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity))
-                                    .ifPresent(abilityType -> store.addAbility(new Ability(abilityType, 1), true));
-                        }
-                    }
-                    return new AbilityStoreCapabilityProvider<>(this, store);
-                }
-                return null;
-            }
-
-            @Override
-            public Capability<IMutableAbilityStore> getCapability() {
-                return MutableAbilityStoreConfig.CAPABILITY;
-            }
-        });
-    }
-
     private static boolean canMobHaveAbility(LivingEntity mob) {
-        ResourceLocation mobName = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
+        ResourceLocation mobName = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
         return mobName != null && GeneralConfig.mobDropBlacklist.stream().noneMatch(mobName.toString()::matches);
     }
 
@@ -185,10 +184,6 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
         // Argument types
         configHandler.addConfigurable(new ArgumentTypeAbilityConfig());
-
-        // Capabilities
-        configHandler.addConfigurable(new AbilityStoreConfig());
-        configHandler.addConfigurable(new MutableAbilityStoreConfig());
 
         // Guis
         configHandler.addConfigurable(new ContainerAbilityContainerConfig());
@@ -230,15 +225,13 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         EverlastingAbilities._instance.getLoggerHelper().log(level, message);
     }
 
-    @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getLevel().isClientSide && event.getEntity().getCapability(MutableAbilityStoreConfig.CAPABILITY).isPresent()) {
+        if (event.getLevel().isClientSide && event.getEntity().getCapability(Capabilities.MutableAbilityStore.ENTITY) != null) {
             getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
         }
     }
 
     private static final String NBT_TOTEM_SPAWNED = Reference.MOD_ID + ":totemSpawned";
-    @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity().level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isPresent() && GeneralConfig.totemMaximumSpawnRarity >= 0) {
             CompoundTag tag = event.getEntity().getPersistentData();
@@ -254,7 +247,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
                 AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(AbilityHelpers.getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
                     ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
-                    itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+                    Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
                             .ifPresent(mutableAbilityStore -> {
                                 ((IMutableAbilityStoreRegistryAccess) mutableAbilityStore).setRegistryAccess(world.registryAccess());
                                 mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
@@ -267,7 +260,6 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         }
     }
 
-    @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
         boolean doMobLoot = event.getEntity().level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
         if (!event.getEntity().level().isClientSide
@@ -276,7 +268,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                         && (GeneralConfig.alwaysDropAbilities || event.getSource().getEntity() instanceof Player))
                     : (doMobLoot && event.getSource().getEntity() instanceof Player))) {
             LivingEntity entity = event.getEntity();
-            entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(mutableAbilityStore -> {
+            Optional.ofNullable(entity.getCapability(Capabilities.MutableAbilityStore.ENTITY)).ifPresent(mutableAbilityStore -> {
                 int toDrop = 1;
                 if (event.getEntity() instanceof Player
                         && (GeneralConfig.alwaysDropAbilities || event.getSource().getEntity() instanceof Player)) {
@@ -284,7 +276,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 }
 
                 ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
-                IMutableAbilityStore itemStackStore = itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
+                IMutableAbilityStore itemStackStore = itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM);
                 ((IMutableAbilityStoreRegistryAccess) itemStackStore).setRegistryAccess(event.getEntity().level().registryAccess());
 
                 Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
@@ -313,21 +305,18 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         }
     }
 
-    @SubscribeEvent
-    public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
-        event.getOriginal().reviveCaps(); // This is needed to enable capability retrieval
-        IMutableAbilityStore oldStore = event.getOriginal().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
-        IMutableAbilityStore newStore = event.getEntity().getCapability(MutableAbilityStoreConfig.CAPABILITY, null).orElse(null);
+    public void onPlayerClone(net.neoforged.neoforge.event.entity.player.PlayerEvent.Clone event) {
+        IMutableAbilityStore oldStore = event.getOriginal().getCapability(Capabilities.MutableAbilityStore.ENTITY);
+        IMutableAbilityStore newStore = event.getEntity().getCapability(Capabilities.MutableAbilityStore.ENTITY);
         if (oldStore != null && newStore != null) {
             newStore.setAbilities(Maps.newHashMap(oldStore.getAbilitiesRaw()));
         }
     }
 
-    @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingTickEvent event) {
         if (GeneralConfig.tickAbilities && event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
+            Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY)).ifPresent(abilityStore -> {
                 for (Ability ability : abilityStore.getAbilities()) {
                     if (AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(ability.getAbilityType())) {
                         if (event.getEntity().level().getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {

@@ -1,26 +1,32 @@
 package org.cyclops.everlastingabilities.ability;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.NonNull;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.Helpers;
+import org.cyclops.everlastingabilities.Capabilities;
+import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.core.helper.WorldHelpers;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 
@@ -131,7 +137,7 @@ public class AbilityHelpers {
      */
     @NonNull
     public static Ability addPlayerAbility(Player player, Ability ability, boolean doAdd, boolean modifyXp) {
-        return player.getCapability(MutableAbilityStoreConfig.CAPABILITY)
+        return Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY))
                 .map(abilityStore -> {
                     int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
                             ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
@@ -177,7 +183,7 @@ public class AbilityHelpers {
      */
     @NonNull
     public static Ability removePlayerAbility(Player player, Ability ability, boolean doRemove, boolean modifyXp) {
-        return player.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+        return Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY))
                 .map(abilityStore -> {
                     int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
                             ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
@@ -201,7 +207,7 @@ public class AbilityHelpers {
     }
 
     public static void setPlayerAbilities(ServerPlayer player, Map<IAbilityType, Integer> abilityTypes) {
-        player.getCapability(MutableAbilityStoreConfig.CAPABILITY)
+        Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY))
                 .ifPresent(abilityStore -> abilityStore.setAbilities(abilityTypes));
     }
 
@@ -314,6 +320,40 @@ public class AbilityHelpers {
             Integer rarity = rarityGetter.get();
             return rarity < 0 ? Rarity.COMMON : (rarity >= Rarity.values().length ? Rarity.EPIC : Rarity.values()[rarity]);
         };
+    }
+
+    public static Tag serialize(Registry<IAbilityType> registry, IMutableAbilityStore capability) {
+        ListTag list = new ListTag();
+        for (Ability ability : capability.getAbilities()) {
+            CompoundTag tag = new CompoundTag();
+            tag.putString("name", registry.getKey(ability.getAbilityType()).toString());
+            tag.putInt("level", ability.getLevel());
+            list.add(tag);
+        }
+        return list;
+    }
+
+    public static void deserialize(Registry<IAbilityType> registry, IMutableAbilityStore capability, Tag nbt) {
+        Map<IAbilityType, Integer> abilityTypes = Maps.newHashMap();
+        if (nbt instanceof ListTag) {
+            if (((ListTag) nbt).getElementType() == Tag.TAG_COMPOUND) {
+                ListTag list = (ListTag) nbt;
+                for (int i = 0; i < list.size(); i++) {
+                    CompoundTag tag = list.getCompound(i);
+                    String name = tag.getString("name");
+                    int level = tag.getInt("level");
+                    IAbilityType abilityType = registry.get(new ResourceLocation(name));
+                    if (abilityType != null) {
+                        abilityTypes.put(abilityType, level);
+                    } else {
+                        EverlastingAbilities.clog(org.apache.logging.log4j.Level.WARN, "Skipped loading unknown ability by name: " + name);
+                    }
+                }
+            }
+        } else {
+            EverlastingAbilities.clog(org.apache.logging.log4j.Level.WARN, "Resetting a corrupted ability storage.");
+        }
+        capability.setAbilities(abilityTypes);
     }
 
 }

@@ -3,7 +3,7 @@ package org.cyclops.everlastingabilities.ability;
 import com.mojang.serialization.Codec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
@@ -26,7 +26,7 @@ public class AbilityTypeSpecialFlight extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_FLIGHT);
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_FLIGHT.get());
     }
 
     @Override

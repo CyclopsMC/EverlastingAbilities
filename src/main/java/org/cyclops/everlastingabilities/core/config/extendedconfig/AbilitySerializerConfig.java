@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.core.config.extendedconfig;
 
 import com.mojang.serialization.Codec;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraft.core.Registry;
 import org.cyclops.cyclopscore.config.ConfigurableType;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfigForge;
@@ -34,7 +34,7 @@ public abstract class AbilitySerializerConfig<T extends IAbilityType> extends Ex
     }
 
     @Override
-    public IForgeRegistry<? super Codec<? extends IAbilityType>> getRegistry() {
+    public Registry<? super Codec<? extends IAbilityType>> getRegistry() {
         return AbilityTypeSerializers.REGISTRY;
     }
 }

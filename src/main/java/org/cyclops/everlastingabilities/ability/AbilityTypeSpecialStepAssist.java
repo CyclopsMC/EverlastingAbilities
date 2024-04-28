@@ -6,8 +6,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
@@ -22,15 +22,11 @@ import java.util.Objects;
  */
 public class AbilityTypeSpecialStepAssist extends AbilityTypeAdapter {
 
-    @Deprecated
-    private final boolean forceDefaultStepHeight; // TODO: rm in next MC version
     private final Map<Integer, AttributeModifier> attributeModifiers;
 
     public AbilityTypeSpecialStepAssist(ICondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
-                                        boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
-                                        boolean forceDefaultStepHeight) {
+                                        boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
         super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
-        this.forceDefaultStepHeight = forceDefaultStepHeight;
         this.attributeModifiers = Maps.newHashMap();
         for (int i = 1; i <= maxLevel; i++) {
             this.attributeModifiers.put(i, new AttributeModifier(Reference.MOD_ID + ":stepHeightModifier" + i, i, AttributeModifier.Operation.ADDITION));
@@ -39,19 +35,15 @@ public class AbilityTypeSpecialStepAssist extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_STEP_ASSIST);
-    }
-
-    public boolean isForceDefaultStepHeight() {
-        return forceDefaultStepHeight;
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_STEP_ASSIST.get());
     }
 
     @Override
     public void onChangedLevel(Player player, int oldLevel, int newLevel) {
-        AttributeInstance attribute = player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get());
+        AttributeInstance attribute = player.getAttribute(NeoForgeMod.STEP_HEIGHT.value());
         if (attribute != null) {
             if (oldLevel > 0) {
-                attribute.removeModifier(this.attributeModifiers.get(oldLevel));
+                attribute.removeModifier(this.attributeModifiers.get(oldLevel).getId());
             }
             if (newLevel > 0) {
                 attribute.addPermanentModifier(this.attributeModifiers.get(newLevel));

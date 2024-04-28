@@ -1,8 +1,8 @@
 package org.cyclops.everlastingabilities.core.helper;
 
 import net.minecraft.core.RegistryAccess;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.fml.DistExecutor;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 /**
  * Helpers for world related logic.

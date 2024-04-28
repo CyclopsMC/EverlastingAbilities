@@ -9,7 +9,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
@@ -37,7 +37,7 @@ public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_POWER_STARE);
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_POWER_STARE.get());
     }
 
     public boolean isRequireSneak() {
@@ -62,7 +62,6 @@ public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
                     player.getBoundingBox().expandTowards(lookVec.x * range, lookVec.y * range, lookVec.z * range)
                             .inflate((double) range));
             for (Entity e : list) {
-                // TODO TameableEntity was IEntityOwnable
                 if (e.isPickable() && (!(e instanceof TamableAnimal) || ((TamableAnimal) e).getOwner() != player) && !player.isAlliedTo(e)) {
                     Entity entity = null;
                     float f10 = e.getPickRadius();

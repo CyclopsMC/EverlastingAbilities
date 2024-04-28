@@ -2,7 +2,6 @@ package org.cyclops.everlastingabilities.recipe;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -26,8 +25,8 @@ public class TotemRecycleRecipe extends CustomRecipe {
     private final RandomSource rand = RandomSource.create();
     private long seed = rand.nextLong();
 
-    public TotemRecycleRecipe(ResourceLocation id, CraftingBookCategory craftingBookCategory) {
-        super(id, craftingBookCategory);
+    public TotemRecycleRecipe(CraftingBookCategory craftingBookCategory) {
+        super(craftingBookCategory);
     }
 
     @Override
@@ -81,7 +80,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
             // Should not be able to happen, unless some mod is doing funky stuff.
             return ItemStack.EMPTY;
         }
-        Rarity rarity = RegistryEntries.ITEM_ABILITY_TOTEM.getRarity(sortedStacks.get(inputTargetIndex));
+        Rarity rarity = RegistryEntries.ITEM_ABILITY_TOTEM.get().getRarity(sortedStacks.get(inputTargetIndex));
 
         // A chance of a bump
         List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesCrafting(AbilityHelpers.getRegistry(registryAccess));
@@ -137,6 +136,6 @@ public class TotemRecycleRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RegistryEntries.RECIPESERIALIZER_TOTEM_RECYCLE;
+        return RegistryEntries.RECIPESERIALIZER_TOTEM_RECYCLE.get();
     }
 }

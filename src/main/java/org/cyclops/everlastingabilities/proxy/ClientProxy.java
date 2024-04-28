@@ -5,17 +5,18 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.particle.ParticleBlurData;
 import org.cyclops.cyclopscore.init.ModBase;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponent;
+import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
+import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 
 /**
  * Proxy for the client side.
@@ -27,7 +28,7 @@ public class ClientProxy extends ClientProxyComponent {
 
 	public ClientProxy() {
 		super(new CommonProxy());
-		MinecraftForge.EVENT_BUS.register(this);
+		NeoForge.EVENT_BUS.register(this);
 	}
 
 	@Override
@@ -38,11 +39,12 @@ public class ClientProxy extends ClientProxyComponent {
 	@SubscribeEvent
 	public void onRenderLiving(RenderLivingEvent.Post event) {
 		LivingEntity entity = event.getEntity();
-		if (((GeneralConfig.showEntityParticles && entity instanceof PathfinderMob) // TODO CreatureEntity was IAnimal
+		if (((GeneralConfig.showEntityParticles && entity instanceof PathfinderMob)
 				|| (GeneralConfig.showPlayerParticles && entity instanceof Player))
 				&& !Minecraft.getInstance().isPaused()
 				&& entity.level().getGameTime() % 10 == 0) {
-			entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent((abilityStore) -> {
+			IMutableAbilityStore abilityStore = entity.getCapability(Capabilities.MutableAbilityStore.ENTITY);
+			if (abilityStore != null) {
 				if (!abilityStore.getAbilities().isEmpty()) {
 					Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
 					float r = abilityColors.getLeft() / 255F;
@@ -69,7 +71,7 @@ public class ClientProxy extends ClientProxyComponent {
 							x, y, z,
 							motionX, motionY, motionZ);
 				}
-			});
+			}
 		}
 	}
 

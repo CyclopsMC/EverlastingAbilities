@@ -3,14 +3,10 @@ package org.cyclops.everlastingabilities.api;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DataPackRegistryEvent;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryBuilder;
-
-import java.util.function.Supplier;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 
 /**
@@ -24,8 +20,6 @@ public class AbilityTypes {
 
     public static final DeferredRegister<IAbilityType> REGISTRY = DeferredRegister
             .create(REGISTRY_KEY, "everlastingabilities");
-    public static final Supplier<IForgeRegistry<IAbilityType>> REGISTRY_BUILTIN = REGISTRY
-            .makeRegistry(() -> new RegistryBuilder<IAbilityType>().allowModification());
 
     @SubscribeEvent
     public static void onDatapackRegistryCreate(DataPackRegistryEvent.NewRegistry event) {

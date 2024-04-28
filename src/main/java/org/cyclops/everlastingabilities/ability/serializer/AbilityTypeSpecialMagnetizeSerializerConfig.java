@@ -2,7 +2,8 @@ package org.cyclops.everlastingabilities.ability.serializer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraftforge.common.crafting.conditions.TrueCondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.TrueCondition;
 import org.cyclops.everlastingabilities.ability.AbilityTypeSpecialMagnetize;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilitySerializerConfig;
@@ -16,7 +17,7 @@ public class AbilityTypeSpecialMagnetizeSerializerConfig extends AbilitySerializ
     public AbilityTypeSpecialMagnetizeSerializerConfig() {
         super("special_magnetize", (eConfig) -> RecordCodecBuilder.create(builder -> builder
                 .group(
-                        CodecHelpers.CODEC_CONDITION.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
+                        ICondition.CODEC.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(IAbilityType::getTranslationKey),
                         CodecHelpers.CODEC_RARITY.fieldOf("rarity").forGetter(IAbilityType::getRarity),
                         Codec.INT.fieldOf("max_level").forGetter(IAbilityType::getMaxLevel),

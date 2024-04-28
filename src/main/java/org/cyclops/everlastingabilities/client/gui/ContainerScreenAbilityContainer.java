@@ -188,7 +188,8 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         int i = this.leftPos;
         int j = this.topPos;
         drawFancyBackground(guiGraphics, i + 8, j + 17, 66, 61, getPlayerAbilityStore());
-        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, i + 41, j + 75, 30, (float)(i + 41) - mouseX, (float)(j + 76 - 50) - mouseY, this.getMinecraft().player);
+        // i + 41, j + 75, i + 41 + 66, j + 75 + 61
+        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, i + 26 - 8, j + 8 + 3, i + 75 - 8, j + 78 + 3, 30, 0.0625F, mouseX, mouseY, this.getMinecraft().player);
         drawXp(guiGraphics, i + 67, j + 70);
         RenderHelpers.drawScaledCenteredString(guiGraphics.pose(), guiGraphics.bufferSource(), font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40), false, Font.DisplayMode.NORMAL);
         drawFancyBackground(guiGraphics, i + 102, j + 17, 66, 61, getItemAbilityStore());
@@ -363,7 +364,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double mouseZ, double scrollAmount) {
         if (isHovering(8, 83, ABILITY_BOX_WIDTH, ABILITY_BOX_HEIGHT * ABILITY_LIST_SIZE, mouseX, mouseY)) {
             if (scrollAmount > 0) {
                 if (startIndexPlayer > 0)

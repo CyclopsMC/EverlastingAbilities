@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.ability;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -10,9 +11,8 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.conditions.FalseCondition;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.conditions.FalseCondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.GeneralConfig;
@@ -48,7 +48,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
         this.targetsFriendlyMobs = targetsFriendlyMobs;
         this.radiusFactor = radiusFactor;
         this.effectId = effectId;
-        this.potion = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(effectId));
+        this.potion = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(effectId));
         if (this.potion == null) {
             EverlastingAbilities.clog(org.apache.logging.log4j.Level.INFO, "No potion effect was found with id: " + effectId + ". Marking as disabled.");
             this.setCondition(FalseCondition.INSTANCE);
@@ -93,7 +93,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
 
     @Override
     public Codec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_EFFECT);
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_EFFECT.get());
     }
 
     protected int getDuration(int tickModulus, int level) {
@@ -138,7 +138,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
 
     public static boolean isFriendlyMob(LivingEntity mob, Player player) {
         ResourceLocation resourceLocation = mob instanceof Player
-                ? new ResourceLocation("player") : ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
+                ? new ResourceLocation("player") : BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
         String mobName = resourceLocation == null ? "null" : resourceLocation.toString();
         return (mob == player ||
                 player.isAlliedTo(mob) ||

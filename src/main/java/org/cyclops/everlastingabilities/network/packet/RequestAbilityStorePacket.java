@@ -2,20 +2,22 @@ package org.cyclops.everlastingabilities.network.packet;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
+import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
-import org.cyclops.everlastingabilities.api.capability.AbilityStoreCapabilityProvider;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -25,14 +27,17 @@ import java.util.UUID;
  */
 public class RequestAbilityStorePacket extends PacketCodec {
 
+	public static final ResourceLocation ID = new ResourceLocation(Reference.MOD_ID, "request_ability_store");
+
 	@CodecField
 	private String entityUuid;
 
     public RequestAbilityStorePacket() {
-
+		super(ID);
     }
 
 	public RequestAbilityStorePacket(String entityUuid) {
+		this();
 		this.entityUuid = entityUuid;
 	}
 
@@ -53,8 +58,8 @@ public class RequestAbilityStorePacket extends PacketCodec {
 			UUID uuid = UUID.fromString(entityUuid);
 			Entity entity = ((ServerLevel) world).getEntity(uuid);
 			if (entity != null) {
-				entity.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
-					Tag contents = AbilityStoreCapabilityProvider.serializeNBTStatic(AbilityHelpers.getRegistry(world.registryAccess()), abilityStore);
+				Optional.ofNullable(entity.getCapability(Capabilities.MutableAbilityStore.ENTITY)).ifPresent(abilityStore -> {
+					Tag contents = AbilityHelpers.serialize(AbilityHelpers.getRegistry(world.registryAccess()), abilityStore);
 					CompoundTag tag = new CompoundTag();
 					tag.put("contents", contents);
 					EverlastingAbilities._instance.getPacketHandler().sendToPlayer(new SendAbilityStorePacket(entity.getId(), tag), player);

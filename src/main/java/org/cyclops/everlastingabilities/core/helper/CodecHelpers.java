@@ -5,14 +5,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapLike;
-import com.mojang.serialization.codecs.PrimitiveCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
 import org.cyclops.everlastingabilities.ability.AbilityTypeEffect;
 
 import java.util.HashMap;
@@ -46,22 +42,6 @@ public class CodecHelpers {
                     (id) -> id >= 0 && id < AbilityTypeEffect.Target.values().length ? AbilityTypeEffect.Target.values()[id] : null, -1
             )
     );
-
-    public static final Codec<ICondition> CODEC_CONDITION = new PrimitiveCodec<ICondition>() {
-        @Override
-        public <T> DataResult<ICondition> read(DynamicOps<T> ops, T input) {
-            try {
-                return DataResult.success(CraftingHelper.getCondition((JsonObject) opsToJson(ops, input)));
-            } catch (RuntimeException error) {
-                return DataResult.error(error::getMessage);
-            }
-        }
-
-        @Override
-        public <T> T write(DynamicOps<T> ops, ICondition value) {
-            return jsonToOps(ops, CraftingHelper.serialize(value));
-        }
-    };
 
     public static <T> JsonElement opsToJson(DynamicOps<T> ops, T input) {
         if (input instanceof JsonElement jsonElement) {

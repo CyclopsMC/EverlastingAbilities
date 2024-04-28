@@ -2,7 +2,8 @@ package org.cyclops.everlastingabilities.ability.serializer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraftforge.common.crafting.conditions.TrueCondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.TrueCondition;
 import org.cyclops.everlastingabilities.ability.AbilityTypeEffect;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilitySerializerConfig;
@@ -17,7 +18,7 @@ public class AbilityTypeEffectSerializerConfig extends AbilitySerializerConfig<A
     public AbilityTypeEffectSerializerConfig() {
         super("effect", (eConfig) -> RecordCodecBuilder.create(builder -> ApplicativeExtended.group17(
                 builder,
-                        CodecHelpers.CODEC_CONDITION.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
+                        ICondition.CODEC.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(AbilityTypeEffect::getTranslationKey),
                         CodecHelpers.CODEC_RARITY.fieldOf("rarity").forGetter(AbilityTypeEffect::getRarity),
                         Codec.INT.fieldOf("max_level").forGetter(AbilityTypeEffect::getMaxLevel),

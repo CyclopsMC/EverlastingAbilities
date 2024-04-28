@@ -1,7 +1,6 @@
 package org.cyclops.everlastingabilities.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -11,21 +10,19 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.cyclops.cyclopscore.inventory.ItemLocation;
 import org.cyclops.cyclopscore.inventory.container.NamedContainerProviderItem;
 import org.cyclops.cyclopscore.item.ItemGui;
-import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityProvider;
+import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStoreRegistryAccess;
-import org.cyclops.everlastingabilities.api.capability.ItemStackMutableAbilityStore;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Base class for items with abilities.
@@ -52,7 +49,7 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     public void appendHoverText(ItemStack itemStack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(itemStack, worldIn, tooltip, flagIn);
 
-        itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null).ifPresent(abilityStore -> {
+        Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM, null)).ifPresent(abilityStore -> {
             if (worldIn != null) {
                 ((IMutableAbilityStoreRegistryAccess) abilityStore).setRegistryAccess(worldIn.registryAccess());
             }
@@ -76,15 +73,6 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
                                 .withItalic(true)));
             }
         });
-    }
-
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
-        // TODO: restore when Forge fixed that bug (backwards compat is already taken care of, because data is stored twice (in stacktag and capdata))
-        //return new SerializableCapabilityProvider<IMutableAbilityStore>(MutableAbilityStoreConfig.CAPABILITY,
-        //        new DefaultMutableAbilityStore());
-        return new DefaultCapabilityProvider<>(() -> MutableAbilityStoreConfig.CAPABILITY,
-                new ItemStackMutableAbilityStore(stack));
     }
 
     public abstract boolean canMoveFromPlayer();

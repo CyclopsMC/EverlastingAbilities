@@ -5,22 +5,22 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.inventory.ItemLocation;
 import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainer;
+import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStoreRegistryAccess;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.client.gui.ContainerScreenAbilityContainer;
 import org.cyclops.everlastingabilities.item.ItemGuiAbilityContainer;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Container for the labeller.
@@ -36,7 +36,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     }
 
     public ContainerAbilityContainer(int id, Inventory inventory, ItemLocation itemLocation) {
-        super(RegistryEntries.CONTAINER_ABILITYCONTAINER, id, inventory, itemLocation);
+        super(RegistryEntries.CONTAINER_ABILITYCONTAINER.get(), id, inventory, itemLocation);
         addInventory(inventory, 0, 8, 195, 1, 9);
 
         // If level is not consistent with total experience count, fix it.
@@ -63,17 +63,17 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
         return 0;
     }
 
-    public LazyOptional<IMutableAbilityStore> getPlayerAbilityStore() {
-        return player.getCapability(MutableAbilityStoreConfig.CAPABILITY);
+    public Optional<IMutableAbilityStore> getPlayerAbilityStore() {
+        return Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY));
     }
 
-    public LazyOptional<IMutableAbilityStore> getItemAbilityStore() {
+    public Optional<IMutableAbilityStore> getItemAbilityStore() {
         ItemStack itemStack = getItemStack(player);
         if (itemStack.isEmpty()) {
-            return LazyOptional.empty();
+            return Optional.empty();
         }
-        return itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY)
-                .lazyMap(store -> {
+        return Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
+                .map(store -> {
                     ((IMutableAbilityStoreRegistryAccess) store).setRegistryAccess(this.player.level().registryAccess());
                     return store;
                 });

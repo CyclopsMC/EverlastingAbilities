@@ -5,10 +5,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
+import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -21,6 +22,8 @@ import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityCont
  */
 public class MoveAbilityPacket extends PacketCodec {
 
+	public static final ResourceLocation ID = new ResourceLocation(Reference.MOD_ID, "move_ability");
+
 	@CodecField
 	private String abilityName;
 	@CodecField
@@ -29,10 +32,11 @@ public class MoveAbilityPacket extends PacketCodec {
 	private int movement;
 
     public MoveAbilityPacket() {
-
+		super(ID);
     }
 
 	public MoveAbilityPacket(Registry<IAbilityType> registry, Ability ability, Movement movement) {
+		this();
 		this.abilityName = registry.getKey(ability.getAbilityType()).toString();
 		this.abilityLevel = ability.getLevel();
 		this.movement = movement.ordinal();

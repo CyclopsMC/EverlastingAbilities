@@ -3,7 +3,7 @@ package org.cyclops.everlastingabilities.api;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.common.crafting.conditions.TrueCondition;
+import net.neoforged.neoforge.common.conditions.TrueCondition;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.core.helper;
 
 import net.minecraft.core.RegistryAccess;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 /**
  * @author rubensworks

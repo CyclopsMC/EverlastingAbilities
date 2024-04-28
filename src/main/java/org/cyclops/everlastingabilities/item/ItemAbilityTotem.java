@@ -2,9 +2,11 @@ package org.cyclops.everlastingabilities.item;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
+
+import java.util.Optional;
 
 /**
  * A totem with abilities.
@@ -23,7 +25,7 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
 
     @Override
     public Rarity getRarity(ItemStack itemStack) {
-        return itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+        return Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
                 .map(abilityStore -> {
                     int maxRarity = 0;
                     for (Ability ability : abilityStore.getAbilities()) {
@@ -36,7 +38,7 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
 
     public static ItemStack getTotem(Ability ability) {
         ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
-        itemStack.getCapability(MutableAbilityStoreConfig.CAPABILITY, null)
+        Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
                 .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(ability, true));
         return itemStack;
     }

@@ -5,15 +5,17 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
+import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+import org.cyclops.everlastingabilities.api.capability.CompoundTagMutableAbilityStore;
 import org.cyclops.everlastingabilities.core.helper.WorldHelpers;
 
 import java.util.Collection;
@@ -35,7 +37,8 @@ public class ItemAbilityTotemConfig extends ItemConfig {
                 "ability_totem",
                 (eConfig) -> new ItemAbilityTotem(new Item.Properties()
                         .stacksTo(1)));
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCreativeModeTabBuildContents);
+        EverlastingAbilities._instance.getModEventBus().addListener(this::onCreativeModeTabBuildContents);
+        EverlastingAbilities._instance.getModEventBus().addListener(this::registerCapability);
     }
 
     @Override
@@ -56,5 +59,9 @@ public class ItemAbilityTotemConfig extends ItemConfig {
                 }
             });
         }
+    }
+
+    protected void registerCapability(RegisterCapabilitiesEvent event) {
+        event.registerItem(Capabilities.MutableAbilityStore.ITEM, (stack, context) -> new CompoundTagMutableAbilityStore(stack::getOrCreateTag), getInstance());
     }
 }

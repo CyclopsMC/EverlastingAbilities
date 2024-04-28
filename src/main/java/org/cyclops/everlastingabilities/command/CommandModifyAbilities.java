@@ -12,11 +12,11 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.cyclops.cyclopscore.command.argument.ArgumentTypeEnum;
+import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
-import org.cyclops.everlastingabilities.capability.MutableAbilityStoreConfig;
 import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbility;
 
 /**
@@ -38,7 +38,7 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
         ServerPlayer sender = context.getSource().getPlayerOrException();
         Action action = ArgumentTypeEnum.getValue(context, "action", Action.class);
         ServerPlayer player = EntityArgument.getPlayer(context, "player");
-        IMutableAbilityStore abilityStore = player.getCapability(MutableAbilityStoreConfig.CAPABILITY).orElse(null);
+        IMutableAbilityStore abilityStore = player.getCapability(Capabilities.MutableAbilityStore.ENTITY);
 
         if (action == Action.LIST) {
             sender.sendSystemMessage(abilityStore.getTextComponent());
