@@ -4,6 +4,8 @@ import net.minecraft.core.RegistryAccess;
 import net.neoforged.fml.DistExecutor;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
+import javax.annotation.Nullable;
+
 /**
  * Helpers for world related logic.
  * TODO: use CyclopsCore's version in >1.19.2
@@ -15,6 +17,7 @@ public class WorldHelpers {
     /**
      * @return The registry access client-side server-side.
      */
+    @Nullable
     public static RegistryAccess getRegistryAccess() {
         if (ServerLifecycleHooks.getCurrentServer() != null) {
             return ServerLifecycleHooks.getCurrentServer().registryAccess();

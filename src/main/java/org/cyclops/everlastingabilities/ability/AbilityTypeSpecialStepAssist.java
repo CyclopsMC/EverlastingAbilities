@@ -39,6 +39,20 @@ public class AbilityTypeSpecialStepAssist extends AbilityTypeAdapter {
     }
 
     @Override
+    public void onTick(Player player, int level) {
+        super.onTick(player, level);
+
+        // On world re-join, ensure the modifier is in place.
+        AttributeInstance attribute = player.getAttribute(NeoForgeMod.STEP_HEIGHT.value());
+        if (attribute != null) {
+            AttributeModifier modifier = this.attributeModifiers.get(level);
+            if (!attribute.hasModifier(modifier)) {
+                attribute.addTransientModifier(modifier);
+            }
+        }
+    }
+
+    @Override
     public void onChangedLevel(Player player, int oldLevel, int newLevel) {
         AttributeInstance attribute = player.getAttribute(NeoForgeMod.STEP_HEIGHT.value());
         if (attribute != null) {
@@ -46,7 +60,7 @@ public class AbilityTypeSpecialStepAssist extends AbilityTypeAdapter {
                 attribute.removeModifier(this.attributeModifiers.get(oldLevel).getId());
             }
             if (newLevel > 0) {
-                attribute.addPermanentModifier(this.attributeModifiers.get(newLevel));
+                attribute.addTransientModifier(this.attributeModifiers.get(newLevel));
             }
         }
     }
