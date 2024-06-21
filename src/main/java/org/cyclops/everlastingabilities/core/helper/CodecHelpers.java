@@ -1,20 +1,11 @@
 package org.cyclops.everlastingabilities.core.helper;
 
-import com.google.common.collect.Maps;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.MapLike;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Rarity;
 import org.cyclops.everlastingabilities.ability.AbilityTypeEffect;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author rubensworks
@@ -42,55 +33,5 @@ public class CodecHelpers {
                     (id) -> id >= 0 && id < AbilityTypeEffect.Target.values().length ? AbilityTypeEffect.Target.values()[id] : null, -1
             )
     );
-
-    public static <T> JsonElement opsToJson(DynamicOps<T> ops, T input) {
-        if (input instanceof JsonElement jsonElement) {
-            return jsonElement;
-        }
-
-        Optional<String> optionalString = ops.getStringValue(input).result();
-        if (optionalString.isPresent()) {
-            return new JsonPrimitive(optionalString.get());
-        }
-
-        Optional<Number> optionalNumber = ops.getNumberValue(input).result();
-        if (optionalNumber.isPresent()) {
-            return new JsonPrimitive(optionalNumber.get());
-        }
-
-        Optional<MapLike<T>> optionalMap = ops.getMap(input).result();
-        if (optionalMap.isPresent()) {
-            MapLike<T> map = optionalMap.get();
-            JsonObject jsonObject = new JsonObject();
-            map.entries().forEach(pair -> {
-                jsonObject.add(opsToJson(ops, pair.getFirst()).getAsString(), opsToJson(ops, pair.getSecond()));
-            });
-            return jsonObject;
-        }
-
-        throw new IllegalArgumentException("Unknown JSON entry " + input);
-    }
-
-    public static <T> T jsonToOps(DynamicOps<T> ops, JsonElement jsonElement) {
-        if (jsonElement.isJsonPrimitive()) {
-            JsonPrimitive primitive = jsonElement.getAsJsonPrimitive();
-            if (primitive.isString()) {
-                return ops.createString(primitive.getAsString());
-            }
-            if (primitive.isNumber()) {
-                return ops.createNumeric(primitive.getAsNumber());
-            }
-        }
-
-        if (jsonElement instanceof JsonObject jsonObject) {
-            HashMap<T, T> map = Maps.newHashMap();
-            for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-                map.put(ops.createString(entry.getKey()), jsonToOps(ops, entry.getValue()));
-            }
-            return ops.createMap(map);
-        }
-
-        throw new IllegalArgumentException("Unknown JSON entry " + jsonElement);
-    }
 
 }
