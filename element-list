@@ -6,6 +6,7 @@ org.cyclops.everlastingabilities.api.capability
 org.cyclops.everlastingabilities.client.gui
 org.cyclops.everlastingabilities.command
 org.cyclops.everlastingabilities.command.argument
+org.cyclops.everlastingabilities.component
 org.cyclops.everlastingabilities.core.config
 org.cyclops.everlastingabilities.core.config.configurabletypeaction
 org.cyclops.everlastingabilities.core.config.extendedconfig
