@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -36,7 +36,7 @@ public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
     }
 
     @Override
-    public Codec<? extends IAbilityType> codec() {
+    public MapCodec<? extends IAbilityType> codec() {
         return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_POWER_STARE.get());
     }
 

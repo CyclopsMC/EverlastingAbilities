@@ -16,7 +16,7 @@ import org.cyclops.everlastingabilities.core.helper.CodecHelpers;
 public class AbilityTypeEffectSerializerConfig extends AbilitySerializerConfig<AbilityTypeEffect> {
 
     public AbilityTypeEffectSerializerConfig() {
-        super("effect", (eConfig) -> RecordCodecBuilder.create(builder -> ApplicativeExtended.group17(
+        super("effect", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> ApplicativeExtended.group17(
                 builder,
                         ICondition.CODEC.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(AbilityTypeEffect::getTranslationKey),

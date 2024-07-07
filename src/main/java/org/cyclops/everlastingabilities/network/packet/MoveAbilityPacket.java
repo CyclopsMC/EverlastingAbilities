@@ -1,6 +1,9 @@
 package org.cyclops.everlastingabilities.network.packet;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +18,8 @@ import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
+import java.util.Optional;
+
 /**
  * Packet from server to client to update capabilities.
  * @author rubensworks
@@ -22,7 +27,8 @@ import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityCont
  */
 public class MoveAbilityPacket extends PacketCodec {
 
-	public static final ResourceLocation ID = new ResourceLocation(Reference.MOD_ID, "move_ability");
+	public static final Type<MoveAbilityPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "move_ability"));
+	public static final StreamCodec<RegistryFriendlyByteBuf, MoveAbilityPacket> CODEC = getCodec(MoveAbilityPacket::new);
 
 	@CodecField
 	private String abilityName;
@@ -32,7 +38,7 @@ public class MoveAbilityPacket extends PacketCodec {
 	private int movement;
 
     public MoveAbilityPacket() {
-		super(ID);
+		super(TYPE);
     }
 
 	public MoveAbilityPacket(Registry<IAbilityType> registry, Ability ability, Movement movement) {
@@ -57,9 +63,9 @@ public class MoveAbilityPacket extends PacketCodec {
 	public void actionServer(Level world, ServerPlayer player) {
 		if (player.containerMenu instanceof ContainerAbilityContainer) {
 			ContainerAbilityContainer container = (ContainerAbilityContainer) player.containerMenu;
-			IAbilityType abilityType = AbilityHelpers.getRegistry(world.registryAccess()).get(new ResourceLocation(abilityName));
-			if (abilityType != null) {
-				Ability ability = new Ability(abilityType, abilityLevel);
+			Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = AbilityHelpers.getRegistry(world.registryAccess()).getHolder(ResourceLocation.parse(abilityName));
+			if (abilityTypeOptional.isPresent()) {
+				Ability ability = new Ability(abilityTypeOptional.get(), abilityLevel);
 				container.getPlayerAbilityStore().ifPresent(playerAbilityStore -> {
 					container.getItemAbilityStore().ifPresent(itemAbilityStore -> {
 						if (movement == Movement.FROM_PLAYER.ordinal()) {

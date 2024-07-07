@@ -1,6 +1,8 @@
 package org.cyclops.everlastingabilities.network.packet;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -26,7 +28,8 @@ import java.util.Optional;
  */
 public class SendAbilityStorePacket extends PacketCodec {
 
-	public static final ResourceLocation ID = new ResourceLocation(Reference.MOD_ID, "send_ability_store");
+	public static final Type<SendAbilityStorePacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "send_ability_store"));
+	public static final StreamCodec<RegistryFriendlyByteBuf, SendAbilityStorePacket> CODEC = getCodec(SendAbilityStorePacket::new);
 
 	@CodecField
 	private int entityId;
@@ -36,7 +39,7 @@ public class SendAbilityStorePacket extends PacketCodec {
 	private int maxPlayerAbilities;
 
     public SendAbilityStorePacket() {
-		super(ID);
+		super(TYPE);
     }
 
 	public SendAbilityStorePacket(int entityId, CompoundTag tag) {

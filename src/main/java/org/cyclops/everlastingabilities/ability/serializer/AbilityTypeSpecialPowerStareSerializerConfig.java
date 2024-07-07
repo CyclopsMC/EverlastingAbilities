@@ -15,7 +15,7 @@ import org.cyclops.everlastingabilities.core.helper.CodecHelpers;
 public class AbilityTypeSpecialPowerStareSerializerConfig extends AbilitySerializerConfig<AbilityTypeSpecialPowerStare> {
 
     public AbilityTypeSpecialPowerStareSerializerConfig() {
-        super("special_power_stare", (eConfig) -> RecordCodecBuilder.create(builder -> builder
+        super("special_power_stare", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> builder
                 .group(
                         ICondition.CODEC.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(IAbilityType::getTranslationKey),

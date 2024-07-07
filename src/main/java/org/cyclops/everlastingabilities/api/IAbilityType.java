@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.api;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -12,7 +12,7 @@ import net.neoforged.neoforge.common.conditions.ICondition;
  */
 public interface IAbilityType {
 
-    public Codec<? extends IAbilityType> codec();
+    public MapCodec<? extends IAbilityType> codec();
 
     public ICondition getCondition();
     public String getTranslationKey();

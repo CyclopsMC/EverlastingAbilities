@@ -4,6 +4,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.NonNull;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -27,7 +29,6 @@ import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
-import org.cyclops.everlastingabilities.core.helper.WorldHelpers;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 
 import java.util.Iterator;
@@ -59,14 +60,14 @@ public class AbilityHelpers {
             Helpers.RGBToInt(255, 0, 255),
     };
 
-    public static Predicate<IAbilityType> PREDICATE_ABILITY_ENABLED = ability -> ability.getCondition().test(ICondition.IContext.EMPTY);
+    public static Predicate<Holder<IAbilityType>> PREDICATE_ABILITY_ENABLED = ability -> ability.value().getCondition().test(ICondition.IContext.EMPTY);
 
     public static Registry<IAbilityType> getRegistry(RegistryAccess registryAccess) {
         return registryAccess.registryOrThrow(AbilityTypes.REGISTRY_KEY);
     }
 
-    public static Registry<IAbilityType> getRegistry() {
-        return getRegistry(WorldHelpers.getRegistryAccess());
+    public static HolderLookup.RegistryLookup<IAbilityType> getRegistryLookup(HolderLookup.Provider holderLookupProvider) {
+        return holderLookupProvider.lookupOrThrow(AbilityTypes.REGISTRY_KEY);
     }
 
     public static int getExperienceForLevel(int level) {
@@ -92,31 +93,42 @@ public class AbilityHelpers {
         return i - 1;
     }
 
-    public static Predicate<IAbilityType> createRarityPredicate(Rarity rarity) {
-        return abilityType -> abilityType.getRarity() == rarity;
+    public static Predicate<Holder<IAbilityType>> createRarityPredicate(Rarity rarity) {
+        return abilityType -> abilityType.value().getRarity() == rarity;
     }
 
-    public static List<IAbilityType> getAbilityTypes(Registry<IAbilityType> registry, Predicate<IAbilityType> abilityFilter) {
+    public static List<Holder<IAbilityType>> getAbilityTypes(Registry<IAbilityType> registry, Predicate<Holder<IAbilityType>> abilityFilter) {
         return registry
-                .stream()
+                .holders()
                 .filter(abilityFilter)
                 .collect(Collectors.toList());
     }
 
-    public static List<IAbilityType> getAbilityTypesPlayerSpawn(Registry<IAbilityType> registry) {
-        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(IAbilityType::isObtainableOnPlayerSpawn));
+    public static List<Holder<IAbilityType>> getAbilityTypes(HolderLookup.Provider holderLookupProvider, Predicate<Holder<IAbilityType>> abilityFilter) {
+        return AbilityHelpers.getRegistryLookup(holderLookupProvider)
+                .listElements()
+                .filter(abilityFilter)
+                .collect(Collectors.toList());
     }
 
-    public static List<IAbilityType> getAbilityTypesMobSpawn(Registry<IAbilityType> registry) {
-        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(IAbilityType::isObtainableOnMobSpawn));
+    public static List<Holder<IAbilityType>> getAbilityTypesPlayerSpawn(Registry<IAbilityType> registry) {
+        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(holder -> holder.value().isObtainableOnPlayerSpawn()));
     }
 
-    public static List<IAbilityType> getAbilityTypesCrafting(Registry<IAbilityType> registry) {
-        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(IAbilityType::isObtainableOnCraft));
+    public static List<Holder<IAbilityType>> getAbilityTypesMobSpawn(Registry<IAbilityType> registry) {
+        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(holder -> holder.value().isObtainableOnMobSpawn()));
     }
 
-    public static List<IAbilityType> getAbilityTypesLoot(Registry<IAbilityType> registry) {
-        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(IAbilityType::isObtainableOnLoot));
+    public static List<Holder<IAbilityType>> getAbilityTypesCrafting(Registry<IAbilityType> registry) {
+        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(holder -> holder.value().isObtainableOnCraft()));
+    }
+
+    public static List<Holder<IAbilityType>> getAbilityTypesCrafting(HolderLookup.Provider provider) {
+        return getAbilityTypes(provider, PREDICATE_ABILITY_ENABLED.and(holder -> holder.value().isObtainableOnCraft()));
+    }
+
+    public static List<Holder<IAbilityType>> getAbilityTypesLoot(Registry<IAbilityType> registry) {
+        return getAbilityTypes(registry, PREDICATE_ABILITY_ENABLED.and(holder -> holder.value().isObtainableOnLoot()));
     }
 
     public static void onPlayerAbilityChanged(Player player, IAbilityType abilityType, int oldLevel, int newLevel) {
@@ -139,8 +151,8 @@ public class AbilityHelpers {
     public static Ability addPlayerAbility(Player player, Ability ability, boolean doAdd, boolean modifyXp) {
         return Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY))
                 .map(abilityStore -> {
-                    int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
-                            ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
+                    int oldLevel = abilityStore.hasAbilityType(ability.getAbilityTypeHolder())
+                            ? abilityStore.getAbility(ability.getAbilityTypeHolder()).getLevel() : 0;
 
                     // Check max ability count
                     if (getMaxPlayerAbilities(player.getCommandSenderWorld()) >= 0 && oldLevel == 0
@@ -155,7 +167,7 @@ public class AbilityHelpers {
                         if (maxLevels == 0) {
                             result = Ability.EMPTY;
                         } else {
-                            result = new Ability(result.getAbilityType(), maxLevels);
+                            result = new Ability(result.getAbilityTypeHolder(), maxLevels);
                         }
                     }
                     if (doAdd && !result.isEmpty()) {
@@ -165,7 +177,7 @@ public class AbilityHelpers {
                         int xpForLevel = getExperienceForLevel(player.experienceLevel);
                         player.experienceProgress = (float)(player.totalExperience - xpForLevel) / (float)player.getXpNeededForNextLevel();
 
-                        int newLevel = abilityStore.getAbility(result.getAbilityType()).getLevel();
+                        int newLevel = abilityStore.getAbility(result.getAbilityTypeHolder()).getLevel();
                         onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
                     }
                     return result;
@@ -185,13 +197,13 @@ public class AbilityHelpers {
     public static Ability removePlayerAbility(Player player, Ability ability, boolean doRemove, boolean modifyXp) {
         return Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY))
                 .map(abilityStore -> {
-                    int oldLevel = abilityStore.hasAbilityType(ability.getAbilityType())
-                            ? abilityStore.getAbility(ability.getAbilityType()).getLevel() : 0;
+                    int oldLevel = abilityStore.hasAbilityType(ability.getAbilityTypeHolder())
+                            ? abilityStore.getAbility(ability.getAbilityTypeHolder()).getLevel() : 0;
                     Ability result = abilityStore.removeAbility(ability, doRemove);
                     if (modifyXp && !result.isEmpty()) {
                         player.giveExperiencePoints(getExperience(result));
-                        int newLevel = abilityStore.hasAbilityType(result.getAbilityType())
-                                ? abilityStore.getAbility(result.getAbilityType()).getLevel() : 0;
+                        int newLevel = abilityStore.hasAbilityType(result.getAbilityTypeHolder())
+                                ? abilityStore.getAbility(result.getAbilityTypeHolder()).getLevel() : 0;
                         onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
                     }
                     return result;
@@ -206,7 +218,7 @@ public class AbilityHelpers {
         return ability.getAbilityType().getXpPerLevelScaled() * ability.getLevel();
     }
 
-    public static void setPlayerAbilities(ServerPlayer player, Map<IAbilityType, Integer> abilityTypes) {
+    public static void setPlayerAbilities(ServerPlayer player, Map<Holder<IAbilityType>, Integer> abilityTypes) {
         Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY))
                 .ifPresent(abilityStore -> abilityStore.setAbilities(abilityTypes));
     }
@@ -234,19 +246,19 @@ public class AbilityHelpers {
         return mutableAbilityStore.removeAbility(ability, true);
     }
 
-    public static Optional<IAbilityType> getRandomAbility(List<IAbilityType> abilityTypes, RandomSource random, Rarity rarity) {
-        List<IAbilityType> filtered = abilityTypes.stream().filter(createRarityPredicate(rarity)).collect(Collectors.toList());
+    public static Optional<Holder<IAbilityType>> getRandomAbility(List<Holder<IAbilityType>> abilityTypes, RandomSource random, Rarity rarity) {
+        List<Holder<IAbilityType>> filtered = abilityTypes.stream().filter(createRarityPredicate(rarity)).toList();
         if (filtered.size() > 0) {
             return Optional.of(filtered.get(random.nextInt(filtered.size())));
         }
         return Optional.empty();
     }
 
-    public static Optional<IAbilityType> getRandomAbilityUntilRarity(List<IAbilityType> abilityTypes, RandomSource random, Rarity rarity, boolean inclusive) {
+    public static Optional<Holder<IAbilityType>> getRandomAbilityUntilRarity(List<Holder<IAbilityType>> abilityTypes, RandomSource random, Rarity rarity, boolean inclusive) {
         NavigableSet<Rarity> validRarities = AbilityHelpers.getValidAbilityRarities(abilityTypes).headSet(rarity, inclusive);
         Iterator<Rarity> it = validRarities.descendingIterator();
         while (it.hasNext()) {
-            Optional<IAbilityType> optional = getRandomAbility(abilityTypes, random, it.next());
+            Optional<Holder<IAbilityType>> optional = getRandomAbility(abilityTypes, random, it.next());
             if (optional.isPresent()) {
                 return optional;
             }
@@ -254,13 +266,13 @@ public class AbilityHelpers {
         return Optional.empty();
     }
 
-    public static Optional<ItemStack> getRandomTotem(List<IAbilityType> abilityTypes, Rarity rarity, RandomSource rand) {
+    public static Optional<ItemStack> getRandomTotem(List<Holder<IAbilityType>> abilityTypes, Rarity rarity, RandomSource rand) {
         return getRandomAbility(abilityTypes, rand, rarity).flatMap(
                 abilityType -> Optional.of(ItemAbilityTotem.getTotem(new Ability(abilityType, 1))));
     }
 
 
-    public static Optional<Rarity> getRandomRarity(List<IAbilityType> abilityTypes, RandomSource rand) {
+    public static Optional<Rarity> getRandomRarity(List<Holder<IAbilityType>> abilityTypes, RandomSource rand) {
         int chance = rand.nextInt(50);
         Rarity rarity;
         if (chance >= 49) {
@@ -279,17 +291,17 @@ public class AbilityHelpers {
             if (size == 0) {
                 return Optional.empty();
             }
-            rarity = Iterables.get(abilityTypes, rand.nextInt(size)).getRarity();
+            rarity = Iterables.get(abilityTypes, rand.nextInt(size)).value().getRarity();
         }
 
         return Optional.of(rarity);
     }
 
-    public static boolean hasRarityAbilities(List<IAbilityType> abilityTypes, Rarity rarity) {
+    public static boolean hasRarityAbilities(List<Holder<IAbilityType>> abilityTypes, Rarity rarity) {
         return abilityTypes.stream().anyMatch(createRarityPredicate(rarity));
     }
 
-    public static NavigableSet<Rarity> getValidAbilityRarities(List<IAbilityType> abilityTypes) {
+    public static NavigableSet<Rarity> getValidAbilityRarities(List<Holder<IAbilityType>> abilityTypes) {
         NavigableSet<Rarity> rarities = Sets.newTreeSet();
         for (Rarity rarity : Rarity.values()) {
             if (hasRarityAbilities(abilityTypes, rarity)) {
@@ -304,9 +316,9 @@ public class AbilityHelpers {
         int g = 0;
         int b = 0;
         int count = 1;
-        for (IAbilityType abilityType : abilityStore.getAbilityTypes()) {
+        for (Holder<IAbilityType> abilityType : abilityStore.getAbilityTypes()) {
             Triple<Float, Float, Float> color = Helpers.intToRGB(AbilityHelpers.RARITY_COLORS
-                    [Math.min(AbilityHelpers.RARITY_COLORS.length - 1, abilityType.getRarity().ordinal())]);
+                    [Math.min(AbilityHelpers.RARITY_COLORS.length - 1, abilityType.value().getRarity().ordinal())]);
             r += color.getLeft() * 255;
             g += color.getMiddle() * 255;
             b += color.getRight() * 255;
@@ -334,7 +346,7 @@ public class AbilityHelpers {
     }
 
     public static void deserialize(Registry<IAbilityType> registry, IMutableAbilityStore capability, Tag nbt) {
-        Map<IAbilityType, Integer> abilityTypes = Maps.newHashMap();
+        Map<Holder<IAbilityType>, Integer> abilityTypes = Maps.newHashMap();
         if (nbt instanceof ListTag) {
             if (((ListTag) nbt).getElementType() == Tag.TAG_COMPOUND) {
                 ListTag list = (ListTag) nbt;
@@ -342,9 +354,9 @@ public class AbilityHelpers {
                     CompoundTag tag = list.getCompound(i);
                     String name = tag.getString("name");
                     int level = tag.getInt("level");
-                    IAbilityType abilityType = registry.get(new ResourceLocation(name));
-                    if (abilityType != null) {
-                        abilityTypes.put(abilityType, level);
+                    Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = registry.getHolder(ResourceLocation.parse(name));
+                    if (abilityTypeOptional.isPresent()) {
+                        abilityTypes.put(abilityTypeOptional.get(), level);
                     } else {
                         EverlastingAbilities.clog(org.apache.logging.log4j.Level.WARN, "Skipped loading unknown ability by name: " + name);
                     }

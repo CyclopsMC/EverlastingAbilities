@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -25,7 +25,7 @@ public class AbilityTypeSpecialFlight extends AbilityTypeAdapter {
     }
 
     @Override
-    public Codec<? extends IAbilityType> codec() {
+    public MapCodec<? extends IAbilityType> codec() {
         return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_FLIGHT.get());
     }
 

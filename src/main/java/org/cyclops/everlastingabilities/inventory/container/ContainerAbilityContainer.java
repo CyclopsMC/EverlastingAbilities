@@ -14,7 +14,6 @@ import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
-import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStoreRegistryAccess;
 import org.cyclops.everlastingabilities.client.gui.ContainerScreenAbilityContainer;
 import org.cyclops.everlastingabilities.item.ItemGuiAbilityContainer;
 
@@ -72,11 +71,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
         if (itemStack.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
-                .map(store -> {
-                    ((IMutableAbilityStoreRegistryAccess) store).setRegistryAccess(this.player.level().registryAccess());
-                    return store;
-                });
+        return Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM));
     }
 
     public List<Ability> getPlayerAbilities() {

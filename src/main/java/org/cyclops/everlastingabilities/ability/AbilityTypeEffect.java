@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.ability;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -22,6 +23,7 @@ import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Ability type for mob effects.
@@ -33,7 +35,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
     private final boolean targetsFriendlyMobs;
     private final double radiusFactor;
     private final String effectId;
-    private final MobEffect potion;
+    private final Holder<MobEffect> potion;
     private final int tickModulus;
     private final double amplifierFactor;
     private final boolean levelBasedDuration;
@@ -48,10 +50,13 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
         this.targetsFriendlyMobs = targetsFriendlyMobs;
         this.radiusFactor = radiusFactor;
         this.effectId = effectId;
-        this.potion = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(effectId));
-        if (this.potion == null) {
+        Optional<Holder.Reference<MobEffect>> potionOptional = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(effectId));
+        if (potionOptional.isEmpty()) {
             EverlastingAbilities.clog(org.apache.logging.log4j.Level.INFO, "No potion effect was found with id: " + effectId + ". Marking as disabled.");
             this.setCondition(FalseCondition.INSTANCE);
+            this.potion = null;
+        } else {
+            this.potion = potionOptional.get();
         }
         this.tickModulus = tickModulus;
         this.amplifierFactor = amplifierFactor;
@@ -92,7 +97,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
     }
 
     @Override
-    public Codec<? extends IAbilityType> codec() {
+    public MapCodec<? extends IAbilityType> codec() {
         return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_EFFECT.get());
     }
 
@@ -119,7 +124,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
             switch (getTarget()) {
                 case SELF -> {
                     player.addEffect(
-                            new MobEffectInstance(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
+                            new MobEffectInstance(this.potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
                 }
                 case RADIUS -> {
                     double radius = level * getRadiusFactor();
@@ -127,7 +132,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
                             player.getBoundingBox().inflate(radius, radius, radius), EntitySelector.NO_SPECTATORS);
                     for (LivingEntity mob : mobs) {
                         if (!(this.targetsFriendlyMobs && isFriendlyMob(mob, player))) {
-                            mob.addEffect(new MobEffectInstance(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
+                            mob.addEffect(new MobEffectInstance(this.potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
                         }
                     }
                 }
@@ -138,7 +143,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
 
     public static boolean isFriendlyMob(LivingEntity mob, Player player) {
         ResourceLocation resourceLocation = mob instanceof Player
-                ? new ResourceLocation("player") : BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+                ? ResourceLocation.parse("player") : BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
         String mobName = resourceLocation == null ? "null" : resourceLocation.toString();
         return (mob == player ||
                 player.isAlliedTo(mob) ||

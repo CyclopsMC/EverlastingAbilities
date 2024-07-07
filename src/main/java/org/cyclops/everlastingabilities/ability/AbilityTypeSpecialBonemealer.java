@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +33,7 @@ public class AbilityTypeSpecialBonemealer extends AbilityTypeAdapter {
     }
 
     @Override
-    public Codec<? extends IAbilityType> codec() {
+    public MapCodec<? extends IAbilityType> codec() {
         return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_BONEMEALER.get());
     }
 

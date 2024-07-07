@@ -2,6 +2,8 @@ package org.cyclops.everlastingabilities.network.packet;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,13 +29,14 @@ import java.util.UUID;
  */
 public class RequestAbilityStorePacket extends PacketCodec {
 
-	public static final ResourceLocation ID = new ResourceLocation(Reference.MOD_ID, "request_ability_store");
+	public static final Type<RequestAbilityStorePacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "request_ability_store"));
+	public static final StreamCodec<RegistryFriendlyByteBuf, RequestAbilityStorePacket> CODEC = getCodec(RequestAbilityStorePacket::new);
 
 	@CodecField
 	private String entityUuid;
 
     public RequestAbilityStorePacket() {
-		super(ID);
+		super(TYPE);
     }
 
 	public RequestAbilityStorePacket(String entityUuid) {

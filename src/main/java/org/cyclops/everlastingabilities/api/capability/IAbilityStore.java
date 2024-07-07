@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.api.capability;
 
 import lombok.NonNull;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -15,13 +16,13 @@ import java.util.Map;
  */
 public interface IAbilityStore {
 
-    public void setAbilities(Map<IAbilityType, Integer> abilityTypes);
-    public boolean hasAbilityType(IAbilityType abilityType);
-    public Collection<IAbilityType> getAbilityTypes();
+    public void setAbilities(Map<Holder<IAbilityType>, Integer> abilityTypes);
+    public boolean hasAbilityType(Holder<IAbilityType> abilityType);
+    public Collection<Holder<IAbilityType>> getAbilityTypes();
     public Collection<Ability> getAbilities();
-    public Map<IAbilityType, Integer> getAbilitiesRaw();
+    public Map<Holder<IAbilityType>, Integer> getAbilitiesRaw();
     @NonNull
-    public Ability getAbility(IAbilityType abilityType);
+    public Ability getAbility(Holder<IAbilityType> abilityType);
 
     public default Component getTextComponent() {
         return ComponentUtils.formatAndSortList(getAbilities(), Ability::getTextComponent);

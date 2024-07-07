@@ -15,7 +15,7 @@ import org.cyclops.everlastingabilities.core.helper.CodecHelpers;
 public class AbilityTypeSpecialFertilitySerializerConfig extends AbilitySerializerConfig<AbilityTypeSpecialFertility> {
 
     public AbilityTypeSpecialFertilitySerializerConfig() {
-        super("special_fertility", (eConfig) -> RecordCodecBuilder.create(builder -> builder
+        super("special_fertility", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> builder
                 .group(
                         ICondition.CODEC.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(IAbilityType::getTranslationKey),

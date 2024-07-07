@@ -1,12 +1,13 @@
 package org.cyclops.everlastingabilities.recipe;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -30,13 +31,13 @@ public class TotemRecycleRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer invCrafting, Level world) {
+    public boolean matches(CraftingInput invCrafting, Level world) {
         if (ItemAbilityTotemConfig.totemCraftingCount <= 0) {
             return false;
         }
 
         int inputCount = 0;
-        for (int i = 0; i < invCrafting.getContainerSize(); i++) {
+        for (int i = 0; i < invCrafting.size(); i++) {
             ItemStack slot = invCrafting.getItem(i);
             if (!slot.isEmpty()) {
                 if (slot.getItem() instanceof ItemAbilityTotem) {
@@ -52,7 +53,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer invCrafting, RegistryAccess registryAccess) {
+    public ItemStack assemble(CraftingInput invCrafting, HolderLookup.Provider holderLookupProvider) {
         // Crafting is simulated
 
         // Select one of the inputs at random, and use its rarity for the rarity of the output.
@@ -61,7 +62,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
 
         // Sort our input stacks, so we can deterministically select one specific one to determine the output rarity.
         NonNullList<ItemStack> sortedStacks = NonNullList.create();
-        for (int i = 0; i < invCrafting.getContainerSize(); i++) {
+        for (int i = 0; i < invCrafting.size(); i++) {
             ItemStack slot = invCrafting.getItem(i);
             if (!slot.isEmpty()) {
                 if (slot.getItem() instanceof ItemAbilityTotem) {
@@ -74,16 +75,16 @@ public class TotemRecycleRecipe extends CustomRecipe {
                 }
             }
         }
-        Collections.sort(sortedStacks, Comparator.comparingInt(itemStack -> itemStack.getTag().hashCode()));
+        Collections.sort(sortedStacks, Comparator.comparingInt(itemStack -> itemStack.getComponents().hashCode()));
 
         if (inputTargetIndex >= sortedStacks.size()) {
             // Should not be able to happen, unless some mod is doing funky stuff.
             return ItemStack.EMPTY;
         }
-        Rarity rarity = RegistryEntries.ITEM_ABILITY_TOTEM.get().getRarity(sortedStacks.get(inputTargetIndex));
+        Rarity rarity = sortedStacks.get(inputTargetIndex).getRarity();
 
         // A chance of a bump
-        List<IAbilityType> abilityTypes = AbilityHelpers.getAbilityTypesCrafting(AbilityHelpers.getRegistry(registryAccess));
+        List<Holder<IAbilityType>> abilityTypes = AbilityHelpers.getAbilityTypesCrafting(holderLookupProvider);
         if (rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent) {
             Rarity newRarity = rarity;
             // This loop ensures that the new rarity has at least one registered ability
@@ -101,7 +102,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
 
         // Set the rand seed so that the resulting ability will always be different
         // (but deterministic) for different input abilities
-        rand.setSeed(seed + sortedStacks.stream().mapToInt(itemStack -> itemStack.getTag().hashCode()).sum());
+        rand.setSeed(seed + sortedStacks.stream().mapToInt(itemStack -> itemStack.getComponents().hashCode()).sum());
         return AbilityHelpers.getRandomTotem(abilityTypes, rarity, rand).get(); // This optional should always be present
     }
 
@@ -111,18 +112,18 @@ public class TotemRecycleRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(HolderLookup.Provider registryAccess) {
         return new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
         // Item is being taken out of crafting grid.
 
         seed++;
 
         // Code below is copied from IRecipe
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.size(), ItemStack.EMPTY);
 
         for(int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack item = inv.getItem(i);

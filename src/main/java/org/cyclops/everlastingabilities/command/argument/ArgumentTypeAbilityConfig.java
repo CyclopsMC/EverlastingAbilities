@@ -10,6 +10,6 @@ import org.cyclops.everlastingabilities.EverlastingAbilities;
  */
 public class ArgumentTypeAbilityConfig extends ArgumentTypeConfig<ArgumentTypeAbility, SingletonArgumentInfo<ArgumentTypeAbility>.Template> {
     public ArgumentTypeAbilityConfig() {
-        super(EverlastingAbilities._instance, "ability", SingletonArgumentInfo.contextFree(ArgumentTypeAbility::new), ArgumentTypeAbility.class);
+        super(EverlastingAbilities._instance, "ability", SingletonArgumentInfo.contextAware(ArgumentTypeAbility::new), ArgumentTypeAbility.class);
     }
 }

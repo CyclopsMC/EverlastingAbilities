@@ -23,8 +23,7 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
         return false;
     }
 
-    @Override
-    public Rarity getRarity(ItemStack itemStack) {
+    public static Rarity getRarity(ItemStack itemStack) {
         return Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
                 .map(abilityStore -> {
                     int maxRarity = 0;
@@ -33,7 +32,7 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
                     }
                     return Rarity.values()[maxRarity];
                 })
-                .orElse(super.getRarity(itemStack));
+                .orElse(Rarity.COMMON);
     }
 
     public static ItemStack getTotem(Ability ability) {

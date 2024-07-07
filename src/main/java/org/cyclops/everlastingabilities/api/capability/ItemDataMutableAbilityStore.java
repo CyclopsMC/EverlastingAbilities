@@ -2,60 +2,39 @@ package org.cyclops.everlastingabilities.api.capability;
 
 import lombok.NonNull;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import org.cyclops.everlastingabilities.Reference;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
+import net.minecraft.world.item.ItemStack;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
- * Wrapper for a tag-based ability store.
+ * Wrapper for an item-based ability store.
  * @author rubensworks
  */
-public class CompoundTagMutableAbilityStore implements IMutableAbilityStore {
+public class ItemDataMutableAbilityStore implements IMutableAbilityStore {
 
-    private static final String NBT_STORE = Reference.MOD_ID + ":abilityStoreStack";
+    private final ItemStack itemStack;
+    private final Runnable onModified;
 
-    private final Supplier<CompoundTag> tagSupplier;
-    private final RegistryAccess registryAccess;
-
-    public CompoundTagMutableAbilityStore(Supplier<CompoundTag> tagSupplier, RegistryAccess registryAccess) {
-        this.tagSupplier = tagSupplier;
-        this.registryAccess = registryAccess;
+    public ItemDataMutableAbilityStore(ItemStack itemStack, Runnable onModified) {
+        this.itemStack = itemStack;
+        this.onModified = onModified;
     }
 
-    protected Registry<IAbilityType> getRegistry() {
-         return AbilityHelpers.getRegistry(this.registryAccess);
-    }
-
-    public boolean isInitialized() {
-        CompoundTag root = tagSupplier.get();
-        return root.contains(NBT_STORE);
+    public ItemDataMutableAbilityStore(ItemStack itemStack) {
+        this(itemStack, () -> {});
     }
 
     protected IMutableAbilityStore getInnerStore() {
-        IMutableAbilityStore store = new DefaultMutableAbilityStore();
-        CompoundTag root = tagSupplier.get();
-        if (!root.contains(NBT_STORE)) {
-            root.put(NBT_STORE, new ListTag());
-        }
-        Tag nbt = root.get(NBT_STORE);
-        AbilityHelpers.deserialize(getRegistry(), store, nbt);
-        return store;
+        return new DefaultMutableAbilityStore(itemStack.get(RegistryEntries.DATACOMPONENT_ABILITY_STORE.get()));
     }
 
     protected IMutableAbilityStore setInnerStore(IMutableAbilityStore store) {
-        CompoundTag root = tagSupplier.get();
-        Tag nbt = AbilityHelpers.serialize(getRegistry(), store);
-        root.put(NBT_STORE, nbt);
+        itemStack.set(RegistryEntries.DATACOMPONENT_ABILITY_STORE, new DefaultAbilityStore(store));
+        this.onModified.run();
         return store;
     }
 

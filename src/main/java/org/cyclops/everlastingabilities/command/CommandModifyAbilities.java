@@ -6,9 +6,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.cyclops.cyclopscore.command.argument.ArgumentTypeEnum;
@@ -48,18 +50,18 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
                         "chat.everlastingabilities.command.invalidAbility", "null")).create();
             }
             // Determine the ability
-            IAbilityType abilityType = context.getArgument("ability", IAbilityType.class);
+            Holder<IAbilityType> abilityType = context.getArgument("ability", ArgumentTypeAbility.Input.class).abilityType();
             // Determine level to add or remove
             int level = this.checkLevel ? context.getArgument("level", Integer.class) : 1;
 
             if (action == Action.ADD) {
-                level = Math.max(1, Math.min(abilityType.getMaxLevelInfinitySafe(), level));
+                level = Math.max(1, Math.min(abilityType.value().getMaxLevelInfinitySafe(), level));
                 Ability ability = new Ability(abilityType, level);
 
                 Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                sender.sendSystemMessage(Component.translatable("chat.everlastingabilities.command.addedAbility", addedAbility, newAbility));
+                sender.sendSystemMessage(Component.translatable("chat.everlastingabilities.command.addedAbility", addedAbility.getTextComponent(), newAbility.getTextComponent()));
             } else {
                 level = Math.max(1, level);
                 Ability ability = new Ability(abilityType, level);
@@ -67,19 +69,19 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
                 Ability removedAbility = AbilityHelpers.removePlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
-                sender.sendSystemMessage(Component.translatable("chat.everlastingabilities.command.removedAbility", removedAbility, newAbility));
+                sender.sendSystemMessage(Component.translatable("chat.everlastingabilities.command.removedAbility", removedAbility.getTextComponent(), newAbility.getTextComponent()));
             }
         }
         return 0;
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> make() {
+    public static LiteralArgumentBuilder<CommandSourceStack> make(CommandBuildContext context) {
         return Commands.literal("abilities")
                 .requires((commandSource) -> commandSource.hasPermission(2))
                 .then(Commands.argument("action", new ArgumentTypeEnum<>(Action.class))
                         .then(Commands.argument("player", EntityArgument.player())
                                 .executes(new CommandModifyAbilities(false, false))
-                                .then(Commands.argument("ability", new ArgumentTypeAbility())
+                                .then(Commands.argument("ability", new ArgumentTypeAbility(context))
                                         .executes(new CommandModifyAbilities(true, false))
                                         .then(Commands.argument("level", IntegerArgumentType.integer(1))
                                                 .executes(new CommandModifyAbilities(true, true))))));

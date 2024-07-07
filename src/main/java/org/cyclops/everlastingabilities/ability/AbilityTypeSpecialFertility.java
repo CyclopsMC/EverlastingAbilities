@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.ability;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +29,7 @@ public class AbilityTypeSpecialFertility extends AbilityTypeAdapter {
     }
 
     @Override
-    public Codec<? extends IAbilityType> codec() {
+    public MapCodec<? extends IAbilityType> codec() {
         return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_FERTILITY.get());
     }
 

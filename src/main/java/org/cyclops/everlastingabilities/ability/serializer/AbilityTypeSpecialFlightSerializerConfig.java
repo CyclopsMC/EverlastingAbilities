@@ -15,7 +15,7 @@ import org.cyclops.everlastingabilities.core.helper.CodecHelpers;
 public class AbilityTypeSpecialFlightSerializerConfig extends AbilitySerializerConfig<AbilityTypeSpecialFlight> {
 
     public AbilityTypeSpecialFlightSerializerConfig() {
-        super("special_flight", (eConfig) -> RecordCodecBuilder.create(builder -> builder
+        super("special_flight", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> builder
                 .group(
                         ICondition.CODEC.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(IAbilityType::getTranslationKey),

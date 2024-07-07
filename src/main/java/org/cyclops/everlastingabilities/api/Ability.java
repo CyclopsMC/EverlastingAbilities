@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.api;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.common.conditions.TrueCondition;
@@ -14,23 +15,27 @@ import java.util.Objects;
  */
 public class Ability implements Comparable<Ability> {
 
-    public static final Ability EMPTY = new Ability(new AbilityTypeAdapter(TrueCondition.INSTANCE, "", Rarity.COMMON, 0, 0, true, true, true, true) {
+    public static final Ability EMPTY = new Ability(Holder.direct(new AbilityTypeAdapter(TrueCondition.INSTANCE, "", Rarity.COMMON, 0, 0, true, true, true, true) {
         @Override
-        public Codec<? extends IAbilityType> codec() {
+        public MapCodec<? extends IAbilityType> codec() {
             return null;
         }
-    }, 0);
+    }), 0);
 
-    private final IAbilityType abilityType;
+    private final Holder<IAbilityType> abilityType;
     private final int level;
 
-    public Ability(@Nonnull IAbilityType abilityType, int level) {
+    public Ability(@Nonnull Holder<IAbilityType> abilityType, int level) {
         this.abilityType = Objects.requireNonNull(abilityType);
         this.level = level;
     }
 
-    public IAbilityType getAbilityType() {
+    public Holder<IAbilityType> getAbilityTypeHolder() {
         return abilityType;
+    }
+
+    public IAbilityType getAbilityType() {
+        return getAbilityTypeHolder().value();
     }
 
     public int getLevel() {
@@ -39,7 +44,7 @@ public class Ability implements Comparable<Ability> {
 
     @Override
     public String toString() {
-        return String.format("[%s @ %s]", abilityType.getTranslationKey(), level);
+        return String.format("[%s @ %s]", abilityType.value().getTranslationKey(), level);
     }
 
     @Override
@@ -49,7 +54,7 @@ public class Ability implements Comparable<Ability> {
 
     public Component getTextComponent() {
         return Component.literal("[")
-                .append(Component.translatable(abilityType.getTranslationKey()))
+                .append(Component.translatable(abilityType.value().getTranslationKey()))
                 .append(" @ " + level + "]");
     }
 

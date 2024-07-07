@@ -15,7 +15,7 @@ import org.cyclops.everlastingabilities.core.helper.CodecHelpers;
 public class AbilityTypeSpecialMagnetizeSerializerConfig extends AbilitySerializerConfig<AbilityTypeSpecialMagnetize> {
 
     public AbilityTypeSpecialMagnetizeSerializerConfig() {
-        super("special_magnetize", (eConfig) -> RecordCodecBuilder.create(builder -> builder
+        super("special_magnetize", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> builder
                 .group(
                         ICondition.CODEC.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(IAbilityType::getTranslationKey),

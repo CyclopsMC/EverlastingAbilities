@@ -7,6 +7,7 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -15,7 +16,6 @@ import org.cyclops.cyclopscore.inventory.container.NamedContainerProviderItem;
 import org.cyclops.cyclopscore.item.ItemGui;
 import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.api.Ability;
-import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStoreRegistryAccess;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
 import javax.annotation.Nullable;
@@ -46,13 +46,10 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(itemStack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(itemStack, context, tooltip, flagIn);
 
         Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM, null)).ifPresent(abilityStore -> {
-            if (worldIn != null) {
-                ((IMutableAbilityStoreRegistryAccess) abilityStore).setRegistryAccess(worldIn.registryAccess());
-            }
             List<Ability> abilities = new ArrayList<Ability>(abilityStore.getAbilities());
             Collections.sort(abilities);
 

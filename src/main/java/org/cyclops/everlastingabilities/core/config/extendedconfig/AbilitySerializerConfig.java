@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.core.config.extendedconfig;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Registry;
 import org.cyclops.cyclopscore.config.ConfigurableType;
 import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
@@ -17,9 +17,9 @@ import java.util.function.Function;
  * @author rubensworks
  * @see ExtendedConfig
  */
-public abstract class AbilitySerializerConfig<T extends IAbilityType> extends ExtendedConfigForge<AbilitySerializerConfig<T>, Codec<T>> {
+public abstract class AbilitySerializerConfig<T extends IAbilityType> extends ExtendedConfigForge<AbilitySerializerConfig<T>, MapCodec<T>> {
 
-    public AbilitySerializerConfig(String namedId, Function<AbilitySerializerConfig<T>, ? extends Codec<T>> elementConstructor) {
+    public AbilitySerializerConfig(String namedId, Function<AbilitySerializerConfig<T>, ? extends MapCodec<T>> elementConstructor) {
         super(EverlastingAbilities._instance, namedId, elementConstructor);
     }
 
@@ -34,7 +34,7 @@ public abstract class AbilitySerializerConfig<T extends IAbilityType> extends Ex
     }
 
     @Override
-    public Registry<? super Codec<? extends IAbilityType>> getRegistry() {
+    public Registry<? super MapCodec<? extends IAbilityType>> getRegistry() {
         return AbilityTypeSerializers.REGISTRY;
     }
 }

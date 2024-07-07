@@ -1,7 +1,12 @@
 package org.cyclops.everlastingabilities.api.capability;
 
+import com.google.common.collect.Maps;
+import net.minecraft.core.Holder;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+
+import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * Default implementation of {@link IAbilityStore} for storing abilities as a capability.
@@ -13,15 +18,19 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
 
     }
 
-    public DefaultMutableAbilityStore(DefaultAbilityStore abilityStore) {
-        setAbilities(abilityStore.abilityTypes);
+    public DefaultMutableAbilityStore(Map<Holder<IAbilityType>, Integer> abilityTypes) {
+        setAbilities(abilityTypes);
+    }
+
+    public DefaultMutableAbilityStore(@Nullable IAbilityStore abilityStore) {
+        this(abilityStore == null ? Maps.newHashMap() : abilityStore.getAbilitiesRaw());
     }
 
     @Override
     public Ability addAbility(Ability ability, boolean doAdd) {
-        IAbilityType abilityType = ability.getAbilityType();
+        Holder<IAbilityType> abilityType = ability.getAbilityTypeHolder();
         int currentLevel = abilityTypes.containsKey(abilityType) ? abilityTypes.get(abilityType) : 0;
-        int maxLevel = abilityType.getMaxLevelInfinitySafe();
+        int maxLevel = abilityType.value().getMaxLevelInfinitySafe();
         int toAddLevel = ability.getLevel();
         int finalLevel = Math.min(currentLevel + toAddLevel, maxLevel);
         int addedLevel = finalLevel - currentLevel;
@@ -30,9 +39,9 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
 
         if (doAdd) {
             if (newAbility.getLevel() == 0) {
-                abilityTypes.remove(newAbility.getAbilityType());
+                abilityTypes.remove(newAbility.getAbilityTypeHolder());
             } else {
-                abilityTypes.put(newAbility.getAbilityType(), newAbility.getLevel());
+                abilityTypes.put(newAbility.getAbilityTypeHolder(), newAbility.getLevel());
             }
         }
         return addedAbility;
@@ -40,7 +49,7 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
 
     @Override
     public Ability removeAbility(Ability ability, boolean doRemove) {
-        IAbilityType abilityType = ability.getAbilityType();
+        Holder<IAbilityType> abilityType = ability.getAbilityTypeHolder();
         int currentLevel = abilityTypes.containsKey(abilityType) ? abilityTypes.get(abilityType) : 0;
         int toRemoveLevel = ability.getLevel();
         int finalLevel = Math.max(currentLevel - toRemoveLevel, 0);
@@ -50,9 +59,9 @@ public class DefaultMutableAbilityStore extends DefaultAbilityStore implements I
 
         if (doRemove) {
             if (newAbility.getLevel() == 0) {
-                abilityTypes.remove(newAbility.getAbilityType());
+                abilityTypes.remove(newAbility.getAbilityTypeHolder());
             } else {
-                abilityTypes.put(newAbility.getAbilityType(), newAbility.getLevel());
+                abilityTypes.put(newAbility.getAbilityTypeHolder(), newAbility.getLevel());
             }
         }
         return removedAbility;

@@ -49,7 +49,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Gui for the labeller.
+ * Gui for the ability container.
  * @author rubensworks
  */
 public class ContainerScreenAbilityContainer extends ContainerScreenExtended<ContainerAbilityContainer> {
@@ -82,7 +82,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
     @Override
     protected ResourceLocation constructGuiTexture() {
-        return new ResourceLocation(Reference.MOD_ID, "textures/gui/ability_totem.png");
+        return ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "textures/gui/ability_totem.png");
     }
 
     @Override
@@ -193,7 +193,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         drawXp(guiGraphics, i + 67, j + 70);
         RenderHelpers.drawScaledCenteredString(guiGraphics.pose(), guiGraphics.bufferSource(), font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40), false, Font.DisplayMode.NORMAL);
         drawFancyBackground(guiGraphics, i + 102, j + 17, 66, 61, getItemAbilityStore());
-        drawItemOnScreen(i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getMenu().getItemStack(this.getMinecraft().player));
+        drawItemOnScreen(guiGraphics, i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getMenu().getItemStack(this.getMinecraft().player));
 
         // Draw abilities
         drawAbilities(guiGraphics, this.leftPos + 8, this.topPos + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
@@ -223,6 +223,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         drawTexturedModalRectColor(guiGraphics, vertexconsumer, x, y, (int) (0 + f * 256), 0, width, height, ((float) r) / 255, ((float) g) / 255, ((float) b) / 255, ((float) 255) / 255);
         drawTexturedModalRectColor(guiGraphics, vertexconsumer, x, y, (int) (-0 + f * 150), (int) (0 + f * 256), width, height, ((float) r) / 255, ((float) g) / 255, ((float) b) / 255, ((float) 255) / 255);
         RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.disableBlend();
     }
 
     protected void drawXp(GuiGraphics guiGraphics, int x, int y) {
@@ -248,7 +249,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             // Name
             RenderHelpers.drawScaledCenteredString(guiGraphics.pose(), guiGraphics.bufferSource(), font,
                     Component.translatable(ability.getAbilityType().getTranslationKey())
-                            .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ability.getAbilityType().getRarity().color)))
+                            .setStyle(ability.getAbilityType().getRarity().getStyleModifier().apply(Style.EMPTY))
                             .getString(),
                     x + 27, boxY + 7, 0, 1.0F, 50, -1, false, Font.DisplayMode.NORMAL);
 
@@ -282,7 +283,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Name
                 lines.add(Component.translatable(ability.getAbilityType().getTranslationKey())
-                        .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ability.getAbilityType().getRarity().color))));
+                        .setStyle(ability.getAbilityType().getRarity().getStyleModifier().apply(Style.EMPTY)));
 
                 // Level
                 lines.add(Component.translatable("general.everlastingabilities.level", ability.getLevel(),
@@ -298,7 +299,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                         AbilityHelpers.getLevelForExperience(ability.getAbilityType().getXpPerLevelScaled()))
                         .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GREEN))));
 
-                if (!AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(ability.getAbilityType())) {
+                if (!AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(ability.getAbilityTypeHolder())) {
                     lines.add(Component.translatable("general.everlastingabilities.disabled")
                             .setStyle(Style.EMPTY
                                     .withColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_RED))
@@ -315,15 +316,16 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         guiGraphics.blit(RES_ITEM_GLINT, x, y, textureX, textureY, width, height);
     }
 
-    public static void drawItemOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, ItemStack itemStack) {
+    public static void drawItemOnScreen(GuiGraphics guiGraphics, int posX, int posY, int scale, float mouseX, float mouseY, ItemStack itemStack) {
         float f = (float)Math.atan((double)(mouseX / 40.0F));
         float f1 = (float)Math.atan((double)(mouseY / 40.0F));
-        PoseStack posestack = RenderSystem.getModelViewStack();
+        PoseStack posestack = guiGraphics.pose();
         posestack.pushPose();
         posestack.translate((double)posX, (double)posY, 1050.0D);
         posestack.scale(1.0F, 1.0F, -1.0F);
+
         RenderSystem.applyModelViewMatrix();
-        PoseStack posestack1 = new PoseStack();
+        PoseStack posestack1 = posestack;
         posestack1.translate(0.0D, 0.0D, 1000.0D);
         posestack1.scale((float)scale, (float)scale, (float)scale);
         Quaternionf rotation = Axis.ZP.rotationDegrees(180.0F);
@@ -408,7 +410,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     public Ability getSelectedPlayerAbilitySingle() {
         Ability ability = getSelectedPlayerAbility();
         if (!ability.isEmpty()) {
-            ability = new Ability(ability.getAbilityType(), 1);
+            ability = new Ability(ability.getAbilityTypeHolder(), 1);
         }
         return ability;
     }
@@ -416,7 +418,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     public Ability getSelectedItemAbilitySingle() {
         Ability ability = getSelectedItemAbility();
         if (!ability.isEmpty()) {
-            ability = new Ability(ability.getAbilityType(), 1);
+            ability = new Ability(ability.getAbilityTypeHolder(), 1);
         }
         return ability;
     }
