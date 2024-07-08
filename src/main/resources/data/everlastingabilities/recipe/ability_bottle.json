@@ -6,16 +6,16 @@
   ],
   "key": {
     "D": {
-      "tag": "forge:dyes/white"
+      "tag": "c:dyes/white"
     },
     "S": {
-      "tag": "forge:slimeballs"
+      "tag": "c:slimeballs"
     },
     "N": {
       "item": "minecraft:bucket"
     },
     "G": {
-      "tag": "forge:nuggets/gold"
+      "tag": "c:nuggets/gold"
     }
   },
   "result": {
