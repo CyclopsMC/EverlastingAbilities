@@ -1,7 +1,6 @@
 package org.cyclops.everlastingabilities.core.helper;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -42,12 +41,8 @@ public class CodecHelpers {
             )
     );
 
-    public static final Codec<IAbilityStore> CODEC_ABILITY_STORE = RecordCodecBuilder.create(builder -> builder
-            .group(
-                    ExtraCodecs.strictUnboundedMap(AbilityTypes.REFERENCE_CODEC, Codec.INT)
-                            .fieldOf("abilities").forGetter(IAbilityStore::getAbilitiesRaw)
-            )
-            .apply(builder, DefaultAbilityStore::new));
+    public static final Codec<IAbilityStore> CODEC_ABILITY_STORE = ExtraCodecs.strictUnboundedMap(AbilityTypes.REFERENCE_CODEC, Codec.INT)
+            .xmap(DefaultAbilityStore::new, IAbilityStore::getAbilitiesRaw);
     public static final StreamCodec<RegistryFriendlyByteBuf, IAbilityStore> STREAM_CODEC_ABILITY_STORE = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, AbilityTypes.STREAM_CODEC, ByteBufCodecs.INT), IAbilityStore::getAbilitiesRaw,
             DefaultAbilityStore::new
