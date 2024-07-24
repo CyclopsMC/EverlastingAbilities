@@ -1,0 +1,10 @@
+{
+  "type": "everlastingabilities:attribute_modifier",
+  "name": "ability.everlastingabilities.attack_steroids",
+  "rarity": "uncommon",
+  "max_level": 10,
+  "xp_per_level": 25,
+  "attribute": "generic.attack_speed",
+  "amount_factor": 2,
+  "operation": "add_value"
+}

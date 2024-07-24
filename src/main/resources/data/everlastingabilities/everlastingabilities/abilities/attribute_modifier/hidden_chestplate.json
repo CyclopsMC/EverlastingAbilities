@@ -1,0 +1,10 @@
+{
+  "type": "everlastingabilities:attribute_modifier",
+  "name": "ability.everlastingabilities.hidden_chestplate",
+  "rarity": "rare",
+  "max_level": 5,
+  "xp_per_level": 35,
+  "attribute": "generic.armor",
+  "amount_factor": 2,
+  "operation": "add_value"
+}

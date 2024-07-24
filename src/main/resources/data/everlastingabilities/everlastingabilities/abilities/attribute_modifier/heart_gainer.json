@@ -1,0 +1,10 @@
+{
+  "type": "everlastingabilities:attribute_modifier",
+  "name": "ability.everlastingabilities.heart_gainer",
+  "rarity": "rare",
+  "max_level": 10,
+  "xp_per_level": 35,
+  "attribute": "generic.max_health",
+  "amount_factor": 2,
+  "operation": "add_value"
+}
