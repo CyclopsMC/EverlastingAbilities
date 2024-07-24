@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.19.1 or higher.
+
+Additions:
+* Add attribute modifier ability type
+* Add 8 new attribute-based abilities
+* Add 6 effect-based abilities for new vanilla mob effects
