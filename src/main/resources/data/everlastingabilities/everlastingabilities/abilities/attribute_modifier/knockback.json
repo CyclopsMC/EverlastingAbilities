@@ -1,0 +1,10 @@
+{
+  "type": "everlastingabilities:attribute_modifier",
+  "name": "ability.everlastingabilities.knockback",
+  "rarity": "uncommon",
+  "max_level": 5,
+  "xp_per_level": 30,
+  "attribute": "generic.attack_knockback",
+  "amount_factor": 1,
+  "operation": "add_value"
+}

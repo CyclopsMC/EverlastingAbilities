@@ -1,0 +1,10 @@
+{
+  "type": "everlastingabilities:attribute_modifier",
+  "name": "ability.everlastingabilities.block_range",
+  "rarity": "common",
+  "max_level": 10,
+  "xp_per_level": 20,
+  "attribute": "player.block_interaction_range",
+  "amount_factor": 1,
+  "operation": "add_value"
+}

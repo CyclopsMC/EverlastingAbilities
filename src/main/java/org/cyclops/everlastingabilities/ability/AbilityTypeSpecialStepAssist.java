@@ -21,6 +21,7 @@ import java.util.Objects;
  * Ability type for flight.
  * @author rubensworks
  */
+@Deprecated // TODO: Remove in the next major version, and rewrite as attribute_modifier
 public class AbilityTypeSpecialStepAssist extends AbilityTypeAdapter {
 
     private final Map<Integer, AttributeModifier> attributeModifiers;
