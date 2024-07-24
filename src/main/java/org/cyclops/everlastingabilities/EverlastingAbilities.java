@@ -41,6 +41,7 @@ import org.cyclops.cyclopscore.modcompat.capabilities.ICapabilityConstructor;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
+import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeAttributeModifierSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeEffectSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialBonemealerSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFertilitySerializerConfig;
@@ -194,6 +195,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
         // Ability serializers
         configHandler.addConfigurable(new AbilityTypeEffectSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeAttributeModifierSerializerConfig());
         configHandler.addConfigurable(new AbilityTypeSpecialBonemealerSerializerConfig());
         configHandler.addConfigurable(new AbilityTypeSpecialFertilitySerializerConfig());
         configHandler.addConfigurable(new AbilityTypeSpecialFlightSerializerConfig());
