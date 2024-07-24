@@ -28,6 +28,8 @@ public class RegistryEntries {
 
     @ObjectHolder(registryName = "everlastingabilities:ability_serializers", value = "everlastingabilities:effect")
     public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_EFFECT = null;
+    @ObjectHolder(registryName = "everlastingabilities:ability_serializers", value = "everlastingabilities:attribute_modifier")
+    public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_ATTRIBUTE_MODIFIER = null;
     @ObjectHolder(registryName = "everlastingabilities:ability_serializers", value = "everlastingabilities:special_bonemealer")
     public static final Codec<? extends IAbilityType> ABILITYSERIALIZER_SPECIAL_BONEMEALER = null;
     @ObjectHolder(registryName = "everlastingabilities:ability_serializers", value = "everlastingabilities:special_fertility")

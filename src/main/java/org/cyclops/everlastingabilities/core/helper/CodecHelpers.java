@@ -10,6 +10,7 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapLike;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
@@ -34,6 +35,15 @@ public class CodecHelpers {
                     Enum::ordinal,
                     (id) -> id >= 0 && id < Rarity.values().length ? Rarity.values()[id] : null, -1
             )
+    );
+    public static final Codec<AttributeModifier.Operation> CODEC_ATTRIBUTE_MODIFIER_OPERATION = ExtraCodecs.stringResolverCodec(
+            operation -> operation.name().toLowerCase(Locale.ROOT),
+            name -> switch (name) {
+                case "add_value" -> AttributeModifier.Operation.ADDITION;
+                case "add_multiplied_base" -> AttributeModifier.Operation.MULTIPLY_BASE;
+                case "add_multiplied_total" -> AttributeModifier.Operation.MULTIPLY_TOTAL;
+                default -> AttributeModifier.Operation.valueOf(name.toUpperCase(Locale.ROOT));
+            }
     );
 
     public static final Codec<AbilityTypeEffect.Target> CODEC_TARGET = ExtraCodecs.orCompressed(
