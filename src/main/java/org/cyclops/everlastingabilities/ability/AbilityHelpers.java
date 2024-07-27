@@ -75,7 +75,7 @@ public class AbilityHelpers {
             return 0;
         } else if (level < 16) {
             return (int) (Math.pow(level, 2) + 6 * level);
-        } else if (level < 31) {
+        } else if (level < 32) {
             return (int) (2.5 * Math.pow(level, 2) - 40.5 * level + 360);
         } else {
             return (int) (4.5 * Math.pow(level, 2) - 162.5 * level + 2220);
