@@ -1,0 +1,8 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.19.1 or higher.
+
+Additions:
+* Add tr_tr.json Turkish localization
+
+Fixes:
+* Fix incorrect xp-level calculation for high levels, Closes #260
