@@ -56,7 +56,7 @@
     "ability.everlastingabilities.oozing": "Oozing",
     "ability.everlastingabilities.oozing.info": "Spawn slimes upon death",
     "ability.everlastingabilities.infested": "Infested",
-    "ability.everlastingabilities.infested.info": "Spawn silverfish upon death",
+    "ability.everlastingabilities.infested.info": "Spawn silverfish upon taking damage",
 
     "ability.everlastingabilities.slowness": "Slowness",
     "ability.everlastingabilities.slowness.info": "Entities in the area move slower",
