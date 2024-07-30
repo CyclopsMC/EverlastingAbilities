@@ -1,9 +1,9 @@
 {
   "type": "everlastingabilities:effect",
-  "target": "self",
-  "name": "ability.everlastingabilities.oozing_self",
+  "target": "radius",
+  "name": "ability.everlastingabilities.oozing_others",
   "rarity": "uncommon",
   "max_level": 1,
-  "xp_per_level": 50,
+  "xp_per_level": 40,
   "effect": "minecraft:oozing"
 }
