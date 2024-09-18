@@ -251,7 +251,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                     Component.translatable(ability.getAbilityType().getTranslationKey())
                             .setStyle(ability.getAbilityType().getRarity().getStyleModifier().apply(Style.EMPTY))
                             .getString(),
-                    x + 27, boxY + 7, 0, 1.0F, 50, -1, false, Font.DisplayMode.NORMAL);
+                    x + 27, boxY + 7, 0, 1.0F, 50, ability.getAbilityType().getRarity().color().getColor(), false, Font.DisplayMode.NORMAL);
 
             // Level
             RenderHelpers.drawScaledCenteredString(guiGraphics.pose(), guiGraphics.bufferSource(), font,
