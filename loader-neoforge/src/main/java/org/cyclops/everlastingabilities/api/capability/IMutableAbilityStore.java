@@ -1,6 +1,5 @@
 package org.cyclops.everlastingabilities.api.capability;
 
-import lombok.NonNull;
 import org.cyclops.everlastingabilities.api.Ability;
 
 /**
@@ -15,7 +14,6 @@ public interface IMutableAbilityStore extends IAbilityStore {
      * @param doAdd If the addition should actually be done.
      * @return The ability part that was added.
      */
-    @NonNull
     public Ability addAbility(Ability ability, boolean doAdd);
 
     /**
@@ -24,7 +22,6 @@ public interface IMutableAbilityStore extends IAbilityStore {
      * @param doRemove If the removal should actually be done.
      * @return The ability part that was removed.
      */
-    @NonNull
     public Ability removeAbility(Ability ability, boolean doRemove);
 
 }

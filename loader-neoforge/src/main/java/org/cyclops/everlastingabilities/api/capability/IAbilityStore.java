@@ -1,6 +1,5 @@
 package org.cyclops.everlastingabilities.api.capability;
 
-import lombok.NonNull;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -21,7 +20,6 @@ public interface IAbilityStore {
     public Collection<Holder<IAbilityType>> getAbilityTypes();
     public Collection<Ability> getAbilities();
     public Map<Holder<IAbilityType>, Integer> getAbilitiesRaw();
-    @NonNull
     public Ability getAbility(Holder<IAbilityType> abilityType);
 
     public default Component getTextComponent() {

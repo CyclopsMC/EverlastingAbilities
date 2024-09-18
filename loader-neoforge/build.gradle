@@ -12,12 +12,6 @@ dependencies {
     } else {
         implementation "org.cyclops.cyclopscore:cyclopscore-${project.minecraft_version}-neoforge:${project.cyclopscore_version}:deobf"
     }
-	
-    // Project lombok
-	compileOnly 'org.projectlombok:lombok:1.18.30'
-	annotationProcessor 'org.projectlombok:lombok:1.18.30'
-	testCompileOnly 'org.projectlombok:lombok:1.18.30'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 task publishCurseForge(type: TaskPublishCurseForge) {

@@ -1,6 +1,5 @@
 package org.cyclops.everlastingabilities.api.capability;
 
-import lombok.NonNull;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import org.cyclops.everlastingabilities.RegistryEntries;
@@ -38,7 +37,6 @@ public class ItemDataMutableAbilityStore implements IMutableAbilityStore {
         return store;
     }
 
-    @NonNull
     @Override
     public Ability addAbility(Ability ability, boolean doAdd) {
         IMutableAbilityStore store = getInnerStore();
@@ -47,7 +45,6 @@ public class ItemDataMutableAbilityStore implements IMutableAbilityStore {
         return ret;
     }
 
-    @NonNull
     @Override
     public Ability removeAbility(Ability ability, boolean doRemove) {
         IMutableAbilityStore store = getInnerStore();

@@ -3,7 +3,6 @@ package org.cyclops.everlastingabilities.ability;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import lombok.NonNull;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
@@ -147,7 +146,6 @@ public class AbilityHelpers {
      * @param modifyXp Whether to require player to have enough XP before adding
      * @return The ability part that was added.
      */
-    @NonNull
     public static Ability addPlayerAbility(Player player, Ability ability, boolean doAdd, boolean modifyXp) {
         return Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY))
                 .map(abilityStore -> {
@@ -193,7 +191,6 @@ public class AbilityHelpers {
      * @param modifyXp Whether to refund XP cost of ability
      * @return The ability part that was removed.
      */
-    @NonNull
     public static Ability removePlayerAbility(Player player, Ability ability, boolean doRemove, boolean modifyXp) {
         return Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY))
                 .map(abilityStore -> {
@@ -211,7 +208,7 @@ public class AbilityHelpers {
                 .orElse(Ability.EMPTY);
     }
 
-    public static int getExperience(@NonNull Ability ability) {
+    public static int getExperience(Ability ability) {
         if (ability.isEmpty()) {
             return 0;
         }

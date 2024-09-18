@@ -1,6 +1,5 @@
 package org.cyclops.everlastingabilities.api.capability;
 
-import lombok.NonNull;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -59,7 +58,6 @@ public class CompoundTagMutableAbilityStore implements IMutableAbilityStore {
         return store;
     }
 
-    @NonNull
     @Override
     public Ability addAbility(Ability ability, boolean doAdd) {
         IMutableAbilityStore store = getInnerStore();
@@ -68,7 +66,6 @@ public class CompoundTagMutableAbilityStore implements IMutableAbilityStore {
         return ret;
     }
 
-    @NonNull
     @Override
     public Ability removeAbility(Ability ability, boolean doRemove) {
         IMutableAbilityStore store = getInnerStore();
