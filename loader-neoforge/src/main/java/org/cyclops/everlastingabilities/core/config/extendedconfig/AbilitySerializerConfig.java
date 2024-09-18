@@ -24,9 +24,9 @@ public abstract class AbilitySerializerConfig<T extends IAbilityType> extends Ex
     }
 
     @Override
-	public String getTranslationKey() {
-		return "ability_serializer." + getNamedId();
-	}
+    public String getTranslationKey() {
+        return "ability_serializer." + getNamedId();
+    }
 
     @Override
     public ConfigurableType getConfigurableType() {
