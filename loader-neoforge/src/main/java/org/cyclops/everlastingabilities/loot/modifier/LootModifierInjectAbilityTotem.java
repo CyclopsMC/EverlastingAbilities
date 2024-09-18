@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
 import org.cyclops.everlastingabilities.Capabilities;
-import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -49,7 +49,7 @@ public class LootModifierInjectAbilityTotem extends LootModifier {
                 AbilityHelpers.getRandomRarity(abilityTypes, context.getRandom()).ifPresent(rarity -> {
                     Holder<IAbilityType> abilityType = AbilityHelpers.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
 
-                    ItemStack stack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+                    ItemStack stack = new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_TOTEM);
                     Optional.ofNullable(stack.getCapability(Capabilities.MutableAbilityStore.ITEM))
                             .ifPresent(mutableAbilityStore -> {
                                 mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);

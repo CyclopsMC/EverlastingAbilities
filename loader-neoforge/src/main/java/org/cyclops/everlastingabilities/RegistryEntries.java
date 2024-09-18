@@ -5,7 +5,6 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -21,8 +20,7 @@ import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
  */
 public class RegistryEntries {
 
-    public static final DeferredHolder<Item, Item> ITEM_ABILITY_BOTTLE = DeferredHolder.create(Registries.ITEM, ResourceLocation.parse("everlastingabilities:ability_bottle"));
-    public static final DeferredHolder<Item, Item> ITEM_ABILITY_TOTEM = DeferredHolder.create(Registries.ITEM, ResourceLocation.parse("everlastingabilities:ability_totem"));
+    // TODO: move all entries below
 
     public static final DeferredHolder<MenuType<?>, MenuType<ContainerAbilityContainer>> CONTAINER_ABILITYCONTAINER = DeferredHolder.create(Registries.MENU, ResourceLocation.parse("everlastingabilities:ability_container"));
 

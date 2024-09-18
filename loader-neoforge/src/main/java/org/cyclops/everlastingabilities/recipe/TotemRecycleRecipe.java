@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
@@ -113,7 +114,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider registryAccess) {
-        return new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+        return new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_TOTEM);
     }
 
     @Override
