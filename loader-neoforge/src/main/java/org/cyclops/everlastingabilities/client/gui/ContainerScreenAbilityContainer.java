@@ -34,8 +34,8 @@ import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.helper.RenderHelpers;
 import org.cyclops.cyclopscore.item.IInformationProvider;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.Reference;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
@@ -102,7 +102,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             if (startIndexItem + ABILITY_LIST_SIZE < Math.max(ABILITY_LIST_SIZE, getItemAbilitiesCount())) startIndexItem++;
         }, ButtonArrow.Direction.SOUTH));
 
-        Registry<IAbilityType> registry = AbilityHelpers.getRegistry(player.level().registryAccess());
+        Registry<IAbilityType> registry = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(player.level().registryAccess());
         addRenderableWidget(buttonLeft = new ButtonArrow(this.leftPos + 76,  this.topPos + 130, Component.translatable("gui.cyclopscore.left"), button -> {
             if (canMoveToPlayer()) {
                 EverlastingAbilities._instance.getPacketHandler().sendToServer(
@@ -210,7 +210,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         int b = 140;
         if (abilityStore != null) {
             if (abilityStore.getAbilityTypes().isEmpty()) return;
-            Triple<Integer, Integer, Integer> color = AbilityHelpers.getAverageRarityColor(abilityStore);
+            Triple<Integer, Integer, Integer> color = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAverageRarityColor(abilityStore);
             r = color.getLeft();
             g = color.getMiddle();
             b = color.getRight();
@@ -296,10 +296,10 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                 // Xp
                 lines.add(Component.translatable("general.everlastingabilities.xp",
                         ability.getAbilityType().getXpPerLevelScaled(),
-                        AbilityHelpers.getLevelForExperience(ability.getAbilityType().getXpPerLevelScaled()))
+                        EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getLevelForExperience(ability.getAbilityType().getXpPerLevelScaled()))
                         .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GREEN))));
 
-                if (!AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(ability.getAbilityTypeHolder())) {
+                if (!EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getPredicateAbilityEnabled().test(ability.getAbilityTypeHolder())) {
                     lines.add(Component.translatable("general.everlastingabilities.disabled")
                             .setStyle(Style.EMPTY
                                     .withColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_RED))
@@ -440,11 +440,11 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     public boolean canMoveFromPlayer(Ability ability, Player player, IMutableAbilityStore target) {
-        return !ability.isEmpty() && AbilityHelpers.canInsert(ability, target);
+        return !ability.isEmpty() && EverlastingAbilitiesInstance.MOD.getAbilityHelpers().canInsert(ability, target);
     }
 
     public boolean canMoveToPlayer(Ability ability, Player player) {
-        return !ability.isEmpty() && AbilityHelpers.canInsertToPlayer(ability, player);
+        return !ability.isEmpty() && EverlastingAbilitiesInstance.MOD.getAbilityHelpers().canInsertToPlayer(ability, player);
     }
 
     public boolean canMoveFromPlayerByItem() {

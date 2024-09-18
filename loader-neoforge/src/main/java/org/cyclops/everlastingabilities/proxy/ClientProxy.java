@@ -14,8 +14,8 @@ import org.cyclops.cyclopscore.init.ModBase;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponent;
 import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.GeneralConfig;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 
 /**
@@ -46,7 +46,7 @@ public class ClientProxy extends ClientProxyComponent {
             IMutableAbilityStore abilityStore = entity.getCapability(Capabilities.MutableAbilityStore.ENTITY);
             if (abilityStore != null) {
                 if (!abilityStore.getAbilities().isEmpty()) {
-                    Triple<Integer, Integer, Integer> abilityColors = AbilityHelpers.getAverageRarityColor(abilityStore);
+                    Triple<Integer, Integer, Integer> abilityColors = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAverageRarityColor(abilityStore);
                     float r = abilityColors.getLeft() / 255F;
                     float g = abilityColors.getMiddle() / 255F;
                     float b = abilityColors.getRight() / 255F;

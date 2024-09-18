@@ -11,9 +11,9 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.RegistryEntriesCommon;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
@@ -85,7 +85,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
         Rarity rarity = sortedStacks.get(inputTargetIndex).getRarity();
 
         // A chance of a bump
-        List<Holder<IAbilityType>> abilityTypes = AbilityHelpers.getAbilityTypesCrafting(holderLookupProvider);
+        List<Holder<IAbilityType>> abilityTypes = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityTypesCrafting(holderLookupProvider);
         if (rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent) {
             Rarity newRarity = rarity;
             // This loop ensures that the new rarity has at least one registered ability
@@ -97,14 +97,14 @@ public class TotemRecycleRecipe extends CustomRecipe {
                     // By logical inference, this will have at least one rarity, i.e., the original ability.
                     newRarity = rarity;
                 }
-            } while (!AbilityHelpers.hasRarityAbilities(abilityTypes, newRarity));
+            } while (!EverlastingAbilitiesInstance.MOD.getAbilityHelpers().hasRarityAbilities(abilityTypes, newRarity));
             rarity = newRarity;
         }
 
         // Set the rand seed so that the resulting ability will always be different
         // (but deterministic) for different input abilities
         rand.setSeed(seed + sortedStacks.stream().mapToInt(itemStack -> itemStack.getComponents().hashCode()).sum());
-        return AbilityHelpers.getRandomTotem(abilityTypes, rarity, rand).get(); // This optional should always be present
+        return EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRandomTotem(abilityTypes, rarity, rand).get(); // This optional should always be present
     }
 
     @Override

@@ -9,10 +9,10 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.conditions.ICondition;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
 
     private final boolean requireSneak;
 
-    public AbilityTypeSpecialPowerStare(ICondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+    public AbilityTypeSpecialPowerStare(IAbilityCondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                                         boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
                                         boolean requireSneak) {
         super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);

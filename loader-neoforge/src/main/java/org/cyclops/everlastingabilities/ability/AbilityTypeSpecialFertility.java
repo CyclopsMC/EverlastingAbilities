@@ -6,10 +6,10 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.conditions.ICondition;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class AbilityTypeSpecialFertility extends AbilityTypeAdapter {
 
     private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS;
 
-    public AbilityTypeSpecialFertility(ICondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+    public AbilityTypeSpecialFertility(IAbilityCondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                                        boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
         super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }

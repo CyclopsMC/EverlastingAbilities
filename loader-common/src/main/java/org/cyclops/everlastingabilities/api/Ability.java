@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Rarity;
-import net.neoforged.neoforge.common.conditions.TrueCondition;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -15,7 +15,7 @@ import java.util.Objects;
  */
 public class Ability implements Comparable<Ability> {
 
-    public static final Ability EMPTY = new Ability(Holder.direct(new AbilityTypeAdapter(TrueCondition.INSTANCE, "", Rarity.COMMON, 0, 0, true, true, true, true) {
+    public static final Ability EMPTY = new Ability(Holder.direct(new AbilityTypeAdapter(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionTrue(), "", Rarity.COMMON, 0, 0, true, true, true, true) {
         @Override
         public MapCodec<? extends IAbilityType> codec() {
             return null;

@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.cyclops.cyclopscore.command.argument.ArgumentTypeEnum;
 import org.cyclops.everlastingabilities.Capabilities;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
@@ -58,7 +58,7 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
                 level = Math.max(1, Math.min(abilityType.value().getMaxLevelInfinitySafe(), level));
                 Ability ability = new Ability(abilityType, level);
 
-                Ability addedAbility = AbilityHelpers.addPlayerAbility(player, ability, true, false);
+                Ability addedAbility = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().addPlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
                 sender.sendSystemMessage(Component.translatable("chat.everlastingabilities.command.addedAbility", addedAbility.getTextComponent(), newAbility.getTextComponent()));
@@ -66,7 +66,7 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
                 level = Math.max(1, level);
                 Ability ability = new Ability(abilityType, level);
 
-                Ability removedAbility = AbilityHelpers.removePlayerAbility(player, ability, true, false);
+                Ability removedAbility = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().removePlayerAbility(player, ability, true, false);
                 Ability newAbility = abilityStore.getAbility(abilityType);
 
                 sender.sendSystemMessage(Component.translatable("chat.everlastingabilities.command.removedAbility", removedAbility.getTextComponent(), newAbility.getTextComponent()));

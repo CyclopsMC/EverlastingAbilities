@@ -12,8 +12,8 @@ import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
 import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
-import org.cyclops.everlastingabilities.RegistryEntries;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.ItemDataMutableAbilityStore;
@@ -49,11 +49,11 @@ public class ItemAbilityTotemConfig extends ItemConfig {
 
     protected void onCreativeModeTabBuildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == this.getMod().getDefaultCreativeTab()) { // Level can be null during game loading
-            AbilityHelpers.getRegistryLookup(event.getParameters().holders()).listElements().forEach(abilityType -> {
+            EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistryLookup(event.getParameters().holders()).listElements().forEach(abilityType -> {
                 for (int level = 1; level <= abilityType.value().getMaxLevel(); level++) {
                     Ability ability = new Ability(abilityType, level);
-                    if (AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(abilityType)) {
-                        event.accept(ItemAbilityTotem.getTotem(ability));
+                    if (EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getPredicateAbilityEnabled().test(abilityType)) {
+                        event.accept(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getTotem(ability));
                     }
                 }
             });
@@ -61,7 +61,7 @@ public class ItemAbilityTotemConfig extends ItemConfig {
     }
 
     protected void modifyComponents(ModifyDefaultComponentsEvent event) {
-        event.modify(getInstance(), (builder) -> builder.set(RegistryEntries.DATACOMPONENT_ABILITY_STORE.get(), new DefaultMutableAbilityStore()));
+        event.modify(getInstance(), (builder) -> builder.set(RegistryEntriesCommon.DATACOMPONENT_ABILITY_STORE.value(), new DefaultMutableAbilityStore()));
     }
 
     protected void registerCapability(RegisterCapabilitiesEvent event) {

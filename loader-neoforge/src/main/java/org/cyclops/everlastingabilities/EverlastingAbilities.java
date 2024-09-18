@@ -33,6 +33,9 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.helper.EntityHelpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
@@ -40,7 +43,6 @@ import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.modcompat.capabilities.ICapabilityConstructor;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeAttributeModifierSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeEffectSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialBonemealerSerializerConfig;
@@ -50,6 +52,7 @@ import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialMag
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialPowerStareSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialStepAssistSerializerConfig;
 import org.cyclops.everlastingabilities.api.Ability;
+import org.cyclops.everlastingabilities.api.AbilityTypeSerializers;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.CompoundTagMutableAbilityStore;
@@ -57,6 +60,8 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
 import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbilityConfig;
 import org.cyclops.everlastingabilities.component.DataComponentAbilityStoreConfig;
+import org.cyclops.everlastingabilities.helper.AbilityHelpersNeoForge;
+import org.cyclops.everlastingabilities.helper.IAbilityHelpers;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainerConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
@@ -76,15 +81,19 @@ import java.util.Optional;
  *
  */
 @Mod(Reference.MOD_ID)
-public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilities> {
+public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilities> implements IEverlastingAbilitiesModBase {
 
     /**
      * The unique instance of this mod.
      */
     public static EverlastingAbilities _instance;
+    private final IAbilityHelpers abilityHelpers;
 
     public EverlastingAbilities(IEventBus modEventBus) {
-        super(Reference.MOD_ID, (instance) -> _instance = instance, modEventBus);
+        super(Reference.MOD_ID, (instance) -> {
+            _instance = instance;
+            EverlastingAbilitiesInstance.MOD = instance;
+        }, modEventBus);
 
         // Register capabilities
         getCapabilityConstructorRegistry().registerEntity(() -> EntityType.PLAYER, new ICapabilityConstructor<Player, Void, IMutableAbilityStore, EntityType<Player>>() {
@@ -118,10 +127,11 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                             && canMobHaveAbility(host)) {
                         RandomSource rand = RandomSource.create();
                         rand.setSeed(host.getId());
-                        Registry<IAbilityType> registry = AbilityHelpers.getRegistry(host.level().registryAccess());
-                        List<Holder<IAbilityType>> abilityTypes = AbilityHelpers.getAbilityTypesMobSpawn(registry);
-                        AbilityHelpers.getRandomRarity(abilityTypes, rand)
-                                .flatMap(rarity -> AbilityHelpers.getRandomAbility(abilityTypes, rand, rarity))
+                        IAbilityHelpers abilityHelpers = getAbilityHelpers();
+                        Registry<IAbilityType> registry = abilityHelpers.getRegistry(host.level().registryAccess());
+                        List<Holder<IAbilityType>> abilityTypes = abilityHelpers.getAbilityTypesMobSpawn(registry);
+                        abilityHelpers.getRandomRarity(abilityTypes, rand)
+                                .flatMap(rarity -> abilityHelpers.getRandomAbility(abilityTypes, rand, rarity))
                                 .ifPresent(abilityType -> store.addAbility(new Ability(abilityType, 1), true));
                     }
                     return store;
@@ -143,6 +153,14 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         NeoForge.EVENT_BUS.addListener(this::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(this::onPlayerClone);
         NeoForge.EVENT_BUS.addListener(this::onLivingUpdate);
+        modEventBus.addListener(this::onRegistriesCreate);
+        modEventBus.addListener(this::onDatapackRegistryCreate);
+        this.abilityHelpers = new AbilityHelpersNeoForge(getModHelpers());
+    }
+
+    @Override
+    public IAbilityHelpers getAbilityHelpers() {
+        return this.abilityHelpers;
     }
 
     @Override
@@ -247,7 +265,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 Level world = event.getEntity().level();
                 Player player = event.getEntity();
                 Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
-                AbilityHelpers.getRandomAbilityUntilRarity(AbilityHelpers.getAbilityTypesPlayerSpawn(AbilityHelpers.getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
+                getAbilityHelpers().getRandomAbilityUntilRarity(getAbilityHelpers().getAbilityTypesPlayerSpawn(getAbilityHelpers().getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
                     ItemStack itemStack = new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_BOTTLE);
                     Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
                             .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
@@ -314,7 +332,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         if (GeneralConfig.tickAbilities && event.getEntity() instanceof Player player) {
             Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY)).ifPresent(abilityStore -> {
                 for (Ability ability : abilityStore.getAbilities()) {
-                    if (AbilityHelpers.PREDICATE_ABILITY_ENABLED.test(ability.getAbilityTypeHolder())) {
+                    if (getAbilityHelpers().getPredicateAbilityEnabled().test(ability.getAbilityTypeHolder())) {
                         if (event.getEntity().level().getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
                             player.causeFoodExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
                         }
@@ -323,6 +341,14 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 }
             });
         }
+    }
+
+    private void onDatapackRegistryCreate(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(AbilityTypes.REGISTRY_KEY, AbilityTypes.DIRECT_CODEC, AbilityTypes.DIRECT_CODEC);
+    }
+
+    private void onRegistriesCreate(NewRegistryEvent event) {
+        AbilityTypeSerializers.REGISTRY = event.create(new RegistryBuilder<>(AbilityTypeSerializers.REGISTRY_KEY));
     }
 
 }

@@ -3,7 +3,6 @@ package org.cyclops.everlastingabilities.item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import org.cyclops.everlastingabilities.Capabilities;
-import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.Ability;
 
 import java.util.Optional;
@@ -33,12 +32,5 @@ public class ItemAbilityTotem extends ItemGuiAbilityContainer {
                     return Rarity.values()[maxRarity];
                 })
                 .orElse(Rarity.COMMON);
-    }
-
-    public static ItemStack getTotem(Ability ability) {
-        ItemStack itemStack = new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_TOTEM);
-        Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
-                .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(ability, true));
-        return itemStack;
     }
 }

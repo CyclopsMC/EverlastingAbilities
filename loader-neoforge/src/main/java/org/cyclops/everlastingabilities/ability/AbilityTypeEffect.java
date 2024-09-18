@@ -12,13 +12,13 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.conditions.FalseCondition;
-import net.neoforged.neoforge.common.conditions.ICondition;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
     private final boolean levelBasedDuration;
     private final double durationFactor;
 
-    public AbilityTypeEffect(ICondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+    public AbilityTypeEffect(IAbilityCondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                              boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
                              Target target, boolean targetsFriendlyMobs, double radiusFactor,
                              String effectId, int tickModulus, double amplifierFactor, boolean levelBasedDuration, double durationFactor) {
@@ -53,7 +53,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
         Optional<Holder.Reference<MobEffect>> potionOptional = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(effectId));
         if (potionOptional.isEmpty()) {
             EverlastingAbilities.clog(org.apache.logging.log4j.Level.INFO, "No potion effect was found with id: " + effectId + ". Marking as disabled.");
-            this.setCondition(FalseCondition.INSTANCE);
+            this.setCondition(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionFalse());
             this.potion = null;
         } else {
             this.potion = potionOptional.get();

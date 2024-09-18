@@ -13,7 +13,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
@@ -37,7 +37,7 @@ public class ArgumentTypeAbility implements ArgumentType<ArgumentTypeAbility.Inp
     @Override
     public ArgumentTypeAbility.Input parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
-        Optional<Holder.Reference<IAbilityType>> abilityOptional = AbilityHelpers.getRegistryLookup(this.context).get(ResourceKey.create(AbilityTypes.REGISTRY_KEY, id));
+        Optional<Holder.Reference<IAbilityType>> abilityOptional = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistryLookup(this.context).get(ResourceKey.create(AbilityTypes.REGISTRY_KEY, id));
         if (abilityOptional.isEmpty()) {
             throw new SimpleCommandExceptionType(Component.translatable("chat.everlastingabilities.command.invalidAbility", id)).create();
         }
@@ -46,7 +46,7 @@ public class ArgumentTypeAbility implements ArgumentType<ArgumentTypeAbility.Inp
 
     @Override
     public Collection<String> getExamples() {
-        return AbilityHelpers.getRegistryLookup(this.context).listElementIds()
+        return EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistryLookup(this.context).listElementIds()
                 .map(k -> k.location().toString())
                 .collect(Collectors.toList());
     }

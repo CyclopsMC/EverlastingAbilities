@@ -3,10 +3,10 @@ package org.cyclops.everlastingabilities.ability;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
-import net.neoforged.neoforge.common.conditions.ICondition;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.Objects;
@@ -19,7 +19,7 @@ public class AbilityTypeSpecialFlight extends AbilityTypeAdapter {
 
     private static final String PLAYER_NBT_KEY = Reference.MOD_ID + ":" + "lastFlight";
 
-    public AbilityTypeSpecialFlight(ICondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+    public AbilityTypeSpecialFlight(IAbilityCondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                                     boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
         super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
     }

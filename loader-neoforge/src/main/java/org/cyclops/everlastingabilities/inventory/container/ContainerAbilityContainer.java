@@ -10,8 +10,8 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.inventory.ItemLocation;
 import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainer;
 import org.cyclops.everlastingabilities.Capabilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.RegistryEntries;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.client.gui.ContainerScreenAbilityContainer;
@@ -41,9 +41,9 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
         // If level is not consistent with total experience count, fix it.
         // This can be caused by vanilla's xp command that adds levels but doesn't change the total xp count.
         // If other mods mess things up, this will resolve it as well.
-        int level = AbilityHelpers.getLevelForExperience(player.totalExperience);
+        int level = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getLevelForExperience(player.totalExperience);
         if (player.experienceLevel != level) {
-            player.totalExperience = AbilityHelpers.getExperienceForLevel(player.experienceLevel);
+            player.totalExperience = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getExperienceForLevel(player.experienceLevel);
         }
     }
 
@@ -88,18 +88,18 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
 
     public void moveFromPlayer(Ability playerAbility) {
         getItemAbilityStore().ifPresent(abilityStore -> {
-            Ability insertedAbility = AbilityHelpers.insert(playerAbility, abilityStore);
+            Ability insertedAbility = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().insert(playerAbility, abilityStore);
             if (!insertedAbility.isEmpty()) {
-                AbilityHelpers.removePlayerAbility(player, insertedAbility, true, true);
+                EverlastingAbilitiesInstance.MOD.getAbilityHelpers().removePlayerAbility(player, insertedAbility, true, true);
             }
         });
     }
 
     public void moveToPlayer(Ability itemAbility) {
         getItemAbilityStore().ifPresent(abilityStore -> {
-            Ability insertedAbility = AbilityHelpers.addPlayerAbility(player, itemAbility, true, true);
+            Ability insertedAbility = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().addPlayerAbility(player, itemAbility, true, true);
             if (!insertedAbility.isEmpty()) {
-                AbilityHelpers.extract(insertedAbility, abilityStore);
+                EverlastingAbilitiesInstance.MOD.getAbilityHelpers().extract(insertedAbility, abilityStore);
 
                 if(getItemAbilities().isEmpty() && !getItem().canMoveFromPlayer()) {
                     this.itemLocation.setItemStack(player, ItemStack.EMPTY);

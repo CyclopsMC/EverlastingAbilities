@@ -14,9 +14,9 @@ import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
 import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.Reference;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 
 import java.util.Optional;
 
@@ -63,11 +63,11 @@ public class SendAbilityStorePacket extends PacketCodec {
                 if (entity != null) {
                     // Sync ability store
                     Optional.ofNullable(entity.getCapability(Capabilities.MutableAbilityStore.ENTITY)).ifPresent(abilityStore -> {
-                        AbilityHelpers.deserialize(AbilityHelpers.getRegistry(world.registryAccess()), abilityStore, tag.get("contents"));
+                        EverlastingAbilitiesInstance.MOD.getAbilityHelpers().deserialize(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(world.registryAccess()), abilityStore, tag.get("contents"));
                     });
 
                     // Sync max abilities value
-                    AbilityHelpers.maxPlayerAbilitiesClient = this.maxPlayerAbilities;
+                    EverlastingAbilitiesInstance.MOD.getAbilityHelpers().setMaxPlayerAbilitiesClient(this.maxPlayerAbilities);
                 }
             }
         } catch (IllegalArgumentException e) {

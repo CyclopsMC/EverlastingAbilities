@@ -12,8 +12,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
 import org.cyclops.everlastingabilities.Capabilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.RegistryEntriesCommon;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.jetbrains.annotations.NotNull;
@@ -45,9 +45,9 @@ public class LootModifierInjectAbilityTotem extends LootModifier {
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         if (getLootTables().contains(context.getQueriedLootTableId().toString())) {
             try {
-                List<Holder<IAbilityType>> abilityTypes = AbilityHelpers.getAbilityTypesLoot(AbilityHelpers.getRegistry(context.getLevel().registryAccess()));
-                AbilityHelpers.getRandomRarity(abilityTypes, context.getRandom()).ifPresent(rarity -> {
-                    Holder<IAbilityType> abilityType = AbilityHelpers.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
+                List<Holder<IAbilityType>> abilityTypes = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityTypesLoot(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(context.getLevel().registryAccess()));
+                EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRandomRarity(abilityTypes, context.getRandom()).ifPresent(rarity -> {
+                    Holder<IAbilityType> abilityType = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
 
                     ItemStack stack = new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_TOTEM);
                     Optional.ofNullable(stack.getCapability(Capabilities.MutableAbilityStore.ITEM))

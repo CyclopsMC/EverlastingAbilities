@@ -2,8 +2,7 @@ package org.cyclops.everlastingabilities.ability.serializer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.common.conditions.TrueCondition;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.ability.AbilityTypeSpecialBonemealer;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilitySerializerConfig;
@@ -17,7 +16,7 @@ public class AbilityTypeSpecialBonemealerSerializerConfig extends AbilitySeriali
     public AbilityTypeSpecialBonemealerSerializerConfig() {
         super("special_bonemealer", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> builder
                 .group(
-                        ICondition.CODEC.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
+                        EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionCodec().optionalFieldOf("condition", EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionTrue()).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(IAbilityType::getTranslationKey),
                         CodecHelpers.CODEC_RARITY.fieldOf("rarity").forGetter(IAbilityType::getRarity),
                         Codec.INT.fieldOf("max_level").forGetter(IAbilityType::getMaxLevel),

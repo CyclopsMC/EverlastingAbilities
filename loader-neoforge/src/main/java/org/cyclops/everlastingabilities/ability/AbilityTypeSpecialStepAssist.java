@@ -8,10 +8,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
-import net.neoforged.neoforge.common.conditions.ICondition;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ public class AbilityTypeSpecialStepAssist extends AbilityTypeAdapter {
 
     private final Map<Integer, AttributeModifier> attributeModifiers;
 
-    public AbilityTypeSpecialStepAssist(ICondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+    public AbilityTypeSpecialStepAssist(IAbilityCondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                                         boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
         super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.attributeModifiers = Maps.newHashMap();

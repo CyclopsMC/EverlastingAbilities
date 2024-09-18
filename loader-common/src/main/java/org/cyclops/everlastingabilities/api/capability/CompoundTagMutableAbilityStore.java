@@ -6,8 +6,8 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.Reference;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
@@ -32,7 +32,7 @@ public class CompoundTagMutableAbilityStore implements IMutableAbilityStore {
     }
 
     protected Registry<IAbilityType> getRegistry() {
-         return AbilityHelpers.getRegistry(this.registryAccess);
+         return EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(this.registryAccess);
     }
 
     public boolean isInitialized() {
@@ -47,13 +47,13 @@ public class CompoundTagMutableAbilityStore implements IMutableAbilityStore {
             root.put(NBT_STORE, new ListTag());
         }
         Tag nbt = root.get(NBT_STORE);
-        AbilityHelpers.deserialize(getRegistry(), store, nbt);
+        EverlastingAbilitiesInstance.MOD.getAbilityHelpers().deserialize(getRegistry(), store, nbt);
         return store;
     }
 
     protected IMutableAbilityStore setInnerStore(IMutableAbilityStore store) {
         CompoundTag root = tagSupplier.get();
-        Tag nbt = AbilityHelpers.serialize(getRegistry(), store);
+        Tag nbt = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().serialize(getRegistry(), store);
         root.put(NBT_STORE, nbt);
         return store;
     }

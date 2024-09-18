@@ -12,8 +12,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.Reference;
-import org.cyclops.everlastingabilities.ability.AbilityHelpers;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
@@ -63,19 +63,19 @@ public class MoveAbilityPacket extends PacketCodec {
     public void actionServer(Level world, ServerPlayer player) {
         if (player.containerMenu instanceof ContainerAbilityContainer) {
             ContainerAbilityContainer container = (ContainerAbilityContainer) player.containerMenu;
-            Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = AbilityHelpers.getRegistry(world.registryAccess()).getHolder(ResourceLocation.parse(abilityName));
+            Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(world.registryAccess()).getHolder(ResourceLocation.parse(abilityName));
             if (abilityTypeOptional.isPresent()) {
                 Ability ability = new Ability(abilityTypeOptional.get(), abilityLevel);
                 container.getPlayerAbilityStore().ifPresent(playerAbilityStore -> {
                     container.getItemAbilityStore().ifPresent(itemAbilityStore -> {
                         if (movement == Movement.FROM_PLAYER.ordinal()) {
-                            if (AbilityHelpers.canExtract(ability, playerAbilityStore)
-                                    && AbilityHelpers.canInsert(ability, itemAbilityStore)) {
+                            if (EverlastingAbilitiesInstance.MOD.getAbilityHelpers().canExtract(ability, playerAbilityStore)
+                                    && EverlastingAbilitiesInstance.MOD.getAbilityHelpers().canInsert(ability, itemAbilityStore)) {
                                 container.moveFromPlayer(ability);
                             }
                         } else {
-                            if (AbilityHelpers.canExtract(ability, itemAbilityStore)
-                                    && AbilityHelpers.canInsert(ability, playerAbilityStore)) {
+                            if (EverlastingAbilitiesInstance.MOD.getAbilityHelpers().canExtract(ability, itemAbilityStore)
+                                    && EverlastingAbilitiesInstance.MOD.getAbilityHelpers().canInsert(ability, playerAbilityStore)) {
                                 container.moveToPlayer(ability);
                             }
                         }

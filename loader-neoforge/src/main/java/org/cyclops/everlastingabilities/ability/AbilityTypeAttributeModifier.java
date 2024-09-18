@@ -10,12 +10,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
-import net.neoforged.neoforge.common.conditions.FalseCondition;
-import net.neoforged.neoforge.common.conditions.ICondition;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
+import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
 import java.util.Map;
@@ -34,7 +34,7 @@ public class AbilityTypeAttributeModifier extends AbilityTypeAdapter {
     private final AttributeModifier.Operation operation;
     private final Map<Integer, AttributeModifier> attributeModifiers;
 
-    public AbilityTypeAttributeModifier(ICondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
+    public AbilityTypeAttributeModifier(IAbilityCondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                                         boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot,
                                         String attributeId, double amountFactor, AttributeModifier.Operation operation) {
         super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
@@ -42,7 +42,7 @@ public class AbilityTypeAttributeModifier extends AbilityTypeAdapter {
         Optional<Holder.Reference<Attribute>> attributeOptional = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attributeId));
         if (attributeOptional.isEmpty()) {
             EverlastingAbilities.clog(org.apache.logging.log4j.Level.INFO, "No attribute was found with id: " + attributeId + ". Marking as disabled.");
-            this.setCondition(FalseCondition.INSTANCE);
+            this.setCondition(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionFalse());
             this.attribute = null;
         } else {
             this.attribute = attributeOptional.get();

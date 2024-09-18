@@ -1,7 +1,6 @@
 package org.cyclops.everlastingabilities;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
@@ -10,7 +9,6 @@ import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.cyclops.everlastingabilities.api.AbilityTypeSerializers;
 import org.cyclops.everlastingabilities.api.IAbilityType;
-import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
 
@@ -18,6 +16,7 @@ import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipe;
  * Referenced registry entries.
  * @author rubensworks
  */
+@Deprecated
 public class RegistryEntries {
 
     // TODO: move all entries below
@@ -34,7 +33,5 @@ public class RegistryEntries {
     public static final DeferredHolder<MapCodec<? extends IAbilityType>, MapCodec<? extends IAbilityType>> ABILITYSERIALIZER_SPECIAL_MAGNETIZE = DeferredHolder.create(AbilityTypeSerializers.REGISTRY_KEY, ResourceLocation.parse("everlastingabilities:special_magnetize"));
     public static final DeferredHolder<MapCodec<? extends IAbilityType>, MapCodec<? extends IAbilityType>> ABILITYSERIALIZER_SPECIAL_POWER_STARE = DeferredHolder.create(AbilityTypeSerializers.REGISTRY_KEY, ResourceLocation.parse("everlastingabilities:special_power_stare"));
     public static final DeferredHolder<MapCodec<? extends IAbilityType>, MapCodec<? extends IAbilityType>> ABILITYSERIALIZER_SPECIAL_STEP_ASSIST = DeferredHolder.create(AbilityTypeSerializers.REGISTRY_KEY, ResourceLocation.parse("everlastingabilities:special_step_assist"));
-
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<IAbilityStore>> DATACOMPONENT_ABILITY_STORE = DeferredHolder.create(Registries.DATA_COMPONENT_TYPE, ResourceLocation.parse("everlastingabilities:ability_store"));
 
 }

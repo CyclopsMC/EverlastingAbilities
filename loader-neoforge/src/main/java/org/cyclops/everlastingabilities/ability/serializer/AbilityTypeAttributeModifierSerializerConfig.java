@@ -3,8 +3,7 @@ package org.cyclops.everlastingabilities.ability.serializer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.common.conditions.TrueCondition;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.ability.AbilityTypeAttributeModifier;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilitySerializerConfig;
@@ -16,7 +15,7 @@ import org.cyclops.everlastingabilities.core.helper.CodecHelpers;
 public class AbilityTypeAttributeModifierSerializerConfig extends AbilitySerializerConfig<AbilityTypeAttributeModifier> {
     public AbilityTypeAttributeModifierSerializerConfig() {
         super("attribute_modifier", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> builder.group(
-                        ICondition.CODEC.optionalFieldOf("condition", TrueCondition.INSTANCE).forGetter(IAbilityType::getCondition),
+                        EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionCodec().optionalFieldOf("condition", EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionTrue()).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(AbilityTypeAttributeModifier::getTranslationKey),
                         CodecHelpers.CODEC_RARITY.fieldOf("rarity").forGetter(AbilityTypeAttributeModifier::getRarity),
                         Codec.INT.fieldOf("max_level").forGetter(AbilityTypeAttributeModifier::getMaxLevel),
