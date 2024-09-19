@@ -3,6 +3,7 @@ package org.cyclops.everlastingabilities.ability.serializer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import org.cyclops.cyclopscore.init.IModBase;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.ability.AbilityTypeAttributeModifier;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -12,9 +13,9 @@ import org.cyclops.everlastingabilities.core.helper.CodecHelpers;
 /**
  * @author rubensworks
  */
-public class AbilityTypeAttributeModifierSerializerConfig extends AbilitySerializerConfig<AbilityTypeAttributeModifier> {
-    public AbilityTypeAttributeModifierSerializerConfig() {
-        super("attribute_modifier", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> builder.group(
+public class AbilityTypeAttributeModifierSerializerConfig<M extends IModBase> extends AbilitySerializerConfig<AbilityTypeAttributeModifier, M> {
+    public AbilityTypeAttributeModifierSerializerConfig(M mod) {
+        super(mod, "attribute_modifier", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> builder.group(
                         EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionCodec().optionalFieldOf("condition", EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionTrue()).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(AbilityTypeAttributeModifier::getTranslationKey),
                         CodecHelpers.CODEC_RARITY.fieldOf("rarity").forGetter(AbilityTypeAttributeModifier::getRarity),

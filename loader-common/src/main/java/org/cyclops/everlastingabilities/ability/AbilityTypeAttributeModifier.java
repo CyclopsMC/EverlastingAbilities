@@ -10,10 +10,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.Reference;
-import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -41,7 +40,7 @@ public class AbilityTypeAttributeModifier extends AbilityTypeAdapter {
         this.attributeId = attributeId;
         Optional<Holder.Reference<Attribute>> attributeOptional = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attributeId));
         if (attributeOptional.isEmpty()) {
-            EverlastingAbilities.clog(org.apache.logging.log4j.Level.INFO, "No attribute was found with id: " + attributeId + ". Marking as disabled.");
+            EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.INFO, "No attribute was found with id: " + attributeId + ". Marking as disabled.");
             this.setCondition(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionFalse());
             this.attribute = null;
         } else {
@@ -69,7 +68,7 @@ public class AbilityTypeAttributeModifier extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_ATTRIBUTE_MODIFIER.get());
+        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_ATTRIBUTE_MODIFIER.value());
     }
 
     @Override

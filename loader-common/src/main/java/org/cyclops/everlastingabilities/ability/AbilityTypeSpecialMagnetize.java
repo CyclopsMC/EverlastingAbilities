@@ -10,8 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.cyclopscore.helper.IModHelpers;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -25,7 +25,6 @@ import java.util.Objects;
  */
 public class AbilityTypeSpecialMagnetize extends AbilityTypeAdapter {
 
-    private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 20;
     private final boolean moveXp;
 
     public AbilityTypeSpecialMagnetize(IAbilityCondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
@@ -37,7 +36,7 @@ public class AbilityTypeSpecialMagnetize extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_MAGNETIZE.get());
+        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_SPECIAL_MAGNETIZE.value());
     }
 
     public boolean isMoveXp() {
@@ -47,7 +46,7 @@ public class AbilityTypeSpecialMagnetize extends AbilityTypeAdapter {
     @Override
     public void onTick(Player player, int level) {
         Level world = player.level();
-        if (!world.isClientSide && !player.isCrouching() && world.getGameTime() % TICK_MODULUS == 0) {
+        if (!world.isClientSide && !player.isCrouching() && world.getGameTime() % (IModHelpers.get().getMinecraftHelpers().getSecondInTicks() / 20) == 0) {
             // Center of the attraction
             double x = player.getX();
             double y = player.getY();
@@ -93,10 +92,6 @@ public class AbilityTypeSpecialMagnetize extends AbilityTypeAdapter {
     }
 
     protected boolean canKineticateItem(ItemEntity entityItem) {
-        // Demagnetize mod support
-        if(entityItem.getPersistentData().contains("PreventRemoteMovement")){
-            return false;
-        }
         return true;
     }
 }

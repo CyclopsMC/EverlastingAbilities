@@ -12,11 +12,10 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
-import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.GeneralConfig;
-import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -52,7 +51,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
         this.effectId = effectId;
         Optional<Holder.Reference<MobEffect>> potionOptional = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(effectId));
         if (potionOptional.isEmpty()) {
-            EverlastingAbilities.clog(org.apache.logging.log4j.Level.INFO, "No potion effect was found with id: " + effectId + ". Marking as disabled.");
+            EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.INFO, "No potion effect was found with id: " + effectId + ". Marking as disabled.");
             this.setCondition(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionFalse());
             this.potion = null;
         } else {
@@ -98,13 +97,13 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_EFFECT.get());
+        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_EFFECT.value());
     }
 
     protected int getDuration(int tickModulus, int level) {
         if (isLevelBasedDuration()) {
             int maxLevel = getMaxLevel() == -1 ? 5 : getMaxLevel();
-            return (int) (MinecraftHelpers.SECOND_IN_TICKS * ((float) level / maxLevel * 20F) * getDurationFactor());
+            return (int) (IModHelpers.get().getMinecraftHelpers().getSecondInTicks() * ((float) level / maxLevel * 20F) * getDurationFactor());
         }
         return (int) (tickModulus * getDurationFactor());
     }

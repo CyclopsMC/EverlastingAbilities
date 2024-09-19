@@ -127,4 +127,9 @@ public interface IAbilityHelpers {
 
     public Codec<IAbilityCondition> getAbilityConditionCodec();
 
+    public boolean hasPlayerStateLastFlight(Player player);
+    public boolean isPlayerStateLastFlight(Player player);
+    public void removePlayerStateLastFlight(Player player);
+    public void setPlayerStateLastFlight(Player player, boolean lastFlight);
+
 }

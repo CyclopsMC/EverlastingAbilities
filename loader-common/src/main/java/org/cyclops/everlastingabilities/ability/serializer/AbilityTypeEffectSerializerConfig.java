@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.ability.serializer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import org.cyclops.cyclopscore.init.IModBase;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.ability.AbilityTypeEffect;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -12,10 +13,10 @@ import org.cyclops.everlastingabilities.core.helper.CodecHelpers;
 /**
  * @author rubensworks
  */
-public class AbilityTypeEffectSerializerConfig extends AbilitySerializerConfig<AbilityTypeEffect> {
+public class AbilityTypeEffectSerializerConfig<M extends IModBase> extends AbilitySerializerConfig<AbilityTypeEffect, M> {
 
-    public AbilityTypeEffectSerializerConfig() {
-        super("effect", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> ApplicativeExtended.group17(
+    public AbilityTypeEffectSerializerConfig(M mod) {
+        super(mod, "effect", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> ApplicativeExtended.group17(
                 builder,
                         EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionCodec().optionalFieldOf("condition", EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionTrue()).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(AbilityTypeEffect::getTranslationKey),

@@ -6,8 +6,8 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
-import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.cyclopscore.helper.IModHelpers;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -21,8 +21,6 @@ import java.util.Objects;
  */
 public class AbilityTypeSpecialFertility extends AbilityTypeAdapter {
 
-    private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS;
-
     public AbilityTypeSpecialFertility(IAbilityCondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                                        boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
         super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
@@ -30,7 +28,7 @@ public class AbilityTypeSpecialFertility extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_FERTILITY.get());
+        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_SPECIAL_FERTILITY.value());
     }
 
     protected int getDurationMultiplier() {
@@ -40,7 +38,7 @@ public class AbilityTypeSpecialFertility extends AbilityTypeAdapter {
     @Override
     public void onTick(Player player, int level) {
         Level world = player.level();
-        if (!world.isClientSide && world.getGameTime() % TICK_MODULUS == 0) {
+        if (!world.isClientSide && world.getGameTime() % IModHelpers.get().getMinecraftHelpers().getSecondInTicks() == 0) {
             int radius = level * 2;
             List<Animal> mobs = world.getEntitiesOfClass(Animal.class,
                     player.getBoundingBox().inflate(radius, radius, radius), EntitySelector.NO_SPECTATORS);

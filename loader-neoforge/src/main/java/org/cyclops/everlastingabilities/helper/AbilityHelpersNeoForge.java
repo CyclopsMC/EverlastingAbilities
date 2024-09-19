@@ -10,6 +10,7 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.TrueCondition;
 import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.Capabilities;
+import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.ability.AbilityConditionNeoForge;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -122,5 +123,27 @@ public class AbilityHelpersNeoForge extends AbilityHelpersCommon {
                 AbilityConditionNeoForge::new,
                 abilityCondition -> ((AbilityConditionNeoForge) abilityCondition).getCondition()
         );
+    }
+
+    private static final String PLAYER_NBT_KEY_LAST_FLIGHT = Reference.MOD_ID + ":" + "lastFlight";
+
+    @Override
+    public boolean hasPlayerStateLastFlight(Player player) {
+        return player.getPersistentData().contains(PLAYER_NBT_KEY_LAST_FLIGHT);
+    }
+
+    @Override
+    public boolean isPlayerStateLastFlight(Player player) {
+        return player.getPersistentData().getBoolean(PLAYER_NBT_KEY_LAST_FLIGHT);
+    }
+
+    @Override
+    public void removePlayerStateLastFlight(Player player) {
+        player.getPersistentData().remove(PLAYER_NBT_KEY_LAST_FLIGHT);
+    }
+
+    @Override
+    public void setPlayerStateLastFlight(Player player, boolean lastFlight) {
+        player.getPersistentData().putBoolean(PLAYER_NBT_KEY_LAST_FLIGHT, lastFlight);
     }
 }

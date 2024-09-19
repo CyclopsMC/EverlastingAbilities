@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.ability.serializer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import org.cyclops.cyclopscore.init.IModBase;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.ability.AbilityTypeSpecialMagnetize;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -11,10 +12,10 @@ import org.cyclops.everlastingabilities.core.helper.CodecHelpers;
 /**
  * @author rubensworks
  */
-public class AbilityTypeSpecialMagnetizeSerializerConfig extends AbilitySerializerConfig<AbilityTypeSpecialMagnetize> {
+public class AbilityTypeSpecialMagnetizeSerializerConfig<M extends IModBase> extends AbilitySerializerConfig<AbilityTypeSpecialMagnetize, M> {
 
-    public AbilityTypeSpecialMagnetizeSerializerConfig() {
-        super("special_magnetize", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> builder
+    public AbilityTypeSpecialMagnetizeSerializerConfig(M mod) {
+        super(mod, "special_magnetize", (eConfig) -> RecordCodecBuilder.mapCodec(builder -> builder
                 .group(
                         EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionCodec().optionalFieldOf("condition", EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionTrue()).forGetter(IAbilityType::getCondition),
                         Codec.STRING.fieldOf("name").forGetter(IAbilityType::getTranslationKey),

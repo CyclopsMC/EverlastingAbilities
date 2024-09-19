@@ -212,14 +212,14 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         configHandler.addConfigurable(new ItemAbilityBottleConfig());
 
         // Ability serializers
-        configHandler.addConfigurable(new AbilityTypeEffectSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeAttributeModifierSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeSpecialBonemealerSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeSpecialFertilitySerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeSpecialFlightSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeSpecialMagnetizeSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeSpecialPowerStareSerializerConfig());
-        configHandler.addConfigurable(new AbilityTypeSpecialStepAssistSerializerConfig());
+        configHandler.addConfigurable(new AbilityTypeEffectSerializerConfig<>(this));
+        configHandler.addConfigurable(new AbilityTypeAttributeModifierSerializerConfig<>(this));
+        configHandler.addConfigurable(new AbilityTypeSpecialBonemealerSerializerConfig<>(this));
+        configHandler.addConfigurable(new AbilityTypeSpecialFertilitySerializerConfig<>(this));
+        configHandler.addConfigurable(new AbilityTypeSpecialFlightSerializerConfig<>(this));
+        configHandler.addConfigurable(new AbilityTypeSpecialMagnetizeSerializerConfig<>(this));
+        configHandler.addConfigurable(new AbilityTypeSpecialPowerStareSerializerConfig<>(this));
+        configHandler.addConfigurable(new AbilityTypeSpecialStepAssistSerializerConfig<>(this));
 
         // Loot modifiers
         configHandler.addConfigurable(new LootModifierInjectAbilityTotemConfig());

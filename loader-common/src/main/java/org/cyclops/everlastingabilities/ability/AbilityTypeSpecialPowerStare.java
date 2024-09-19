@@ -9,8 +9,8 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.cyclopscore.helper.IModHelpers;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -24,8 +24,6 @@ import java.util.Objects;
  */
 public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
 
-    private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS / 4;
-
     private final boolean requireSneak;
 
     public AbilityTypeSpecialPowerStare(IAbilityCondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
@@ -37,7 +35,7 @@ public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_POWER_STARE.get());
+        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_SPECIAL_POWER_STARE.value());
     }
 
     public boolean isRequireSneak() {
@@ -51,7 +49,7 @@ public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
         }
 
         Level world = player.level();
-        if (!world.isClientSide && world.getGameTime() % TICK_MODULUS == 0) {
+        if (!world.isClientSide && world.getGameTime() % (IModHelpers.get().getMinecraftHelpers().getSecondInTicks() / 4) == 0) {
             int range = level * 10;
             double eyeHeight = player.getEyeHeight();
             Vec3 lookVec = player.getLookAngle();
@@ -73,7 +71,7 @@ public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
                     } else if (hitVec != null) {
                         double distance = origin.distanceTo(hitVec);
                         if (distance < range || range == 0.0D) {
-                            if (e == player.getVehicle() && !player.canRiderInteract()) {
+                            if (e == player.getVehicle()) {
                                 if (range == 0.0D) {
                                     entity = e;
                                 }

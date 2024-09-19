@@ -9,9 +9,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.GrassBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.cyclops.cyclopscore.helper.MinecraftHelpers;
-import org.cyclops.cyclopscore.helper.WorldHelpers;
-import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.cyclopscore.helper.IModHelpers;
+import org.cyclops.cyclopscore.helper.IWorldHelpers;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -25,8 +25,6 @@ import java.util.Objects;
  */
 public class AbilityTypeSpecialBonemealer extends AbilityTypeAdapter {
 
-    private static final int TICK_MODULUS = MinecraftHelpers.SECOND_IN_TICKS;
-
     public AbilityTypeSpecialBonemealer(IAbilityCondition condition, String name, Rarity rarity, int maxLevel, int baseXpPerLevel,
                                         boolean obtainableOnPlayerSpawn, boolean obtainableOnMobSpawn, boolean obtainableOnCraft, boolean obtainableOnLoot) {
         super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
@@ -34,7 +32,7 @@ public class AbilityTypeSpecialBonemealer extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_BONEMEALER.get());
+        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_SPECIAL_BONEMEALER.value());
     }
 
     protected int getDurationMultiplier() {
@@ -44,9 +42,9 @@ public class AbilityTypeSpecialBonemealer extends AbilityTypeAdapter {
     @Override
     public void onTick(Player player, int level) {
         Level world = player.level();
-        if (!world.isClientSide() && world.getGameTime() % (TICK_MODULUS / level) == 0) {
+        if (!world.isClientSide() && world.getGameTime() % (IModHelpers.get().getMinecraftHelpers().getSecondInTicks() / level) == 0) {
             int radius = level * 2;
-            WorldHelpers.foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.blockPosition(), new WorldHelpers.WorldFoldingFunction<Void, Void, Level>() {
+            IModHelpers.get().getWorldHelpers().foldArea(world, new int[]{radius, 1, radius}, new int[]{radius, 1, radius}, player.blockPosition(), new IWorldHelpers.WorldFoldingFunction<Void, Void, Level>() {
                 @Nullable
                 @Override
                 public Void apply(Void from, Level world, BlockPos pos) {

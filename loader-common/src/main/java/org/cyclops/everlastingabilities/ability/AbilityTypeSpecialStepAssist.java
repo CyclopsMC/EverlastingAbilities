@@ -9,7 +9,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import org.cyclops.everlastingabilities.Reference;
-import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -37,7 +37,7 @@ public class AbilityTypeSpecialStepAssist extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_STEP_ASSIST.get());
+        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_SPECIAL_STEP_ASSIST.value());
     }
 
     @Override

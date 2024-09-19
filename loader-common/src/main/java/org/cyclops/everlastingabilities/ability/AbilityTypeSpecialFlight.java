@@ -3,11 +3,13 @@ package org.cyclops.everlastingabilities.ability;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.Reference;
-import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+import org.cyclops.everlastingabilities.helper.IAbilityHelpers;
 
 import java.util.Objects;
 
@@ -26,7 +28,7 @@ public class AbilityTypeSpecialFlight extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_FLIGHT.get());
+        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_SPECIAL_FLIGHT.value());
     }
 
     @Override
@@ -36,18 +38,19 @@ public class AbilityTypeSpecialFlight extends AbilityTypeAdapter {
 
     @Override
     public void onChangedLevel(Player player, int oldLevel, int newLevel) {
+        IAbilityHelpers abilityHelpers = EverlastingAbilitiesInstance.MOD.getAbilityHelpers();
         if (oldLevel > 0 && newLevel == 0) {
             boolean allowFlying = false;
-            if(player.getPersistentData().contains(PLAYER_NBT_KEY)) {
-                allowFlying = player.getPersistentData().getBoolean(PLAYER_NBT_KEY);
-                player.getPersistentData().remove(PLAYER_NBT_KEY);
+            if (abilityHelpers.hasPlayerStateLastFlight(player)) {
+                allowFlying = abilityHelpers.isPlayerStateLastFlight(player);
+                abilityHelpers.removePlayerStateLastFlight(player);
             }
             player.getAbilities().mayfly = allowFlying;
             if (!allowFlying) {
                 player.getAbilities().flying = false;
             }
         } else if (oldLevel == 0 && newLevel > 0) {
-            player.getPersistentData().putBoolean(PLAYER_NBT_KEY, player.getAbilities().mayfly);
+            abilityHelpers.removePlayerStateLastFlight(player);
         }
     }
 }

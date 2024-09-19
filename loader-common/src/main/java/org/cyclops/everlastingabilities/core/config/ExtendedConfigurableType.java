@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.core.config;
 
-import org.cyclops.cyclopscore.config.ConfigurableType;
+import org.cyclops.cyclopscore.config.ConfigurableTypeCommon;
 import org.cyclops.everlastingabilities.core.config.configurabletypeaction.AbilitySerializerAction;
 import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilitySerializerConfig;
 
@@ -9,5 +9,5 @@ import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilitySerial
  * @author rubensworks
  */
 public class ExtendedConfigurableType {
-    public static final ConfigurableType ABILITY_SERIALIZER = new ConfigurableType(true, AbilitySerializerConfig.class, new AbilitySerializerAction(), "ability_serializer");
+    public static final ConfigurableTypeCommon ABILITY_SERIALIZER = new ConfigurableTypeCommon(true, AbilitySerializerConfig.class, new AbilitySerializerAction<>(), "ability_serializer");
 }
