@@ -14,7 +14,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.cyclops.cyclopscore.command.argument.ArgumentTypeEnum;
-import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -40,7 +39,7 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
         ServerPlayer sender = context.getSource().getPlayerOrException();
         Action action = ArgumentTypeEnum.getValue(context, "action", Action.class);
         ServerPlayer player = EntityArgument.getPlayer(context, "player");
-        IMutableAbilityStore abilityStore = player.getCapability(Capabilities.MutableAbilityStore.ENTITY);
+        IMutableAbilityStore abilityStore = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getPlayerAbilityStore(player).get();
 
         if (action == Action.LIST) {
             sender.sendSystemMessage(abilityStore.getTextComponent());

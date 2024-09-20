@@ -65,6 +65,8 @@ public interface IAbilityHelpers {
 
     public int getMaxPlayerAbilities(Level world);
 
+    public Optional<IMutableAbilityStore> getPlayerAbilityStore(Player player);
+
     /**
      * Add the given ability.
      * @param player The player.
