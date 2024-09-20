@@ -199,7 +199,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         configHandler.addConfigurable(new GeneralConfig(this));
 
         // Argument types
-        configHandler.addConfigurable(new ArgumentTypeAbilityConfig());
+        configHandler.addConfigurable(new ArgumentTypeAbilityConfig<>(this));
 
         // Guis
         configHandler.addConfigurable(new ContainerAbilityContainerConfig());
