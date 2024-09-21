@@ -225,7 +225,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         configHandler.addConfigurable(new LootModifierInjectAbilityTotemConfig());
 
         // Data components
-        configHandler.addConfigurable(new DataComponentAbilityStoreConfig());
+        configHandler.addConfigurable(new DataComponentAbilityStoreConfig<>(this));
     }
 
     /**
