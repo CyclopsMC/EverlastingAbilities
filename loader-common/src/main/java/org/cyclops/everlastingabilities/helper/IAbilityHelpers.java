@@ -8,6 +8,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -65,7 +66,7 @@ public interface IAbilityHelpers {
 
     public int getMaxPlayerAbilities(Level world);
 
-    public Optional<IMutableAbilityStore> getPlayerAbilityStore(Player player);
+    public Optional<IMutableAbilityStore> getEntityAbilityStore(Entity entity);
 
     /**
      * Add the given ability.

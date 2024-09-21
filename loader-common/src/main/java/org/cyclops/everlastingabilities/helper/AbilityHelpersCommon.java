@@ -162,7 +162,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
 
     @Override
     public Ability addPlayerAbility(Player player, Ability ability, boolean doAdd, boolean modifyXp) {
-        return getPlayerAbilityStore(player)
+        return getEntityAbilityStore(player)
                 .map(abilityStore -> {
                     int oldLevel = abilityStore.hasAbilityType(ability.getAbilityTypeHolder())
                             ? abilityStore.getAbility(ability.getAbilityTypeHolder()).getLevel() : 0;
@@ -200,7 +200,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
 
     @Override
     public Ability removePlayerAbility(Player player, Ability ability, boolean doRemove, boolean modifyXp) {
-        return getPlayerAbilityStore(player)
+        return getEntityAbilityStore(player)
                 .map(abilityStore -> {
                     int oldLevel = abilityStore.hasAbilityType(ability.getAbilityTypeHolder())
                             ? abilityStore.getAbility(ability.getAbilityTypeHolder()).getLevel() : 0;
@@ -218,7 +218,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
 
     @Override
     public void setPlayerAbilities(ServerPlayer player, Map<Holder<IAbilityType>, Integer> abilityTypes) {
-        getPlayerAbilityStore(player)
+        getEntityAbilityStore(player)
                 .ifPresent(abilityStore -> abilityStore.setAbilities(abilityTypes));
     }
 

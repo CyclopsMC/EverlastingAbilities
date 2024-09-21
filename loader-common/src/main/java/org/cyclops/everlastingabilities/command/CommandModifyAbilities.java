@@ -39,7 +39,7 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
         ServerPlayer sender = context.getSource().getPlayerOrException();
         Action action = ArgumentTypeEnum.getValue(context, "action", Action.class);
         ServerPlayer player = EntityArgument.getPlayer(context, "player");
-        IMutableAbilityStore abilityStore = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getPlayerAbilityStore(player).get();
+        IMutableAbilityStore abilityStore = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getEntityAbilityStore(player).get();
 
         if (action == Action.LIST) {
             sender.sendSystemMessage(abilityStore.getTextComponent());

@@ -10,16 +10,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
-import org.cyclops.everlastingabilities.Capabilities;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.Reference;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -50,7 +45,6 @@ public class RequestAbilityStorePacket extends PacketCodec {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void actionClient(Level world, Player player) {
 
     }
@@ -61,15 +55,15 @@ public class RequestAbilityStorePacket extends PacketCodec {
             UUID uuid = UUID.fromString(entityUuid);
             Entity entity = ((ServerLevel) world).getEntity(uuid);
             if (entity != null) {
-                Optional.ofNullable(entity.getCapability(Capabilities.MutableAbilityStore.ENTITY)).ifPresent(abilityStore -> {
+                EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getEntityAbilityStore(entity).ifPresent(abilityStore -> {
                     Tag contents = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().serialize(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(world.registryAccess()), abilityStore);
                     CompoundTag tag = new CompoundTag();
                     tag.put("contents", contents);
-                    EverlastingAbilities._instance.getPacketHandler().sendToPlayer(new SendAbilityStorePacket(entity.getId(), tag), player);
+                    EverlastingAbilitiesInstance.MOD.getPacketHandlerCommon().sendToPlayer(new SendAbilityStorePacket(entity.getId(), tag), player);
                 });
             }
         } catch (IllegalArgumentException e) {
-            EverlastingAbilities.clog(org.apache.logging.log4j.Level.ERROR, e.getMessage());
+            EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.ERROR, e.getMessage());
         }
     }
 

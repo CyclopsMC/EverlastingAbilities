@@ -8,17 +8,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.network.CodecField;
 import org.cyclops.cyclopscore.network.PacketCodec;
-import org.cyclops.everlastingabilities.Capabilities;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.Reference;
-
-import java.util.Optional;
 
 /**
  * Packet from client to server to request an entity's ability store.
@@ -55,14 +49,13 @@ public class SendAbilityStorePacket extends PacketCodec {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void actionClient(Level world, Player player) {
         try {
             if (world != null) {
                 Entity entity = world.getEntity(entityId);
                 if (entity != null) {
                     // Sync ability store
-                    Optional.ofNullable(entity.getCapability(Capabilities.MutableAbilityStore.ENTITY)).ifPresent(abilityStore -> {
+                    EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getEntityAbilityStore(entity).ifPresent(abilityStore -> {
                         EverlastingAbilitiesInstance.MOD.getAbilityHelpers().deserialize(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(world.registryAccess()), abilityStore, tag.get("contents"));
                     });
 
@@ -71,7 +64,7 @@ public class SendAbilityStorePacket extends PacketCodec {
                 }
             }
         } catch (IllegalArgumentException e) {
-            EverlastingAbilities.clog(org.apache.logging.log4j.Level.ERROR, e.getMessage());
+            EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.ERROR, e.getMessage());
         }
     }
 

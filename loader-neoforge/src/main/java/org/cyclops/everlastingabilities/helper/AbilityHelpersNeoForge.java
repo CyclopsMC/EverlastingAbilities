@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.helper;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.conditions.FalseCondition;
@@ -37,8 +38,8 @@ public class AbilityHelpersNeoForge extends AbilityHelpersCommon {
     }
 
     @Override
-    public Optional<IMutableAbilityStore> getPlayerAbilityStore(Player player) {
-        return Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY));
+    public Optional<IMutableAbilityStore> getEntityAbilityStore(Entity entity) {
+        return Optional.ofNullable(entity.getCapability(Capabilities.MutableAbilityStore.ENTITY));
     }
 
     @Override
