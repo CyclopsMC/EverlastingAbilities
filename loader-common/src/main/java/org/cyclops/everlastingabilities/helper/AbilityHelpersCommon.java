@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootContext;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -397,5 +399,24 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
             EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.WARN, "Resetting a corrupted ability storage.");
         }
         capability.setAbilities(abilityTypes);
+    }
+
+    @Override
+    public void injectLootTotem(Consumer<ItemStack> callback, LootContext context) {
+        try {
+            List<Holder<IAbilityType>> abilityTypes = this.getAbilityTypesLoot(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(context.getLevel().registryAccess()));
+            this.getRandomRarity(abilityTypes, context.getRandom()).ifPresent(rarity -> {
+                Holder<IAbilityType> abilityType = this.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
+
+                ItemStack stack = new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_TOTEM);
+                this.getItemAbilityStore(stack)
+                        .ifPresent(mutableAbilityStore -> {
+                            mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
+                            callback.accept(stack);
+                        });
+            });
+        } catch (IllegalStateException e) {
+            // Do nothing on empty ability registry
+        }
     }
 }

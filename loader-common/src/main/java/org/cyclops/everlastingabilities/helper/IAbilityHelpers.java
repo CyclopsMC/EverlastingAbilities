@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootContext;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -135,5 +137,7 @@ public interface IAbilityHelpers {
     public boolean isPlayerStateLastFlight(Player player);
     public void removePlayerStateLastFlight(Player player);
     public void setPlayerStateLastFlight(Player player, boolean lastFlight);
+
+    public void injectLootTotem(Consumer<ItemStack> callback, LootContext context);
 
 }
