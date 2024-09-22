@@ -2,7 +2,7 @@ package org.cyclops.everlastingabilities.api.capability;
 
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
-import org.cyclops.everlastingabilities.RegistryEntriesCommon;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 
@@ -28,11 +28,11 @@ public class ItemDataMutableAbilityStore implements IMutableAbilityStore {
     }
 
     protected IMutableAbilityStore getInnerStore() {
-        return new DefaultMutableAbilityStore(itemStack.get(RegistryEntriesCommon.DATACOMPONENT_ABILITY_STORE.value()));
+        return new DefaultMutableAbilityStore(itemStack.get(RegistryEntries.DATACOMPONENT_ABILITY_STORE.value()));
     }
 
     protected IMutableAbilityStore setInnerStore(IMutableAbilityStore store) {
-        itemStack.set(RegistryEntriesCommon.DATACOMPONENT_ABILITY_STORE.value(), new DefaultAbilityStore(store));
+        itemStack.set(RegistryEntries.DATACOMPONENT_ABILITY_STORE.value(), new DefaultAbilityStore(store));
         this.onModified.run();
         return store;
     }

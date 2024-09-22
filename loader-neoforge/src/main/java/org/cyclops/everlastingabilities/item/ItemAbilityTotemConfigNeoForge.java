@@ -7,7 +7,7 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
-import org.cyclops.everlastingabilities.RegistryEntriesCommon;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.ItemDataMutableAbilityStore;
 
@@ -31,7 +31,7 @@ public class ItemAbilityTotemConfigNeoForge extends ItemAbilityTotemConfig<Everl
     }
 
     protected void modifyComponents(ModifyDefaultComponentsEvent event) {
-        event.modify(getInstance(), (builder) -> builder.set(RegistryEntriesCommon.DATACOMPONENT_ABILITY_STORE.value(), new DefaultMutableAbilityStore()));
+        event.modify(getInstance(), (builder) -> builder.set(RegistryEntries.DATACOMPONENT_ABILITY_STORE.value(), new DefaultMutableAbilityStore()));
     }
 
     protected void registerCapability(RegisterCapabilitiesEvent event) {

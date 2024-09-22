@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.GrassBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.cyclopscore.helper.IWorldHelpers;
-import org.cyclops.everlastingabilities.RegistryEntriesCommon;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -32,7 +32,7 @@ public class AbilityTypeSpecialBonemealer extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_SPECIAL_BONEMEALER.value());
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_BONEMEALER.value());
     }
 
     protected int getDurationMultiplier() {

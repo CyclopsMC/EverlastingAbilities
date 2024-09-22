@@ -11,9 +11,10 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import org.cyclops.cyclopscore.helper.IItemStackHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.RegistryEntries;
-import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
@@ -114,7 +115,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider registryAccess) {
-        return new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_TOTEM);
+        return new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
     }
 
     @Override
@@ -126,10 +127,11 @@ public class TotemRecycleRecipe extends CustomRecipe {
         // Code below is copied from IRecipe
         NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.size(), ItemStack.EMPTY);
 
+        IItemStackHelpers itemStackHelpers = IModHelpers.get().getItemStackHelpers();
         for(int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack item = inv.getItem(i);
-            if (item.hasCraftingRemainingItem()) {
-                nonnulllist.set(i, item.getCraftingRemainingItem());
+            if (itemStackHelpers.hasCraftingRemainingItem(item)) {
+                nonnulllist.set(i, itemStackHelpers.getCraftingRemainingItem(item));
             }
         }
 
@@ -138,6 +140,6 @@ public class TotemRecycleRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RegistryEntries.RECIPESERIALIZER_TOTEM_RECYCLE.get();
+        return RegistryEntries.RECIPESERIALIZER_TOTEM_RECYCLE.value();
     }
 }

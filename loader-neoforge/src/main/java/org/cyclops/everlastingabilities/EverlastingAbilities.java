@@ -190,7 +190,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     @Override
     protected CreativeModeTab.Builder constructDefaultCreativeModeTab(CreativeModeTab.Builder builder) {
         return super.constructDefaultCreativeModeTab(builder)
-                .icon(() -> new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_BOTTLE));
+                .icon(() -> new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE));
     }
 
     @Override
@@ -205,7 +205,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         configHandler.addConfigurable(new ContainerAbilityContainerConfig<>(this));
 
         // Recipes
-        configHandler.addConfigurable(new TotemRecycleRecipeConfig());
+        configHandler.addConfigurable(new TotemRecycleRecipeConfig<>(this));
 
         // Items
         configHandler.addConfigurable(new ItemAbilityTotemConfigNeoForge());
@@ -266,7 +266,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                 Player player = event.getEntity();
                 Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
                 getAbilityHelpers().getRandomAbilityUntilRarity(getAbilityHelpers().getAbilityTypesPlayerSpawn(getAbilityHelpers().getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
-                    ItemStack itemStack = new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_BOTTLE);
+                    ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
                     Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
                             .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
 
@@ -292,7 +292,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                     toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
                 }
 
-                ItemStack itemStack = new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_TOTEM);
+                ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
                 IMutableAbilityStore itemStackStore = itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM);
 
                 Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());

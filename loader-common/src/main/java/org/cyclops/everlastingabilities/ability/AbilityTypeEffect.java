@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.GeneralConfig;
-import org.cyclops.everlastingabilities.RegistryEntriesCommon;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -97,7 +97,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_EFFECT.value());
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_EFFECT.value());
     }
 
     protected int getDuration(int tickModulus, int level) {

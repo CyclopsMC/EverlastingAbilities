@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.cyclops.cyclopscore.helper.IModHelpers;
-import org.cyclops.everlastingabilities.RegistryEntriesCommon;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -35,7 +35,7 @@ public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_SPECIAL_POWER_STARE.value());
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_POWER_STARE.value());
     }
 
     public boolean isRequireSneak() {

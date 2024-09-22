@@ -11,7 +11,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cyclops.cyclopscore.helper.IModHelpers;
-import org.cyclops.everlastingabilities.RegistryEntriesCommon;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.AbilityTypeAdapter;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -36,7 +36,7 @@ public class AbilityTypeSpecialMagnetize extends AbilityTypeAdapter {
 
     @Override
     public MapCodec<? extends IAbilityType> codec() {
-        return Objects.requireNonNull(RegistryEntriesCommon.ABILITYSERIALIZER_SPECIAL_MAGNETIZE.value());
+        return Objects.requireNonNull(RegistryEntries.ABILITYSERIALIZER_SPECIAL_MAGNETIZE.value());
     }
 
     public boolean isMoveXp() {

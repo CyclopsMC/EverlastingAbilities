@@ -10,7 +10,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.inventory.ItemLocation;
 import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainerCommon;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
-import org.cyclops.everlastingabilities.RegistryEntriesCommon;
+import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.client.gui.ContainerScreenAbilityContainer;
@@ -34,7 +34,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainerCommon<Item
     }
 
     public ContainerAbilityContainer(int id, Inventory inventory, ItemLocation itemLocation) {
-        super(RegistryEntriesCommon.CONTAINER_ABILITYCONTAINER.value(), id, inventory, itemLocation);
+        super(RegistryEntries.CONTAINER_ABILITYCONTAINER.value(), id, inventory, itemLocation);
         addInventory(inventory, 0, 8, 195, 1, 9);
 
         // If level is not consistent with total experience count, fix it.
