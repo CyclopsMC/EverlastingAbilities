@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 import org.cyclops.cyclopscore.inventory.ItemLocation;
 import org.cyclops.cyclopscore.inventory.container.NamedContainerProviderItem;
 import org.cyclops.cyclopscore.item.ItemGui;
-import org.cyclops.everlastingabilities.Capabilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 
@@ -22,7 +22,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Base class for items with abilities.
@@ -30,7 +29,7 @@ import java.util.Optional;
  */
 public abstract class ItemGuiAbilityContainer extends ItemGui {
 
-    protected ItemGuiAbilityContainer(Properties properties) {
+    protected ItemGuiAbilityContainer(Item.Properties properties) {
         super(properties);
     }
 
@@ -49,7 +48,7 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(itemStack, context, tooltip, flagIn);
 
-        Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM, null)).ifPresent(abilityStore -> {
+        EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getItemAbilityStore(itemStack).ifPresent(abilityStore -> {
             List<Ability> abilities = new ArrayList<Ability>(abilityStore.getAbilities());
             Collections.sort(abilities);
 
@@ -73,10 +72,5 @@ public abstract class ItemGuiAbilityContainer extends ItemGui {
     }
 
     public abstract boolean canMoveFromPlayer();
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return oldStack == null || newStack == null || oldStack.getItem() != newStack.getItem();
-    }
 
 }

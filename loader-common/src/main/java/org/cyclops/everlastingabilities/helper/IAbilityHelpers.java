@@ -67,6 +67,7 @@ public interface IAbilityHelpers {
     public int getMaxPlayerAbilities(Level world);
 
     public Optional<IMutableAbilityStore> getEntityAbilityStore(Entity entity);
+    public Optional<IMutableAbilityStore> getItemAbilityStore(ItemStack itemStack);
 
     /**
      * Add the given ability.

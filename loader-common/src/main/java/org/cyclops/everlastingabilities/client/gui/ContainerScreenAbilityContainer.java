@@ -29,11 +29,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.gui.component.button.ButtonArrow;
-import org.cyclops.cyclopscore.client.gui.container.ContainerScreenExtended;
-import org.cyclops.cyclopscore.helper.Helpers;
-import org.cyclops.cyclopscore.helper.RenderHelpers;
-import org.cyclops.cyclopscore.item.IInformationProvider;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.cyclopscore.client.gui.container.ContainerScreenExtendedCommon;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -52,7 +49,7 @@ import java.util.List;
  * Gui for the ability container.
  * @author rubensworks
  */
-public class ContainerScreenAbilityContainer extends ContainerScreenExtended<ContainerAbilityContainer> {
+public class ContainerScreenAbilityContainer extends ContainerScreenExtendedCommon<ContainerAbilityContainer> {
 
     private static final ResourceLocation RES_ITEM_GLINT = ItemRenderer.ENCHANTED_GLINT_ITEM;
     protected static final int ABILITY_LIST_SIZE = 6;
@@ -74,10 +71,13 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     protected ButtonArrow buttonLeft;
     protected ButtonArrow buttonRight;
 
+    private final IModHelpers modHelpers;
+
     public ContainerScreenAbilityContainer(ContainerAbilityContainer container, Inventory inventory, Component title) {
         super(container, inventory, title);
         this.player = inventory.player;
         container.setGui(this);
+        this.modHelpers = IModHelpers.get();
     }
 
     @Override
@@ -105,14 +105,14 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         Registry<IAbilityType> registry = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(player.level().registryAccess());
         addRenderableWidget(buttonLeft = new ButtonArrow(this.leftPos + 76,  this.topPos + 130, Component.translatable("gui.cyclopscore.left"), button -> {
             if (canMoveToPlayer()) {
-                EverlastingAbilities._instance.getPacketHandler().sendToServer(
+                EverlastingAbilitiesInstance.MOD.getPacketHandlerCommon().sendToServer(
                         new MoveAbilityPacket(registry, getSelectedItemAbilitySingle(), MoveAbilityPacket.Movement.TO_PLAYER));
                 moveToPlayer();
             }
         }, ButtonArrow.Direction.WEST));
         addRenderableWidget(buttonRight = new ButtonArrow(this.leftPos + 90,  this.topPos + 130, Component.translatable("gui.cyclopscore.right"), button -> {
             if (canMoveFromPlayer()) {
-                EverlastingAbilities._instance.getPacketHandler().sendToServer(
+                EverlastingAbilitiesInstance.MOD.getPacketHandlerCommon().sendToServer(
                         new MoveAbilityPacket(registry, getSelectedPlayerAbilitySingle(), MoveAbilityPacket.Movement.FROM_PLAYER));
                 moveFromPlayer();
             }
@@ -189,11 +189,11 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         int j = this.topPos;
         drawFancyBackground(guiGraphics, i + 8, j + 17, 66, 61, getPlayerAbilityStore());
         // i + 41, j + 75, i + 41 + 66, j + 75 + 61
-        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, i + 26 - 8, j + 8 + 3, i + 75 - 8, j + 78 + 3, 30, 0.0625F, mouseX, mouseY, this.getMinecraft().player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, i + 26 - 8, j + 8 + 3, i + 75 - 8, j + 78 + 3, 30, 0.0625F, mouseX, mouseY, this.minecraft.player);
         drawXp(guiGraphics, i + 67, j + 70);
-        RenderHelpers.drawScaledCenteredString(guiGraphics.pose(), guiGraphics.bufferSource(), font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, Helpers.RGBToInt(40, 215, 40), false, Font.DisplayMode.NORMAL);
+        IModHelpers.get().getRenderHelpers().drawScaledCenteredString(guiGraphics, font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, IModHelpers.get().getBaseHelpers().RGBToInt(40, 215, 40), false, Font.DisplayMode.NORMAL);
         drawFancyBackground(guiGraphics, i + 102, j + 17, 66, 61, getItemAbilityStore());
-        drawItemOnScreen(guiGraphics, i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getMenu().getItemStack(this.getMinecraft().player));
+        drawItemOnScreen(guiGraphics, i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getMenu().getItemStack(this.minecraft.player));
 
         // Draw abilities
         drawAbilities(guiGraphics, this.leftPos + 8, this.topPos + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
@@ -247,14 +247,14 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             }
 
             // Name
-            RenderHelpers.drawScaledCenteredString(guiGraphics.pose(), guiGraphics.bufferSource(), font,
+            modHelpers.getRenderHelpers().drawScaledCenteredString(guiGraphics, font,
                     Component.translatable(ability.getAbilityType().getTranslationKey())
-                            .setStyle(ability.getAbilityType().getRarity().getStyleModifier().apply(Style.EMPTY))
+                            .setStyle(Style.EMPTY.withColor(ability.getAbilityType().getRarity().color()))
                             .getString(),
                     x + 27, boxY + 7, 0, 1.0F, 50, ability.getAbilityType().getRarity().color().getColor(), false, Font.DisplayMode.NORMAL);
 
             // Level
-            RenderHelpers.drawScaledCenteredString(guiGraphics.pose(), guiGraphics.bufferSource(), font,
+            modHelpers.getRenderHelpers().drawScaledCenteredString(guiGraphics, font,
                     "" + ability.getLevel(),
                     x + 58, boxY + 5, 0, 0.8F, -1, false, Font.DisplayMode.NORMAL);
 
@@ -266,9 +266,9 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }
             drawXp(guiGraphics, x + 57, boxY + 10);
-            RenderHelpers.drawScaledCenteredString(guiGraphics.pose(), guiGraphics.bufferSource(), font,
+            modHelpers.getRenderHelpers().drawScaledCenteredString(guiGraphics, font,
                     "" + requiredXp,
-                    x + 53, boxY + 13, 0, 0.5F, Helpers.RGBToInt(40, 215, 40), false, Font.DisplayMode.NORMAL);
+                    x + 53, boxY + 13, 0, 0.5F, modHelpers.getBaseHelpers().RGBToInt(40, 215, 40), false, Font.DisplayMode.NORMAL);
         }
         RenderSystem.setShaderColor(1, 1, 1, 1);
     }
@@ -283,7 +283,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Name
                 lines.add(Component.translatable(ability.getAbilityType().getTranslationKey())
-                        .setStyle(ability.getAbilityType().getRarity().getStyleModifier().apply(Style.EMPTY)));
+                        .setStyle(Style.EMPTY.withColor(ability.getAbilityType().getRarity().color())));
 
                 // Level
                 lines.add(Component.translatable("general.everlastingabilities.level", ability.getLevel(),
@@ -291,7 +291,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Description
                 lines.add(Component.translatable(ability.getAbilityType().getUnlocalizedDescription())
-                        .setStyle(Style.EMPTY.applyFormats(IInformationProvider.INFO_PREFIX_STYLES)));
+                        .setStyle(Style.EMPTY.applyFormats(ChatFormatting.RED)));
 
                 // Xp
                 lines.add(Component.translatable("general.everlastingabilities.xp",
@@ -306,7 +306,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                                     .withBold(true)));
                 }
 
-                drawTooltip(lines, guiGraphics.pose(), mouseX - this.leftPos, mouseY - this.topPos);
+                modHelpers.getGuiHelpers().drawTooltip(this, guiGraphics.pose(), lines, mouseX - this.leftPos, mouseY - this.topPos);
             }
         }
     }

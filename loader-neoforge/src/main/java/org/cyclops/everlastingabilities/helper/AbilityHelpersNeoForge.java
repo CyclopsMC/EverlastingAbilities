@@ -11,9 +11,7 @@ import net.neoforged.neoforge.common.conditions.TrueCondition;
 import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.Reference;
-import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.ability.AbilityConditionNeoForge;
-import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
@@ -43,11 +41,8 @@ public class AbilityHelpersNeoForge extends AbilityHelpersCommon {
     }
 
     @Override
-    public ItemStack getTotem(Ability ability) {
-        ItemStack itemStack = new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_TOTEM);
-        Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
-                .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(ability, true));
-        return itemStack;
+    public Optional<IMutableAbilityStore> getItemAbilityStore(ItemStack itemStack) {
+        return Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM));
     }
 
     @Override

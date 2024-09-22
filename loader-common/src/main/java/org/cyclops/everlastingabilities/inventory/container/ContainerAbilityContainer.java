@@ -8,10 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.inventory.ItemLocation;
-import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainer;
-import org.cyclops.everlastingabilities.Capabilities;
+import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainerCommon;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
-import org.cyclops.everlastingabilities.RegistryEntries;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.client.gui.ContainerScreenAbilityContainer;
@@ -25,7 +24,7 @@ import java.util.Optional;
  * Container for the labeller.
  * @author rubensworks
  */
-public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbilityContainer> {
+public class ContainerAbilityContainer extends ItemInventoryContainerCommon<ItemGuiAbilityContainer> {
 
     @OnlyIn(Dist.CLIENT)
     private ContainerScreenAbilityContainer gui;
@@ -35,7 +34,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     }
 
     public ContainerAbilityContainer(int id, Inventory inventory, ItemLocation itemLocation) {
-        super(RegistryEntries.CONTAINER_ABILITYCONTAINER.get(), id, inventory, itemLocation);
+        super(RegistryEntriesCommon.CONTAINER_ABILITYCONTAINER.value(), id, inventory, itemLocation);
         addInventory(inventory, 0, 8, 195, 1, 9);
 
         // If level is not consistent with total experience count, fix it.
@@ -63,7 +62,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
     }
 
     public Optional<IMutableAbilityStore> getPlayerAbilityStore() {
-        return Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY));
+        return EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getEntityAbilityStore(player);
     }
 
     public Optional<IMutableAbilityStore> getItemAbilityStore() {
@@ -71,7 +70,7 @@ public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbi
         if (itemStack.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM));
+        return EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getItemAbilityStore(itemStack);
     }
 
     public List<Ability> getPlayerAbilities() {

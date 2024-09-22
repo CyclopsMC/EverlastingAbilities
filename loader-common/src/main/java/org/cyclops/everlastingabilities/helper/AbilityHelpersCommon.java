@@ -21,6 +21,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.GeneralConfig;
+import org.cyclops.everlastingabilities.RegistryEntriesCommon;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -265,6 +266,14 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
             return Optional.of(filtered.get(random.nextInt(filtered.size())));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public ItemStack getTotem(Ability ability) {
+        ItemStack itemStack = new ItemStack(RegistryEntriesCommon.ITEM_ABILITY_TOTEM);
+        getItemAbilityStore(itemStack)
+                .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(ability, true));
+        return itemStack;
     }
 
     @Override

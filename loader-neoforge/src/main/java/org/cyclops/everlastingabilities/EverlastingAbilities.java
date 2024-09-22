@@ -63,8 +63,8 @@ import org.cyclops.everlastingabilities.component.DataComponentAbilityStoreConfi
 import org.cyclops.everlastingabilities.helper.AbilityHelpersNeoForge;
 import org.cyclops.everlastingabilities.helper.IAbilityHelpers;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainerConfig;
-import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfig;
-import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfig;
+import org.cyclops.everlastingabilities.item.ItemAbilityBottleConfigNeoForge;
+import org.cyclops.everlastingabilities.item.ItemAbilityTotemConfigNeoForge;
 import org.cyclops.everlastingabilities.loot.modifier.LootModifierInjectAbilityTotemConfig;
 import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket;
 import org.cyclops.everlastingabilities.proxy.ClientProxy;
@@ -202,14 +202,14 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         configHandler.addConfigurable(new ArgumentTypeAbilityConfig<>(this));
 
         // Guis
-        configHandler.addConfigurable(new ContainerAbilityContainerConfig());
+        configHandler.addConfigurable(new ContainerAbilityContainerConfig<>(this));
 
         // Recipes
         configHandler.addConfigurable(new TotemRecycleRecipeConfig());
 
         // Items
-        configHandler.addConfigurable(new ItemAbilityTotemConfig());
-        configHandler.addConfigurable(new ItemAbilityBottleConfig());
+        configHandler.addConfigurable(new ItemAbilityTotemConfigNeoForge());
+        configHandler.addConfigurable(new ItemAbilityBottleConfigNeoForge());
 
         // Ability serializers
         configHandler.addConfigurable(new AbilityTypeEffectSerializerConfig<>(this));

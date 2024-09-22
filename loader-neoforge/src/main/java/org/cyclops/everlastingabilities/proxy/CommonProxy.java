@@ -24,8 +24,8 @@ public class CommonProxy extends CommonProxyComponent {
     public void registerPacketHandlers(PacketHandler packetHandler) {
         super.registerPacketHandlers(packetHandler);
 
-        packetHandler.register(MoveAbilityPacket.TYPE, MoveAbilityPacket.CODEC);
-        packetHandler.register(RequestAbilityStorePacket.TYPE, RequestAbilityStorePacket.CODEC);
-        packetHandler.register(SendAbilityStorePacket.TYPE, SendAbilityStorePacket.CODEC);
+        packetHandler.register(MoveAbilityPacket.class, MoveAbilityPacket.TYPE, MoveAbilityPacket.CODEC);
+        packetHandler.register(RequestAbilityStorePacket.class, RequestAbilityStorePacket.TYPE, RequestAbilityStorePacket.CODEC);
+        packetHandler.register(SendAbilityStorePacket.class, SendAbilityStorePacket.TYPE, SendAbilityStorePacket.CODEC);
     }
 }

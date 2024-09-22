@@ -1,9 +1,10 @@
 package org.cyclops.everlastingabilities.item;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
-import org.cyclops.cyclopscore.config.extendedconfig.ItemConfig;
 import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.RegistryEntriesCommon;
@@ -11,18 +12,22 @@ import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStor
 import org.cyclops.everlastingabilities.api.capability.ItemDataMutableAbilityStore;
 
 /**
- * Config for the ability bottle.
+ * Config for the ability totem.
  * @author rubensworks
  */
-public class ItemAbilityBottleConfig extends ItemConfig {
+public class ItemAbilityTotemConfigNeoForge extends ItemAbilityTotemConfig<EverlastingAbilities> {
 
-    public ItemAbilityBottleConfig() {
+    public ItemAbilityTotemConfigNeoForge() {
         super(EverlastingAbilities._instance,
-                "ability_bottle",
-                (eConfig) -> new ItemAbilityBottle(new Item.Properties()
+                (eConfig) -> new ItemAbilityTotemNeoForge(new Item.Properties()
                         .stacksTo(1)));
+        EverlastingAbilities._instance.getModEventBus().addListener(this::onCreativeModeTabBuildContents);
         EverlastingAbilities._instance.getModEventBus().addListener(this::modifyComponents);
         EverlastingAbilities._instance.getModEventBus().addListener(this::registerCapability);
+    }
+
+    protected void onCreativeModeTabBuildContents(BuildCreativeModeTabContentsEvent event) {
+        this.onCreativeModeTabBuildContentsCommon(event.getTab(), event.getParameters(), event::accept);
     }
 
     protected void modifyComponents(ModifyDefaultComponentsEvent event) {
@@ -30,7 +35,6 @@ public class ItemAbilityBottleConfig extends ItemConfig {
     }
 
     protected void registerCapability(RegisterCapabilitiesEvent event) {
-        event.registerItem(Capabilities.MutableAbilityStore.ITEM, (stack, context) -> new ItemDataMutableAbilityStore(stack), getInstance());
+        event.registerItem(Capabilities.MutableAbilityStore.ITEM, (stack, context) -> new ItemDataMutableAbilityStore(stack, () -> stack.set(DataComponents.RARITY, ItemAbilityTotem.getRarity(stack))), getInstance());
     }
-
 }

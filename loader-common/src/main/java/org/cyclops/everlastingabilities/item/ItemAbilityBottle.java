@@ -1,12 +1,14 @@
 package org.cyclops.everlastingabilities.item;
 
+import net.minecraft.world.item.Item;
+
 /**
  * A bottle with abilities.
  * @author rubensworks
  */
-public class ItemAbilityBottle extends ItemGuiAbilityContainer {
+public abstract class ItemAbilityBottle extends ItemGuiAbilityContainer {
 
-    public ItemAbilityBottle(Properties properties) {
+    public ItemAbilityBottle(Item.Properties properties) {
         super(properties);
     }
 
