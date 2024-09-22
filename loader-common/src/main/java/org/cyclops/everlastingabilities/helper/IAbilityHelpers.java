@@ -8,7 +8,9 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -19,6 +21,7 @@ import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+import org.cyclops.everlastingabilities.api.capability.CompoundTagMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 
@@ -139,5 +142,17 @@ public interface IAbilityHelpers {
     public void setPlayerStateLastFlight(Player player, boolean lastFlight);
 
     public void injectLootTotem(Consumer<ItemStack> callback, LootContext context);
+
+    public void initializeEntityAbilities(Mob mob, CompoundTagMutableAbilityStore store);
+
+    public void initializePlayerAbilitiesOnSpawn(Player player);
+
+    public boolean isFirstTotemSpawn(Player player);
+
+    public void onPlayerClone(Player playerOld, Player playerNew);
+
+    public void onEntityDeath(Entity entity, DamageSource source);
+
+    public void onEntityTick(Entity entity);
 
 }

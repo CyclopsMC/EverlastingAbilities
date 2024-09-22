@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.helper;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -83,5 +84,21 @@ public class AbilityHelpersNeoForge extends AbilityHelpersCommon {
     @Override
     public void setPlayerStateLastFlight(Player player, boolean lastFlight) {
         player.getPersistentData().putBoolean(PLAYER_NBT_KEY_LAST_FLIGHT, lastFlight);
+    }
+
+    private static final String NBT_TOTEM_SPAWNED = Reference.MOD_ID + ":totemSpawned";
+    @Override
+    public boolean isFirstTotemSpawn(Player player) {
+        CompoundTag tag = player.getPersistentData();
+        if (!tag.contains(Player.PERSISTED_NBT_TAG)) {
+            tag.put(Player.PERSISTED_NBT_TAG, new CompoundTag());
+        }
+        CompoundTag playerTag = tag.getCompound(Player.PERSISTED_NBT_TAG);
+        if (!playerTag.contains(NBT_TOTEM_SPAWNED)) {
+            playerTag.putBoolean(NBT_TOTEM_SPAWNED, true);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -1,21 +1,32 @@
 package org.cyclops.everlastingabilities.helper;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.apache.commons.lang3.tuple.Triple;
@@ -26,9 +37,11 @@ import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+import org.cyclops.everlastingabilities.api.capability.CompoundTagMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -417,6 +430,116 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
             });
         } catch (IllegalStateException e) {
             // Do nothing on empty ability registry
+        }
+    }
+
+    private boolean canMobHaveAbility(LivingEntity mob) {
+        ResourceLocation mobName = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+        return mobName != null && GeneralConfig.mobDropBlacklist.stream().noneMatch(mobName.toString()::matches);
+    }
+
+    @Override
+    public void initializeEntityAbilities(Mob host, CompoundTagMutableAbilityStore store) {
+        if (!host.getCommandSenderWorld().isClientSide
+                && !store.isInitialized()
+                && GeneralConfig.mobAbilityChance > 0
+                && host.getId() % GeneralConfig.mobAbilityChance == 0
+                && canMobHaveAbility(host)) {
+            RandomSource rand = RandomSource.create();
+            rand.setSeed(host.getId());
+            Registry<IAbilityType> registry = this.getRegistry(host.level().registryAccess());
+            List<Holder<IAbilityType>> abilityTypes = this.getAbilityTypesMobSpawn(registry);
+            this.getRandomRarity(abilityTypes, rand)
+                    .flatMap(rarity -> this.getRandomAbility(abilityTypes, rand, rarity))
+                    .ifPresent(abilityType -> store.addAbility(new Ability(abilityType, 1), true));
+        }
+    }
+
+    @Override
+    public void initializePlayerAbilitiesOnSpawn(Player player) {
+        Level world = player.level();
+        if (world.registryAccess().registry(AbilityTypes.REGISTRY_KEY).isPresent() && GeneralConfig.totemMaximumSpawnRarity >= 0 && isFirstTotemSpawn(player)) {
+            Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
+            this.getRandomAbilityUntilRarity(this.getAbilityTypesPlayerSpawn(this.getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
+                ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
+                this.getItemAbilityStore(itemStack)
+                        .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
+
+                IModHelpers.get().getItemStackHelpers().spawnItemStackToPlayer(world, player.blockPosition(), itemStack, player);
+                if (world instanceof ServerLevel serverLevel) {
+                    ExperienceOrb.award(serverLevel, player.position(), abilityType.value().getXpPerLevelScaled());
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onPlayerClone(Player playerOld, Player playerNew) {
+        IMutableAbilityStore oldStore = this.getEntityAbilityStore(playerOld).orElse(null);
+        IMutableAbilityStore newStore = this.getEntityAbilityStore(playerNew).orElse(null);
+        if (oldStore != null && newStore != null) {
+            newStore.setAbilities(Maps.newHashMap(oldStore.getAbilitiesRaw()));
+        }
+    }
+
+    @Override
+    public void onEntityDeath(Entity entity, DamageSource source) {
+        boolean doMobLoot = entity.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
+        if (!entity.level().isClientSide
+                && (entity instanceof Player
+                ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
+                && (GeneralConfig.alwaysDropAbilities || source.getEntity() instanceof Player))
+                : (doMobLoot && source.getEntity() instanceof Player))) {
+
+            getEntityAbilityStore(entity).ifPresent(mutableAbilityStore -> {
+                int toDrop = 1;
+                if (entity instanceof Player
+                        && (GeneralConfig.alwaysDropAbilities || source.getEntity() instanceof Player)) {
+                    toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
+                }
+
+                ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+                IMutableAbilityStore itemStackStore = getItemAbilityStore(itemStack).get();
+
+                Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
+                for (Ability ability : abilities) {
+                    if (toDrop > 0) {
+                        Ability toRemove = new Ability(ability.getAbilityTypeHolder(), toDrop);
+                        Ability removed = mutableAbilityStore.removeAbility(toRemove, true);
+                        if (removed != null) {
+                            toDrop -= removed.getLevel();
+                            itemStackStore.addAbility(removed, true);
+                            entity.sendSystemMessage(Component.translatable("chat.everlastingabilities.playerLostAbility",
+                                    entity.getName(),
+                                    Component.translatable(removed.getAbilityType().getTranslationKey())
+                                            .setStyle(Style.EMPTY
+                                                            .withBold(true)
+                                                            .withColor(removed.getAbilityType().getRarity().color())),
+                                    removed.getLevel()));
+                        }
+                    }
+                }
+
+                if (!itemStackStore.getAbilities().isEmpty()) {
+                    IModHelpers.get().getItemStackHelpers().spawnItemStack(entity.level(), entity.blockPosition(), itemStack);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onEntityTick(Entity entity) {
+        if (GeneralConfig.tickAbilities && entity instanceof Player player) {
+            this.getEntityAbilityStore(player).ifPresent(abilityStore -> {
+                for (Ability ability : abilityStore.getAbilities()) {
+                    if (this.getPredicateAbilityEnabled().test(ability.getAbilityTypeHolder())) {
+                        if (entity.level().getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
+                            player.causeFoodExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
+                        }
+                        ability.getAbilityType().onTick(player, ability.getLevel());
+                    }
+                }
+            });
         }
     }
 }

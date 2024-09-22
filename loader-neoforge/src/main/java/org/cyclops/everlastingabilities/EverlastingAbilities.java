@@ -1,29 +1,15 @@
 package org.cyclops.everlastingabilities;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.BaseCapability;
@@ -36,9 +22,7 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
-import org.cyclops.cyclopscore.config.ConfigHandler;
-import org.cyclops.cyclopscore.helper.EntityHelpers;
-import org.cyclops.cyclopscore.helper.ItemStackHelpers;
+import org.cyclops.cyclopscore.config.ConfigHandlerCommon;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.modcompat.capabilities.ICapabilityConstructor;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
@@ -51,10 +35,8 @@ import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFli
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialMagnetizeSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialPowerStareSerializerConfig;
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialStepAssistSerializerConfig;
-import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypeSerializers;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
-import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.CompoundTagMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
@@ -70,10 +52,6 @@ import org.cyclops.everlastingabilities.network.packet.RequestAbilityStorePacket
 import org.cyclops.everlastingabilities.proxy.ClientProxy;
 import org.cyclops.everlastingabilities.proxy.CommonProxy;
 import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipeConfig;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * The main mod class of this mod.
@@ -120,20 +98,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
                         return null;
                     }
                     CompoundTagMutableAbilityStore store = new CompoundTagMutableAbilityStore(host::getPersistentData, host.level().registryAccess());
-                    if (!host.getCommandSenderWorld().isClientSide
-                            && !store.isInitialized()
-                            && GeneralConfig.mobAbilityChance > 0
-                            && host.getId() % GeneralConfig.mobAbilityChance == 0
-                            && canMobHaveAbility(host)) {
-                        RandomSource rand = RandomSource.create();
-                        rand.setSeed(host.getId());
-                        IAbilityHelpers abilityHelpers = getAbilityHelpers();
-                        Registry<IAbilityType> registry = abilityHelpers.getRegistry(host.level().registryAccess());
-                        List<Holder<IAbilityType>> abilityTypes = abilityHelpers.getAbilityTypesMobSpawn(registry);
-                        abilityHelpers.getRandomRarity(abilityTypes, rand)
-                                .flatMap(rarity -> abilityHelpers.getRandomAbility(abilityTypes, rand, rarity))
-                                .ifPresent(abilityType -> store.addAbility(new Ability(abilityType, 1), true));
-                    }
+                    getAbilityHelpers().initializeEntityAbilities(host, store);
                     return store;
                 };
             }
@@ -182,11 +147,6 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         return new CommonProxy();
     }
 
-    private static boolean canMobHaveAbility(LivingEntity mob) {
-        ResourceLocation mobName = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
-        return mobName != null && GeneralConfig.mobDropBlacklist.stream().noneMatch(mobName.toString()::matches);
-    }
-
     @Override
     protected CreativeModeTab.Builder constructDefaultCreativeModeTab(CreativeModeTab.Builder builder) {
         return super.constructDefaultCreativeModeTab(builder)
@@ -194,7 +154,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     }
 
     @Override
-    protected void onConfigsRegister(ConfigHandler configHandler) {
+    protected void onConfigsRegister(ConfigHandlerCommon configHandler) {
         super.onConfigsRegister(configHandler);
         configHandler.addConfigurable(new GeneralConfig(this));
 
@@ -246,101 +206,25 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     }
 
     public void onEntityJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getLevel().isClientSide && event.getEntity().getCapability(Capabilities.MutableAbilityStore.ENTITY) != null) {
-            getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
+        if (event.getLevel().isClientSide && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
+            getPacketHandlerCommon().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
         }
     }
 
-    private static final String NBT_TOTEM_SPAWNED = Reference.MOD_ID + ":totemSpawned";
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity().level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isPresent() && GeneralConfig.totemMaximumSpawnRarity >= 0) {
-            CompoundTag tag = event.getEntity().getPersistentData();
-            if (!tag.contains(Player.PERSISTED_NBT_TAG)) {
-                tag.put(Player.PERSISTED_NBT_TAG, new CompoundTag());
-            }
-            CompoundTag playerTag = tag.getCompound(Player.PERSISTED_NBT_TAG);
-            if (!playerTag.contains(NBT_TOTEM_SPAWNED)) {
-                playerTag.putBoolean(NBT_TOTEM_SPAWNED, true);
-
-                Level world = event.getEntity().level();
-                Player player = event.getEntity();
-                Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
-                getAbilityHelpers().getRandomAbilityUntilRarity(getAbilityHelpers().getAbilityTypesPlayerSpawn(getAbilityHelpers().getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
-                    ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
-                    Optional.ofNullable(itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM))
-                            .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
-
-                    ItemStackHelpers.spawnItemStackToPlayer(world, player.blockPosition(), itemStack, player);
-                    EntityHelpers.spawnXpAtPlayer(world, player, abilityType.value().getXpPerLevelScaled());
-                });
-            }
-        }
+        getAbilityHelpers().initializePlayerAbilitiesOnSpawn(event.getEntity());
     }
 
     public void onLivingDeath(LivingDeathEvent event) {
-        boolean doMobLoot = event.getEntity().level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
-        if (!event.getEntity().level().isClientSide
-                && (event.getEntity() instanceof Player
-                    ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
-                        && (GeneralConfig.alwaysDropAbilities || event.getSource().getEntity() instanceof Player))
-                    : (doMobLoot && event.getSource().getEntity() instanceof Player))) {
-            LivingEntity entity = event.getEntity();
-            Optional.ofNullable(entity.getCapability(Capabilities.MutableAbilityStore.ENTITY)).ifPresent(mutableAbilityStore -> {
-                int toDrop = 1;
-                if (event.getEntity() instanceof Player
-                        && (GeneralConfig.alwaysDropAbilities || event.getSource().getEntity() instanceof Player)) {
-                    toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
-                }
-
-                ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
-                IMutableAbilityStore itemStackStore = itemStack.getCapability(Capabilities.MutableAbilityStore.ITEM);
-
-                Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
-                for (Ability ability : abilities) {
-                    if (toDrop > 0) {
-                        Ability toRemove = new Ability(ability.getAbilityTypeHolder(), toDrop);
-                        Ability removed = mutableAbilityStore.removeAbility(toRemove, true);
-                        if (removed != null) {
-                            toDrop -= removed.getLevel();
-                            itemStackStore.addAbility(removed, true);
-                            entity.sendSystemMessage(Component.translatable("chat.everlastingabilities.playerLostAbility",
-                                    entity.getName(),
-                                    Component.translatable(removed.getAbilityType().getTranslationKey())
-                                            .setStyle(removed.getAbilityType().getRarity().getStyleModifier()
-                                                    .apply(Style.EMPTY.withBold(true))),
-                                    removed.getLevel()));
-                        }
-                    }
-                }
-
-                if (!itemStackStore.getAbilities().isEmpty()) {
-                    ItemStackHelpers.spawnItemStack(entity.level(), entity.blockPosition(), itemStack);
-                }
-            });
-        }
+        getAbilityHelpers().onEntityDeath(event.getEntity(), event.getSource());
     }
 
     public void onPlayerClone(net.neoforged.neoforge.event.entity.player.PlayerEvent.Clone event) {
-        IMutableAbilityStore oldStore = event.getOriginal().getCapability(Capabilities.MutableAbilityStore.ENTITY);
-        IMutableAbilityStore newStore = event.getEntity().getCapability(Capabilities.MutableAbilityStore.ENTITY);
-        if (oldStore != null && newStore != null) {
-            newStore.setAbilities(Maps.newHashMap(oldStore.getAbilitiesRaw()));
-        }
+        getAbilityHelpers().onPlayerClone(event.getOriginal(), event.getEntity());
     }
 
     public void onLivingUpdate(EntityTickEvent.Post event) {
-        if (GeneralConfig.tickAbilities && event.getEntity() instanceof Player player) {
-            Optional.ofNullable(player.getCapability(Capabilities.MutableAbilityStore.ENTITY)).ifPresent(abilityStore -> {
-                for (Ability ability : abilityStore.getAbilities()) {
-                    if (getAbilityHelpers().getPredicateAbilityEnabled().test(ability.getAbilityTypeHolder())) {
-                        if (event.getEntity().level().getGameTime() % 20 == 0 && GeneralConfig.exhaustionPerAbilityTick > 0) {
-                            player.causeFoodExhaustion((float) GeneralConfig.exhaustionPerAbilityTick);
-                        }
-                        ability.getAbilityType().onTick(player, ability.getLevel());
-                    }
-                }
-            });
-        }
+        getAbilityHelpers().onEntityTick(event.getEntity());
     }
 
     private void onDatapackRegistryCreate(DataPackRegistryEvent.NewRegistry event) {
