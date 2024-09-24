@@ -21,7 +21,7 @@ public class AbilityTypes {
 
     public static final ResourceKey<Registry<IAbilityType>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("everlastingabilities", "abilities"));
 
-    public static final Codec<IAbilityType> DIRECT_CODEC = Codec.lazyInitialized(() -> AbilityTypeSerializers.REGISTRY.byNameCodec())
+    public static final Codec<IAbilityType> DIRECT_CODEC = Codec.lazyInitialized(() -> AbilityTypeSerializers.NAME_CODEC)
             .dispatch(IAbilityType::codec, Function.identity());
     public static final Codec<Holder<IAbilityType>> REFERENCE_CODEC = RegistryFileCodec.create(REGISTRY_KEY, DIRECT_CODEC);
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<IAbilityType>> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(REFERENCE_CODEC);

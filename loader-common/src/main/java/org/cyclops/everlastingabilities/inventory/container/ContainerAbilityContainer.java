@@ -5,15 +5,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.inventory.ItemLocation;
 import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainerCommon;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
-import org.cyclops.everlastingabilities.client.gui.ContainerScreenAbilityContainer;
 import org.cyclops.everlastingabilities.item.ItemGuiAbilityContainer;
 
 import java.util.Collections;
@@ -25,9 +22,6 @@ import java.util.Optional;
  * @author rubensworks
  */
 public class ContainerAbilityContainer extends ItemInventoryContainerCommon<ItemGuiAbilityContainer> {
-
-    @OnlyIn(Dist.CLIENT)
-    private ContainerScreenAbilityContainer gui;
 
     public ContainerAbilityContainer(int id, Inventory inventory, FriendlyByteBuf packetBuffer) {
         this(id, inventory, ItemLocation.readFromPacketBuffer(packetBuffer));
@@ -44,16 +38,6 @@ public class ContainerAbilityContainer extends ItemInventoryContainerCommon<Item
         if (player.experienceLevel != level) {
             player.totalExperience = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getExperienceForLevel(player.experienceLevel);
         }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void setGui(ContainerScreenAbilityContainer gui) {
-        this.gui = gui;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public ContainerScreenAbilityContainer getGui() {
-        return this.gui;
     }
 
     @Override

@@ -76,7 +76,6 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtendedComm
     public ContainerScreenAbilityContainer(ContainerAbilityContainer container, Inventory inventory, Component title) {
         super(container, inventory, title);
         this.player = inventory.player;
-        container.setGui(this);
         this.modHelpers = IModHelpers.get();
     }
 
