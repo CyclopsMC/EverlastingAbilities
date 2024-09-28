@@ -37,8 +37,8 @@ import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
-import org.cyclops.everlastingabilities.api.capability.CompoundTagMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.IInitializableMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 
 import java.util.Collection;
@@ -439,7 +439,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
     }
 
     @Override
-    public void initializeEntityAbilities(Mob host, CompoundTagMutableAbilityStore store) {
+    public void initializeEntityAbilities(Mob host, IInitializableMutableAbilityStore store) {
         if (!host.getCommandSenderWorld().isClientSide
                 && !store.isInitialized()
                 && GeneralConfig.mobAbilityChance > 0

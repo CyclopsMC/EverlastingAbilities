@@ -1,11 +1,9 @@
 package org.cyclops.everlastingabilities;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.Registry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
@@ -39,7 +37,6 @@ import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialPow
 import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialStepAssistSerializerConfig;
 import org.cyclops.everlastingabilities.api.AbilityTypeSerializers;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
-import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.CompoundTagMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
@@ -235,8 +232,8 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     }
 
     private void onRegistriesCreate(NewRegistryEvent event) {
-        Registry<MapCodec<? extends IAbilityType>> registry = event.create(new RegistryBuilder<>(AbilityTypeSerializers.REGISTRY_KEY));
-        AbilityTypeSerializers.NAME_CODEC = registry.byNameCodec();
+        AbilityTypeSerializers.REGISTRY = event.create(new RegistryBuilder<>(AbilityTypeSerializers.REGISTRY_KEY));
+        AbilityTypeSerializers.NAME_CODEC = AbilityTypeSerializers.REGISTRY.byNameCodec();
     }
 
 }

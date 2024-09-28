@@ -1,62 +1,48 @@
-package org.cyclops.everlastingabilities.api.capability;
+package org.cyclops.everlastingabilities.attachment;
 
+import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
-import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
+import org.cyclops.everlastingabilities.api.capability.DefaultAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.IInitializableMutableAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
- * Wrapper for a tag-based ability store.
+ * Wrapper for an attachable ability store.
  * @author rubensworks
  */
-public class CompoundTagMutableAbilityStore implements IMutableAbilityStore, IInitializableMutableAbilityStore {
+public class AttachableMutableAbilityStore implements IMutableAbilityStore, IInitializableMutableAbilityStore {
 
-    private static final String NBT_STORE = Reference.MOD_ID + ":abilityStoreStack";
+    private final AttachmentTarget target;
+    private final Runnable onModified;
 
-    private final Supplier<CompoundTag> tagSupplier;
-    private final RegistryAccess registryAccess;
-
-    public CompoundTagMutableAbilityStore(Supplier<CompoundTag> tagSupplier, RegistryAccess registryAccess) {
-        this.tagSupplier = tagSupplier;
-        this.registryAccess = registryAccess;
+    public AttachableMutableAbilityStore(AttachmentTarget target, Runnable onModified) {
+        this.target = target;
+        this.onModified = onModified;
     }
 
-    protected Registry<IAbilityType> getRegistry() {
-         return EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(this.registryAccess);
+    public AttachableMutableAbilityStore(AttachmentTarget target) {
+        this(target, () -> {});
+    }
+
+    protected IMutableAbilityStore getInnerStore() {
+        return new DefaultMutableAbilityStore(target.getAttachedOrGet(Attachments.ABILITY_STORE, DefaultAbilityStore::new));
+    }
+
+    protected IMutableAbilityStore setInnerStore(IMutableAbilityStore store) {
+        target.setAttached(Attachments.ABILITY_STORE, new DefaultAbilityStore(store));
+        this.onModified.run();
+        return store;
     }
 
     @Override
     public boolean isInitialized() {
-        CompoundTag root = tagSupplier.get();
-        return root.contains(NBT_STORE);
-    }
-
-    protected IMutableAbilityStore getInnerStore() {
-        IMutableAbilityStore store = new DefaultMutableAbilityStore();
-        CompoundTag root = tagSupplier.get();
-        if (!root.contains(NBT_STORE)) {
-            root.put(NBT_STORE, new ListTag());
-        }
-        Tag nbt = root.get(NBT_STORE);
-        EverlastingAbilitiesInstance.MOD.getAbilityHelpers().deserialize(getRegistry(), store, nbt);
-        return store;
-    }
-
-    protected IMutableAbilityStore setInnerStore(IMutableAbilityStore store) {
-        CompoundTag root = tagSupplier.get();
-        Tag nbt = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().serialize(getRegistry(), store);
-        root.put(NBT_STORE, nbt);
-        return store;
+        return target.hasAttached(Attachments.ABILITY_STORE);
     }
 
     @Override

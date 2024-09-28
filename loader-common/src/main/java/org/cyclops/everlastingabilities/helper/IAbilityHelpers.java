@@ -21,8 +21,8 @@ import org.cyclops.everlastingabilities.GeneralConfig;
 import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
-import org.cyclops.everlastingabilities.api.capability.CompoundTagMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.IInitializableMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 
 import java.util.List;
@@ -143,7 +143,7 @@ public interface IAbilityHelpers {
 
     public void injectLootTotem(Consumer<ItemStack> callback, LootContext context);
 
-    public void initializeEntityAbilities(Mob mob, CompoundTagMutableAbilityStore store);
+    public void initializeEntityAbilities(Mob mob, IInitializableMutableAbilityStore store);
 
     public void initializePlayerAbilitiesOnSpawn(Player player);
 
