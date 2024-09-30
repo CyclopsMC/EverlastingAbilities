@@ -3,8 +3,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'idea'
-    id 'jacoco'
+	id 'jacoco'
     id 'com.github.kt3k.coveralls'
     id 'com.diffplug.spotless'
 }
@@ -180,7 +179,7 @@ jar {
                 'Implementation-Title'     : project.name,
                 'Implementation-Version'   : project.jar.archiveVersion,
                 'Implementation-Vendor'    : mod_author,
-                "Implementation-Timestamp" : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+				"Implementation-Timestamp" : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 'Built-On-Minecraft'       : minecraft_version
         ])
     }
@@ -204,8 +203,8 @@ processResources {
             'mod_author'                   : mod_author,
             'mod_id'                       : mod_id,
             'license'                      : license,
-            'issue_tracker_url'            : issue_tracker_url,
-            'display_url'                  : display_url,
+			'issue_tracker_url'            : issue_tracker_url,
+			'display_url'                  : display_url,
             'description'                  : project.description,
             'neoforge_version'             : neoforge_version,
             'neoforge_loader_version_range': neoforge_loader_version_range,
@@ -289,17 +288,6 @@ tasks.configureEach { task ->
     }
     if (task.name.startsWith("testJunit")) {
         task.enabled = false
-    }
-}
-
-idea {
-    module {
-        downloadSources = true
-        downloadJavadoc = true
-        for (String excludeDirName in ["runs", "out", "logs", "gradle"]) {
-            File excludeDir = new File(projectDir, excludeDirName)
-            excludeDirs.add(excludeDir)
-        }
     }
 }
 
