@@ -92,6 +92,9 @@ public class GeneralConfig extends DummyConfigCommon<ModBaseCommon<?>> {
     @ConfigurablePropertyCommon(category = "general", comment = "If ability effects should apply. Disable this if you don't want any abilities to work. Useful for debugging.", configLocation = ModConfigLocation.SERVER, isCommandable = true)
     public static boolean tickAbilities = true;
 
+    @ConfigurablePropertyCommon(category = "general", comment = "Id's of abilities that should be disabled. (ids: https://github.com/CyclopsMC/EverlastingAbilities/wiki/Ability-datapacks#default-abilities)", configLocation = ModConfigLocation.SERVER)
+    public static List<String> disabledAbilities = Lists.newArrayList();
+
     /**
      * Create a new instance.
      */

@@ -33,7 +33,7 @@ public class AbilityHelpersNeoForge extends AbilityHelpersCommon {
 
     @Override
     public Predicate<Holder<IAbilityType>> getPredicateAbilityEnabled() {
-        return PREDICATE_ABILITY_ENABLED;
+        return PREDICATE_ABILITY_NOT_DISABLED.and(PREDICATE_ABILITY_ENABLED);
     }
 
     @Override

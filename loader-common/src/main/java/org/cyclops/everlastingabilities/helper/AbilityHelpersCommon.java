@@ -58,6 +58,8 @@ import java.util.stream.Collectors;
  */
 public abstract class AbilityHelpersCommon implements IAbilityHelpers {
 
+    protected static Predicate<Holder<IAbilityType>> PREDICATE_ABILITY_NOT_DISABLED = ability -> !GeneralConfig.disabledAbilities.contains(ability.getRegisteredName());
+
     private final IModHelpers modHelpers;
     private int maxPlayerAbilitiesClient = -1;
 
