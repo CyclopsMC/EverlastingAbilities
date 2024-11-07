@@ -126,7 +126,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
                     List<LivingEntity> mobs = world.getEntitiesOfClass(LivingEntity.class,
                             player.getBoundingBox().inflate(radius, radius, radius), EntitySelector.NO_SPECTATORS);
                     for (LivingEntity mob : mobs) {
-                        if (!(this.targetsFriendlyMobs && isFriendlyMob(mob, player))) {
+                        if (mob != player && (this.targetsFriendlyMobs || !isFriendlyMob(mob, player))) {
                             mob.addEffect(new MobEffectInstance(potion, getDuration(getTickModulus(level), level), getAmplifier(level), true, GeneralConfig.showPotionEffectParticles));
                         }
                     }
@@ -140,8 +140,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
         ResourceLocation resourceLocation = mob instanceof Player
                 ? new ResourceLocation("player") : ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
         String mobName = resourceLocation == null ? "null" : resourceLocation.toString();
-        return (mob == player ||
-                player.isAlliedTo(mob) ||
+        return (player.isAlliedTo(mob) ||
                 (mob instanceof TamableAnimal && ((TamableAnimal) mob).getOwner() == player) ||
                 GeneralConfig.friendlyMobs.stream().anyMatch(mobName::matches));
     }

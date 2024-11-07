@@ -5,5 +5,6 @@
   "rarity": "epic",
   "max_level": 3,
   "xp_per_level": 125,
-  "effect": "minecraft:wither"
+  "effect": "minecraft:wither",
+  "targets_friendly_mobs": false
 }
