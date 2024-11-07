@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "org.cyclops.everlastingabilities.EverlastingAbilitiesFabric"
+    ],
+    "fabric-gametest": [
+      "org.cyclops.everlastingabilities.gametest.GameTestsCommon"
     ]
   },
 
