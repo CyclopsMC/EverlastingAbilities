@@ -5,5 +5,6 @@
   "rarity": "epic",
   "max_level": 3,
   "xp_per_level": 100,
-  "effect": "minecraft:poison"
+  "effect": "minecraft:poison",
+  "targets_friendly_mobs": false
 }
