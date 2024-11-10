@@ -224,7 +224,9 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
                             ? abilityStore.getAbility(ability.getAbilityTypeHolder()).getLevel() : 0;
                     Ability result = abilityStore.removeAbility(ability, doRemove);
                     if (modifyXp && !result.isEmpty()) {
-                        player.giveExperiencePoints(getExperience(result));
+                        if (doRemove) {
+                            player.giveExperiencePoints(getExperience(result));
+                        }
                         int newLevel = abilityStore.hasAbilityType(result.getAbilityTypeHolder())
                                 ? abilityStore.getAbility(result.getAbilityTypeHolder()).getLevel() : 0;
                         onPlayerAbilityChanged(player, result.getAbilityType(), oldLevel, newLevel);
