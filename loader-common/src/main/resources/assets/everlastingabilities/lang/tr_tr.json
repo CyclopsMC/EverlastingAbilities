@@ -1,18 +1,13 @@
 {
-    "_comment": "Genel",
+    "_comment": "Eşyalar",
     "itemGroup.everlastingabilities": "Ebedi Yetenekler",
     "general.everlastingabilities.empty": "Boş",
-    "general.everlastingabilities.level": "Level: %s / %s",
     "general.everlastingabilities.xp": "XP/Level: %s (%s oyuncu leveli)",
     "general.everlastingabilities.disabled": "Kullanıma Kapalı",
-
-    "_comment": "Sohbet",
     "chat.everlastingabilities.command.invalidAbility": " \"%s\" ID içeren yetenek bulunamadı.",
     "chat.everlastingabilities.command.addedAbility": "Eklenen yetenek %s, yeni yetenek %s.",
     "chat.everlastingabilities.command.removedAbility": "Kaldırılan yetenek %s, yeni yetenek %s.",
     "chat.everlastingabilities.playerLostAbility": "%s yeteneği, %s seviyeden %s adet seviye düşürdü!",
-
-    "_comment": "# Yetenekler",
     "ability.everlastingabilities.speed": "Hız",
     "ability.everlastingabilities.speed.info": "Daha hızlı yürü",
     "ability.everlastingabilities.haste": "Acele",
@@ -47,7 +42,6 @@
     "ability.everlastingabilities.dolphins_grace.info": "Yunus yakınında olduğunda daha hızlı yüzme hızı kazan",
     "ability.everlastingabilities.bad_omen_self": "Kötü Kehanet (kendin)",
     "ability.everlastingabilities.bad_omen_self.info": "Köylere baskınları tetikleyin",
-
     "ability.everlastingabilities.slowness": "Yavaşlık",
     "ability.everlastingabilities.slowness.info": "Bölgedeki varlıklar daha yavaş hareket eder",
     "ability.everlastingabilities.mining_fatigue": "Madenci Yorgunluğu",
@@ -62,7 +56,6 @@
     "ability.everlastingabilities.weakness.info": "Bölgedeki varlıklar zayıflar",
     "ability.everlastingabilities.poison": "Zehir",
     "ability.everlastingabilities.poison.info": "Bölgedeki varlıklar zehirlenir",
-    "ability.everlastingabilities.wither": "Wither",
     "ability.everlastingabilities.wither.info": "Bölgedeki varlıklar Wither efekti alır",
     "ability.everlastingabilities.glowing": "Parıltı",
     "ability.everlastingabilities.glowing.info": "Bölgedeki varlıklar parıldar",
@@ -72,7 +65,6 @@
     "ability.everlastingabilities.unluck.info": "Bölgedeki varlıkların ganimet şansını düşürür",
     "ability.everlastingabilities.bad_omen": "Kötü Kehanet (diğerleri)",
     "ability.everlastingabilities.bad_omen.info": "Bölgedeki varlıklar, köylere baskın yapmayı tetikler",
-
     "ability.everlastingabilities.flight": "Uçuş",
     "ability.everlastingabilities.flight.info": "Uçmana izin verir",
     "ability.everlastingabilities.step_assist": "Adım Desteği",
@@ -85,8 +77,6 @@
     "ability.everlastingabilities.power_stare.info": "Baktığın varlıkları uzaklaştır",
     "ability.everlastingabilities.magnetize": "Mıknatıslamak",
     "ability.everlastingabilities.magnetize.info": "Yakındaki eşyaları çeker",
-
-    "_comment": "Eşyalar",
     "item.everlastingabilities.ability_totem": "Yetenek Totemi",
     "item.everlastingabilities.ability_bottle": "Yetenek Şişesi"
 }
