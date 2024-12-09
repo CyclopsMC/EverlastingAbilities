@@ -1,17 +1,12 @@
 {
-    "_comment": "Общее",
     "itemGroup.everlastingabilities": "Вечные способности",
     "general.everlastingabilities.empty": "Ничего",
     "general.everlastingabilities.level": "Уровень: %s / %s",
     "general.everlastingabilities.xp": "XP/Уровень: %s (%s уровни игрока)",
-
-    "_comment": "Чат",
     "chat.everlastingabilities.command.invalidAbility": "Не удалось найти способность с помощью id \"%s\".",
     "chat.everlastingabilities.command.addedAbility": "Добавлена способность %s, новая способность %s.",
     "chat.everlastingabilities.command.removedAbility": "Удалена способность %s, новая способность %s.",
     "chat.everlastingabilities.playerLostAbility": "%s сброшена %s уровень %s!",
-
-    "_comment": "# Способности",
     "ability.everlastingabilities.speed": "Скорость",
     "ability.everlastingabilities.speed.info": "Идти быстрее",
     "ability.everlastingabilities.haste": "Спешка",
@@ -32,13 +27,10 @@
     "ability.everlastingabilities.invisibility.info": "Стать невидимым",
     "ability.everlastingabilities.night_vision": "Ночное зрение",
     "ability.everlastingabilities.night_vision.info": "Видеть в темноте",
-    "ability.everlastingabilities.absorbtion": "Поглощение",
-    "ability.everlastingabilities.absorbtion.info": "Добавляет поглощающиеся сердца",
     "ability.everlastingabilities.saturation": "Насыщение",
     "ability.everlastingabilities.saturation.info": "Пониженное чувство голода",
     "ability.everlastingabilities.luck": "Удача",
     "ability.everlastingabilities.luck.info": "Есть высокий шанс на лучшую добычу",
-
     "ability.everlastingabilities.slowness": "Медлительность",
     "ability.everlastingabilities.slowness.info": "Существа поблизости менее подвижные",
     "ability.everlastingabilities.mining_fatigue": "Утомляемая добыча",
@@ -61,21 +53,16 @@
     "ability.everlastingabilities.levitation.info": "Существа поблизости начинают парить",
     "ability.everlastingabilities.unluck": "Невезучесть",
     "ability.everlastingabilities.unluck.info": "Существа поблизости имеют низкие шансы на хорошую добычу",
-
     "ability.everlastingabilities.flight": "Полёт",
     "ability.everlastingabilities.flight.info": "Позволяет вам летать",
-    "ability.everlastingabilities.step_assist": "Step Assist",
     "ability.everlastingabilities.step_assist.info": "Автоматически увеличивает определённое кол-во блоков в зависимости от размера",
     "ability.everlastingabilities.fertility": "Рождаемость",
     "ability.everlastingabilities.fertility.info": "Животные поблизости становятся плодородными",
-    "ability.everlastingabilities.bonemealer": "Bonemealer",
     "ability.everlastingabilities.bonemealer.info": "Повсюду костная мука",
     "ability.everlastingabilities.power_stare": "Мощный взгляд",
     "ability.everlastingabilities.power_stare.info": "Отталкивайте существа, на которые вы смотрите",
     "ability.everlastingabilities.magnetize": "Намагничивание",
     "ability.everlastingabilities.magnetize.info": "Притягивает поблизости предметы",
-
-    "_comment": "Items",
     "item.everlastingabilities.ability_totem": "Тотем способности",
     "item.everlastingabilities.ability_bottle": "Бутылка способности"
 }
