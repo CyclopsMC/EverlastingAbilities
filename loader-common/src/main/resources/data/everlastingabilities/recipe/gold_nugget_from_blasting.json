@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "everlastingabilities:ability_totem"
+  },
+  "result": {
+    "id": "minecraft:gold_nugget"
+  },
+  "experience": 0.1,
+  "cookingtime": 100
+}
