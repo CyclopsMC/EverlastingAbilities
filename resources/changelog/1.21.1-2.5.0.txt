@@ -1,0 +1,6 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.25.2 or higher.
+
+Additions:
+* Allow totems to be smelted to nuggets, Closes #149
+* Make totem loot tables configurable in Fabric, Closes #273
