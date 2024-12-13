@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.item;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
@@ -22,7 +22,7 @@ import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Config for the ability totem.
@@ -30,21 +30,24 @@ import java.util.Set;
  */
 public class ItemAbilityTotemConfigFabric extends ItemAbilityTotemConfig<EverlastingAbilitiesFabric> {
 
+    @Deprecated // TODO: rm in next major. Not needed anymore since we have the list.
     @ConfigurablePropertyCommon(category = "core", comment = "If totems should be added to loot tables.", configLocation = ModConfigLocation.SERVER)
     public static boolean totemInjectLootTables = true;
 
-    protected static Registry<LootTable> LOOT_TABLES_REGISTRY;
-    protected static Set<ResourceKey<LootTable>> LOOT_TABLES = Sets.newHashSet(
-            BuiltInLootTables.SPAWN_BONUS_CHEST,
-            BuiltInLootTables.VILLAGE_TOOLSMITH,
-            BuiltInLootTables.VILLAGE_WEAPONSMITH,
-            BuiltInLootTables.VILLAGE_SHEPHERD,
-            BuiltInLootTables.NETHER_BRIDGE,
-            BuiltInLootTables.SIMPLE_DUNGEON,
-            BuiltInLootTables.ABANDONED_MINESHAFT,
-            BuiltInLootTables.JUNGLE_TEMPLE,
-            BuiltInLootTables.ANCIENT_CITY
+    @ConfigurablePropertyCommon(category = "core", comment = "The loot tables in which totems should be spawned.", configLocation = ModConfigLocation.SERVER)
+    public static List<String> lootTables = Lists.newArrayList(
+            BuiltInLootTables.SPAWN_BONUS_CHEST.location().toString(),
+            BuiltInLootTables.VILLAGE_TOOLSMITH.location().toString(),
+            BuiltInLootTables.VILLAGE_WEAPONSMITH.location().toString(),
+            BuiltInLootTables.VILLAGE_SHEPHERD.location().toString(),
+            BuiltInLootTables.NETHER_BRIDGE.location().toString(),
+            BuiltInLootTables.SIMPLE_DUNGEON.location().toString(),
+            BuiltInLootTables.ABANDONED_MINESHAFT.location().toString(),
+            BuiltInLootTables.JUNGLE_TEMPLE.location().toString(),
+            BuiltInLootTables.ANCIENT_CITY.location().toString()
     );
+
+    protected static Registry<LootTable> LOOT_TABLES_REGISTRY;
 
     public ItemAbilityTotemConfigFabric() {
         super(EverlastingAbilitiesFabric._instance,
@@ -63,7 +66,7 @@ public class ItemAbilityTotemConfigFabric extends ItemAbilityTotemConfig<Everlas
     private void onLootTableModify(LootTable lootTable, LootContext context, ObjectArrayList<ItemStack> itemStacks) {
         if (totemInjectLootTables) {
             ResourceKey<LootTable> key = LOOT_TABLES_REGISTRY.getResourceKey(lootTable).get();
-            if (LOOT_TABLES.contains(key)) {
+            if (lootTables.contains(key.location().toString())) {
                 EverlastingAbilitiesInstance.MOD.getAbilityHelpers().injectLootTotem(itemStacks::add, context);
             }
         }
