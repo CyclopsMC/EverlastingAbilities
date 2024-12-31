@@ -109,16 +109,6 @@ public class TotemRecycleRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return width * height >= ItemAbilityTotemConfig.totemCraftingCount;
-    }
-
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider registryAccess) {
-        return new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
-    }
-
-    @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
         // Item is being taken out of crafting grid.
 
@@ -130,7 +120,8 @@ public class TotemRecycleRecipe extends CustomRecipe {
         IItemStackHelpers itemStackHelpers = IModHelpers.get().getItemStackHelpers();
         for(int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack item = inv.getItem(i);
-            if (itemStackHelpers.hasCraftingRemainingItem(item)) {
+            ItemStack remaining = itemStackHelpers.getCraftingRemainingItem(item);
+            if (!remaining.isEmpty()) {
                 nonnulllist.set(i, itemStackHelpers.getCraftingRemainingItem(item));
             }
         }
@@ -139,7 +130,7 @@ public class TotemRecycleRecipe extends CustomRecipe {
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends CustomRecipe> getSerializer() {
         return RegistryEntries.RECIPESERIALIZER_TOTEM_RECYCLE.value();
     }
 }

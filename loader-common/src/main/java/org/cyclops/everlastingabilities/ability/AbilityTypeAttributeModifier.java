@@ -38,7 +38,7 @@ public class AbilityTypeAttributeModifier extends AbilityTypeAdapter {
                                         String attributeId, double amountFactor, AttributeModifier.Operation operation) {
         super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.attributeId = attributeId;
-        Optional<Holder.Reference<Attribute>> attributeOptional = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attributeId));
+        Optional<Holder.Reference<Attribute>> attributeOptional = BuiltInRegistries.ATTRIBUTE.get(ResourceLocation.parse(attributeId));
         if (attributeOptional.isEmpty()) {
             EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.INFO, "No attribute was found with id: " + attributeId + ". Marking as disabled.");
             this.setCondition(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionFalse());

@@ -6,9 +6,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.conditions.FalseCondition;
+import net.neoforged.neoforge.common.conditions.AlwaysCondition;
 import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.common.conditions.TrueCondition;
+import net.neoforged.neoforge.common.conditions.NeverCondition;
 import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.Capabilities;
 import org.cyclops.everlastingabilities.Reference;
@@ -48,12 +48,12 @@ public class AbilityHelpersNeoForge extends AbilityHelpersCommon {
 
     @Override
     public IAbilityCondition getAbilityConditionTrue() {
-        return new AbilityConditionNeoForge(TrueCondition.INSTANCE);
+        return new AbilityConditionNeoForge(AlwaysCondition.INSTANCE);
     }
 
     @Override
     public IAbilityCondition getAbilityConditionFalse() {
-        return new AbilityConditionNeoForge(FalseCondition.INSTANCE);
+        return new AbilityConditionNeoForge(NeverCondition.INSTANCE);
     }
 
     @Override

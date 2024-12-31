@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.proxy;
 
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.cyclops.cyclopscore.init.ModBaseForge;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponentForge;
@@ -27,7 +27,7 @@ public class ClientProxyForge extends ClientProxyComponentForge {
     }
 
     @SubscribeEvent
-    public void onRenderLiving(RenderLivingEvent.Post event) {
+    public void onRenderLiving(LivingEvent.LivingTickEvent event) {
         RenderLivingHandler.onRenderLiving(event.getEntity());
     }
 

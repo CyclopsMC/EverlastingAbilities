@@ -60,7 +60,7 @@ public class MoveAbilityPacket extends PacketCodec {
     public void actionServer(Level world, ServerPlayer player) {
         if (player.containerMenu instanceof ContainerAbilityContainer) {
             ContainerAbilityContainer container = (ContainerAbilityContainer) player.containerMenu;
-            Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(world.registryAccess()).getHolder(ResourceLocation.parse(abilityName));
+            Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(world.registryAccess()).get(ResourceLocation.parse(abilityName));
             if (abilityTypeOptional.isPresent()) {
                 Ability ability = new Ability(abilityTypeOptional.get(), abilityLevel);
                 container.getPlayerAbilityStore().ifPresent(playerAbilityStore -> {

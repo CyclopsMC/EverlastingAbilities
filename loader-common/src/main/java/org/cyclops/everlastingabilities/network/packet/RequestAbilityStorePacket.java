@@ -59,7 +59,7 @@ public class RequestAbilityStorePacket extends PacketCodec {
                     Tag contents = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().serialize(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(world.registryAccess()), abilityStore);
                     CompoundTag tag = new CompoundTag();
                     tag.put("contents", contents);
-                    EverlastingAbilitiesInstance.MOD.getPacketHandlerCommon().sendToPlayer(new SendAbilityStorePacket(entity.getId(), tag), player);
+                    EverlastingAbilitiesInstance.MOD.getPacketHandler().sendToPlayer(new SendAbilityStorePacket(entity.getId(), tag), player);
                 });
             }
         } catch (IllegalArgumentException e) {

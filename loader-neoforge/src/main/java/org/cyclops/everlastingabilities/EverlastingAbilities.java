@@ -23,18 +23,11 @@ import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.cyclops.cyclopscore.config.ConfigHandlerCommon;
-import org.cyclops.cyclopscore.init.ModBaseVersionable;
+import org.cyclops.cyclopscore.init.ModBaseNeoForge;
 import org.cyclops.cyclopscore.modcompat.capabilities.ICapabilityConstructor;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeAttributeModifierSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeEffectSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialBonemealerSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFertilitySerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFlightSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialMagnetizeSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialPowerStareSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialStepAssistSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.*;
 import org.cyclops.everlastingabilities.api.AbilityTypeSerializers;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.capability.CompoundTagMutableAbilityStore;
@@ -59,7 +52,7 @@ import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipeConfig;
  *
  */
 @Mod(Reference.MOD_ID)
-public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilities> implements IEverlastingAbilitiesModBase {
+public class EverlastingAbilities extends ModBaseNeoForge<EverlastingAbilities> implements IEverlastingAbilitiesModBase {
 
     /**
      * The unique instance of this mod.
@@ -83,7 +76,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             @Override
             public ICapabilityProvider<Player, Void, IMutableAbilityStore> createProvider(EntityType<Player> host) {
                 return (player, context) -> {
-                    if (player.level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isEmpty()) {
+                    if (player.level().registryAccess().lookup(AbilityTypes.REGISTRY_KEY).isEmpty()) {
                         return null;
                     }
                     return new CompoundTagMutableAbilityStore(player::getPersistentData, player.level().registryAccess());
@@ -94,7 +87,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
             @Override
             public ICapabilityProvider<Mob, Void, IMutableAbilityStore> createProvider(EntityType<?> key) {
                 return (host, context) -> {
-                    if (host.level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isEmpty()) {
+                    if (host.level().registryAccess().lookup(AbilityTypes.REGISTRY_KEY).isEmpty()) {
                         return null;
                     }
                     CompoundTagMutableAbilityStore store = new CompoundTagMutableAbilityStore(host::getPersistentData, host.level().registryAccess());
@@ -179,7 +172,6 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
         configHandler.addConfigurable(new AbilityTypeSpecialFlightSerializerConfig<>(this));
         configHandler.addConfigurable(new AbilityTypeSpecialMagnetizeSerializerConfig<>(this));
         configHandler.addConfigurable(new AbilityTypeSpecialPowerStareSerializerConfig<>(this));
-        configHandler.addConfigurable(new AbilityTypeSpecialStepAssistSerializerConfig<>(this));
 
         // Loot modifiers
         configHandler.addConfigurable(new LootModifierInjectAbilityTotemConfig());
@@ -207,7 +199,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
 
     public void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (event.getLevel().isClientSide && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
-            getPacketHandlerCommon().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
+            getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
         }
     }
 

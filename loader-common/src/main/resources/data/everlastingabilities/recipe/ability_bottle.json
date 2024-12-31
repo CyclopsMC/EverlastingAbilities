@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DSD",
+    "NGN"
+  ],
+  "key": {
+    "D": "#c:dyes/white",
+    "S": "#c:slime_balls",
+    "N": "minecraft:bucket",
+    "G": "#c:nuggets/gold"
+  },
+  "result": {
+    "id": "everlastingabilities:ability_bottle"
+  }
+}

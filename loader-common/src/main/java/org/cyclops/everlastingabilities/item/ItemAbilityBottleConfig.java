@@ -4,7 +4,7 @@ import net.minecraft.world.item.Item;
 import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigCommon;
 import org.cyclops.cyclopscore.init.IModBase;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /**
  * Config for the ability bottle.
@@ -12,7 +12,7 @@ import java.util.function.Function;
  */
 public class ItemAbilityBottleConfig<M extends IModBase> extends ItemConfigCommon<M> {
 
-    public ItemAbilityBottleConfig(M mod, Function<ItemConfigCommon<M>, ? extends Item> elementConstructor) {
+    public ItemAbilityBottleConfig(M mod, BiFunction<ItemConfigCommon<M>, Item.Properties, ? extends Item> elementConstructor) {
         super(mod,
                 "ability_bottle",
                 elementConstructor);

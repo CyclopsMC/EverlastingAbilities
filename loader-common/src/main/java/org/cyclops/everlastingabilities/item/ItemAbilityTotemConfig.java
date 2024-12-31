@@ -12,8 +12,8 @@ import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.api.Ability;
 
 import java.util.Collection;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Config for the ability totem.
@@ -27,14 +27,14 @@ public class ItemAbilityTotemConfig<M extends IModBase> extends ItemConfigCommon
     @ConfigurablePropertyCommon(category = "core", comment = "When combining totems, percentage chance of getting one higher rarity than normal.", configLocation = ModConfigLocation.SERVER)
     public static int totemCraftingRarityIncreasePercent = 15;
 
-    public ItemAbilityTotemConfig(M mod, Function<ItemConfigCommon<M>, ? extends Item> elementConstructor) {
+    public ItemAbilityTotemConfig(M mod, BiFunction<ItemConfigCommon<M>, Item.Properties, ? extends Item> elementConstructor) {
         super(mod,
                 "ability_totem",
                 elementConstructor);
     }
 
     @Override
-    protected Collection<ItemStack> getDefaultCreativeTabEntries() {
+    public Collection<ItemStack> getDefaultCreativeTabEntries() {
         return Lists.newArrayList();
     }
 

@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.cyclops.cyclopscore.inventory.ItemLocation;
-import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainerCommon;
+import org.cyclops.cyclopscore.inventory.container.ItemInventoryContainer;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.Ability;
@@ -21,7 +21,7 @@ import java.util.Optional;
  * Container for the labeller.
  * @author rubensworks
  */
-public class ContainerAbilityContainer extends ItemInventoryContainerCommon<ItemGuiAbilityContainer> {
+public class ContainerAbilityContainer extends ItemInventoryContainer<ItemGuiAbilityContainer> {
 
     public ContainerAbilityContainer(int id, Inventory inventory, FriendlyByteBuf packetBuffer) {
         this(id, inventory, ItemLocation.readFromPacketBuffer(packetBuffer));

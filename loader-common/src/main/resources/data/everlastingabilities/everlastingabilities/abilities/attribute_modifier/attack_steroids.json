@@ -4,7 +4,7 @@
   "rarity": "uncommon",
   "max_level": 10,
   "xp_per_level": 25,
-  "attribute": "generic.attack_speed",
+  "attribute": "attack_speed",
   "amount_factor": 2,
   "operation": "add_value"
 }

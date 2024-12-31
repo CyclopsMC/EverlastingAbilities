@@ -17,8 +17,8 @@ import org.cyclops.everlastingabilities.core.config.extendedconfig.AbilitySerial
 public class AbilitySerializerActionForge<T extends IAbilityType, M extends ModBaseForge<?>> extends AbilitySerializerAction<T, M> {
 
     @Override
-    public void onRegisterForge(AbilitySerializerConfig<T, M> eConfig) {
-        super.onRegisterForge(eConfig);
+    public void onRegistriesCreated(AbilitySerializerConfig<T, M> eConfig) {
+        super.onRegistriesCreated(eConfig);
 
         eConfig.getMod().getModEventBus().addListener((RegisterEvent event) -> {
             if (event.getRegistryKey().equals(AbilityTypeSerializers.REGISTRY_KEY)) {
@@ -28,7 +28,7 @@ public class AbilitySerializerActionForge<T extends IAbilityType, M extends ModB
     }
 
     @Override
-    public void onRegisterForgeFilled(AbilitySerializerConfig<T, M> eConfig) {
+    public void onRegistriesFilled(AbilitySerializerConfig<T, M> eConfig) {
         // Do nothing, as we register to a different type of registry above
     }
 

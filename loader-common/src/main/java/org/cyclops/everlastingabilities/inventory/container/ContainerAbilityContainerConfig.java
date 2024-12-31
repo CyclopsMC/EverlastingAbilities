@@ -4,7 +4,7 @@ import net.minecraft.world.flag.FeatureFlags;
 import org.cyclops.cyclopscore.config.extendedconfig.GuiConfigCommon;
 import org.cyclops.cyclopscore.config.extendedconfig.GuiConfigScreenFactoryProvider;
 import org.cyclops.cyclopscore.init.IModBase;
-import org.cyclops.cyclopscore.inventory.container.ContainerTypeDataCommon;
+import org.cyclops.cyclopscore.inventory.container.ContainerTypeData;
 
 /**
  * Config for {@link ContainerAbilityContainer}.
@@ -15,7 +15,7 @@ public class ContainerAbilityContainerConfig<M extends IModBase> extends GuiConf
     public ContainerAbilityContainerConfig(M mod) {
         super(mod,
                 "ability_container",
-                eConfig -> new ContainerTypeDataCommon<>(ContainerAbilityContainer::new, FeatureFlags.VANILLA_SET));
+                eConfig -> new ContainerTypeData<>(ContainerAbilityContainer::new, FeatureFlags.VANILLA_SET));
     }
 
     @Override

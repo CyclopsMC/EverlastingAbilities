@@ -1,6 +1,5 @@
 package org.cyclops.everlastingabilities.item;
 
-import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 import org.cyclops.everlastingabilities.Capabilities;
@@ -17,7 +16,7 @@ public class ItemAbilityBottleConfigNeoForge extends ItemAbilityBottleConfig<Eve
 
     public ItemAbilityBottleConfigNeoForge() {
         super(EverlastingAbilities._instance,
-                (eConfig) -> new ItemAbilityBottleNeoForge(new Item.Properties()
+                (eConfig, properties) -> new ItemAbilityBottleNeoForge(properties
                         .stacksTo(1)));
         EverlastingAbilities._instance.getModEventBus().addListener(this::modifyComponents);
         EverlastingAbilities._instance.getModEventBus().addListener(this::registerCapability);

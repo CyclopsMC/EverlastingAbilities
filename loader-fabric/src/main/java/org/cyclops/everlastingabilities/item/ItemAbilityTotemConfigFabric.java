@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -30,10 +29,6 @@ import java.util.List;
  */
 public class ItemAbilityTotemConfigFabric extends ItemAbilityTotemConfig<EverlastingAbilitiesFabric> {
 
-    @Deprecated // TODO: rm in next major. Not needed anymore since we have the list.
-    @ConfigurablePropertyCommon(category = "core", comment = "If totems should be added to loot tables.", configLocation = ModConfigLocation.SERVER)
-    public static boolean totemInjectLootTables = true;
-
     @ConfigurablePropertyCommon(category = "core", comment = "The loot tables in which totems should be spawned.", configLocation = ModConfigLocation.SERVER)
     public static List<String> lootTables = Lists.newArrayList(
             BuiltInLootTables.SPAWN_BONUS_CHEST.location().toString(),
@@ -51,7 +46,7 @@ public class ItemAbilityTotemConfigFabric extends ItemAbilityTotemConfig<Everlas
 
     public ItemAbilityTotemConfigFabric() {
         super(EverlastingAbilitiesFabric._instance,
-                (eConfig) -> new ItemAbilityTotemFabric(new Item.Properties()
+                (eConfig, properties) -> new ItemAbilityTotemFabric(properties
                         .stacksTo(1)));
         DefaultItemComponentEvents.MODIFY.register(this::onSetDefaultComponents);
         ItemGroupEvents.MODIFY_ENTRIES_ALL.register(this::onCreativeModeTabBuildContents);
@@ -64,11 +59,9 @@ public class ItemAbilityTotemConfigFabric extends ItemAbilityTotemConfig<Everlas
     }
 
     private void onLootTableModify(LootTable lootTable, LootContext context, ObjectArrayList<ItemStack> itemStacks) {
-        if (totemInjectLootTables) {
-            ResourceKey<LootTable> key = LOOT_TABLES_REGISTRY.getResourceKey(lootTable).get();
-            if (lootTables.contains(key.location().toString())) {
-                EverlastingAbilitiesInstance.MOD.getAbilityHelpers().injectLootTotem(itemStacks::add, context);
-            }
+        ResourceKey<LootTable> key = LOOT_TABLES_REGISTRY.getResourceKey(lootTable).get();
+        if (lootTables.contains(key.location().toString())) {
+            EverlastingAbilitiesInstance.MOD.getAbilityHelpers().injectLootTotem(itemStacks::add, context);
         }
     }
 

@@ -1,8 +1,6 @@
 {
   "type": "minecraft:blasting",
-  "ingredient": {
-    "item": "everlastingabilities:ability_totem"
-  },
+  "ingredient": "everlastingabilities:ability_totem",
   "result": {
     "id": "minecraft:gold_nugget"
   },

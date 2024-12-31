@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.proxy;
 
-import org.cyclops.cyclopscore.init.ModBase;
-import org.cyclops.cyclopscore.network.PacketHandler;
+import org.cyclops.cyclopscore.init.ModBaseNeoForge;
+import org.cyclops.cyclopscore.network.IPacketHandler;
 import org.cyclops.cyclopscore.proxy.CommonProxyComponent;
 import org.cyclops.everlastingabilities.EverlastingAbilities;
 import org.cyclops.everlastingabilities.network.packet.MoveAbilityPacket;
@@ -16,13 +16,13 @@ import org.cyclops.everlastingabilities.network.packet.SendAbilityStorePacket;
 public class CommonProxy extends CommonProxyComponent {
 
     @Override
-    public ModBase getMod() {
+    public ModBaseNeoForge getMod() {
         return EverlastingAbilities._instance;
     }
 
     @Override
-    public void registerPacketHandlers(PacketHandler packetHandler) {
-        super.registerPacketHandlers(packetHandler);
+    public void registerPackets(IPacketHandler packetHandler) {
+        super.registerPackets(packetHandler);
 
         packetHandler.register(MoveAbilityPacket.class, MoveAbilityPacket.TYPE, MoveAbilityPacket.CODEC);
         packetHandler.register(RequestAbilityStorePacket.class, RequestAbilityStorePacket.TYPE, RequestAbilityStorePacket.CODEC);

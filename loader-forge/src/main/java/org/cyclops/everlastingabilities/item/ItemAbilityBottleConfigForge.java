@@ -1,6 +1,5 @@
 package org.cyclops.everlastingabilities.item;
 
-import net.minecraft.world.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.GatherComponentsEvent;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesForge;
@@ -15,7 +14,7 @@ public class ItemAbilityBottleConfigForge extends ItemAbilityBottleConfig<Everla
 
     public ItemAbilityBottleConfigForge() {
         super(EverlastingAbilitiesForge._instance,
-                (eConfig) -> new ItemAbilityBottleForge(new Item.Properties()
+                (eConfig, properties) -> new ItemAbilityBottleForge(properties
                         .stacksTo(1)));
         MinecraftForge.EVENT_BUS.addListener(this::modifyComponents);
     }

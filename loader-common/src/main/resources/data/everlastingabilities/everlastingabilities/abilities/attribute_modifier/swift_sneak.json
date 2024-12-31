@@ -4,7 +4,7 @@
   "rarity": "uncommon",
   "max_level": 3,
   "xp_per_level": 25,
-  "attribute": "player.sneaking_speed",
+  "attribute": "sneaking_speed",
   "amount_factor": 0.1,
   "operation": "add_value"
 }

@@ -1,7 +1,6 @@
 package org.cyclops.everlastingabilities.item;
 
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
-import net.minecraft.world.item.Item;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesFabric;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
@@ -14,7 +13,7 @@ public class ItemAbilityBottleConfigFabric extends ItemAbilityBottleConfig<Everl
 
     public ItemAbilityBottleConfigFabric() {
         super(EverlastingAbilitiesFabric._instance,
-                (eConfig) -> new ItemAbilityBottleFabric(new Item.Properties()
+                (eConfig, properties) -> new ItemAbilityBottleFabric(properties
                         .stacksTo(1)));
         DefaultItemComponentEvents.MODIFY.register(this::onSetDefaultComponents);
     }

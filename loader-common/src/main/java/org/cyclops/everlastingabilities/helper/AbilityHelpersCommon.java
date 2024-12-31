@@ -41,12 +41,7 @@ import org.cyclops.everlastingabilities.api.capability.IAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IInitializableMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableSet;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -89,7 +84,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
 
     @Override
     public Registry<IAbilityType> getRegistry(RegistryAccess registryAccess) {
-        return registryAccess.registryOrThrow(AbilityTypes.REGISTRY_KEY);
+        return registryAccess.lookupOrThrow(AbilityTypes.REGISTRY_KEY);
     }
 
     @Override
@@ -130,7 +125,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
     @Override
     public List<Holder<IAbilityType>> getAbilityTypes(Registry<IAbilityType> registry, Predicate<Holder<IAbilityType>> abilityFilter) {
         return registry
-                .holders()
+                .listElements()
                 .filter(abilityFilter)
                 .collect(Collectors.toList());
     }
@@ -404,7 +399,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
                     CompoundTag tag = list.getCompound(i);
                     String name = tag.getString("name");
                     int level = tag.getInt("level");
-                    Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = registry.getHolder(ResourceLocation.parse(name));
+                    Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = registry.get(ResourceLocation.parse(name));
                     if (abilityTypeOptional.isPresent()) {
                         abilityTypes.put(abilityTypeOptional.get(), level);
                     } else {
@@ -462,7 +457,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
     @Override
     public void initializePlayerAbilitiesOnSpawn(Player player) {
         Level world = player.level();
-        if (world.registryAccess().registry(AbilityTypes.REGISTRY_KEY).isPresent() && GeneralConfig.totemMaximumSpawnRarity >= 0 && isFirstTotemSpawn(player)) {
+        if (world.registryAccess().lookup(AbilityTypes.REGISTRY_KEY).isPresent() && GeneralConfig.totemMaximumSpawnRarity >= 0 && isFirstTotemSpawn(player)) {
             Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
             this.getRandomAbilityUntilRarity(this.getAbilityTypesPlayerSpawn(this.getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
                 ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
@@ -488,46 +483,49 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
 
     @Override
     public void onEntityDeath(Entity entity, DamageSource source) {
-        boolean doMobLoot = entity.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
-        if (!entity.level().isClientSide
-                && (entity instanceof Player
-                ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
-                && (GeneralConfig.alwaysDropAbilities || source.getEntity() instanceof Player))
-                : (doMobLoot && source.getEntity() instanceof Player))) {
+        if (!entity.level().isClientSide) {
+            boolean doMobLoot = ((ServerLevel) entity.level()).getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
+            if (entity instanceof Player
+                    ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
+                    && (GeneralConfig.alwaysDropAbilities || source.getEntity() instanceof Player))
+                    : (doMobLoot && source.getEntity() instanceof Player)) {
 
-            getEntityAbilityStore(entity).ifPresent(mutableAbilityStore -> {
-                int toDrop = 1;
-                if (entity instanceof Player
-                        && (GeneralConfig.alwaysDropAbilities || source.getEntity() instanceof Player)) {
-                    toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
-                }
+                getEntityAbilityStore(entity).ifPresent(mutableAbilityStore -> {
+                    int toDrop = 1;
+                    if (entity instanceof Player
+                            && (GeneralConfig.alwaysDropAbilities || source.getEntity() instanceof Player)) {
+                        toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
+                    }
 
-                ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
-                IMutableAbilityStore itemStackStore = getItemAbilityStore(itemStack).get();
+                    ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+                    IMutableAbilityStore itemStackStore = getItemAbilityStore(itemStack).get();
 
-                Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
-                for (Ability ability : abilities) {
-                    if (toDrop > 0) {
-                        Ability toRemove = new Ability(ability.getAbilityTypeHolder(), toDrop);
-                        Ability removed = mutableAbilityStore.removeAbility(toRemove, true);
-                        if (removed != null) {
-                            toDrop -= removed.getLevel();
-                            itemStackStore.addAbility(removed, true);
-                            entity.sendSystemMessage(Component.translatable("chat.everlastingabilities.playerLostAbility",
-                                    entity.getName(),
-                                    Component.translatable(removed.getAbilityType().getTranslationKey())
-                                            .setStyle(Style.EMPTY
+                    Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());
+                    for (Ability ability : abilities) {
+                        if (toDrop > 0) {
+                            Ability toRemove = new Ability(ability.getAbilityTypeHolder(), toDrop);
+                            Ability removed = mutableAbilityStore.removeAbility(toRemove, true);
+                            if (removed != null) {
+                                toDrop -= removed.getLevel();
+                                itemStackStore.addAbility(removed, true);
+                                if (entity instanceof Player player) {
+                                    player.displayClientMessage(Component.translatable("chat.everlastingabilities.playerLostAbility",
+                                            entity.getName(),
+                                            Component.translatable(removed.getAbilityType().getTranslationKey())
+                                                    .setStyle(Style.EMPTY
                                                             .withBold(true)
                                                             .withColor(removed.getAbilityType().getRarity().color())),
-                                    removed.getLevel()));
+                                            removed.getLevel()), false);
+                                }
+                            }
                         }
                     }
-                }
 
-                if (!itemStackStore.getAbilities().isEmpty()) {
-                    IModHelpers.get().getItemStackHelpers().spawnItemStack(entity.level(), entity.blockPosition(), itemStack);
-                }
-            });
+                    if (!itemStackStore.getAbilities().isEmpty()) {
+                        IModHelpers.get().getItemStackHelpers().spawnItemStack(entity.level(), entity.blockPosition(), itemStack);
+                    }
+                });
+            }
         }
     }
 

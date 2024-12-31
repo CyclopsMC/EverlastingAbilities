@@ -1,7 +1,6 @@
 package org.cyclops.everlastingabilities.item;
 
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
@@ -19,7 +18,7 @@ public class ItemAbilityTotemConfigNeoForge extends ItemAbilityTotemConfig<Everl
 
     public ItemAbilityTotemConfigNeoForge() {
         super(EverlastingAbilities._instance,
-                (eConfig) -> new ItemAbilityTotemNeoForge(new Item.Properties()
+                (eConfig, properties) -> new ItemAbilityTotemNeoForge(properties
                         .stacksTo(1)));
         EverlastingAbilities._instance.getModEventBus().addListener(this::onCreativeModeTabBuildContents);
         EverlastingAbilities._instance.getModEventBus().addListener(this::modifyComponents);

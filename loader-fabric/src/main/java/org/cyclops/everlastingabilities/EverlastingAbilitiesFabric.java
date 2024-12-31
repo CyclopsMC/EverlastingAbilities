@@ -23,14 +23,7 @@ import org.cyclops.cyclopscore.events.IPlayerLoggedInEvent;
 import org.cyclops.cyclopscore.init.ModBaseFabric;
 import org.cyclops.cyclopscore.proxy.IClientProxyCommon;
 import org.cyclops.cyclopscore.proxy.ICommonProxyCommon;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeAttributeModifierSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeEffectSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialBonemealerSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFertilitySerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFlightSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialMagnetizeSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialPowerStareSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialStepAssistSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.*;
 import org.cyclops.everlastingabilities.api.AbilityTypeSerializers;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.attachment.Attachments;
@@ -150,7 +143,6 @@ public class EverlastingAbilitiesFabric extends ModBaseFabric<EverlastingAbiliti
         configHandler.addConfigurable(new AbilityTypeSpecialFlightSerializerConfig<>(this));
         configHandler.addConfigurable(new AbilityTypeSpecialMagnetizeSerializerConfig<>(this));
         configHandler.addConfigurable(new AbilityTypeSpecialPowerStareSerializerConfig<>(this));
-        configHandler.addConfigurable(new AbilityTypeSpecialStepAssistSerializerConfig<>(this));
 
         // Data components
         configHandler.addConfigurable(new DataComponentAbilityStoreConfig<>(this));
@@ -158,7 +150,7 @@ public class EverlastingAbilitiesFabric extends ModBaseFabric<EverlastingAbiliti
 
     public void onEntityJoinWorld(Entity entity, Level level) {
         if (level.isClientSide && getAbilityHelpers().getEntityAbilityStore(entity).isPresent()) {
-            getPacketHandlerCommon().sendToServer(new RequestAbilityStorePacket(entity.getUUID().toString()));
+            getPacketHandler().sendToServer(new RequestAbilityStorePacket(entity.getUUID().toString()));
         }
     }
 

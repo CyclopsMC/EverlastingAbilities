@@ -1,0 +1,10 @@
+{
+  "type": "everlastingabilities:attribute_modifier",
+  "name": "ability.everlastingabilities.step_assist",
+  "rarity": "common",
+  "max_level": 3,
+  "xp_per_level": 25,
+  "attribute": "step_height",
+  "amount_factor": 1,
+  "operation": "add_value"
+}

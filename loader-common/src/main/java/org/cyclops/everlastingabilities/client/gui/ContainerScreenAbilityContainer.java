@@ -23,13 +23,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.gui.component.button.ButtonArrow;
-import org.cyclops.cyclopscore.client.gui.container.ContainerScreenExtendedCommon;
+import org.cyclops.cyclopscore.client.gui.container.ContainerScreenExtended;
 import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.Reference;
@@ -49,7 +50,7 @@ import java.util.List;
  * Gui for the ability container.
  * @author rubensworks
  */
-public class ContainerScreenAbilityContainer extends ContainerScreenExtendedCommon<ContainerAbilityContainer> {
+public class ContainerScreenAbilityContainer extends ContainerScreenExtended<ContainerAbilityContainer> {
 
     private static final ResourceLocation RES_ITEM_GLINT = ItemRenderer.ENCHANTED_GLINT_ITEM;
     protected static final int ABILITY_LIST_SIZE = 6;
@@ -104,14 +105,14 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtendedComm
         Registry<IAbilityType> registry = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(player.level().registryAccess());
         addRenderableWidget(buttonLeft = new ButtonArrow(this.leftPos + 76,  this.topPos + 130, Component.translatable("gui.cyclopscore.left"), button -> {
             if (canMoveToPlayer()) {
-                EverlastingAbilitiesInstance.MOD.getPacketHandlerCommon().sendToServer(
+                EverlastingAbilitiesInstance.MOD.getPacketHandler().sendToServer(
                         new MoveAbilityPacket(registry, getSelectedItemAbilitySingle(), MoveAbilityPacket.Movement.TO_PLAYER));
                 moveToPlayer();
             }
         }, ButtonArrow.Direction.WEST));
         addRenderableWidget(buttonRight = new ButtonArrow(this.leftPos + 90,  this.topPos + 130, Component.translatable("gui.cyclopscore.right"), button -> {
             if (canMoveFromPlayer()) {
-                EverlastingAbilitiesInstance.MOD.getPacketHandlerCommon().sendToServer(
+                EverlastingAbilitiesInstance.MOD.getPacketHandler().sendToServer(
                         new MoveAbilityPacket(registry, getSelectedPlayerAbilitySingle(), MoveAbilityPacket.Movement.FROM_PLAYER));
                 moveFromPlayer();
             }
@@ -226,7 +227,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtendedComm
     }
 
     protected void drawXp(GuiGraphics guiGraphics, int x, int y) {
-        guiGraphics.blit(texture, x, y, 0, 219, 5, 5);
+        guiGraphics.blit(RenderType::guiTextured, texture, x, y, 0, 219, 5, 5, 256, 256);
     }
 
     private void drawAbilities(GuiGraphics guiGraphics, int x, int y, List<Ability> abilities, int startIndex, int playerXp,
@@ -311,8 +312,8 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtendedComm
     }
 
     public void drawTexturedModalRectColor(GuiGraphics guiGraphics, VertexConsumer vertexbuffer, int x, int y, int textureX, int textureY, int width, int height, float r, float g, float b, float a) {
-        RenderSystem.setShaderColor(r, g, b, a);
-        guiGraphics.blit(RES_ITEM_GLINT, x, y, textureX, textureY, width, height);
+//        RenderSystem.setShaderColor(r, g, b, a);
+        guiGraphics.blit(RenderType::guiTextured, RES_ITEM_GLINT, x, y, textureX, textureY, width, height, 256, 256, ARGB.colorFromFloat(a, r, g, b));
     }
 
     public static void drawItemOnScreen(GuiGraphics guiGraphics, int posX, int posY, int scale, float mouseX, float mouseY, ItemStack itemStack) {
@@ -323,7 +324,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtendedComm
         posestack.translate((double)posX, (double)posY, 1050.0D);
         posestack.scale(1.0F, 1.0F, -1.0F);
 
-        RenderSystem.applyModelViewMatrix();
+//        RenderSystem.applyModelViewMatrix();
         PoseStack posestack1 = posestack;
         posestack1.translate(0.0D, 0.0D, 1000.0D);
         posestack1.scale((float)scale, (float)scale, (float)scale);
@@ -341,7 +342,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtendedComm
         renderTypeBuffer.endBatch();
 
         posestack.popPose();
-        RenderSystem.applyModelViewMatrix();
+//        RenderSystem.applyModelViewMatrix();
         Lighting.setupFor3DItems();
     }
 

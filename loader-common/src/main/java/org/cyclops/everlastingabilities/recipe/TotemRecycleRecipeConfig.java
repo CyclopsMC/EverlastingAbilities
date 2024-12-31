@@ -1,6 +1,6 @@
 package org.cyclops.everlastingabilities.recipe;
 
-import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.minecraft.world.item.crafting.CustomRecipe;
 import org.cyclops.cyclopscore.config.extendedconfig.RecipeConfigCommon;
 import org.cyclops.cyclopscore.init.IModBase;
 
@@ -13,7 +13,7 @@ public class TotemRecycleRecipeConfig<M extends IModBase> extends RecipeConfigCo
     public TotemRecycleRecipeConfig(M mod) {
         super(mod,
                 "crafting_special_totem_recycle",
-                eConfig -> new SimpleCraftingRecipeSerializer<>(TotemRecycleRecipe::new));
+                eConfig -> new CustomRecipe.Serializer<>(TotemRecycleRecipe::new));
     }
 
 }

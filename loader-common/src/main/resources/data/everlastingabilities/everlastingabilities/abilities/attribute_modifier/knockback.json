@@ -4,7 +4,7 @@
   "rarity": "uncommon",
   "max_level": 5,
   "xp_per_level": 30,
-  "attribute": "generic.attack_knockback",
+  "attribute": "attack_knockback",
   "amount_factor": 1,
   "operation": "add_value"
 }

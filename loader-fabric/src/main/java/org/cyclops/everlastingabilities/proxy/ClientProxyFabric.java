@@ -1,6 +1,8 @@
 package org.cyclops.everlastingabilities.proxy;
 
-import org.cyclops.cyclopscore.events.ILivingEntityRendererEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import org.cyclops.cyclopscore.events.IEntityTickEvent;
 import org.cyclops.cyclopscore.init.ModBaseFabric;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponentFabric;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesFabric;
@@ -26,6 +28,10 @@ public class ClientProxyFabric extends ClientProxyComponentFabric {
     @Override
     public void registerRenderers() {
         super.registerRenderers();
-        ILivingEntityRendererEvent.EVENT.register((livingEntity, livingEntityRenderer, v, poseStack, multiBufferSource, i) -> RenderLivingHandler.onRenderLiving(livingEntity));
+        IEntityTickEvent.EVENT.register((Entity entity) -> {
+            if (entity instanceof LivingEntity livingEntity) {
+                RenderLivingHandler.onRenderLiving(livingEntity);
+            }
+        });
     }
 }

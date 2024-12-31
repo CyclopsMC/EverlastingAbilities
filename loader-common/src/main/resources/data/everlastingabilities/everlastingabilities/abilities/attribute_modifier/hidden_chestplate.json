@@ -4,7 +4,7 @@
   "rarity": "rare",
   "max_level": 5,
   "xp_per_level": 35,
-  "attribute": "generic.armor",
+  "attribute": "armor",
   "amount_factor": 2,
   "operation": "add_value"
 }

@@ -49,7 +49,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
         this.targetsFriendlyMobs = targetsFriendlyMobs;
         this.radiusFactor = radiusFactor;
         this.effectId = effectId;
-        Optional<Holder.Reference<MobEffect>> potionOptional = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(effectId));
+        Optional<Holder.Reference<MobEffect>> potionOptional = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse(effectId));
         if (potionOptional.isEmpty()) {
             EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.INFO, "No potion effect was found with id: " + effectId + ". Marking as disabled.");
             this.setCondition(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionFalse());

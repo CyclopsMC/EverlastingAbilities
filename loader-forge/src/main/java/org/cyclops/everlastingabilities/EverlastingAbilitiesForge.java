@@ -31,14 +31,7 @@ import org.cyclops.cyclopscore.config.ConfigHandlerCommon;
 import org.cyclops.cyclopscore.init.ModBaseForge;
 import org.cyclops.cyclopscore.proxy.IClientProxyCommon;
 import org.cyclops.cyclopscore.proxy.ICommonProxyCommon;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeAttributeModifierSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeEffectSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialBonemealerSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFertilitySerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialFlightSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialMagnetizeSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialPowerStareSerializerConfig;
-import org.cyclops.everlastingabilities.ability.serializer.AbilityTypeSpecialStepAssistSerializerConfig;
+import org.cyclops.everlastingabilities.ability.serializer.*;
 import org.cyclops.everlastingabilities.api.AbilityTypeSerializers;
 import org.cyclops.everlastingabilities.api.AbilityTypes;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -77,11 +70,11 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
 
     public static IForgeRegistry<MapCodec<? extends IAbilityType>> REGISTRY_ABILITY_SERIALIZERS;
 
-    public EverlastingAbilitiesForge() {
+    public EverlastingAbilitiesForge(FMLJavaModLoadingContext context) {
         super(Reference.MOD_ID, (instance) -> {
             _instance = instance;
             EverlastingAbilitiesInstance.MOD = instance;
-        });
+        }, context);
 
         ExtendedConfigurableType.ABILITY_SERIALIZER.setAction(new AbilitySerializerActionForge<>());
 
@@ -91,8 +84,8 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerClone);
         MinecraftForge.EVENT_BUS.addListener(this::onLivingUpdate);
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::onAttachCapabilities);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onRegistriesCreate);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onDatapackRegistryCreate);
+        getModEventBus().addListener(this::onRegistriesCreate);
+        getModEventBus().addListener(this::onDatapackRegistryCreate);
         this.abilityHelpers = new AbilityHelpersForge(getModHelpers());
     }
 
@@ -122,7 +115,7 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
         event.addCapability(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "ability_store"), new ICapabilityProvider() {
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction direction) {
-                if (!entity.level().registryAccess().registry(AbilityTypes.REGISTRY_KEY).isEmpty()) {
+                if (!entity.level().registryAccess().lookup(AbilityTypes.REGISTRY_KEY).isEmpty()) {
                     if (capability == CapabilitiesForge.CAPABILITY) {
                         return LazyOptional.of(() -> {
                             CompoundTagMutableAbilityStore store = new CompoundTagMutableAbilityStore(entity::getPersistentData, entity.level().registryAccess());
@@ -186,7 +179,6 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
         configHandler.addConfigurable(new AbilityTypeSpecialFlightSerializerConfig<>(this));
         configHandler.addConfigurable(new AbilityTypeSpecialMagnetizeSerializerConfig<>(this));
         configHandler.addConfigurable(new AbilityTypeSpecialPowerStareSerializerConfig<>(this));
-        configHandler.addConfigurable(new AbilityTypeSpecialStepAssistSerializerConfig<>(this));
 
         // Loot modifiers
         configHandler.addConfigurable(new LootModifierInjectAbilityTotemConfig());
@@ -197,7 +189,7 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
 
     public void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (event.getLevel().isClientSide && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
-            getPacketHandlerCommon().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
+            getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
         }
     }
 
