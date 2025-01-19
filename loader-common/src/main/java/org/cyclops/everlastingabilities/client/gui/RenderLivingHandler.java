@@ -16,7 +16,8 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
  */
 public class RenderLivingHandler {
     public static void onRenderLiving(LivingEntity entity) {
-        if (((GeneralConfig.showEntityParticles && entity instanceof PathfinderMob)
+        if (entity.level().isClientSide
+                && ((GeneralConfig.showEntityParticles && entity instanceof PathfinderMob)
                 || (GeneralConfig.showPlayerParticles && entity instanceof Player))
                 && !Minecraft.getInstance().isPaused()
                 && entity.level().getGameTime() % 10 == 0) {
