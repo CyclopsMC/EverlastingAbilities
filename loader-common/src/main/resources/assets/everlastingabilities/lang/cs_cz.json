@@ -1,1 +1,9 @@
-{}
+{
+    "_comment": "Předměty",
+    "itemGroup.everlastingabilities": "Everlasting Abilities",
+    "general.everlastingabilities.empty": "Žádné",
+    "general.everlastingabilities.level": "Úroveň: %s / %s",
+    "general.everlastingabilities.xp": "XP/Úroveň: %s (%s úrovní hráče)",
+    "general.everlastingabilities.disabled": "Vypnuto",
+    "chat.everlastingabilities.command.invalidAbility": "Nelze najít schopnost s id \"%s\"."
+}
