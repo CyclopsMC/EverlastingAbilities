@@ -23,6 +23,7 @@ import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Config for the ability totem.
@@ -65,9 +66,12 @@ public class ItemAbilityTotemConfigFabric extends ItemAbilityTotemConfig<Everlas
 
     private void onLootTableModify(LootTable lootTable, LootContext context, ObjectArrayList<ItemStack> itemStacks) {
         if (totemInjectLootTables) {
-            ResourceKey<LootTable> key = LOOT_TABLES_REGISTRY.getResourceKey(lootTable).get();
-            if (lootTables.contains(key.location().toString())) {
-                EverlastingAbilitiesInstance.MOD.getAbilityHelpers().injectLootTotem(itemStacks::add, context);
+            Optional<ResourceKey<LootTable>> optionalKey = LOOT_TABLES_REGISTRY.getResourceKey(lootTable);
+            if (optionalKey.isPresent()) {
+                ResourceKey<LootTable> key = optionalKey.get();
+                if (lootTables.contains(key.location().toString())) {
+                    EverlastingAbilitiesInstance.MOD.getAbilityHelpers().injectLootTotem(itemStacks::add, context);
+                }
             }
         }
     }
