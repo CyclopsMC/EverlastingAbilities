@@ -5,6 +5,9 @@
     "general.everlastingabilities.level": "Niveau: %s / %s",
     "general.everlastingabilities.xp": "Ervaring/niveau: %s (%s spelerniveaus)",
     "general.everlastingabilities.disabled": "Uitgeschakeld",
+    "chat.everlastingabilities.command.invalidAbility": "Kon geen effect vinden met ID \"%s\".",
+    "chat.everlastingabilities.command.addedAbility": "Effect %s toegevoegd, nieuw effect %s.",
+    "chat.everlastingabilities.command.removedAbility": "Effect %s verwijderd, nieuw effect %s.",
     "chat.everlastingabilities.playerLostAbility": "%s verloor %s van niveau %s!",
     "ability.everlastingabilities.speed": "Snelheid",
     "ability.everlastingabilities.speed.info": "Loop sneller",
@@ -111,5 +114,7 @@
     "ability.everlastingabilities.impacting_legs": "Impact-vaste benen",
     "ability.everlastingabilities.impacting_legs.info": "Vergroot je veilige valafstand",
     "ability.everlastingabilities.swift_sneak": "Snel sluipen",
-    "ability.everlastingabilities.swift_sneak.info": "Beweeg sneller tijdens het sluipen"
+    "ability.everlastingabilities.swift_sneak.info": "Beweeg sneller tijdens het sluipen",
+    "item.everlastingabilities.ability_totem": "Effectentotem",
+    "item.everlastingabilities.ability_bottle": "Effectenfles"
 }
