@@ -1,0 +1,10 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.25.2 or higher.
+
+Additions:
+* Add ja_jp translations
+* Add cs_cz translations
+* Add tr_tr translations
+
+Fixes:
+* Fix losing all abilities on death on Forge, Closes #286
