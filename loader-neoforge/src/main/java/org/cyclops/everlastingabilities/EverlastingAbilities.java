@@ -5,7 +5,7 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -83,9 +83,9 @@ public class EverlastingAbilities extends ModBaseNeoForge<EverlastingAbilities> 
                 };
             }
         });
-        ICapabilityConstructor<Mob, Void, IMutableAbilityStore, EntityType<?>> capCtor = new ICapabilityConstructor<>() {
+        ICapabilityConstructor<LivingEntity, Void, IMutableAbilityStore, EntityType<?>> capCtor = new ICapabilityConstructor<>() {
             @Override
-            public ICapabilityProvider<Mob, Void, IMutableAbilityStore> createProvider(EntityType<?> key) {
+            public ICapabilityProvider<LivingEntity, Void, IMutableAbilityStore> createProvider(EntityType<?> key) {
                 return (host, context) -> {
                     if (host.level().registryAccess().lookup(AbilityTypes.REGISTRY_KEY).isEmpty()) {
                         return null;
