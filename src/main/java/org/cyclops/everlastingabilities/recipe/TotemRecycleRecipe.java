@@ -1,6 +1,7 @@
 package org.cyclops.everlastingabilities.recipe;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -73,7 +74,10 @@ public class TotemRecycleRecipe extends CustomRecipe {
                 }
             }
         }
-        Collections.sort(sortedStacks, Comparator.comparingInt(itemStack -> itemStack.getTag().hashCode()));
+        Collections.sort(sortedStacks, Comparator.comparingInt(itemStack -> {
+            CompoundTag tag = itemStack.getTag();
+            return tag == null ? 0 : tag.hashCode();
+        }));
 
         if (inputTargetIndex >= sortedStacks.size()) {
             // Should not be able to happen, unless some mod is doing funky stuff.
