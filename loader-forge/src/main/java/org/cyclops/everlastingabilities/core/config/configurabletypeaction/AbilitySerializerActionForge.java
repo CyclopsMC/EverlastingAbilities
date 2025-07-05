@@ -20,7 +20,7 @@ public class AbilitySerializerActionForge<T extends IAbilityType, M extends ModB
     public void onRegistriesCreated(AbilitySerializerConfig<T, M> eConfig) {
         super.onRegistriesCreated(eConfig);
 
-        eConfig.getMod().getModEventBus().addListener((RegisterEvent event) -> {
+        RegisterEvent.getBus(eConfig.getMod().getModBusGroup()).addListener((RegisterEvent event) -> {
             if (event.getRegistryKey().equals(AbilityTypeSerializers.REGISTRY_KEY)) {
                 EverlastingAbilitiesForge.REGISTRY_ABILITY_SERIALIZERS.register(ConfigHandlerCommon.getConfigId(eConfig), eConfig.getInstance());
             }

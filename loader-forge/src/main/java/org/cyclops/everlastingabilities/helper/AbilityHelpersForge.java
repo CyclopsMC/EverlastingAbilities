@@ -80,7 +80,7 @@ public class AbilityHelpersForge extends AbilityHelpersCommon {
 
     @Override
     public boolean isPlayerStateLastFlight(Player player) {
-        return player.getPersistentData().getBoolean(PLAYER_NBT_KEY_LAST_FLIGHT);
+        return player.getPersistentData().getBoolean(PLAYER_NBT_KEY_LAST_FLIGHT).orElse(false);
     }
 
     @Override

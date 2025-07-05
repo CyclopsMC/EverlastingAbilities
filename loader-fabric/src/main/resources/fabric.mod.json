@@ -20,11 +20,9 @@
   "entrypoints": {
     "main": [
       "org.cyclops.everlastingabilities.EverlastingAbilitiesFabric"
-    ],
-    "fabric-gametest": [
-      "org.cyclops.everlastingabilities.gametest.GameTestsCommon"
     ]
   },
+  "accessWidener" : "everlastingabilities.accesswidener",
 
   "depends": {
     "cyclopscore": ">=${cyclopscore_version_semver}",

@@ -5,7 +5,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 import org.cyclops.everlastingabilities.Capabilities;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesNeoForge;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.ItemDataMutableAbilityStore;
@@ -14,15 +14,15 @@ import org.cyclops.everlastingabilities.api.capability.ItemDataMutableAbilitySto
  * Config for the ability totem.
  * @author rubensworks
  */
-public class ItemAbilityTotemConfigNeoForge extends ItemAbilityTotemConfig<EverlastingAbilities> {
+public class ItemAbilityTotemConfigNeoForge extends ItemAbilityTotemConfig<EverlastingAbilitiesNeoForge> {
 
     public ItemAbilityTotemConfigNeoForge() {
-        super(EverlastingAbilities._instance,
+        super(EverlastingAbilitiesNeoForge._instance,
                 (eConfig, properties) -> new ItemAbilityTotemNeoForge(properties
                         .stacksTo(1)));
-        EverlastingAbilities._instance.getModEventBus().addListener(this::onCreativeModeTabBuildContents);
-        EverlastingAbilities._instance.getModEventBus().addListener(this::modifyComponents);
-        EverlastingAbilities._instance.getModEventBus().addListener(this::registerCapability);
+        EverlastingAbilitiesNeoForge._instance.getModEventBus().addListener(this::onCreativeModeTabBuildContents);
+        EverlastingAbilitiesNeoForge._instance.getModEventBus().addListener(this::modifyComponents);
+        EverlastingAbilitiesNeoForge._instance.getModEventBus().addListener(this::registerCapability);
     }
 
     protected void onCreativeModeTabBuildContents(BuildCreativeModeTabContentsEvent event) {

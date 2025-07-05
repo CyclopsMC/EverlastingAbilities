@@ -3,13 +3,14 @@ package org.cyclops.everlastingabilities.gametest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+import org.cyclops.cyclopscore.gametest.GameTest;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.Reference;
 import org.cyclops.everlastingabilities.RegistryEntries;
@@ -47,14 +48,14 @@ public class GameTestsCommon {
                     ability,
                     false,
                     true
-            ).isEmpty(), "Expected not to be addable in simulate-mode");
+            ).isEmpty(), Component.literal("Expected not to be addable in simulate-mode"));
 
             // Check if player has an ability store
             Optional<IMutableAbilityStore> store = getAbilityHelpers().getEntityAbilityStore(player);
-            helper.assertTrue(store.isPresent(), "Player has no ability store");
+            helper.assertTrue(store.isPresent(), Component.literal("Player has no ability store"));
 
             // Check if ability was not added
-            helper.assertValueEqual(store.get().getAbilities().size(), 0, "Expect ability store of size 1");
+            helper.assertValueEqual(store.get().getAbilities().size(), 0, Component.literal("Expect ability store of size 1"));
         });
     }
 
@@ -77,26 +78,26 @@ public class GameTestsCommon {
                     ability,
                     false,
                     true
-            ).isEmpty(), "Expected to be addable in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be addable in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability,
                     true,
                     true
-            ).isEmpty(), "Expected to be addable");
+            ).isEmpty(), Component.literal("Expected to be addable"));
 
             // Check if player has an ability store
             Optional<IMutableAbilityStore> store = getAbilityHelpers().getEntityAbilityStore(player);
-            helper.assertTrue(store.isPresent(), "Player has no ability store");
+            helper.assertTrue(store.isPresent(), Component.literal("Player has no ability store"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.get().getAbilities().size(), 1, "Expect ability store of size 1");
-            helper.assertTrue(store.get().getAbility(abilityType).getAbilityType() != null, "Expect ability type to be contained");
-            helper.assertValueEqual(store.get().getAbility(abilityType).getAbilityTypeHolder(), abilityType, "Expect ability type to be correct");
-            helper.assertValueEqual(store.get().getAbility(abilityType).getLevel(), 3, "Expect ability level to be correct");
+            helper.assertValueEqual(store.get().getAbilities().size(), 1, Component.literal("Expect ability store of size 1"));
+            helper.assertTrue(store.get().getAbility(abilityType).getAbilityType() != null, Component.literal("Expect ability type to be contained"));
+            helper.assertValueEqual(store.get().getAbility(abilityType).getAbilityTypeHolder(), abilityType, Component.literal("Expect ability type to be correct"));
+            helper.assertValueEqual(store.get().getAbility(abilityType).getLevel(), 3, Component.literal("Expect ability level to be correct"));
 
             // Check if xp was lowered
-            helper.assertValueEqual(player.totalExperience, 0, "Expect XP to have been lowered");
+            helper.assertValueEqual(player.totalExperience, 0, Component.literal("Expect XP to have been lowered"));
         });
     }
 
@@ -119,23 +120,23 @@ public class GameTestsCommon {
                     ability,
                     false,
                     true
-            ).getLevel(), 5, "Expected added ability to be of level 5 in simulate-mode");
+            ).getLevel(), 5, Component.literal("Expected added ability to be of level 5 in simulate-mode"));
             helper.assertValueEqual(getAbilityHelpers().addPlayerAbility(
                     player,
                     ability,
                     true,
                     true
-            ).getLevel(), 5, "Expected added ability to be of level 5");
+            ).getLevel(), 5, Component.literal("Expected added ability to be of level 5"));
 
             // Check if player has an ability store
             Optional<IMutableAbilityStore> store = getAbilityHelpers().getEntityAbilityStore(player);
-            helper.assertTrue(store.isPresent(), "Player has no ability store");
+            helper.assertTrue(store.isPresent(), Component.literal("Player has no ability store"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.get().getAbilities().size(), 1, "Expect ability store of size 1");
-            helper.assertTrue(store.get().getAbility(abilityType).getAbilityType() != null, "Expect ability type to be contained");
-            helper.assertValueEqual(store.get().getAbility(abilityType).getAbilityTypeHolder(), abilityType, "Expect ability type to be correct");
-            helper.assertValueEqual(store.get().getAbility(abilityType).getLevel(), 5, "Expect ability level to be correct");
+            helper.assertValueEqual(store.get().getAbilities().size(), 1, Component.literal("Expect ability store of size 1"));
+            helper.assertTrue(store.get().getAbility(abilityType).getAbilityType() != null, Component.literal("Expect ability type to be contained"));
+            helper.assertValueEqual(store.get().getAbility(abilityType).getAbilityTypeHolder(), abilityType, Component.literal("Expect ability type to be correct"));
+            helper.assertValueEqual(store.get().getAbility(abilityType).getLevel(), 5, Component.literal("Expect ability level to be correct"));
         });
     }
 
@@ -160,47 +161,47 @@ public class GameTestsCommon {
                     ability1,
                     false,
                     true
-            ).isEmpty(), "Expected to be addable (1) in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be addable (1) in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability1,
                     true,
                     true
-            ).isEmpty(), "Expected to be addable (1)");
+            ).isEmpty(), Component.literal("Expected to be addable (1)"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability2,
                     false,
                     true
-            ).isEmpty(), "Expected to be addable (2) in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be addable (2) in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability2,
                     true,
                     true
-            ).isEmpty(), "Expected to be addable (2)");
+            ).isEmpty(), Component.literal("Expected to be addable (2)"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability3,
                     false,
                     true
-            ).isEmpty(), "Expected to be addable (3) in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be addable (3) in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability3,
                     true,
                     true
-            ).isEmpty(), "Expected to be addable (3)");
+            ).isEmpty(), Component.literal("Expected to be addable (3)"));
 
             // Check if player has an ability store
             Optional<IMutableAbilityStore> store = getAbilityHelpers().getEntityAbilityStore(player);
-            helper.assertTrue(store.isPresent(), "Player has no ability store");
+            helper.assertTrue(store.isPresent(), Component.literal("Player has no ability store"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.get().getAbilities().size(), 1, "Expect ability store of size 1");
-            helper.assertTrue(store.get().getAbility(abilityType).getAbilityType() != null, "Expect ability type to be contained");
-            helper.assertValueEqual(store.get().getAbility(abilityType).getAbilityTypeHolder(), abilityType, "Expect ability type to be correct");
-            helper.assertValueEqual(store.get().getAbility(abilityType).getLevel(), 3, "Expect ability level to be correct");
+            helper.assertValueEqual(store.get().getAbilities().size(), 1, Component.literal("Expect ability store of size 1"));
+            helper.assertTrue(store.get().getAbility(abilityType).getAbilityType() != null, Component.literal("Expect ability type to be contained"));
+            helper.assertValueEqual(store.get().getAbility(abilityType).getAbilityTypeHolder(), abilityType, Component.literal("Expect ability type to be correct"));
+            helper.assertValueEqual(store.get().getAbility(abilityType).getLevel(), 3, Component.literal("Expect ability level to be correct"));
         });
     }
 
@@ -226,50 +227,50 @@ public class GameTestsCommon {
                     ability1,
                     false,
                     true
-            ).isEmpty(), "Expected to be addable (1) in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be addable (1) in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability1,
                     true,
                     true
-            ).isEmpty(), "Expected to be addable (1)");
+            ).isEmpty(), Component.literal("Expected to be addable (1)"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability2,
                     false,
                     true
-            ).isEmpty(), "Expected to be addable (2) in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be addable (2) in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability2,
                     true,
                     true
-            ).isEmpty(), "Expected to be addable (2)");
+            ).isEmpty(), Component.literal("Expected to be addable (2)"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability3,
                     false,
                     true
-            ).isEmpty(), "Expected to be addable (3) in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be addable (3) in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().addPlayerAbility(
                     player,
                     ability3,
                     true,
                     true
-            ).isEmpty(), "Expected to be addable (3)");
+            ).isEmpty(), Component.literal("Expected to be addable (3)"));
 
             // Check if player has an ability store
             Optional<IMutableAbilityStore> store = getAbilityHelpers().getEntityAbilityStore(player);
-            helper.assertTrue(store.isPresent(), "Player has no ability store");
+            helper.assertTrue(store.isPresent(), Component.literal("Player has no ability store"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.get().getAbilities().size(), 2, "Expect ability store of size 2");
-            helper.assertTrue(store.get().getAbility(abilityType1).getAbilityType() != null, "Expect ability type 1 to be contained");
-            helper.assertValueEqual(store.get().getAbility(abilityType1).getAbilityTypeHolder(), abilityType1, "Expect ability type 1 to be correct");
-            helper.assertValueEqual(store.get().getAbility(abilityType1).getLevel(), 2, "Expect ability level 1 to be correct");
-            helper.assertTrue(store.get().getAbility(abilityType2).getAbilityType() != null, "Expect ability type 2 to be contained");
-            helper.assertValueEqual(store.get().getAbility(abilityType2).getAbilityTypeHolder(), abilityType2, "Expect ability type 2 to be correct");
-            helper.assertValueEqual(store.get().getAbility(abilityType2).getLevel(), 1, "Expect ability level 2 to be correct");
+            helper.assertValueEqual(store.get().getAbilities().size(), 2, Component.literal("Expect ability store of size 2"));
+            helper.assertTrue(store.get().getAbility(abilityType1).getAbilityType() != null, Component.literal("Expect ability type 1 to be contained"));
+            helper.assertValueEqual(store.get().getAbility(abilityType1).getAbilityTypeHolder(), abilityType1, Component.literal("Expect ability type 1 to be correct"));
+            helper.assertValueEqual(store.get().getAbility(abilityType1).getLevel(), 2, Component.literal("Expect ability level 1 to be correct"));
+            helper.assertTrue(store.get().getAbility(abilityType2).getAbilityType() != null, Component.literal("Expect ability type 2 to be contained"));
+            helper.assertValueEqual(store.get().getAbility(abilityType2).getAbilityTypeHolder(), abilityType2, Component.literal("Expect ability type 2 to be correct"));
+            helper.assertValueEqual(store.get().getAbility(abilityType2).getLevel(), 1, Component.literal("Expect ability level 2 to be correct"));
         });
     }
 
@@ -300,23 +301,23 @@ public class GameTestsCommon {
                     ability,
                     false,
                     true
-            ).isEmpty(), "Expected to be removable in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be removable in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().removePlayerAbility(
                     player,
                     ability,
                     true,
                     true
-            ).isEmpty(), "Expected to be removable");
+            ).isEmpty(), Component.literal("Expected to be removable"));
 
             // Check if player has an ability store
             Optional<IMutableAbilityStore> store = getAbilityHelpers().getEntityAbilityStore(player);
-            helper.assertTrue(store.isPresent(), "Player has no ability store");
+            helper.assertTrue(store.isPresent(), Component.literal("Player has no ability store"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.get().getAbilities().size(), 0, "Expect ability store of size 0");
+            helper.assertValueEqual(store.get().getAbilities().size(), 0, Component.literal("Expect ability store of size 0"));
 
             // Check if xp was incremented again
-            helper.assertValueEqual(player.totalExperience, 300, "Expect XP to have been lowered again");
+            helper.assertValueEqual(player.totalExperience, 300, Component.literal("Expect XP to have been lowered again"));
         });
     }
 
@@ -348,47 +349,47 @@ public class GameTestsCommon {
                     ability2,
                     false,
                     true
-            ).isEmpty(), "Expected to be removable in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be removable in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().removePlayerAbility(
                     player,
                     ability2,
                     true,
                     true
-            ).isEmpty(), "Expected to be removable");
+            ).isEmpty(), Component.literal("Expected to be removable"));
             helper.assertTrue(!getAbilityHelpers().removePlayerAbility(
                     player,
                     ability2,
                     false,
                     true
-            ).isEmpty(), "Expected to be removable in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be removable in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().removePlayerAbility(
                     player,
                     ability2,
                     true,
                     true
-            ).isEmpty(), "Expected to be removable");
+            ).isEmpty(), Component.literal("Expected to be removable"));
             helper.assertTrue(!getAbilityHelpers().removePlayerAbility(
                     player,
                     ability2,
                     false,
                     true
-            ).isEmpty(), "Expected to be removable in simulate-mode");
+            ).isEmpty(), Component.literal("Expected to be removable in simulate-mode"));
             helper.assertTrue(!getAbilityHelpers().removePlayerAbility(
                     player,
                     ability2,
                     true,
                     true
-            ).isEmpty(), "Expected to be removable");
+            ).isEmpty(), Component.literal("Expected to be removable"));
 
             // Check if player has an ability store
             Optional<IMutableAbilityStore> store = getAbilityHelpers().getEntityAbilityStore(player);
-            helper.assertTrue(store.isPresent(), "Player has no ability store");
+            helper.assertTrue(store.isPresent(), Component.literal("Player has no ability store"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.get().getAbilities().size(), 0, "Expect ability store of size 0");
+            helper.assertValueEqual(store.get().getAbilities().size(), 0, Component.literal("Expect ability store of size 0"));
 
             // Check if xp was incremented again
-            helper.assertValueEqual(player.totalExperience, 300, "Expect XP to have been lowered again");
+            helper.assertValueEqual(player.totalExperience, 300, Component.literal("Expect XP to have been lowered again"));
         });
     }
 
@@ -419,13 +420,13 @@ public class GameTestsCommon {
 
             // Check if player has an ability store
             Optional<IMutableAbilityStore> store = getAbilityHelpers().getEntityAbilityStore(player2);
-            helper.assertTrue(store.isPresent(), "Player has no ability store");
+            helper.assertTrue(store.isPresent(), Component.literal("Player has no ability store"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.get().getAbilities().size(), 1, "Expect ability store of size 1");
-            helper.assertTrue(store.get().getAbility(abilityType).getAbilityType() != null, "Expect ability type to be contained");
-            helper.assertValueEqual(store.get().getAbility(abilityType).getAbilityTypeHolder(), abilityType, "Expect ability type to be correct");
-            helper.assertValueEqual(store.get().getAbility(abilityType).getLevel(), 3, "Expect ability level to be correct");
+            helper.assertValueEqual(store.get().getAbilities().size(), 1, Component.literal("Expect ability store of size 1"));
+            helper.assertTrue(store.get().getAbility(abilityType).getAbilityType() != null, Component.literal("Expect ability type to be contained"));
+            helper.assertValueEqual(store.get().getAbility(abilityType).getAbilityTypeHolder(), abilityType, Component.literal("Expect ability type to be correct"));
+            helper.assertValueEqual(store.get().getAbility(abilityType).getLevel(), 3, Component.literal("Expect ability level to be correct"));
         });
     }
 
@@ -441,13 +442,13 @@ public class GameTestsCommon {
             Ability ability = new Ability(abilityType, 3);
 
             // Add ability
-            helper.assertTrue(!getAbilityHelpers().insert(ability, store).isEmpty(), "Expected to be addable");
+            helper.assertTrue(!getAbilityHelpers().insert(ability, store).isEmpty(), Component.literal("Expected to be addable"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.getAbilities().size(), 1, "Expect ability store of size 1");
-            helper.assertTrue(store.getAbility(abilityType).getAbilityType() != null, "Expect ability type to be contained");
-            helper.assertValueEqual(store.getAbility(abilityType).getAbilityTypeHolder(), abilityType, "Expect ability type to be correct");
-            helper.assertValueEqual(store.getAbility(abilityType).getLevel(), 3, "Expect ability level to be correct");
+            helper.assertValueEqual(store.getAbilities().size(), 1, Component.literal("Expect ability store of size 1"));
+            helper.assertTrue(store.getAbility(abilityType).getAbilityType() != null, Component.literal("Expect ability type to be contained"));
+            helper.assertValueEqual(store.getAbility(abilityType).getAbilityTypeHolder(), abilityType, Component.literal("Expect ability type to be correct"));
+            helper.assertValueEqual(store.getAbility(abilityType).getLevel(), 3, Component.literal("Expect ability level to be correct"));
         });
     }
 
@@ -463,15 +464,15 @@ public class GameTestsCommon {
             Ability ability = new Ability(abilityType, 1);
 
             // Add ability
-            helper.assertTrue(!getAbilityHelpers().insert(ability, store).isEmpty(), "Expected to be addable");
-            helper.assertTrue(!getAbilityHelpers().insert(ability, store).isEmpty(), "Expected to be addable");
-            helper.assertTrue(!getAbilityHelpers().insert(ability, store).isEmpty(), "Expected to be addable");
+            helper.assertTrue(!getAbilityHelpers().insert(ability, store).isEmpty(), Component.literal("Expected to be addable"));
+            helper.assertTrue(!getAbilityHelpers().insert(ability, store).isEmpty(), Component.literal("Expected to be addable"));
+            helper.assertTrue(!getAbilityHelpers().insert(ability, store).isEmpty(), Component.literal("Expected to be addable"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.getAbilities().size(), 1, "Expect ability store of size 1");
-            helper.assertTrue(store.getAbility(abilityType).getAbilityType() != null, "Expect ability type to be contained");
-            helper.assertValueEqual(store.getAbility(abilityType).getAbilityTypeHolder(), abilityType, "Expect ability type to be correct");
-            helper.assertValueEqual(store.getAbility(abilityType).getLevel(), 3, "Expect ability level to be correct");
+            helper.assertValueEqual(store.getAbilities().size(), 1, Component.literal("Expect ability store of size 1"));
+            helper.assertTrue(store.getAbility(abilityType).getAbilityType() != null, Component.literal("Expect ability type to be contained"));
+            helper.assertValueEqual(store.getAbility(abilityType).getAbilityTypeHolder(), abilityType, Component.literal("Expect ability type to be correct"));
+            helper.assertValueEqual(store.getAbility(abilityType).getLevel(), 3, Component.literal("Expect ability level to be correct"));
         });
     }
 
@@ -489,18 +490,18 @@ public class GameTestsCommon {
             Ability ability2 = new Ability(abilityType2, 1);
 
             // Add ability
-            helper.assertTrue(!getAbilityHelpers().insert(ability1, store).isEmpty(), "Expected to be addable");
-            helper.assertTrue(!getAbilityHelpers().insert(ability2, store).isEmpty(), "Expected to be addable");
-            helper.assertTrue(!getAbilityHelpers().insert(ability1, store).isEmpty(), "Expected to be addable");
+            helper.assertTrue(!getAbilityHelpers().insert(ability1, store).isEmpty(), Component.literal("Expected to be addable"));
+            helper.assertTrue(!getAbilityHelpers().insert(ability2, store).isEmpty(), Component.literal("Expected to be addable"));
+            helper.assertTrue(!getAbilityHelpers().insert(ability1, store).isEmpty(), Component.literal("Expected to be addable"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.getAbilities().size(), 2, "Expect ability store of size 2");
-            helper.assertTrue(store.getAbility(abilityType1).getAbilityType() != null, "Expect ability type 1 to be contained");
-            helper.assertValueEqual(store.getAbility(abilityType1).getAbilityTypeHolder(), abilityType1, "Expect ability type 1 to be correct");
-            helper.assertValueEqual(store.getAbility(abilityType1).getLevel(), 2, "Expect ability level 1 to be correct");
-            helper.assertTrue(store.getAbility(abilityType2).getAbilityType() != null, "Expect ability type 2 to be contained");
-            helper.assertValueEqual(store.getAbility(abilityType2).getAbilityTypeHolder(), abilityType2, "Expect ability type 2 to be correct");
-            helper.assertValueEqual(store.getAbility(abilityType2).getLevel(), 1, "Expect ability level 2 to be correct");
+            helper.assertValueEqual(store.getAbilities().size(), 2, Component.literal("Expect ability store of size 2"));
+            helper.assertTrue(store.getAbility(abilityType1).getAbilityType() != null, Component.literal("Expect ability type 1 to be contained"));
+            helper.assertValueEqual(store.getAbility(abilityType1).getAbilityTypeHolder(), abilityType1, Component.literal("Expect ability type 1 to be correct"));
+            helper.assertValueEqual(store.getAbility(abilityType1).getLevel(), 2, Component.literal("Expect ability level 1 to be correct"));
+            helper.assertTrue(store.getAbility(abilityType2).getAbilityType() != null, Component.literal("Expect ability type 2 to be contained"));
+            helper.assertValueEqual(store.getAbility(abilityType2).getAbilityTypeHolder(), abilityType2, Component.literal("Expect ability type 2 to be correct"));
+            helper.assertValueEqual(store.getAbility(abilityType2).getLevel(), 1, Component.literal("Expect ability level 2 to be correct"));
         });
     }
 
@@ -519,10 +520,10 @@ public class GameTestsCommon {
             getAbilityHelpers().insert(ability, store);
 
             // Remove ability
-            helper.assertTrue(!getAbilityHelpers().extract(ability, store).isEmpty(), "Expected to be removable");
+            helper.assertTrue(!getAbilityHelpers().extract(ability, store).isEmpty(), Component.literal("Expected to be removable"));
 
             // Check if ability was added
-            helper.assertValueEqual(store.getAbilities().size(), 0, "Expect ability store of size 0");
+            helper.assertValueEqual(store.getAbilities().size(), 0, Component.literal("Expect ability store of size 0"));
         });
     }
 

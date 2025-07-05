@@ -180,8 +180,8 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
                             ? abilityStore.getAbility(ability.getAbilityTypeHolder()).getLevel() : 0;
 
                     // Check max ability count
-                    if (getMaxPlayerAbilities(player.getCommandSenderWorld()) >= 0 && oldLevel == 0
-                            && getMaxPlayerAbilities(player.getCommandSenderWorld()) <= abilityStore.getAbilities().size()) {
+                    if (getMaxPlayerAbilities(player.level()) >= 0 && oldLevel == 0
+                            && getMaxPlayerAbilities(player.level()) <= abilityStore.getAbilities().size()) {
                         return Ability.EMPTY;
                     }
 
@@ -392,18 +392,16 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
     public void deserialize(Registry<IAbilityType> registry, IMutableAbilityStore capability, Tag nbt) {
         Map<Holder<IAbilityType>, Integer> abilityTypes = Maps.newHashMap();
         if (nbt instanceof ListTag) {
-            if (((ListTag) nbt).getElementType() == Tag.TAG_COMPOUND) {
-                ListTag list = (ListTag) nbt;
-                for (int i = 0; i < list.size(); i++) {
-                    CompoundTag tag = list.getCompound(i);
-                    String name = tag.getString("name");
-                    int level = tag.getInt("level");
-                    Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = registry.get(ResourceLocation.parse(name));
-                    if (abilityTypeOptional.isPresent()) {
-                        abilityTypes.put(abilityTypeOptional.get(), level);
-                    } else {
-                        EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.WARN, "Skipped loading unknown ability by name: " + name);
-                    }
+            ListTag list = (ListTag) nbt;
+            for (int i = 0; i < list.size(); i++) {
+                CompoundTag tag = list.getCompound(i).orElseThrow();
+                String name = tag.getString("name").orElseThrow();
+                int level = tag.getInt("level").orElseThrow();
+                Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = registry.get(ResourceLocation.parse(name));
+                if (abilityTypeOptional.isPresent()) {
+                    abilityTypes.put(abilityTypeOptional.get(), level);
+                } else {
+                    EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.WARN, "Skipped loading unknown ability by name: " + name);
                 }
             }
         } else {
@@ -438,7 +436,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
 
     @Override
     public void initializeEntityAbilities(LivingEntity host, IInitializableMutableAbilityStore store) {
-        if (!host.getCommandSenderWorld().isClientSide
+        if (!host.level().isClientSide
                 && !store.isInitialized()
                 && GeneralConfig.mobAbilityChance > 0
                 && host.getId() % GeneralConfig.mobAbilityChance == 0

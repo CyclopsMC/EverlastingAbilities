@@ -6,7 +6,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.cyclops.cyclopscore.init.ModBaseNeoForge;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponent;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesNeoForge;
 import org.cyclops.everlastingabilities.client.gui.RenderLivingHandler;
 
 /**
@@ -23,8 +23,8 @@ public class ClientProxy extends ClientProxyComponent {
     }
 
     @Override
-    public ModBaseNeoForge<EverlastingAbilities> getMod() {
-        return EverlastingAbilities._instance;
+    public ModBaseNeoForge<EverlastingAbilitiesNeoForge> getMod() {
+        return EverlastingAbilitiesNeoForge._instance;
     }
 
     @SubscribeEvent

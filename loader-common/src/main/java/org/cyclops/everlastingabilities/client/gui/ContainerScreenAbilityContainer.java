@@ -1,12 +1,7 @@
 package org.cyclops.everlastingabilities.client.gui;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -14,10 +9,10 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -26,7 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.client.gui.component.button.ButtonArrow;
@@ -41,6 +35,7 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainer;
 import org.cyclops.everlastingabilities.network.packet.MoveAbilityPacket;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.awt.*;
 import java.util.Collections;
@@ -190,10 +185,10 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         drawFancyBackground(guiGraphics, i + 8, j + 17, 66, 61, getPlayerAbilityStore());
         // i + 41, j + 75, i + 41 + 66, j + 75 + 61
         InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, i + 26 - 8, j + 8 + 3, i + 75 - 8, j + 78 + 3, 30, 0.0625F, mouseX, mouseY, this.minecraft.player);
-        drawXp(guiGraphics, i + 67, j + 70);
-        IModHelpers.get().getRenderHelpers().drawScaledCenteredString(guiGraphics, font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, IModHelpers.get().getBaseHelpers().RGBToInt(40, 215, 40), false, Font.DisplayMode.NORMAL);
+        drawXp(guiGraphics, i + 67, j + 70, false);
+        IModHelpers.get().getRenderHelpers().drawScaledCenteredString(guiGraphics, font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, IModHelpers.get().getBaseHelpers().RGBAToInt(40, 215, 40, 255), false, Font.DisplayMode.NORMAL);
         drawFancyBackground(guiGraphics, i + 102, j + 17, 66, 61, getItemAbilityStore());
-        drawItemOnScreen(guiGraphics, i + 134, j + 46, 50, (float)(i + 134) - mouseX, (float)(j + 46 - 30) - mouseY, getMenu().getItemStack(this.minecraft.player));
+        drawItemOnScreen(guiGraphics, i + 102, j + 17, 66, 61, 8, mouseX, mouseY, getMenu().getItemStack(this.minecraft.player));
 
         // Draw abilities
         drawAbilities(guiGraphics, this.leftPos + 8, this.topPos + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
@@ -201,10 +196,6 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     public void drawFancyBackground(GuiGraphics guiGraphics, int x, int y, int width, int height, IAbilityStore abilityStore) {
-        RenderType rendertype = Sheets.translucentItemSheet();
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-        VertexConsumer vertexconsumer = ItemRenderer.getFoilBuffer(bufferSource, rendertype, true, true);
-
         int r = 140;
         int g = 140;
         int b = 140;
@@ -218,16 +209,12 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
         float f = (float)(Util.getMillis() % 9000L) / 9000.0F;
 
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_DST_COLOR);
-        drawTexturedModalRectColor(guiGraphics, vertexconsumer, x, y, (int) (0 + f * 256), 0, width, height, ((float) r) / 255, ((float) g) / 255, ((float) b) / 255, ((float) 255) / 255);
-        drawTexturedModalRectColor(guiGraphics, vertexconsumer, x, y, (int) (-0 + f * 150), (int) (0 + f * 256), width, height, ((float) r) / 255, ((float) g) / 255, ((float) b) / 255, ((float) 255) / 255);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.disableBlend();
+        drawTexturedModalRectColor(guiGraphics, x, y, (int) (0 + f * 256), 0, width, height, ((float) r) / 255, ((float) g) / 255, ((float) b) / 255, ((float) 255) / 255);
+        drawTexturedModalRectColor(guiGraphics, x, y, (int) (-0 + f * 150), (int) (0 + f * 256), width, height, ((float) r) / 255, ((float) g) / 255, ((float) b) / 255, ((float) 255) / 255);
     }
 
-    protected void drawXp(GuiGraphics guiGraphics, int x, int y) {
-        guiGraphics.blit(RenderType::guiTextured, texture, x, y, 0, 219, 5, 5, 256, 256);
+    protected void drawXp(GuiGraphics guiGraphics, int x, int y, boolean reducedIntensity) {
+        modHelpers.getRenderHelpers().blitColored(guiGraphics, texture, x, y, 0, 219, 5, 5, reducedIntensity ? 0.3F : 1F, reducedIntensity ? 0.3F : 1F, reducedIntensity ? 0.3F : 1F, 1F);
     }
 
     private void drawAbilities(GuiGraphics guiGraphics, int x, int y, List<Ability> abilities, int startIndex, int playerXp,
@@ -251,7 +238,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                     Component.translatable(ability.getAbilityType().getTranslationKey())
                             .setStyle(Style.EMPTY.withColor(ability.getAbilityType().getRarity().color()))
                             .getString(),
-                    x + 27, boxY + 7, 0, 1.0F, 50, ability.getAbilityType().getRarity().color().getColor(), false, Font.DisplayMode.NORMAL);
+                    x + 27, boxY + 7, 0, 1.0F, 50, ARGB.opaque(ability.getAbilityType().getRarity().color().getColor()), false, Font.DisplayMode.NORMAL);
 
             // Level
             modHelpers.getRenderHelpers().drawScaledCenteredString(guiGraphics, font,
@@ -260,17 +247,11 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
             // XP
             int requiredXp = ability.getAbilityType().getXpPerLevelScaled();
-            if (playerXp < requiredXp) {
-                RenderSystem.setShaderColor(0.3F, 0.3F, 0.3F, 1);
-            } else {
-                RenderSystem.setShaderColor(1, 1, 1, 1);
-            }
-            drawXp(guiGraphics, x + 57, boxY + 10);
+            drawXp(guiGraphics, x + 57, boxY + 10, playerXp < requiredXp);
             modHelpers.getRenderHelpers().drawScaledCenteredString(guiGraphics, font,
                     "" + requiredXp,
-                    x + 53, boxY + 13, 0, 0.5F, modHelpers.getBaseHelpers().RGBToInt(40, 215, 40), false, Font.DisplayMode.NORMAL);
+                    x + 53, boxY + 13, 0, 0.5F, modHelpers.getBaseHelpers().RGBAToInt(40, 215, 40, 255), false, Font.DisplayMode.NORMAL);
         }
-        RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     private void drawAbilitiesTooltip(GuiGraphics guiGraphics, int x, int y, List<Ability> abilities, int startIndex, int mouseX, int mouseY) {
@@ -283,11 +264,12 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Name
                 lines.add(Component.translatable(ability.getAbilityType().getTranslationKey())
-                        .setStyle(Style.EMPTY.withColor(ability.getAbilityType().getRarity().color())));
+                        .setStyle(Style.EMPTY.withColor(ability.getAbilityType().getRarity().color().getColor())));
 
                 // Level
                 lines.add(Component.translatable("general.everlastingabilities.level", ability.getLevel(),
-                        ability.getAbilityType().getMaxLevel() == -1 ? "Inf" : ability.getAbilityType().getMaxLevel()));
+                        ability.getAbilityType().getMaxLevel() == -1 ? "Inf" : ability.getAbilityType().getMaxLevel())
+                        .setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
 
                 // Description
                 lines.add(Component.translatable(ability.getAbilityType().getUnlocalizedDescription())
@@ -306,44 +288,44 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                                     .withBold(true)));
                 }
 
-                modHelpers.getGuiHelpers().drawTooltip(this, guiGraphics.pose(), lines, mouseX - this.leftPos, mouseY - this.topPos);
+                guiGraphics.setComponentTooltipForNextFrame(font, lines, mouseX - this.leftPos, mouseY - this.topPos);
             }
         }
     }
 
-    public void drawTexturedModalRectColor(GuiGraphics guiGraphics, VertexConsumer vertexbuffer, int x, int y, int textureX, int textureY, int width, int height, float r, float g, float b, float a) {
-//        RenderSystem.setShaderColor(r, g, b, a);
-        guiGraphics.blit(RenderType::guiTextured, RES_ITEM_GLINT, x, y, textureX, textureY, width, height, 256, 256, ARGB.colorFromFloat(a, r, g, b));
+    public void drawTexturedModalRectColor(GuiGraphics guiGraphics, int x, int y, int textureX, int textureY, int width, int height, float r, float g, float b, float a) {
+        guiGraphics.blit(RenderPipelines.GUI_OPAQUE_TEXTURED_BACKGROUND, RES_ITEM_GLINT, x, y, textureX, textureY, width, height, 256, 256, ARGB.colorFromFloat(a, r, g, b));
     }
 
-    public static void drawItemOnScreen(GuiGraphics guiGraphics, int posX, int posY, int scale, float mouseX, float mouseY, ItemStack itemStack) {
-        float f = (float)Math.atan((double)(mouseX / 40.0F));
-        float f1 = (float)Math.atan((double)(mouseY / 40.0F));
-        PoseStack posestack = guiGraphics.pose();
-        posestack.pushPose();
-        posestack.translate((double)posX, (double)posY, 1050.0D);
-        posestack.scale(1.0F, 1.0F, -1.0F);
+    public static void drawItemOnScreen(GuiGraphics guiGraphics, int x1, int y1, int width, int height, int scale, float mouseX, float mouseY, ItemStack itemStack) {
+        int x2 = x1 + width;
+        int y2 = y1 + height;
 
-//        RenderSystem.applyModelViewMatrix();
-        PoseStack posestack1 = posestack;
-        posestack1.translate(0.0D, 0.0D, 1000.0D);
-        posestack1.scale((float)scale, (float)scale, (float)scale);
-        Quaternionf rotation = Axis.ZP.rotationDegrees(180.0F);
-        Quaternionf cameraOrientationY = Axis.YP.rotationDegrees(-f * 40.0F);
-        Quaternionf cameraOrientationX = Axis.XP.rotationDegrees(f1 * 20.0F);
-        rotation.mul(cameraOrientationY);
-        rotation.mul(cameraOrientationX);
-        posestack1.mulPose(rotation);
+        float averageX = (float)(x1 + x2) / 2.0F;
+        float averageY = (float)(y1 + y2) / 2.0F;
+        guiGraphics.enableScissor(x1, y1, x2, y2);
+        float rotationY = (float)Math.atan((averageX - mouseX) / 40.0F);
+        float rotationX = (float)Math.atan((averageY - mouseY) / 40.0F);
+        Quaternionf rotation = (new Quaternionf())
+                .rotateZ((float)Math.PI)
+                .rotateY(-182.0F + rotationY * -40.0F * ((float)Math.PI / 180F))
+                .rotateX((rotationX) * 50.0F * ((float)Math.PI / 180F));
 
-        MultiBufferSource.BufferSource renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        Lighting.setupFor3DItems();
-        Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemDisplayContext.FIXED, 15728880, OverlayTexture.NO_OVERLAY, posestack1, renderTypeBuffer, null, 0);
-        Lighting.setupForFlatItems();
-        renderTypeBuffer.endBatch();
+        guiGraphics.guiRenderState.submitPicturesInPictureState(
+                new GuiItemRenderState(
+                        itemStack,
+                        new Vector3f(0.0F, 0.0F, 0.0F),
+                        rotation,
+                        x1,
+                        y1,
+                        x2,
+                        y2,
+                        scale,
+                        guiGraphics.scissorStack.peek()
+                )
+        );
 
-        posestack.popPose();
-//        RenderSystem.applyModelViewMatrix();
-        Lighting.setupFor3DItems();
+        guiGraphics.disableScissor();
     }
 
     @Override

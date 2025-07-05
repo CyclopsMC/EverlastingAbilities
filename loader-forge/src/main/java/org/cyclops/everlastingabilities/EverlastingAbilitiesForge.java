@@ -12,7 +12,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -41,6 +40,7 @@ import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbilityConf
 import org.cyclops.everlastingabilities.component.DataComponentAbilityStoreConfig;
 import org.cyclops.everlastingabilities.core.config.ExtendedConfigurableType;
 import org.cyclops.everlastingabilities.core.config.configurabletypeaction.AbilitySerializerActionForge;
+import org.cyclops.everlastingabilities.gametest.GameTestsCommon;
 import org.cyclops.everlastingabilities.helper.AbilityHelpersForge;
 import org.cyclops.everlastingabilities.helper.IAbilityHelpers;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainerConfig;
@@ -78,14 +78,14 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
 
         ExtendedConfigurableType.ABILITY_SERIALIZER.setAction(new AbilitySerializerActionForge<>());
 
-        MinecraftForge.EVENT_BUS.addListener(this::onEntityJoinWorld);
-        MinecraftForge.EVENT_BUS.addListener(this::onPlayerLoggedIn);
-        MinecraftForge.EVENT_BUS.addListener(this::onLivingDeath);
-        MinecraftForge.EVENT_BUS.addListener(this::onPlayerClone);
-        MinecraftForge.EVENT_BUS.addListener(this::onLivingUpdate);
-        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::onAttachCapabilities);
-        getModEventBus().addListener(this::onRegistriesCreate);
-        getModEventBus().addListener(this::onDatapackRegistryCreate);
+        EntityJoinLevelEvent.BUS.addListener(this::onEntityJoinWorld);
+        PlayerEvent.PlayerLoggedInEvent.BUS.addListener(this::onPlayerLoggedIn);
+        LivingDeathEvent.BUS.addListener(this::onLivingDeath);
+        PlayerEvent.Clone.BUS.addListener(this::onPlayerClone);
+        TickEvent.PlayerTickEvent.Post.BUS.addListener(this::onLivingUpdate);
+        AttachCapabilitiesEvent.Entities.BUS.addListener(this::onAttachCapabilities);
+        NewRegistryEvent.getBus(getModBusGroup()).addListener(this::onRegistriesCreate);
+        DataPackRegistryEvent.NewRegistry.getBus(getModBusGroup()).addListener(this::onDatapackRegistryCreate);
         this.abilityHelpers = new AbilityHelpersForge(getModHelpers());
     }
 
@@ -185,6 +185,11 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
 
         // Data components
         configHandler.addConfigurable(new DataComponentAbilityStoreConfig<>(this));
+    }
+
+    @Override
+    public Class<?>[] getGameTestClasses() {
+        return new Class<?>[] { GameTestsCommon.class };
     }
 
     public void onEntityJoinWorld(EntityJoinLevelEvent event) {

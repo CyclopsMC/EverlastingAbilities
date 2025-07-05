@@ -30,6 +30,7 @@ import org.cyclops.everlastingabilities.attachment.Attachments;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
 import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbilityConfig;
 import org.cyclops.everlastingabilities.component.DataComponentAbilityStoreConfig;
+import org.cyclops.everlastingabilities.gametest.GameTestsCommon;
 import org.cyclops.everlastingabilities.helper.AbilityHelpersFabric;
 import org.cyclops.everlastingabilities.helper.IAbilityHelpers;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainerConfig;
@@ -146,6 +147,11 @@ public class EverlastingAbilitiesFabric extends ModBaseFabric<EverlastingAbiliti
 
         // Data components
         configHandler.addConfigurable(new DataComponentAbilityStoreConfig<>(this));
+    }
+
+    @Override
+    public Class<?>[] getGameTestClasses() {
+        return new Class<?>[] { GameTestsCommon.class };
     }
 
     public void onEntityJoinWorld(Entity entity, Level level) {

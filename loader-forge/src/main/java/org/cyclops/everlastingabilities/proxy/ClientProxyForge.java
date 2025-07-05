@@ -1,8 +1,6 @@
 package org.cyclops.everlastingabilities.proxy;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.cyclops.cyclopscore.init.ModBaseForge;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponentForge;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesForge;
@@ -18,7 +16,7 @@ public class ClientProxyForge extends ClientProxyComponentForge {
 
     public ClientProxyForge() {
         super(new CommonProxyForge());
-        MinecraftForge.EVENT_BUS.register(this);
+        LivingEvent.LivingTickEvent.BUS.addListener(this::onRenderLiving);
     }
 
     @Override
@@ -26,7 +24,6 @@ public class ClientProxyForge extends ClientProxyComponentForge {
         return EverlastingAbilitiesForge._instance;
     }
 
-    @SubscribeEvent
     public void onRenderLiving(LivingEvent.LivingTickEvent event) {
         RenderLivingHandler.onRenderLiving(event.getEntity());
     }
