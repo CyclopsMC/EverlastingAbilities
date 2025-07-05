@@ -35,6 +35,7 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.command.CommandModifyAbilities;
 import org.cyclops.everlastingabilities.command.argument.ArgumentTypeAbilityConfig;
 import org.cyclops.everlastingabilities.component.DataComponentAbilityStoreConfig;
+import org.cyclops.everlastingabilities.gametest.GameTestsCommon;
 import org.cyclops.everlastingabilities.helper.AbilityHelpersNeoForge;
 import org.cyclops.everlastingabilities.helper.IAbilityHelpers;
 import org.cyclops.everlastingabilities.inventory.container.ContainerAbilityContainerConfig;
@@ -52,15 +53,15 @@ import org.cyclops.everlastingabilities.recipe.TotemRecycleRecipeConfig;
  *
  */
 @Mod(Reference.MOD_ID)
-public class EverlastingAbilities extends ModBaseNeoForge<EverlastingAbilities> implements IEverlastingAbilitiesModBase {
+public class EverlastingAbilitiesNeoForge extends ModBaseNeoForge<EverlastingAbilitiesNeoForge> implements IEverlastingAbilitiesModBase {
 
     /**
      * The unique instance of this mod.
      */
-    public static EverlastingAbilities _instance;
+    public static EverlastingAbilitiesNeoForge _instance;
     private final IAbilityHelpers abilityHelpers;
 
-    public EverlastingAbilities(IEventBus modEventBus) {
+    public EverlastingAbilitiesNeoForge(IEventBus modEventBus) {
         super(Reference.MOD_ID, (instance) -> {
             _instance = instance;
             EverlastingAbilitiesInstance.MOD = instance;
@@ -180,6 +181,11 @@ public class EverlastingAbilities extends ModBaseNeoForge<EverlastingAbilities> 
         configHandler.addConfigurable(new DataComponentAbilityStoreConfig<>(this));
     }
 
+    @Override
+    public Class<?>[] getGameTestClasses() {
+        return new Class<?>[] { GameTestsCommon.class };
+    }
+
     /**
      * Log a new info message for this mod.
      * @param message The message to show.
@@ -194,7 +200,7 @@ public class EverlastingAbilities extends ModBaseNeoForge<EverlastingAbilities> 
      * @param message The message to show.
      */
     public static void clog(org.apache.logging.log4j.Level level, String message) {
-        EverlastingAbilities._instance.getLoggerHelper().log(level, message);
+        EverlastingAbilitiesNeoForge._instance.getLoggerHelper().log(level, message);
     }
 
     public void onEntityJoinWorld(EntityJoinLevelEvent event) {

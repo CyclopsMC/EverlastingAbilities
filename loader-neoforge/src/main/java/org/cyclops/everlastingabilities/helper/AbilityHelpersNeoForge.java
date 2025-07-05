@@ -73,7 +73,7 @@ public class AbilityHelpersNeoForge extends AbilityHelpersCommon {
 
     @Override
     public boolean isPlayerStateLastFlight(Player player) {
-        return player.getPersistentData().getBoolean(PLAYER_NBT_KEY_LAST_FLIGHT);
+        return player.getPersistentData().getBoolean(PLAYER_NBT_KEY_LAST_FLIGHT).orElse(false);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class AbilityHelpersNeoForge extends AbilityHelpersCommon {
         if (!tag.contains(Player.PERSISTED_NBT_TAG)) {
             tag.put(Player.PERSISTED_NBT_TAG, new CompoundTag());
         }
-        CompoundTag playerTag = tag.getCompound(Player.PERSISTED_NBT_TAG);
+        CompoundTag playerTag = tag.getCompound(Player.PERSISTED_NBT_TAG).get();
         if (!playerTag.contains(NBT_TOTEM_SPAWNED)) {
             playerTag.putBoolean(NBT_TOTEM_SPAWNED, true);
             return true;

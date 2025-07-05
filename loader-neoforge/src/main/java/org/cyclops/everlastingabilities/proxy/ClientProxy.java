@@ -2,11 +2,14 @@ package org.cyclops.everlastingabilities.proxy;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.cyclops.cyclopscore.init.ModBaseNeoForge;
 import org.cyclops.cyclopscore.proxy.ClientProxyComponent;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesNeoForge;
+import org.cyclops.everlastingabilities.client.gui.GuiItemRenderState;
+import org.cyclops.everlastingabilities.client.gui.GuiItemRenderer;
 import org.cyclops.everlastingabilities.client.gui.RenderLivingHandler;
 
 /**
@@ -20,11 +23,12 @@ public class ClientProxy extends ClientProxyComponent {
     public ClientProxy() {
         super(new CommonProxy());
         NeoForge.EVENT_BUS.register(this);
+        getMod().getModEventBus().addListener(this::onRegisterPictureInPictureRenderers);
     }
 
     @Override
-    public ModBaseNeoForge<EverlastingAbilities> getMod() {
-        return EverlastingAbilities._instance;
+    public ModBaseNeoForge<EverlastingAbilitiesNeoForge> getMod() {
+        return EverlastingAbilitiesNeoForge._instance;
     }
 
     @SubscribeEvent
@@ -32,6 +36,10 @@ public class ClientProxy extends ClientProxyComponent {
         if (event.getEntity() instanceof LivingEntity livingEntity) {
             RenderLivingHandler.onRenderLiving(livingEntity);
         }
+    }
+
+    public void onRegisterPictureInPictureRenderers(RegisterPictureInPictureRenderersEvent event) {
+        event.register(GuiItemRenderState.class, GuiItemRenderer::new);
     }
 
 }

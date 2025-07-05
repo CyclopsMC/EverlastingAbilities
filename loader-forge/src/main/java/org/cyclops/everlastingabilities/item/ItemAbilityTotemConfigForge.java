@@ -1,9 +1,7 @@
 package org.cyclops.everlastingabilities.item;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.GatherComponentsEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesForge;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
@@ -18,8 +16,8 @@ public class ItemAbilityTotemConfigForge extends ItemAbilityTotemConfig<Everlast
         super(EverlastingAbilitiesForge._instance,
                 (eConfig, properties) -> new ItemAbilityTotemForge(properties
                         .stacksTo(1)));
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCreativeModeTabBuildContents);
-        MinecraftForge.EVENT_BUS.addListener(this::modifyComponents);
+        BuildCreativeModeTabContentsEvent.getBus(EverlastingAbilitiesForge._instance.getModBusGroup()).addListener(this::onCreativeModeTabBuildContents);
+        GatherComponentsEvent.Item.BUS.addListener(this::modifyComponents);
     }
 
     protected void onCreativeModeTabBuildContents(BuildCreativeModeTabContentsEvent event) {

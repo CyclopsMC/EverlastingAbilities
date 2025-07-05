@@ -17,8 +17,6 @@ import org.cyclops.everlastingabilities.ability.AbilityConditionForge;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
-import org.cyclops.everlastingabilities.api.capability.ItemDataMutableAbilityStore;
-import org.cyclops.everlastingabilities.item.ItemGuiAbilityContainer;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -46,11 +44,7 @@ public class AbilityHelpersForge extends AbilityHelpersCommon {
 
     @Override
     public Optional<IMutableAbilityStore> getItemAbilityStore(ItemStack itemStack) {
-        // TODO: use capabilities when Forge restores item capabilities
-        if (itemStack.getItem() instanceof ItemGuiAbilityContainer) {
-            return Optional.of(new ItemDataMutableAbilityStore(itemStack));
-        }
-        return Optional.empty();
+        return itemStack.getCapability(CapabilitiesForge.CAPABILITY).resolve();
     }
 
     @Override
@@ -80,7 +74,7 @@ public class AbilityHelpersForge extends AbilityHelpersCommon {
 
     @Override
     public boolean isPlayerStateLastFlight(Player player) {
-        return player.getPersistentData().getBoolean(PLAYER_NBT_KEY_LAST_FLIGHT);
+        return player.getPersistentData().getBoolean(PLAYER_NBT_KEY_LAST_FLIGHT).orElse(false);
     }
 
     @Override

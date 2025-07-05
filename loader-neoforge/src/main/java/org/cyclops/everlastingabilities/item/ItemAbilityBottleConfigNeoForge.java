@@ -3,7 +3,7 @@ package org.cyclops.everlastingabilities.item;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 import org.cyclops.everlastingabilities.Capabilities;
-import org.cyclops.everlastingabilities.EverlastingAbilities;
+import org.cyclops.everlastingabilities.EverlastingAbilitiesNeoForge;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.capability.DefaultMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.ItemDataMutableAbilityStore;
@@ -12,14 +12,14 @@ import org.cyclops.everlastingabilities.api.capability.ItemDataMutableAbilitySto
  * Config for the ability bottle.
  * @author rubensworks
  */
-public class ItemAbilityBottleConfigNeoForge extends ItemAbilityBottleConfig<EverlastingAbilities> {
+public class ItemAbilityBottleConfigNeoForge extends ItemAbilityBottleConfig<EverlastingAbilitiesNeoForge> {
 
     public ItemAbilityBottleConfigNeoForge() {
-        super(EverlastingAbilities._instance,
+        super(EverlastingAbilitiesNeoForge._instance,
                 (eConfig, properties) -> new ItemAbilityBottleNeoForge(properties
                         .stacksTo(1)));
-        EverlastingAbilities._instance.getModEventBus().addListener(this::modifyComponents);
-        EverlastingAbilities._instance.getModEventBus().addListener(this::registerCapability);
+        EverlastingAbilitiesNeoForge._instance.getModEventBus().addListener(this::modifyComponents);
+        EverlastingAbilitiesNeoForge._instance.getModEventBus().addListener(this::registerCapability);
     }
 
     protected void modifyComponents(ModifyDefaultComponentsEvent event) {
