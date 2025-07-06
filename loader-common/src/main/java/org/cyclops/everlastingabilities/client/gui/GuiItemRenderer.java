@@ -26,7 +26,7 @@ public class GuiItemRenderer extends PictureInPictureRenderer<GuiItemRenderState
 
     @Override
     protected void renderToTexture(GuiItemRenderState renderState, PoseStack poseStack) {
-        Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
+        Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ENTITY_IN_UI);
         Vector3f vector3f = renderState.translation();
         poseStack.translate(vector3f.x, vector3f.y, vector3f.z);
         poseStack.scale(renderState.scale(), renderState.scale(), 1);
