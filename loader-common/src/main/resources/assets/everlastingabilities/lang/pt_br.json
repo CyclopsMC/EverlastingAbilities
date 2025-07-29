@@ -1,18 +1,12 @@
 {
-    "_comment": "General",
-    "itemGroup.everlastingabilities": "Everlasting Abilities",
     "general.everlastingabilities.empty": "Nenhuma",
     "general.everlastingabilities.level": "Nível: %s / %s",
     "general.everlastingabilities.xp": "XP/Nível: %s (%s níveis de jogador)",
     "general.everlastingabilities.disabled": "Desativada",
-
-    "_comment": "Chat",
     "chat.everlastingabilities.command.invalidAbility": "Não foi possível encontrar a habilidade com o id \"%s\".",
     "chat.everlastingabilities.command.addedAbility": "Habilidade %s adicionada, nova habilidade %s.",
     "chat.everlastingabilities.command.removedAbility": "Habilidade %s removida, nova habilidade %s.",
     "chat.everlastingabilities.playerLostAbility": "%s deixou cair %s de nível %s!",
-
-    "_comment": "# Abilities",
     "ability.everlastingabilities.speed": "Velocidade",
     "ability.everlastingabilities.speed.info": "Anda mais rápido",
     "ability.everlastingabilities.haste": "Pressa",
@@ -57,7 +51,6 @@
     "ability.everlastingabilities.oozing_self.info": "Gera slimes ao morrer",
     "ability.everlastingabilities.infested_self": "Infestado (próprio)",
     "ability.everlastingabilities.infested_self.info": "Gera traças ao receber dano",
-
     "ability.everlastingabilities.slowness": "Lentidão",
     "ability.everlastingabilities.slowness.info": "Entidades na área se movem mais devagar",
     "ability.everlastingabilities.mining_fatigue": "Fadiga de Mineração",
@@ -72,7 +65,6 @@
     "ability.everlastingabilities.weakness.info": "Entidades na área ficam mais fracas",
     "ability.everlastingabilities.poison": "Veneno",
     "ability.everlastingabilities.poison.info": "Entidades na área ficam envenenadas",
-    "ability.everlastingabilities.wither": "Wither",
     "ability.everlastingabilities.wither.info": "Entidades na área recebem o efeito Wither",
     "ability.everlastingabilities.glowing": "Brilho",
     "ability.everlastingabilities.glowing.info": "Entidades na área começam a brilhar",
@@ -92,7 +84,6 @@
     "ability.everlastingabilities.oozing_others.info": "Entidades na área geram slimes ao morrer",
     "ability.everlastingabilities.infested_others": "Infestado (outros)",
     "ability.everlastingabilities.infested_others.info": "Entidades na área geram traças ao receber dano",
-
     "ability.everlastingabilities.flight": "Voo",
     "ability.everlastingabilities.flight.info": "Permite que você voe",
     "ability.everlastingabilities.step_assist": "Assistência de Subida",
@@ -105,7 +96,6 @@
     "ability.everlastingabilities.power_stare.info": "Empurra as entidades para as quais você está olhando",
     "ability.everlastingabilities.magnetize": "Magnetizar",
     "ability.everlastingabilities.magnetize.info": "Atrai itens próximos",
-
     "ability.everlastingabilities.heart_gainer": "Ganhador de Coração",
     "ability.everlastingabilities.heart_gainer.info": "Aumenta a vida máxima",
     "ability.everlastingabilities.hidden_chestplate": "Peitoral Oculto",
@@ -122,8 +112,6 @@
     "ability.everlastingabilities.impacting_legs.info": "Aumenta sua distância de queda segura",
     "ability.everlastingabilities.swift_sneak": "Passo Furtivo",
     "ability.everlastingabilities.swift_sneak.info": "Move-se mais rápido enquanto está agachado",
-
-    "_comment": "Items",
     "item.everlastingabilities.ability_totem": "Totem de Habilidade",
     "item.everlastingabilities.ability_bottle": "Frasco de Habilidade"
 }
