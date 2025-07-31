@@ -207,9 +207,7 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
     }
 
     public void onPlayerClone(PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
-            event.getOriginal().reviveCaps();
-        }
+        event.getOriginal().reviveCaps();
         getAbilityHelpers().onPlayerClone(event.getOriginal(), event.getEntity());
     }
 

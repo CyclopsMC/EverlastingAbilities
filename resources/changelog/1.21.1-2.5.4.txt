@@ -1,0 +1,9 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.25.2 or higher.
+
+Additions:
+* Add PT_BR localization (#300)
+* Add translations through Crowdin (#301)
+
+Fixes:
+* Fix abilities resetting after killing Ender Dragon in Forge, Closes #298
