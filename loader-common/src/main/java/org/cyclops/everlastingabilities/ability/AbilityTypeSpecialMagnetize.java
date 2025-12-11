@@ -46,7 +46,7 @@ public class AbilityTypeSpecialMagnetize extends AbilityTypeAdapter {
     @Override
     public void onTick(Player player, int level) {
         Level world = player.level();
-        if (!world.isClientSide && !player.isCrouching() && world.getGameTime() % (IModHelpers.get().getMinecraftHelpers().getSecondInTicks() / 20) == 0) {
+        if (!world.isClientSide() && !player.isCrouching() && world.getGameTime() % (IModHelpers.get().getMinecraftHelpers().getSecondInTicks() / 20) == 0) {
             // Center of the attraction
             double x = player.getX();
             double y = player.getY();

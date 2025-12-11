@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities.proxy;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEvent;
@@ -39,7 +40,7 @@ public class ClientProxy extends ClientProxyComponent {
     }
 
     public void onRegisterPictureInPictureRenderers(RegisterPictureInPictureRenderersEvent event) {
-        event.register(GuiItemRenderState.class, GuiItemRenderer::new);
+        event.register(GuiItemRenderState.class, buffers -> new GuiItemRenderer(buffers, Minecraft.getInstance().getEntityRenderDispatcher()));
     }
 
 }

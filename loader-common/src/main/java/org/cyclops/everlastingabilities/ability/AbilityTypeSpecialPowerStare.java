@@ -49,7 +49,7 @@ public class AbilityTypeSpecialPowerStare extends AbilityTypeAdapter {
         }
 
         Level world = player.level();
-        if (!world.isClientSide && world.getGameTime() % (IModHelpers.get().getMinecraftHelpers().getSecondInTicks() / 4) == 0) {
+        if (!world.isClientSide() && world.getGameTime() % (IModHelpers.get().getMinecraftHelpers().getSecondInTicks() / 4) == 0) {
             int range = level * 10;
             double eyeHeight = player.getEyeHeight();
             Vec3 lookVec = player.getLookAngle();

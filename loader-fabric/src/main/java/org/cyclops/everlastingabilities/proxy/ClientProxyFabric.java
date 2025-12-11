@@ -39,7 +39,7 @@ public class ClientProxyFabric extends ClientProxyComponentFabric {
         });
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             GuiRenderer guiRenderer = Minecraft.getInstance().gameRenderer.guiRenderer;
-            GuiItemRenderer guiItemRenderer = new GuiItemRenderer(guiRenderer.bufferSource);
+            GuiItemRenderer guiItemRenderer = new GuiItemRenderer(guiRenderer.bufferSource, Minecraft.getInstance().getEntityRenderDispatcher());
             guiRenderer.pictureInPictureRenderers.put(
                     guiItemRenderer.getRenderStateClass(),
                     guiItemRenderer

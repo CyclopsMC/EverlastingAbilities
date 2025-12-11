@@ -3,17 +3,22 @@ package org.cyclops.everlastingabilities.client.gui;
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.state.ItemEntityRenderState;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -183,7 +188,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         drawXp(guiGraphics, i + 67, j + 70, false);
         IModHelpers.get().getRenderHelpers().drawScaledCenteredString(guiGraphics, font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, IModHelpers.get().getBaseHelpers().RGBAToInt(40, 215, 40, 255), false, Font.DisplayMode.NORMAL);
         drawFancyBackground(guiGraphics, i + 102, j + 17, 66, 61, getItemAbilityStore());
-        drawItemOnScreen(guiGraphics, i + 100, j + 17, 66, 61, 8, mouseX - 16, mouseY, getMenu().getItemStack(this.minecraft.player));
+        drawItemOnScreen(guiGraphics, i + 100, j + 17, 66, 61, 10, mouseX - 16, mouseY, getMenu().getItemStack(this.minecraft.player));
 
         // Draw abilities
         drawAbilities(guiGraphics, this.leftPos + 8, this.topPos + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
@@ -306,10 +311,15 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                 .rotateY(-182.0F + rotationY * -40.0F * ((float)Math.PI / 180F))
                 .rotateX((rotationX) * 50.0F * ((float)Math.PI / 180F));
 
+        ItemEntity itemEntity = new ItemEntity(Minecraft.getInstance().level, 0, 0, 0, itemStack);
+        EntityRenderer<? super ItemEntity, ?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(itemEntity);
+        ItemEntityRenderState entityRenderState = (ItemEntityRenderState) renderer.createRenderState(itemEntity, 0);
+        entityRenderState.bobOffset = 0;
         guiGraphics.guiRenderState.submitPicturesInPictureState(
                 new GuiItemRenderState(
+                        entityRenderState,
                         itemStack,
-                        new Vector3f(0.0F, 0.0F, 0.0F),
+                        new Vector3f(0.5F, 4.0F, 0.0F),
                         rotation,
                         x1,
                         y1,
@@ -324,9 +334,9 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        int newSelectedPlayer = canMoveFromPlayerByItem() ? clickAbilities(8, 83, getPlayerAbilities(), startIndexPlayer, absoluteSelectedIndexPlayer, mouseX, mouseY) : -2;
-        int newSelectedItem = clickAbilities(105, 83, getItemAbilities(), startIndexItem, absoluteSelectedIndexItem, mouseX, mouseY);
+    public boolean mouseClicked(MouseButtonEvent evt, boolean isDoubleClick) {
+        int newSelectedPlayer = canMoveFromPlayerByItem() ? clickAbilities(8, 83, getPlayerAbilities(), startIndexPlayer, absoluteSelectedIndexPlayer, evt.x(), evt.y()) : -2;
+        int newSelectedItem = clickAbilities(105, 83, getItemAbilities(), startIndexItem, absoluteSelectedIndexItem, evt.x(), evt.y());
 
         if (newSelectedPlayer >= -1) {
             absoluteSelectedIndexPlayer = newSelectedPlayer;
@@ -336,7 +346,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         }
 
         if (newSelectedPlayer < 0 && newSelectedItem < 0) {
-            super.mouseClicked(mouseX, mouseY, mouseButton);
+            super.mouseClicked(evt, isDoubleClick);
         }
 
         return true;

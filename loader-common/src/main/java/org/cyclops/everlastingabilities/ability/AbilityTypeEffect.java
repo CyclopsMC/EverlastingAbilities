@@ -119,7 +119,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
     @Override
     public void onTick(Player player, int level) {
         Level world = player.level();
-        if (potion != null && !world.isClientSide && world.getGameTime() % getTickModulus(level) == 0) {
+        if (potion != null && !world.isClientSide() && world.getGameTime() % getTickModulus(level) == 0) {
             switch (getTarget()) {
                 case SELF -> {
                     player.addEffect(

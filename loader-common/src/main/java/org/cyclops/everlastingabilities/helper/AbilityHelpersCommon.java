@@ -436,7 +436,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
 
     @Override
     public void initializeEntityAbilities(LivingEntity host, IInitializableMutableAbilityStore store) {
-        if (!host.level().isClientSide
+        if (!host.level().isClientSide()
                 && !store.isInitialized()
                 && GeneralConfig.mobAbilityChance > 0
                 && host.getId() % GeneralConfig.mobAbilityChance == 0
@@ -480,7 +480,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
 
     @Override
     public void onEntityDeath(Entity entity, DamageSource source) {
-        if (!entity.level().isClientSide) {
+        if (!entity.level().isClientSide()) {
             boolean doMobLoot = ((ServerLevel) entity.level()).getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
             if (entity instanceof Player
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0

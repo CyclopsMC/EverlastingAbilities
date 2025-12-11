@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.client.gui;
 
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -13,6 +14,7 @@ import javax.annotation.Nullable;
  * @author rubensworks
  */
 public record GuiItemRenderState(
+        EntityRenderState renderState,
         ItemStack itemStack,
         Vector3f translation,
         Quaternionf rotation,
@@ -26,6 +28,7 @@ public record GuiItemRenderState(
 ) implements PictureInPictureRenderState {
 
     public GuiItemRenderState(
+            EntityRenderState renderState,
             ItemStack itemStack,
             Vector3f translation,
             Quaternionf rotation,
@@ -37,6 +40,7 @@ public record GuiItemRenderState(
             @Nullable ScreenRectangle scissorArea
     ) {
         this(
+                renderState,
                 itemStack,
                 translation,
                 rotation,

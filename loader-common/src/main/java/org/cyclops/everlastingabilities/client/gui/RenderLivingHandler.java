@@ -16,7 +16,7 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
  */
 public class RenderLivingHandler {
     public static void onRenderLiving(LivingEntity entity) {
-        if (entity.level().isClientSide
+        if (entity.level().isClientSide()
                 && ((GeneralConfig.showEntityParticles && entity instanceof PathfinderMob)
                 || (GeneralConfig.showPlayerParticles && entity instanceof Player))
                 && !Minecraft.getInstance().isPaused()
@@ -44,8 +44,8 @@ public class RenderLivingHandler {
                     double motionY = 0.02D - rand.nextDouble() * 0.04D;
                     double motionZ = 0.02D - rand.nextDouble() * 0.04D;
 
-                    Minecraft.getInstance().levelRenderer.addParticle(
-                            new ParticleBlurData(red, green, blue, scale, ageMultiplier), false,
+                    entity.level().addParticle(
+                            new ParticleBlurData(red, green, blue, scale, ageMultiplier),
                             x, y, z,
                             motionX, motionY, motionZ);
                 }

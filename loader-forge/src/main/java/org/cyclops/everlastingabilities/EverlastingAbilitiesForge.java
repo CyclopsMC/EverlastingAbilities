@@ -84,8 +84,8 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
         PlayerEvent.Clone.BUS.addListener(this::onPlayerClone);
         TickEvent.PlayerTickEvent.Post.BUS.addListener(this::onLivingUpdate);
         AttachCapabilitiesEvent.Entities.BUS.addListener(this::onAttachCapabilities);
-        NewRegistryEvent.getBus(getModBusGroup()).addListener(this::onRegistriesCreate);
-        DataPackRegistryEvent.NewRegistry.getBus(getModBusGroup()).addListener(this::onDatapackRegistryCreate);
+        NewRegistryEvent.BUS.addListener(this::onRegistriesCreate);
+        DataPackRegistryEvent.NewRegistry.BUS.addListener(this::onDatapackRegistryCreate);
         this.abilityHelpers = new AbilityHelpersForge(getModHelpers());
     }
 
@@ -103,7 +103,7 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
         return root;
     }
 
-    public void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public void onAttachCapabilities(AttachCapabilitiesEvent.Entities event) {
         if (event.getObject() instanceof Mob entity) {
             attachEntityCapability(event, entity);
         } else if (event.getObject() instanceof Player entity) {
@@ -111,7 +111,7 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
         }
     }
 
-    protected void attachEntityCapability(AttachCapabilitiesEvent<?> event, Entity entity) {
+    protected void attachEntityCapability(AttachCapabilitiesEvent.Entities event, Entity entity) {
         event.addCapability(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "ability_store"), new ICapabilityProvider() {
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction direction) {
@@ -193,7 +193,7 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
     }
 
     public void onEntityJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getLevel().isClientSide && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
+        if (event.getLevel().isClientSide() && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
             getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
         }
     }
@@ -211,8 +211,8 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
         getAbilityHelpers().onPlayerClone(event.getOriginal(), event.getEntity());
     }
 
-    public void onLivingUpdate(TickEvent.PlayerTickEvent event) {
-        getAbilityHelpers().onEntityTick(event.player);
+    public void onLivingUpdate(TickEvent.PlayerTickEvent.Post event) {
+        getAbilityHelpers().onEntityTick(event.player());
     }
 
     private void onDatapackRegistryCreate(DataPackRegistryEvent.NewRegistry event) {

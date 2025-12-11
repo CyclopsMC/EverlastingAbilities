@@ -5,18 +5,22 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import org.cyclops.everlastingabilities.Reference;
 import org.joml.Vector3f;
 
 /**
+ * Based on GuiEntityRenderer
  * @author rubensworks
  */
 public class GuiItemRenderer extends PictureInPictureRenderer<GuiItemRenderState>  {
+    private final EntityRenderDispatcher entityRenderDispatcher;
 
-    public GuiItemRenderer(MultiBufferSource.BufferSource bufferSource) {
+    public GuiItemRenderer(MultiBufferSource.BufferSource bufferSource, EntityRenderDispatcher entityRenderDispatcher) {
         super(bufferSource);
+        this.entityRenderDispatcher = entityRenderDispatcher;
     }
 
     @Override
@@ -31,8 +35,12 @@ public class GuiItemRenderer extends PictureInPictureRenderer<GuiItemRenderState
         poseStack.translate(vector3f.x, vector3f.y, vector3f.z);
         poseStack.scale(renderState.scale(), renderState.scale(), 1);
         poseStack.mulPose(renderState.rotation());
+        FeatureRenderDispatcher featurerenderdispatcher = Minecraft.getInstance().gameRenderer.getFeatureRenderDispatcher();
+        CameraRenderState camerarenderstate = new CameraRenderState();
 
-        Minecraft.getInstance().getItemRenderer().renderStatic(renderState.itemStack(), ItemDisplayContext.FIXED, 15728880, OverlayTexture.NO_OVERLAY, poseStack, this.bufferSource, null, 0);
+        this.entityRenderDispatcher
+                .submit(renderState.renderState(), camerarenderstate, 0.0, 0.0, 0.0, poseStack, featurerenderdispatcher.getSubmitNodeStorage());
+        featurerenderdispatcher.renderAllFeatures();
     }
 
     @Override

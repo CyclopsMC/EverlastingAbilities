@@ -1,5 +1,6 @@
 package org.cyclops.everlastingabilities.proxy;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RegisterPictureInPictureRendererEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import org.cyclops.cyclopscore.init.ModBaseForge;
@@ -32,7 +33,7 @@ public class ClientProxyForge extends ClientProxyComponentForge {
     }
 
     public void onRegisterPictureInPictureRenderers(RegisterPictureInPictureRendererEvent event) {
-        event.register(new GuiItemRenderer(event.getBufferSource()));
+        event.register(new GuiItemRenderer(event.getBufferSource(), Minecraft.getInstance().getEntityRenderDispatcher()));
     }
 
 }
