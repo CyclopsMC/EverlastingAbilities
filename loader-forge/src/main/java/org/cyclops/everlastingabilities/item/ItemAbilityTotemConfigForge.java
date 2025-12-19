@@ -16,7 +16,7 @@ public class ItemAbilityTotemConfigForge extends ItemAbilityTotemConfig<Everlast
         super(EverlastingAbilitiesForge._instance,
                 (eConfig, properties) -> new ItemAbilityTotemForge(properties
                         .stacksTo(1)));
-        BuildCreativeModeTabContentsEvent.getBus(EverlastingAbilitiesForge._instance.getModBusGroup()).addListener(this::onCreativeModeTabBuildContents);
+        BuildCreativeModeTabContentsEvent.BUS.addListener(this::onCreativeModeTabBuildContents);
         GatherComponentsEvent.Item.BUS.addListener(this::modifyComponents);
     }
 

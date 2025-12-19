@@ -14,7 +14,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -25,8 +25,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.apache.commons.lang3.tuple.Triple;
 import org.cyclops.cyclopscore.helper.IModHelpers;
@@ -397,7 +397,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
                 CompoundTag tag = list.getCompound(i).orElseThrow();
                 String name = tag.getString("name").orElseThrow();
                 int level = tag.getInt("level").orElseThrow();
-                Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = registry.get(ResourceLocation.parse(name));
+                Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = registry.get(Identifier.parse(name));
                 if (abilityTypeOptional.isPresent()) {
                     abilityTypes.put(abilityTypeOptional.get(), level);
                 } else {
@@ -430,7 +430,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
     }
 
     private boolean canMobHaveAbility(LivingEntity mob) {
-        ResourceLocation mobName = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+        Identifier mobName = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
         return mobName != null && GeneralConfig.mobDropBlacklist.stream().noneMatch(mobName.toString()::matches);
     }
 
@@ -481,7 +481,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
     @Override
     public void onEntityDeath(Entity entity, DamageSource source) {
         if (!entity.level().isClientSide()) {
-            boolean doMobLoot = ((ServerLevel) entity.level()).getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT);
+            boolean doMobLoot = ((ServerLevel) entity.level()).getGameRules().get(GameRules.MOB_DROPS);
             if (entity instanceof Player
                     ? (GeneralConfig.dropAbilitiesOnPlayerDeath > 0
                     && (GeneralConfig.alwaysDropAbilities || source.getEntity() instanceof Player))

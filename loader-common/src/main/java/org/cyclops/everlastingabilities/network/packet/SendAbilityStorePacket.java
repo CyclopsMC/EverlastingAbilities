@@ -3,7 +3,7 @@ package org.cyclops.everlastingabilities.network.packet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +22,7 @@ import org.cyclops.everlastingabilities.Reference;
  */
 public class SendAbilityStorePacket extends PacketCodec {
 
-    public static final Type<SendAbilityStorePacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "send_ability_store"));
+    public static final Type<SendAbilityStorePacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Reference.MOD_ID, "send_ability_store"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SendAbilityStorePacket> CODEC = getCodec(SendAbilityStorePacket::new);
 
     @CodecField

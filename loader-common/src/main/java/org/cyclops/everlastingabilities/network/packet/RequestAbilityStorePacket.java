@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 public class RequestAbilityStorePacket extends PacketCodec {
 
-    public static final Type<RequestAbilityStorePacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "request_ability_store"));
+    public static final Type<RequestAbilityStorePacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Reference.MOD_ID, "request_ability_store"));
     public static final StreamCodec<RegistryFriendlyByteBuf, RequestAbilityStorePacket> CODEC = getCodec(RequestAbilityStorePacket::new);
 
     @CodecField

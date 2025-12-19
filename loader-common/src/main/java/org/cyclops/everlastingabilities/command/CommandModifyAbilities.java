@@ -76,7 +76,7 @@ public class CommandModifyAbilities implements Command<CommandSourceStack> {
 
     public static LiteralArgumentBuilder<CommandSourceStack> make(CommandBuildContext context) {
         return Commands.literal("abilities")
-                .requires((commandSource) -> commandSource.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.argument("action", new ArgumentTypeEnum<>(Action.class))
                         .then(Commands.argument("player", EntityArgument.player())
                                 .executes(new CommandModifyAbilities(false, false))

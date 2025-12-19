@@ -2,7 +2,7 @@ package org.cyclops.everlastingabilities.client.gui;
 
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,7 +16,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class ContainerScreenAbilityContainer extends ContainerScreenExtended<ContainerAbilityContainer> {
 
-    private static final ResourceLocation RES_ITEM_GLINT = ItemRenderer.ENCHANTED_GLINT_ITEM;
+    private static final Identifier RES_ITEM_GLINT = ItemRenderer.ENCHANTED_GLINT_ITEM;
     protected static final int ABILITY_LIST_SIZE = 6;
     protected static final int ABILITY_BOX_HEIGHT = 18;
     protected static final int ABILITY_BOX_WIDTH = 63;
@@ -76,8 +76,8 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     @Override
-    protected ResourceLocation constructGuiTexture() {
-        return ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "textures/gui/ability_totem.png");
+    protected Identifier constructGuiTexture() {
+        return Identifier.fromNamespaceAndPath(Reference.MOD_ID, "textures/gui/ability_totem.png");
     }
 
     @Override
@@ -188,7 +188,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         drawXp(guiGraphics, i + 67, j + 70, false);
         IModHelpers.get().getRenderHelpers().drawScaledCenteredString(guiGraphics, font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, IModHelpers.get().getBaseHelpers().RGBAToInt(40, 215, 40, 255), false, Font.DisplayMode.NORMAL);
         drawFancyBackground(guiGraphics, i + 102, j + 17, 66, 61, getItemAbilityStore());
-        drawItemOnScreen(guiGraphics, i + 100, j + 17, 66, 61, 10, mouseX - 16, mouseY, getMenu().getItemStack(this.minecraft.player));
+        drawItemOnScreen(guiGraphics, i + 98, j + 17, 70, 61, 10, mouseX - 16, mouseY, getMenu().getItemStack(this.minecraft.player));
 
         // Draw abilities
         drawAbilities(guiGraphics, this.leftPos + 8, this.topPos + 83, getPlayerAbilities(), startIndexPlayer, Integer.MAX_VALUE, absoluteSelectedIndexPlayer, mouseX, mouseY, canMoveFromPlayerByItem());
@@ -309,7 +309,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         Quaternionf rotation = (new Quaternionf())
                 .rotateZ((float)Math.PI)
                 .rotateY(-182.0F + rotationY * -40.0F * ((float)Math.PI / 180F))
-                .rotateX((rotationX) * 50.0F * ((float)Math.PI / 180F));
+                .rotateX((rotationX) * 25.0F * ((float)Math.PI / 180F));
 
         ItemEntity itemEntity = new ItemEntity(Minecraft.getInstance().level, 0, 0, 0, itemStack);
         EntityRenderer<? super ItemEntity, ?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(itemEntity);

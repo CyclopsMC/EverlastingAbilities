@@ -3,7 +3,7 @@ package org.cyclops.everlastingabilities.ability;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntitySelector;
@@ -49,7 +49,7 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
         this.targetsFriendlyMobs = targetsFriendlyMobs;
         this.radiusFactor = radiusFactor;
         this.effectId = effectId;
-        Optional<Holder.Reference<MobEffect>> potionOptional = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse(effectId));
+        Optional<Holder.Reference<MobEffect>> potionOptional = BuiltInRegistries.MOB_EFFECT.get(Identifier.parse(effectId));
         if (potionOptional.isEmpty()) {
             EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.INFO, "No potion effect was found with id: " + effectId + ". Marking as disabled.");
             this.setCondition(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionFalse());
@@ -141,8 +141,8 @@ public class AbilityTypeEffect extends AbilityTypeAdapter {
     }
 
     public static boolean isFriendlyMob(LivingEntity mob, Player player) {
-        ResourceLocation resourceLocation = mob instanceof Player
-                ? ResourceLocation.parse("player") : BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+        Identifier resourceLocation = mob instanceof Player
+                ? Identifier.parse("player") : BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
         String mobName = resourceLocation == null ? "null" : resourceLocation.toString();
         return (player.isAlliedTo(mob) ||
                 (mob instanceof TamableAnimal && ((TamableAnimal) mob).getOwner() == player) ||

@@ -6,7 +6,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -39,7 +39,7 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
             Ability ability = new Ability(abilityType, 3);
 
             // Add ability
@@ -69,7 +69,7 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
             Ability ability = new Ability(abilityType, 3);
 
             // Add ability
@@ -111,7 +111,7 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
             Ability ability = new Ability(abilityType, 6);
 
             // Add ability
@@ -150,7 +150,7 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
             Ability ability1 = new Ability(abilityType, 1);
             Ability ability2 = new Ability(abilityType, 1);
             Ability ability3 = new Ability(abilityType, 1);
@@ -215,8 +215,8 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType1 = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
-            Holder<IAbilityType> abilityType2 = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/darkness")));
+            Holder<IAbilityType> abilityType1 = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType2 = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/darkness")));
             Ability ability1 = new Ability(abilityType1, 1);
             Ability ability2 = new Ability(abilityType2, 1);
             Ability ability3 = new Ability(abilityType1, 1);
@@ -284,7 +284,7 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
             Ability ability = new Ability(abilityType, 3);
 
             // Add ability
@@ -331,7 +331,7 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
             Ability ability1 = new Ability(abilityType, 3);
             Ability ability2 = new Ability(abilityType, 1);
 
@@ -404,7 +404,7 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
             Ability ability = new Ability(abilityType, 3);
 
             // Add ability
@@ -438,7 +438,7 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
             Ability ability = new Ability(abilityType, 3);
 
             // Add ability
@@ -460,7 +460,7 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
             Ability ability = new Ability(abilityType, 1);
 
             // Add ability
@@ -484,8 +484,8 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType1 = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
-            Holder<IAbilityType> abilityType2 = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/darkness")));
+            Holder<IAbilityType> abilityType1 = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType2 = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/darkness")));
             Ability ability1 = new Ability(abilityType1, 1);
             Ability ability2 = new Ability(abilityType2, 1);
 
@@ -513,7 +513,7 @@ public class GameTestsCommon {
 
             // Determine an ability
             Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
             Ability ability = new Ability(abilityType, 3);
 
             // Add ability

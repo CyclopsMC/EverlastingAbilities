@@ -4,7 +4,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -25,7 +25,7 @@ import java.util.Optional;
  */
 public class MoveAbilityPacket extends PacketCodec {
 
-    public static final Type<MoveAbilityPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "move_ability"));
+    public static final Type<MoveAbilityPacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Reference.MOD_ID, "move_ability"));
     public static final StreamCodec<RegistryFriendlyByteBuf, MoveAbilityPacket> CODEC = getCodec(MoveAbilityPacket::new);
 
     @CodecField
@@ -60,7 +60,7 @@ public class MoveAbilityPacket extends PacketCodec {
     public void actionServer(Level world, ServerPlayer player) {
         if (player.containerMenu instanceof ContainerAbilityContainer) {
             ContainerAbilityContainer container = (ContainerAbilityContainer) player.containerMenu;
-            Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(world.registryAccess()).get(ResourceLocation.parse(abilityName));
+            Optional<Holder.Reference<IAbilityType>> abilityTypeOptional = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(world.registryAccess()).get(Identifier.parse(abilityName));
             if (abilityTypeOptional.isPresent()) {
                 Ability ability = new Ability(abilityTypeOptional.get(), abilityLevel);
                 container.getPlayerAbilityStore().ifPresent(playerAbilityStore -> {

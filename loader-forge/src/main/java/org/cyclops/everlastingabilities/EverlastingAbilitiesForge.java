@@ -6,7 +6,7 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -112,7 +112,7 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
     }
 
     protected void attachEntityCapability(AttachCapabilitiesEvent.Entities event, Entity entity) {
-        event.addCapability(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "ability_store"), new ICapabilityProvider() {
+        event.addCapability(Identifier.fromNamespaceAndPath(Reference.MOD_ID, "ability_store"), new ICapabilityProvider() {
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction direction) {
                 if (!entity.level().registryAccess().lookup(AbilityTypes.REGISTRY_KEY).isEmpty()) {
@@ -221,7 +221,7 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
 
     private void onRegistriesCreate(NewRegistryEvent event) {
          event.create(new RegistryBuilder<MapCodec<? extends IAbilityType>>()
-                .setName(AbilityTypeSerializers.REGISTRY_KEY.location())
+                .setName(AbilityTypeSerializers.REGISTRY_KEY.identifier())
                 .disableSaving()
                 .disableSync(),
                 registry -> {

@@ -2,7 +2,7 @@ package org.cyclops.everlastingabilities.item;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -40,7 +40,7 @@ public class ItemAbilityBottleConfigForge extends ItemAbilityBottleConfig<Everla
     protected void registerCapability(AttachCapabilitiesEvent.ItemStacks event) {
         ItemStack stack = event.getObject();
         if (stack.getItem() instanceof ItemGuiAbilityContainer) {
-            event.addCapability(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, getNamedId()), new ICapabilityProvider() {
+            event.addCapability(Identifier.fromNamespaceAndPath(Reference.MOD_ID, getNamedId()), new ICapabilityProvider() {
                 @Override
                 public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
                     return LazyOptional.of(() -> new ItemDataMutableAbilityStore(stack, () -> stack.set(DataComponents.RARITY, ItemAbilityTotem.getRarity(stack)))).cast();

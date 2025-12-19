@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -38,7 +38,7 @@ public class AbilityTypeAttributeModifier extends AbilityTypeAdapter {
                                         String attributeId, double amountFactor, AttributeModifier.Operation operation) {
         super(condition, name, rarity, maxLevel, baseXpPerLevel, obtainableOnPlayerSpawn, obtainableOnMobSpawn, obtainableOnCraft, obtainableOnLoot);
         this.attributeId = attributeId;
-        Optional<Holder.Reference<Attribute>> attributeOptional = BuiltInRegistries.ATTRIBUTE.get(ResourceLocation.parse(attributeId));
+        Optional<Holder.Reference<Attribute>> attributeOptional = BuiltInRegistries.ATTRIBUTE.get(Identifier.parse(attributeId));
         if (attributeOptional.isEmpty()) {
             EverlastingAbilitiesInstance.MOD.log(org.apache.logging.log4j.Level.INFO, "No attribute was found with id: " + attributeId + ". Marking as disabled.");
             this.setCondition(EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityConditionFalse());
@@ -50,7 +50,7 @@ public class AbilityTypeAttributeModifier extends AbilityTypeAdapter {
         this.operation = operation;
         this.attributeModifiers = Maps.newHashMap();
         for (int i = 1; i <= maxLevel; i++) {
-            this.attributeModifiers.put(i, new AttributeModifier(ResourceLocation.parse(Reference.MOD_ID + ":modifier_" + name + "_" + i), this.amountFactor * i, this.operation));
+            this.attributeModifiers.put(i, new AttributeModifier(Identifier.parse(Reference.MOD_ID + ":modifier_" + name + "_" + i), this.amountFactor * i, this.operation));
         }
     }
 

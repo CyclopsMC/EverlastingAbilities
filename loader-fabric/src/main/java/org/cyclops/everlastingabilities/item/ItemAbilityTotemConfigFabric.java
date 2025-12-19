@@ -32,15 +32,15 @@ public class ItemAbilityTotemConfigFabric extends ItemAbilityTotemConfig<Everlas
 
     @ConfigurablePropertyCommon(category = "core", comment = "The loot tables in which totems should be spawned.", configLocation = ModConfigLocation.SERVER)
     public static List<String> lootTables = Lists.newArrayList(
-            BuiltInLootTables.SPAWN_BONUS_CHEST.location().toString(),
-            BuiltInLootTables.VILLAGE_TOOLSMITH.location().toString(),
-            BuiltInLootTables.VILLAGE_WEAPONSMITH.location().toString(),
-            BuiltInLootTables.VILLAGE_SHEPHERD.location().toString(),
-            BuiltInLootTables.NETHER_BRIDGE.location().toString(),
-            BuiltInLootTables.SIMPLE_DUNGEON.location().toString(),
-            BuiltInLootTables.ABANDONED_MINESHAFT.location().toString(),
-            BuiltInLootTables.JUNGLE_TEMPLE.location().toString(),
-            BuiltInLootTables.ANCIENT_CITY.location().toString()
+            BuiltInLootTables.SPAWN_BONUS_CHEST.identifier().toString(),
+            BuiltInLootTables.VILLAGE_TOOLSMITH.identifier().toString(),
+            BuiltInLootTables.VILLAGE_WEAPONSMITH.identifier().toString(),
+            BuiltInLootTables.VILLAGE_SHEPHERD.identifier().toString(),
+            BuiltInLootTables.NETHER_BRIDGE.identifier().toString(),
+            BuiltInLootTables.SIMPLE_DUNGEON.identifier().toString(),
+            BuiltInLootTables.ABANDONED_MINESHAFT.identifier().toString(),
+            BuiltInLootTables.JUNGLE_TEMPLE.identifier().toString(),
+            BuiltInLootTables.ANCIENT_CITY.identifier().toString()
     );
 
     protected static Registry<LootTable> LOOT_TABLES_REGISTRY;
@@ -63,7 +63,7 @@ public class ItemAbilityTotemConfigFabric extends ItemAbilityTotemConfig<Everlas
         Optional<ResourceKey<LootTable>> optionalKey = LOOT_TABLES_REGISTRY.getResourceKey(lootTable);
         if (optionalKey.isPresent()) {
             ResourceKey<LootTable> key = optionalKey.get();
-            if (lootTables.contains(key.location().toString())) {
+            if (lootTables.contains(key.identifier().toString())) {
                 EverlastingAbilitiesInstance.MOD.getAbilityHelpers().injectLootTotem(itemStacks::add, context);
             }
         }

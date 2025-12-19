@@ -8,7 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Function;
 
@@ -19,7 +19,7 @@ import java.util.function.Function;
  */
 public class AbilityTypes {
 
-    public static final ResourceKey<Registry<IAbilityType>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("everlastingabilities", "abilities"));
+    public static final ResourceKey<Registry<IAbilityType>> REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath("everlastingabilities", "abilities"));
 
     public static final Codec<IAbilityType> DIRECT_CODEC = Codec.lazyInitialized(() -> AbilityTypeSerializers.NAME_CODEC)
             .dispatch(IAbilityType::codec, Function.identity());
