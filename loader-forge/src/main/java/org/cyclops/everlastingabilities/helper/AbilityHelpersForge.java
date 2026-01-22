@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.helper;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.entity.Entity;
@@ -17,6 +18,9 @@ import org.cyclops.everlastingabilities.ability.AbilityConditionForge;
 import org.cyclops.everlastingabilities.api.IAbilityCondition;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
+import org.cyclops.everlastingabilities.api.capability.ItemDataMutableAbilityStore;
+import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
+import org.cyclops.everlastingabilities.item.ItemGuiAbilityContainer;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -44,7 +48,11 @@ public class AbilityHelpersForge extends AbilityHelpersCommon {
 
     @Override
     public Optional<IMutableAbilityStore> getItemAbilityStore(ItemStack itemStack) {
-        return itemStack.getCapability(CapabilitiesForge.CAPABILITY).resolve();
+//        // TODO: use capabilities when Forge restores item capabilities
+        if (itemStack.getItem() instanceof ItemGuiAbilityContainer) {
+            return Optional.of(new ItemDataMutableAbilityStore(itemStack, () -> itemStack.set(DataComponents.RARITY, ItemAbilityTotem.getRarity(itemStack))));
+        }
+        return Optional.empty();
     }
 
     @Override
