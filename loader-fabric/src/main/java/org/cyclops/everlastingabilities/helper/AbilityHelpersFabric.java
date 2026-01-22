@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.NotResourceCondition;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.TrueResourceCondition;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +18,7 @@ import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.api.capability.ItemDataMutableAbilityStore;
 import org.cyclops.everlastingabilities.attachment.AttachableMutableAbilityStore;
 import org.cyclops.everlastingabilities.attachment.Attachments;
+import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 import org.cyclops.everlastingabilities.item.ItemGuiAbilityContainer;
 
 import java.util.Optional;
@@ -50,7 +52,7 @@ public class AbilityHelpersFabric extends AbilityHelpersCommon {
     @Override
     public Optional<IMutableAbilityStore> getItemAbilityStore(ItemStack itemStack) {
         if (itemStack.getItem() instanceof ItemGuiAbilityContainer) {
-            return Optional.of(new ItemDataMutableAbilityStore(itemStack));
+            return Optional.of(new ItemDataMutableAbilityStore(itemStack, () -> itemStack.set(DataComponents.RARITY, ItemAbilityTotem.getRarity(itemStack))));
         }
         return Optional.empty();
     }
