@@ -1,0 +1,5 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.25.2 or higher.
+
+Fixes:
+* Fix missing rarity colors in Fabric and Forge, Closes #306
