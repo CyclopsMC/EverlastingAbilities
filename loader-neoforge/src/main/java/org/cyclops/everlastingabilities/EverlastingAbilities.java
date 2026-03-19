@@ -199,7 +199,7 @@ public class EverlastingAbilities extends ModBaseVersionable<EverlastingAbilitie
     }
 
     public void onEntityJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getLevel().isClientSide && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
+        if (event.getLevel().isClientSide && event.getEntity() instanceof LivingEntity && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
             getPacketHandlerCommon().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
         }
     }

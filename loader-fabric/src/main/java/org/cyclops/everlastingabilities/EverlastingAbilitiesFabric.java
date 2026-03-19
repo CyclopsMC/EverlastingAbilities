@@ -157,7 +157,7 @@ public class EverlastingAbilitiesFabric extends ModBaseFabric<EverlastingAbiliti
     }
 
     public void onEntityJoinWorld(Entity entity, Level level) {
-        if (level.isClientSide && getAbilityHelpers().getEntityAbilityStore(entity).isPresent()) {
+        if (level.isClientSide && entity instanceof LivingEntity && getAbilityHelpers().getEntityAbilityStore(entity).isPresent()) {
             getPacketHandlerCommon().sendToServer(new RequestAbilityStorePacket(entity.getUUID().toString()));
         }
     }

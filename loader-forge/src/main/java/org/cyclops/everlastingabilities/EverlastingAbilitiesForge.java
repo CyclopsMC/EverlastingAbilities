@@ -8,6 +8,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -189,7 +190,7 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
     }
 
     public void onEntityJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getLevel().isClientSide && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
+        if (event.getLevel().isClientSide && event.getEntity() instanceof LivingEntity && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
             getPacketHandlerCommon().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
         }
     }
