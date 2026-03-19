@@ -9,6 +9,9 @@ plugins {
 def extraModsDir = "extra-mods"
 
 repositories {
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
     flatDir {
         name "extra-mods"
         dir file(extraModsDir)
@@ -16,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    implementation minecraft.dependency("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
 
     testImplementation "junit:junit:4.12"
     testImplementation "org.mockito:mockito-core:1.+"
@@ -30,9 +33,6 @@ dependencies {
         def version = basename.substring(versionSep + 1)
         runtimeOnly "extra-mods:$artifactId:$version"
     }
-
-    // Hack to make Forge run
-    implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
@@ -40,64 +40,33 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 minecraft {
     mappings channel: 'official', version: minecraft_version
 
-    reobf = false
-
-    copyIdeResources.set(true)
-
-    // Automatically enable neoforge AccessTransformers if the file exists
+    // Automatically enable AccessTransformers if the file exists
     def at = project(':loader-common').file('src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {
-        accessTransformer = file(at.absolutePath)
+        accessTransformer.from(file(at.absolutePath))
     }
 
     runs {
-        client {
-            property 'forge.enabledGameTestNamespaces', "cyclopscore,${mod_id}"
-            workingDirectory file('runs/client')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            taskName 'Client'
-            mods {
-                modClientRun {
-                    source sourceSets.main
-                }
-            }
+        configureEach {
+            systemProperty 'forge.enabledGameTestNamespaces', "cyclopscore,${mod_id}"
         }
 
-        server {
-            property 'forge.enabledGameTestNamespaces', "cyclopscore,${mod_id}"
+        register('client') {
+            workingDirectory file('runs/client')
+        }
+
+        register('server') {
             args '--nogui'
             workingDirectory file('runs/server')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            taskName 'Server'
-            mods {
-                modServerRun {
-                    source sourceSets.main
-                }
-            }
         }
 
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', "cyclopscore,${mod_id}"
+        register('gameTestServer') {
             workingDirectory file('runs/gametest')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            taskName 'runGameTestServer'
-            mods {
-                modDataRun {
-                    source sourceSets.main
-                }
-            }
         }
 
-        data {
+        register('data') {
             workingDirectory file('runs/data')
-            ideaModule "${rootProject.name}.${project.name}.main"
             args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            taskName 'Data'
-            mods {
-                modDataRun {
-                    source sourceSets.main
-                }
-            }
         }
     }
 }
@@ -115,12 +84,5 @@ tasks.register('signJar').configure {
     keyPass = System.getenv().SIGN_KEYPASS
     inputFile = jar.archivePath
     outputFile = jar.archivePath
-}
-
-// Required because FG, copied from the MDK
-sourceSets.forEach {
-    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
-    it.output.resourcesDir = dir
-    it.java.destinationDirectory = dir
 }
 
