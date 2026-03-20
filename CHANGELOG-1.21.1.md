@@ -1,8 +1,15 @@
 # Changelog for Minecraft 1.21.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.21.1-2.5.6"></a>
+## [1.21.1-2.5.6](https://github.com/CyclopsMC/EverlastingAbilities/compare/1.21.1-2.5.5...1.21.1-2.5.6) - 2026-03-20 20:06:50
+
+
+### Fixed
+* Fix crash when non-living entities join the world (missing LivingEntity guard) (#308), Closes #307
+
 <a name="1.21.1-2.5.5"></a>
-## [1.21.1-2.5.5](https://github.com/CyclopsMC/EverlastingAbilities/compare/1.21.1-2.5.4...1.21.1-2.5.5) - 2026-01-22 06:12:15
+## [1.21.1-2.5.5](https://github.com/CyclopsMC/EverlastingAbilities/compare/1.21.1-2.5.4...1.21.1-2.5.5) - 2026-01-22 06:12:15 +0100
 
 
 ### Fixed

@@ -204,7 +204,7 @@ public class EverlastingAbilitiesNeoForge extends ModBaseNeoForge<EverlastingAbi
     }
 
     public void onEntityJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getLevel().isClientSide() && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
+        if (event.getLevel().isClientSide() && event.getEntity() instanceof LivingEntity && getAbilityHelpers().getEntityAbilityStore(event.getEntity()).isPresent()) {
             getPacketHandler().sendToServer(new RequestAbilityStorePacket(event.getEntity().getUUID().toString()));
         }
     }
