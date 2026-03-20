@@ -22,9 +22,6 @@ loom {
     if (aw.exists()) {
         accessWidenerPath.set(aw)
     }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
-    }
     runs {
         client {
             client()
@@ -66,7 +63,7 @@ publishing {
     publications { PublicationContainer publicationContainer ->
         publicationContainer.getByName("maven") { MavenPublication publication ->
             publication.artifacts = [remapJar, javadocJar, deobfJar, remapSourcesJar]
-            publication.artifactId = project.archivesBaseName.toLowerCase() // GH can't handle uppercase...
+            publication.artifactId = project.base.archivesName.get().toLowerCase() // GH can't handle uppercase...
         }
     }
 }

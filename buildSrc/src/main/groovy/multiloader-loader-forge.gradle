@@ -52,20 +52,20 @@ minecraft {
         }
 
         register('client') {
-            workingDirectory file('runs/client')
+            workingDir.set(file('runs/client'))
         }
 
         register('server') {
             args '--nogui'
-            workingDirectory file('runs/server')
+            workingDir.set(file('runs/server'))
         }
 
         register('gameTestServer') {
-            workingDirectory file('runs/gametest')
+            workingDir.set(file('runs/gametest'))
         }
 
         register('data') {
-            workingDirectory file('runs/data')
+            workingDir.set(file('runs/data'))
             args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
         }
     }
