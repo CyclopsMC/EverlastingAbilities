@@ -18,6 +18,13 @@ repositories {
     }
 }
 
+configurations.all {
+    // Force jopt-simple to 5.0.4 to prevent Gradle from selecting 6.0-alpha-3,
+    // which has an incompatible Automatic-Module-Name ('joptsimple' vs 'jopt.simple'
+    // expected by modlauncher).
+    resolutionStrategy.force 'net.sf.jopt-simple:jopt-simple:5.0.4'
+}
+
 dependencies {
     implementation minecraft.dependency("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
 
