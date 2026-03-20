@@ -56,6 +56,11 @@ minecraft {
     runs {
         configureEach {
             systemProperty 'forge.enabledGameTestNamespaces', "cyclopscore,${mod_id}"
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
         }
 
         register('client') {
