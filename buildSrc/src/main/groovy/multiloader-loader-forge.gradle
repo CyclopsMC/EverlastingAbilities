@@ -71,18 +71,19 @@ minecraft {
     }
 }
 
-tasks.register('signJar').configure {
-    dependsOn(tasks.jar)
-
-    onlyIf {
-        System.getenv().SIGN_KEYSTORE
-    }
-
-    keyStore = System.getenv().SIGN_KEYSTORE
-    alias = System.getenv().SIGN_ALIAS
-    storePass = System.getenv().SIGN_STOREPASS
-    keyPass = System.getenv().SIGN_KEYPASS
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
-}
+// Disabled because signed jars are not being checked anyways
+//tasks.register('signJar').configure {
+//    dependsOn(tasks.jar)
+//
+//    onlyIf {
+//        System.getenv().SIGN_KEYSTORE
+//    }
+//
+//    keyStore = System.getenv().SIGN_KEYSTORE
+//    alias = System.getenv().SIGN_ALIAS
+//    storePass = System.getenv().SIGN_STOREPASS
+//    keyPass = System.getenv().SIGN_KEYPASS
+//    inputFile = jar.archivePath
+//    outputFile = jar.archivePath
+//}
 
