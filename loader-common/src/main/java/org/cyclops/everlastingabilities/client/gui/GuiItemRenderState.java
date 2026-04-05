@@ -1,7 +1,7 @@
 package org.cyclops.everlastingabilities.client.gui;
 
 import net.minecraft.client.gui.navigation.ScreenRectangle;
-import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
+import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Quaternionf;
@@ -10,7 +10,7 @@ import org.joml.Vector3f;
 import javax.annotation.Nullable;
 
 /**
- * Derived from {@link net.minecraft.client.gui.render.state.pip.GuiEntityRenderState}.
+ * Derived from {@link net.minecraft.client.renderer.state.gui.pip.GuiEntityRenderState}.
  * @author rubensworks
  */
 public record GuiItemRenderState(

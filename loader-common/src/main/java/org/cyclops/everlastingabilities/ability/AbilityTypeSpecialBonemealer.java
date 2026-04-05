@@ -50,7 +50,7 @@ public class AbilityTypeSpecialBonemealer extends AbilityTypeAdapter {
                 public Void apply(Void from, Level world, BlockPos pos) {
                     BlockState blockState = world.getBlockState(pos);
                     if (blockState.getBlock() instanceof BonemealableBlock && !(blockState.getBlock() instanceof GrassBlock)) {
-                        blockState.randomTick((ServerLevel) world, pos, world.random);
+                        blockState.randomTick((ServerLevel) world, pos, world.getRandom());
                     }
                     return null;
                 }

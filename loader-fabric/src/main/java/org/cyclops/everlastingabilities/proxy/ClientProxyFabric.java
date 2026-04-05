@@ -1,8 +1,6 @@
 package org.cyclops.everlastingabilities.proxy;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.render.GuiRenderer;
+import net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.cyclops.cyclopscore.events.IEntityTickEvent;
@@ -37,13 +35,6 @@ public class ClientProxyFabric extends ClientProxyComponentFabric {
                 RenderLivingHandler.onRenderLiving(livingEntity);
             }
         });
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            GuiRenderer guiRenderer = Minecraft.getInstance().gameRenderer.guiRenderer;
-            GuiItemRenderer guiItemRenderer = new GuiItemRenderer(guiRenderer.bufferSource, Minecraft.getInstance().getEntityRenderDispatcher());
-            guiRenderer.pictureInPictureRenderers.put(
-                    guiItemRenderer.getRenderStateClass(),
-                    guiItemRenderer
-            );
-        });
+        PictureInPictureRendererRegistry.register(ctx -> new GuiItemRenderer(ctx.bufferSource(), ctx.minecraft().getEntityRenderDispatcher()));
     }
 }

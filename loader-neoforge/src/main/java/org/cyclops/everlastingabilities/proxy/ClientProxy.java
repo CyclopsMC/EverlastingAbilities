@@ -40,7 +40,10 @@ public class ClientProxy extends ClientProxyComponent {
     }
 
     public void onRegisterPictureInPictureRenderers(RegisterPictureInPictureRenderersEvent event) {
-        event.register(GuiItemRenderState.class, buffers -> new GuiItemRenderer(buffers, Minecraft.getInstance().getEntityRenderDispatcher()));
+        event.register(
+                GuiItemRenderState.class,
+                bufferSource -> new GuiItemRenderer(bufferSource, Minecraft.getInstance().getEntityRenderDispatcher())
+        );
     }
 
 }

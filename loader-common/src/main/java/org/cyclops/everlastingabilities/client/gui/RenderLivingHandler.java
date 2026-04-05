@@ -29,7 +29,7 @@ public class RenderLivingHandler {
                     float g = abilityColors.getMiddle() / 255F;
                     float b = abilityColors.getRight() / 255F;
 
-                    RandomSource rand = entity.level().random;
+                    RandomSource rand = entity.level().getRandom();
                     float scale = 0.5F - rand.nextFloat() * 0.3F;
                     float red = Math.max(0, r - rand.nextFloat() * 0.1F);
                     float green = Math.max(0, g - rand.nextFloat() * 0.1F);

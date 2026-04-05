@@ -2,15 +2,13 @@ package org.cyclops.everlastingabilities.client.gui;
 
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
-import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.state.ItemEntityRenderState;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -18,6 +16,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -40,6 +39,7 @@ import org.joml.Vector3f;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Gui for the ability container.
@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class ContainerScreenAbilityContainer extends ContainerScreenExtended<ContainerAbilityContainer> {
 
-    private static final Identifier RES_ITEM_GLINT = ItemRenderer.ENCHANTED_GLINT_ITEM;
+    private static final Identifier RES_ITEM_GLINT = Identifier.withDefaultNamespace("textures/misc/enchanted_glint_item.png");
     protected static final int ABILITY_LIST_SIZE = 6;
     protected static final int ABILITY_BOX_HEIGHT = 18;
     protected static final int ABILITY_BOX_WIDTH = 63;
@@ -120,13 +120,13 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (getMenu().getItemStack(player) == null) {
             return;
         }
 
-        guiGraphics.drawString(this.font, player.getDisplayName().getString(), 8, 6, -1);
-        guiGraphics.drawString(this.font, getMenu().getItemStack(player).getHoverName().getVisualOrderText(), 102, 6, -1);
+        guiGraphics.text(this.font, player.getDisplayName().getString(), 8, 6, -1);
+        guiGraphics.text(this.font, getMenu().getItemStack(player).getHoverName().getVisualOrderText(), 102, 6, -1);
 
         // Draw abilities
         drawAbilitiesTooltip(guiGraphics, 8, 83, getPlayerAbilities(), startIndexPlayer, mouseX, mouseY);
@@ -162,7 +162,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (getMenu().getItemStack(player) == null) {
             return;
         }
@@ -178,13 +178,13 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
             buttonRight.active = canMoveFromPlayerByItem();
         }
 
-        super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
         int i = this.leftPos;
         int j = this.topPos;
         drawFancyBackground(guiGraphics, i + 8, j + 17, 66, 61, getPlayerAbilityStore());
         // i + 41, j + 75, i + 41 + 66, j + 75 + 61
-        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, i + 26 - 8, j + 8 + 3, i + 75 - 8, j + 78 + 3, 30, 0.0625F, mouseX, mouseY, this.minecraft.player);
+        InventoryScreen.extractEntityInInventoryFollowsMouse(guiGraphics, i + 26 - 8, j + 8 + 3, i + 75 - 8, j + 78 + 3, 30, 0.0625F, mouseX, mouseY, this.minecraft.player);
         drawXp(guiGraphics, i + 67, j + 70, false);
         IModHelpers.get().getRenderHelpers().drawScaledCenteredString(guiGraphics, font, "" + player.totalExperience, i + 62, j + 73, 0, 0.5F, IModHelpers.get().getBaseHelpers().RGBAToInt(40, 215, 40, 255), false, Font.DisplayMode.NORMAL);
         drawFancyBackground(guiGraphics, i + 102, j + 17, 66, 61, getItemAbilityStore());
@@ -195,7 +195,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         drawAbilities(guiGraphics, this.leftPos + 105, this.topPos + 83, getItemAbilities(), startIndexItem, player.totalExperience, absoluteSelectedIndexItem, mouseX, mouseY, true);
     }
 
-    public void drawFancyBackground(GuiGraphics guiGraphics, int x, int y, int width, int height, IAbilityStore abilityStore) {
+    public void drawFancyBackground(GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height, IAbilityStore abilityStore) {
         int r = 140;
         int g = 140;
         int b = 140;
@@ -213,11 +213,11 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         drawTexturedModalRectColor(guiGraphics, x, y, (int) (-0 + f * 150), (int) (0 + f * 256), width, height, ((float) r) / 255, ((float) g) / 255, ((float) b) / 255, ((float) 255) / 255);
     }
 
-    protected void drawXp(GuiGraphics guiGraphics, int x, int y, boolean reducedIntensity) {
+    protected void drawXp(GuiGraphicsExtractor guiGraphics, int x, int y, boolean reducedIntensity) {
         modHelpers.getRenderHelpers().blitColored(guiGraphics, texture, x, y, 0, 219, 5, 5, reducedIntensity ? 0.3F : 1F, reducedIntensity ? 0.3F : 1F, reducedIntensity ? 0.3F : 1F, 1F);
     }
 
-    private void drawAbilities(GuiGraphics guiGraphics, int x, int y, List<Ability> abilities, int startIndex, int playerXp,
+    private void drawAbilities(GuiGraphicsExtractor guiGraphics, int x, int y, List<Ability> abilities, int startIndex, int playerXp,
                                int currentSelectedIndex, int mouseX, int mouseY, boolean canEdit) {
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
@@ -254,7 +254,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         }
     }
 
-    private void drawAbilitiesTooltip(GuiGraphics guiGraphics, int x, int y, List<Ability> abilities, int startIndex, int mouseX, int mouseY) {
+    private void drawAbilitiesTooltip(GuiGraphicsExtractor guiGraphics, int x, int y, List<Ability> abilities, int startIndex, int mouseX, int mouseY) {
         int maxI = Math.min(ABILITY_LIST_SIZE, abilities.size() - startIndex);
         for (int i = 0; i < maxI; i++) {
             int boxY = y + i * ABILITY_BOX_HEIGHT;
@@ -288,16 +288,16 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                                     .withBold(true)));
                 }
 
-                guiGraphics.setComponentTooltipForNextFrame(font, lines, mouseX - this.leftPos, mouseY - this.topPos);
+                guiGraphics.setTooltipForNextFrame(font, lines, Optional.empty(), mouseX - this.leftPos, mouseY - this.topPos);
             }
         }
     }
 
-    public void drawTexturedModalRectColor(GuiGraphics guiGraphics, int x, int y, int textureX, int textureY, int width, int height, float r, float g, float b, float a) {
+    public void drawTexturedModalRectColor(GuiGraphicsExtractor guiGraphics, int x, int y, int textureX, int textureY, int width, int height, float r, float g, float b, float a) {
         guiGraphics.blit(RenderPipelines.GUI_OPAQUE_TEXTURED_BACKGROUND, RES_ITEM_GLINT, x, y, textureX, textureY, width, height, 256, 256, ARGB.colorFromFloat(a, r, g, b));
     }
 
-    public static void drawItemOnScreen(GuiGraphics guiGraphics, int x1, int y1, int width, int height, int scale, float mouseX, float mouseY, ItemStack itemStack) {
+    public static void drawItemOnScreen(GuiGraphicsExtractor guiGraphics, int x1, int y1, int width, int height, int scale, float mouseX, float mouseY, ItemStack itemStack) {
         int x2 = x1 + width;
         int y2 = y1 + height;
 
@@ -315,7 +315,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
         EntityRenderer<? super ItemEntity, ?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(itemEntity);
         ItemEntityRenderState entityRenderState = (ItemEntityRenderState) renderer.createRenderState(itemEntity, 0);
         entityRenderState.bobOffset = 0;
-        guiGraphics.guiRenderState.submitPicturesInPictureState(
+        guiGraphics.guiRenderState.addPicturesInPictureState(
                 new GuiItemRenderState(
                         entityRenderState,
                         itemStack,

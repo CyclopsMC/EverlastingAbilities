@@ -71,7 +71,7 @@ public class EverlastingAbilitiesFabric extends ModBaseFabric<EverlastingAbiliti
     public void onInitialize() {
         // Setup registries
         AbilityTypeSerializers.REGISTRY = FabricRegistryBuilder
-                .createSimple(AbilityTypeSerializers.REGISTRY_KEY)
+                .create(AbilityTypeSerializers.REGISTRY_KEY)
                 .buildAndRegister();
         AbilityTypeSerializers.NAME_CODEC = AbilityTypeSerializers.REGISTRY.byNameCodec();
         DynamicRegistries.registerSynced(AbilityTypes.REGISTRY_KEY, AbilityTypes.DIRECT_CODEC, AbilityTypes.DIRECT_CODEC);

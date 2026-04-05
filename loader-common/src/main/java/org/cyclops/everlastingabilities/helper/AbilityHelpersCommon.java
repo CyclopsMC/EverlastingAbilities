@@ -456,7 +456,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
         Level world = player.level();
         if (world.registryAccess().lookup(AbilityTypes.REGISTRY_KEY).isPresent() && GeneralConfig.totemMaximumSpawnRarity >= 0 && isFirstTotemSpawn(player)) {
             Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
-            this.getRandomAbilityUntilRarity(this.getAbilityTypesPlayerSpawn(this.getRegistry(world.registryAccess())), world.random, rarity, true).ifPresent(abilityType -> {
+            this.getRandomAbilityUntilRarity(this.getAbilityTypesPlayerSpawn(this.getRegistry(world.registryAccess())), world.getRandom(), rarity, true).ifPresent(abilityType -> {
                 ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
                 this.getItemAbilityStore(itemStack)
                         .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
@@ -506,13 +506,13 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
                                 toDrop -= removed.getLevel();
                                 itemStackStore.addAbility(removed, true);
                                 if (entity instanceof Player player) {
-                                    player.displayClientMessage(Component.translatable("chat.everlastingabilities.playerLostAbility",
+                                    player.sendOverlayMessage(Component.translatable("chat.everlastingabilities.playerLostAbility",
                                             entity.getName(),
                                             Component.translatable(removed.getAbilityType().getTranslationKey())
                                                     .setStyle(Style.EMPTY
                                                             .withBold(true)
                                                             .withColor(removed.getAbilityType().getRarity().color())),
-                                            removed.getLevel()), false);
+                                            removed.getLevel()));
                                 }
                             }
                         }

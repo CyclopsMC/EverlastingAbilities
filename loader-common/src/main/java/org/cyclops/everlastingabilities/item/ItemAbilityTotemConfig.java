@@ -14,6 +14,7 @@ import org.cyclops.everlastingabilities.api.Ability;
 import java.util.Collection;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Config for the ability totem.
@@ -34,7 +35,7 @@ public class ItemAbilityTotemConfig<M extends IModBase> extends ItemConfigCommon
     }
 
     @Override
-    public Collection<ItemStack> getDefaultCreativeTabEntries() {
+    public Collection<Supplier<ItemStack>> getDefaultCreativeTabEntries() {
         return Lists.newArrayList();
     }
 

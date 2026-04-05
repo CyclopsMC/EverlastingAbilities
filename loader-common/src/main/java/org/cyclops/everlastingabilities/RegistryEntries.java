@@ -6,7 +6,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.cyclops.cyclopscore.config.DeferredHolderCommon;
 import org.cyclops.everlastingabilities.api.AbilityTypeSerializers;
@@ -25,7 +24,7 @@ public class RegistryEntries {
 
     public static final DeferredHolderCommon<MenuType<?>, MenuType<ContainerAbilityContainer>> CONTAINER_ABILITYCONTAINER = DeferredHolderCommon.create(Registries.MENU, Identifier.parse("everlastingabilities:ability_container"));
 
-    public static final DeferredHolderCommon<RecipeSerializer<?>, CustomRecipe.Serializer<TotemRecycleRecipe>> RECIPESERIALIZER_TOTEM_RECYCLE = DeferredHolderCommon.create(Registries.RECIPE_SERIALIZER, Identifier.parse("everlastingabilities:crafting_special_totem_recycle"));
+    public static final DeferredHolderCommon<RecipeSerializer<?>, RecipeSerializer<TotemRecycleRecipe>> RECIPESERIALIZER_TOTEM_RECYCLE = DeferredHolderCommon.create(Registries.RECIPE_SERIALIZER, Identifier.parse("everlastingabilities:crafting_special_totem_recycle"));
 
     public static final DeferredHolderCommon<MapCodec<? extends IAbilityType>, MapCodec<? extends IAbilityType>> ABILITYSERIALIZER_EFFECT = DeferredHolderCommon.create(AbilityTypeSerializers.REGISTRY_KEY, Identifier.parse("everlastingabilities:effect"));
     public static final DeferredHolderCommon<MapCodec<? extends IAbilityType>, MapCodec<? extends IAbilityType>> ABILITYSERIALIZER_ATTRIBUTE_MODIFIER = DeferredHolderCommon.create(AbilityTypeSerializers.REGISTRY_KEY, Identifier.parse("everlastingabilities:attribute_modifier"));

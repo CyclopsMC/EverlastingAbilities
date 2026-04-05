@@ -1,12 +1,11 @@
 package org.cyclops.everlastingabilities.recipe;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -27,13 +26,14 @@ public class TotemRecycleRecipe extends CustomRecipe {
 
     private final RandomSource rand = RandomSource.create();
     private long seed = rand.nextLong();
+    private RegistryAccess registryAccess = null;
 
-    public TotemRecycleRecipe(CraftingBookCategory craftingBookCategory) {
-        super(craftingBookCategory);
+    public TotemRecycleRecipe() {
     }
 
     @Override
     public boolean matches(CraftingInput invCrafting, Level world) {
+        this.registryAccess = world.registryAccess();
         if (ItemAbilityTotemConfig.totemCraftingCount <= 0) {
             return false;
         }
@@ -55,7 +55,11 @@ public class TotemRecycleRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInput invCrafting, HolderLookup.Provider holderLookupProvider) {
+    public ItemStack assemble(CraftingInput invCrafting) {
+        if (registryAccess == null) {
+            return ItemStack.EMPTY;
+        }
+
         // Crafting is simulated
 
         // Select one of the inputs at random, and use its rarity for the rarity of the output.
@@ -86,7 +90,8 @@ public class TotemRecycleRecipe extends CustomRecipe {
         Rarity rarity = sortedStacks.get(inputTargetIndex).getRarity();
 
         // A chance of a bump
-        List<Holder<IAbilityType>> abilityTypes = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityTypesCrafting(holderLookupProvider);
+        List<Holder<IAbilityType>> abilityTypes = EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getAbilityTypesCrafting(
+                EverlastingAbilitiesInstance.MOD.getAbilityHelpers().getRegistry(registryAccess));
         if (rand.nextInt(100) < ItemAbilityTotemConfig.totemCraftingRarityIncreasePercent) {
             Rarity newRarity = rarity;
             // This loop ensures that the new rarity has at least one registered ability
