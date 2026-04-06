@@ -13,11 +13,12 @@ import org.cyclops.cyclopscore.init.IModBase;
 public class TotemRecycleRecipeConfig<M extends IModBase> extends RecipeConfigCommon<TotemRecycleRecipe, M> {
 
     public TotemRecycleRecipeConfig(M mod) {
+        TotemRecycleRecipe recipe = new TotemRecycleRecipe();
         super(mod,
                 "crafting_special_totem_recycle",
                 eConfig -> new RecipeSerializer<>(
-                        MapCodec.unit(TotemRecycleRecipe::new),
-                        StreamCodec.unit(new TotemRecycleRecipe())));
+                        MapCodec.unit(recipe),
+                        StreamCodec.unit(recipe)));
     }
 
 }
