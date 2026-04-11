@@ -283,7 +283,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
 
     @Override
     public ItemStack getTotem(Ability ability) {
-        ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+        ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM.value());
         getItemAbilityStore(itemStack)
                 .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(ability, true));
         return itemStack;
@@ -417,7 +417,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
             this.getRandomRarity(abilityTypes, context.getRandom()).ifPresent(rarity -> {
                 Holder<IAbilityType> abilityType = this.getRandomAbility(abilityTypes, context.getRandom(), rarity).get(); // Should always be present, as the method above guarantees that
 
-                ItemStack stack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+                ItemStack stack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM.value());
                 this.getItemAbilityStore(stack)
                         .ifPresent(mutableAbilityStore -> {
                             mutableAbilityStore.addAbility(new Ability(abilityType, 1), true);
@@ -457,7 +457,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
         if (world.registryAccess().lookup(AbilityTypes.REGISTRY_KEY).isPresent() && GeneralConfig.totemMaximumSpawnRarity >= 0 && isFirstTotemSpawn(player)) {
             Rarity rarity = Rarity.values()[GeneralConfig.totemMaximumSpawnRarity];
             this.getRandomAbilityUntilRarity(this.getAbilityTypesPlayerSpawn(this.getRegistry(world.registryAccess())), world.getRandom(), rarity, true).ifPresent(abilityType -> {
-                ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
+                ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE.value());
                 this.getItemAbilityStore(itemStack)
                         .ifPresent(mutableAbilityStore -> mutableAbilityStore.addAbility(new Ability(abilityType, 1), true));
 
@@ -494,7 +494,7 @@ public abstract class AbilityHelpersCommon implements IAbilityHelpers {
                         toDrop = GeneralConfig.dropAbilitiesOnPlayerDeath;
                     }
 
-                    ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM);
+                    ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_TOTEM.value());
                     IMutableAbilityStore itemStackStore = getItemAbilityStore(itemStack).get();
 
                     Collection<Ability> abilities = Lists.newArrayList(mutableAbilityStore.getAbilities());

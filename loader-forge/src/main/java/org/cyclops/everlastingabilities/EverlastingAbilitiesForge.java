@@ -150,7 +150,7 @@ public class EverlastingAbilitiesForge extends ModBaseForge<EverlastingAbilities
     @Override
     protected CreativeModeTab.Builder constructDefaultCreativeModeTab(CreativeModeTab.Builder builder) {
         return super.constructDefaultCreativeModeTab(builder)
-                .icon(() -> new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE));
+                .icon(() -> new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE.value()));
     }
 
     @Override
