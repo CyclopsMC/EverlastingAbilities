@@ -1,4 +1,6 @@
 {
+    "_comment": "Items",
+    "itemGroup.everlastingabilities": "Everlasting Abilities",
     "general.everlastingabilities.empty": "Nenhuma",
     "general.everlastingabilities.level": "Nível: %s / %s",
     "general.everlastingabilities.xp": "XP/Nível: %s (%s níveis de jogador)",
@@ -65,6 +67,7 @@
     "ability.everlastingabilities.weakness.info": "Entidades na área ficam mais fracas",
     "ability.everlastingabilities.poison": "Veneno",
     "ability.everlastingabilities.poison.info": "Entidades na área ficam envenenadas",
+    "ability.everlastingabilities.wither": "Wither",
     "ability.everlastingabilities.wither.info": "Entidades na área recebem o efeito Wither",
     "ability.everlastingabilities.glowing": "Brilho",
     "ability.everlastingabilities.glowing.info": "Entidades na área começam a brilhar",
