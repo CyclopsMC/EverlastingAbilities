@@ -10,8 +10,6 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import org.cyclops.cyclopscore.helper.IItemStackHelpers;
-import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
 import org.cyclops.everlastingabilities.RegistryEntries;
 import org.cyclops.everlastingabilities.api.IAbilityType;
@@ -116,22 +114,10 @@ public class TotemRecycleRecipe extends CustomRecipe {
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
         // Item is being taken out of crafting grid.
-
         seed++;
 
-        // Code below is copied from IRecipe
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.size(), ItemStack.EMPTY);
-
-        IItemStackHelpers itemStackHelpers = IModHelpers.get().getItemStackHelpers();
-        for(int i = 0; i < nonnulllist.size(); ++i) {
-            ItemStack item = inv.getItem(i);
-            ItemStack remaining = itemStackHelpers.getCraftingRemainingItem(item);
-            if (!remaining.isEmpty()) {
-                nonnulllist.set(i, itemStackHelpers.getCraftingRemainingItem(item));
-            }
-        }
-
-        return nonnulllist;
+        // Totems have no crafting remainder, so all input slots are consumed.
+        return NonNullList.withSize(inv.size(), ItemStack.EMPTY);
     }
 
     @Override
