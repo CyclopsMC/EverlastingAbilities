@@ -2,6 +2,7 @@ package org.cyclops.everlastingabilities.gametest;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
@@ -9,6 +10,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.GameType;
 import org.cyclops.cyclopscore.gametest.GameTest;
 import org.cyclops.everlastingabilities.EverlastingAbilitiesInstance;
@@ -18,7 +23,9 @@ import org.cyclops.everlastingabilities.api.Ability;
 import org.cyclops.everlastingabilities.api.IAbilityType;
 import org.cyclops.everlastingabilities.api.capability.IMutableAbilityStore;
 import org.cyclops.everlastingabilities.helper.IAbilityHelpers;
+import org.cyclops.everlastingabilities.item.ItemAbilityTotem;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -524,6 +531,42 @@ public class GameTestsCommon {
 
             // Check if ability was added
             helper.assertValueEqual(store.getAbilities().size(), 0, Component.literal("Expect ability store of size 0"));
+        });
+    }
+
+    @GameTest(template = TEMPLATE_EMPTY)
+    public void testTotemRecycleRecipeConsumesIngredients(GameTestHelper helper) {
+        helper.succeedIf(() -> {
+            // Determine an ability for the input totems
+            Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
+            Holder<IAbilityType> abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), Identifier.fromNamespaceAndPath(Reference.MOD_ID, "effect/speed")));
+
+            // Create 3 totem stacks as input
+            ItemStack totem1 = getAbilityHelpers().getTotem(new Ability(abilityType, 1));
+            ItemStack totem2 = getAbilityHelpers().getTotem(new Ability(abilityType, 1));
+            ItemStack totem3 = getAbilityHelpers().getTotem(new Ability(abilityType, 1));
+
+            // Create a crafting input with 3 totems in a row
+            CraftingInput craftingInput = CraftingInput.of(3, 1, List.of(totem1, totem2, totem3));
+
+            // Verify the recipe is found
+            Optional<RecipeHolder<CraftingRecipe>> recipeHolder = helper.getLevel().recipeAccess().getRecipeFor(
+                    RecipeType.CRAFTING, craftingInput, helper.getLevel());
+            helper.assertTrue(recipeHolder.isPresent(), Component.literal("Expected totem recycle recipe to be found"));
+
+            CraftingRecipe recipe = recipeHolder.get().value();
+
+            // Verify assemble returns a non-empty totem (registryAccess was set by matches() in getRecipeFor)
+            ItemStack result = recipe.assemble(craftingInput);
+            helper.assertTrue(!result.isEmpty(), Component.literal("Expected recipe result to be non-empty"));
+            helper.assertTrue(result.getItem() instanceof ItemAbilityTotem, Component.literal("Expected recipe result to be a totem"));
+
+            // Verify getRemainingItems returns all empty stacks (no NullPointerException, items are consumed)
+            NonNullList<ItemStack> remainingItems = recipe.getRemainingItems(craftingInput);
+            helper.assertValueEqual(remainingItems.size(), craftingInput.size(), Component.literal("Expected remaining items size to match crafting input size"));
+            for (int i = 0; i < remainingItems.size(); i++) {
+                helper.assertTrue(remainingItems.get(i).isEmpty(), Component.literal("Expected remaining item at slot " + i + " to be empty (items consumed)"));
+            }
         });
     }
 
