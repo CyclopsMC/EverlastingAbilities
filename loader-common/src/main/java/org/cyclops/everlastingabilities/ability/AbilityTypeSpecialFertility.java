@@ -43,7 +43,9 @@ public class AbilityTypeSpecialFertility extends AbilityTypeAdapter {
             List<Animal> mobs = world.getEntitiesOfClass(Animal.class,
                     player.getBoundingBox().inflate(radius, radius, radius), EntitySelector.NO_SPECTATORS);
             for (Animal animal : mobs) {
-                animal.setInLove(player);
+                if (animal.canFallInLove()) {
+                    animal.setInLove(player);
+                }
             }
         }
     }
