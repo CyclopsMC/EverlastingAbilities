@@ -26,8 +26,8 @@ public class LootModifierInjectAbilityTotem extends LootModifier {
 
     private final List<String> lootTables;
 
-    public LootModifierInjectAbilityTotem(LootItemCondition[] conditionsIn, List<String> lootTables) {
-        super(conditionsIn);
+    public LootModifierInjectAbilityTotem(LootItemCondition[] conditionsIn, int priority, List<String> lootTables) {
+        super(conditionsIn, priority);
         this.lootTables = lootTables;
     }
 
