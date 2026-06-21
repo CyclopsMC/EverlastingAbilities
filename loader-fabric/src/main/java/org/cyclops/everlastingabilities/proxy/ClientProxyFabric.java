@@ -35,6 +35,6 @@ public class ClientProxyFabric extends ClientProxyComponentFabric {
                 RenderLivingHandler.onRenderLiving(livingEntity);
             }
         });
-        PictureInPictureRendererRegistry.register(ctx -> new GuiItemRenderer(ctx.bufferSource(), ctx.minecraft().getEntityRenderDispatcher()));
+        PictureInPictureRendererRegistry.register(ctx -> new GuiItemRenderer(ctx.minecraft().getEntityRenderDispatcher()));
     }
 }

@@ -30,7 +30,7 @@ public class ItemAbilityTotemConfigNeoForge extends ItemAbilityTotemConfig<Everl
     }
 
     protected void modifyComponents(ModifyDefaultComponentsEvent event) {
-        event.modify(getInstance(), (builder) -> builder.set(RegistryEntries.DATACOMPONENT_ABILITY_STORE.value(), new DefaultMutableAbilityStore()));
+        event.modify(getInstance(), (components, context, item) -> components.set(RegistryEntries.DATACOMPONENT_ABILITY_STORE.value(), new DefaultMutableAbilityStore()));
     }
 
     protected void registerCapability(RegisterCapabilitiesEvent event) {

@@ -238,7 +238,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                     Component.translatable(ability.getAbilityType().getTranslationKey())
                             .setStyle(Style.EMPTY.withColor(ability.getAbilityType().getRarity().color()))
                             .getString(),
-                    x + 27, boxY + 7, 0, 1.0F, 50, ARGB.opaque(ability.getAbilityType().getRarity().color().getColor()), false, Font.DisplayMode.NORMAL);
+                    x + 27, boxY + 7, 0, 1.0F, 50, ARGB.opaque(TextColor.fromLegacyFormat(ability.getAbilityType().getRarity().color()).getValue()), false, Font.DisplayMode.NORMAL);
 
             // Level
             modHelpers.getRenderHelpers().drawScaledCenteredString(guiGraphics, font,
@@ -264,7 +264,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
 
                 // Name
                 lines.add(Component.translatable(ability.getAbilityType().getTranslationKey())
-                        .setStyle(Style.EMPTY.withColor(ability.getAbilityType().getRarity().color().getColor())));
+                        .setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ability.getAbilityType().getRarity().color()).getValue())));
 
                 // Level
                 lines.add(Component.translatable("general.everlastingabilities.level", ability.getLevel(),
@@ -312,6 +312,7 @@ public class ContainerScreenAbilityContainer extends ContainerScreenExtended<Con
                 .rotateX((rotationX) * 25.0F * ((float)Math.PI / 180F));
 
         ItemEntity itemEntity = new ItemEntity(Minecraft.getInstance().level, 0, 0, 0, itemStack);
+        itemEntity.setId(1); // A dummy id, otherwise rendering crashes
         EntityRenderer<? super ItemEntity, ?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(itemEntity);
         ItemEntityRenderState entityRenderState = (ItemEntityRenderState) renderer.createRenderState(itemEntity, 0);
         entityRenderState.bobOffset = 0;

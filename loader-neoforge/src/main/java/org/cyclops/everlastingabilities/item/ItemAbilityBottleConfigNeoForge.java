@@ -23,7 +23,7 @@ public class ItemAbilityBottleConfigNeoForge extends ItemAbilityBottleConfig<Eve
     }
 
     protected void modifyComponents(ModifyDefaultComponentsEvent event) {
-        event.modify(getInstance(), (builder) -> builder.set(RegistryEntries.DATACOMPONENT_ABILITY_STORE.value(), new DefaultMutableAbilityStore()));
+        event.modify(getInstance(), (components, context, item) -> components.set(RegistryEntries.DATACOMPONENT_ABILITY_STORE.value(), new DefaultMutableAbilityStore()));
     }
 
     protected void registerCapability(RegisterCapabilitiesEvent event) {

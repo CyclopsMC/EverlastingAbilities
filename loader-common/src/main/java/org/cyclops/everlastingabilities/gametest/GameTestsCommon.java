@@ -440,7 +440,7 @@ public class GameTestsCommon {
     @GameTest(template = TEMPLATE_EMPTY)
     public void testItemAbilityValid(GameTestHelper helper) {
         helper.succeedIf(() -> {
-            ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
+            ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE.getHolder());
             IMutableAbilityStore store = getAbilityHelpers().getItemAbilityStore(itemStack).get();
 
             // Determine an ability
@@ -462,7 +462,7 @@ public class GameTestsCommon {
     @GameTest(template = TEMPLATE_EMPTY)
     public void testItemAbilityMultipleSameValid(GameTestHelper helper) {
         helper.succeedIf(() -> {
-            ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
+            ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE.getHolder());
             IMutableAbilityStore store = getAbilityHelpers().getItemAbilityStore(itemStack).get();
 
             // Determine an ability
@@ -486,7 +486,7 @@ public class GameTestsCommon {
     @GameTest(template = TEMPLATE_EMPTY)
     public void testItemAbilityMultipleDifferentValid(GameTestHelper helper) {
         helper.succeedIf(() -> {
-            ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
+            ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE.getHolder());
             IMutableAbilityStore store = getAbilityHelpers().getItemAbilityStore(itemStack).get();
 
             // Determine an ability
@@ -515,7 +515,7 @@ public class GameTestsCommon {
     @GameTest(template = TEMPLATE_EMPTY)
     public void testItemAbilityRemoveValid(GameTestHelper helper) {
         helper.succeedIf(() -> {
-            ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE);
+            ItemStack itemStack = new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE.getHolder());
             IMutableAbilityStore store = getAbilityHelpers().getItemAbilityStore(itemStack).get();
 
             // Determine an ability

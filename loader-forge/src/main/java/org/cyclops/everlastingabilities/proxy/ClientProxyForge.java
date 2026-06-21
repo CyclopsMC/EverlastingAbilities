@@ -33,7 +33,7 @@ public class ClientProxyForge extends ClientProxyComponentForge {
     }
 
     public void onRegisterPictureInPictureRenderers(RegisterPictureInPictureRendererEvent event) {
-        event.register(new GuiItemRenderer(event.getBufferSource(), Minecraft.getInstance().getEntityRenderDispatcher()));
+        event.register(new GuiItemRenderer(Minecraft.getInstance().getEntityRenderDispatcher()));
     }
 
 }

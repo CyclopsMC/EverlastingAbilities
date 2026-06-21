@@ -5,6 +5,7 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
@@ -68,7 +69,7 @@ public class EverlastingAbilitiesNeoForge extends ModBaseNeoForge<EverlastingAbi
         }, modEventBus);
 
         // Register capabilities
-        getCapabilityConstructorRegistry().registerEntity(() -> EntityType.PLAYER, new ICapabilityConstructor<Player, Void, IMutableAbilityStore, EntityType<Player>>() {
+        getCapabilityConstructorRegistry().registerEntity(() -> EntityTypes.PLAYER, new ICapabilityConstructor<Player, Void, IMutableAbilityStore, EntityType<Player>>() {
             @Override
             public BaseCapability<IMutableAbilityStore, Void> getCapability() {
                 return Capabilities.MutableAbilityStore.ENTITY;
@@ -144,7 +145,7 @@ public class EverlastingAbilitiesNeoForge extends ModBaseNeoForge<EverlastingAbi
     @Override
     protected CreativeModeTab.Builder constructDefaultCreativeModeTab(CreativeModeTab.Builder builder) {
         return super.constructDefaultCreativeModeTab(builder)
-                .icon(() -> new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE));
+                .icon(() -> new ItemStack(RegistryEntries.ITEM_ABILITY_BOTTLE.getHolder()));
     }
 
     @Override
