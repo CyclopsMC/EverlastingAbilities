@@ -33,7 +33,7 @@ public class GuiItemRenderer extends PictureInPictureRenderer<GuiItemRenderState
         Vector3f vector3f = renderState.translation();
         poseStack.translate(vector3f.x, vector3f.y, vector3f.z);
         poseStack.scale(renderState.scale(), renderState.scale(), 1);
-        poseStack.mulPose(renderState.rotation());
+        poseStack.rotate(renderState.rotation());
         CameraRenderState camerarenderstate = new CameraRenderState();
 
         this.entityRenderDispatcher
