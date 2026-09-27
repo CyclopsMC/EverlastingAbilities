@@ -20,7 +20,7 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
-import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewDatapackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.cyclops.cyclopscore.config.ConfigHandlerCommon;
@@ -226,8 +226,8 @@ public class EverlastingAbilitiesNeoForge extends ModBaseNeoForge<EverlastingAbi
         getAbilityHelpers().onEntityTick(event.getEntity());
     }
 
-    private void onDatapackRegistryCreate(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(AbilityTypes.REGISTRY_KEY, AbilityTypes.DIRECT_CODEC, AbilityTypes.DIRECT_CODEC);
+    private void onDatapackRegistryCreate(NewDatapackRegistryEvent event) {
+        event.worldRegistry(AbilityTypes.REGISTRY_KEY, AbilityTypes.DIRECT_CODEC, AbilityTypes.DIRECT_CODEC);
     }
 
     private void onRegistriesCreate(NewRegistryEvent event) {
