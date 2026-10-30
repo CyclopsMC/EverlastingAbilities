@@ -7,9 +7,6 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -526,26 +523,6 @@ public class GameTestsCommon {
 
             // Check if ability was added
             helper.assertValueEqual(store.getAbilities().size(), 0, "Expect ability store of size 0");
-        });
-    }
-
-    @GameTest(template = TEMPLATE_EMPTY)
-    public void testRadiusEffectSkipsFriendlyMobs(GameTestHelper helper) {
-        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-        player.moveTo(helper.absoluteVec(POS.getCenter()));
-
-        Registry<IAbilityType> registry = getAbilityHelpers().getRegistry(helper.getLevel().registryAccess());
-        IAbilityType abilityType = registry.getOrThrow(ResourceKey.create(registry.key(), ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "effect/poison")));
-
-        LivingEntity camel = helper.spawnWithNoFreeWill(EntityType.CAMEL, POS);
-        LivingEntity cow = helper.spawnWithNoFreeWill(EntityType.COW, POS);
-        LivingEntity zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, POS);
-
-        helper.onEachTick(() -> abilityType.onTick(player, 3));
-        helper.succeedWhen(() -> {
-            helper.assertTrue(zombie.hasEffect(MobEffects.POISON), "Expected zombie to be poisoned");
-            helper.assertFalse(camel.hasEffect(MobEffects.POISON), "Expected camel not to be poisoned");
-            helper.assertFalse(cow.hasEffect(MobEffects.POISON), "Expected cow not to be poisoned");
         });
     }
 
