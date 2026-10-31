@@ -3,7 +3,7 @@
   "target": "self",
   "name": "ability.everlastingabilities.resistance",
   "rarity": "rare",
-  "max_level": 3,
+  "max_level": 4,
   "xp_per_level": 50,
   "effect": "minecraft:resistance"
 }
