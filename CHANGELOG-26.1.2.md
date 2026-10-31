@@ -1,8 +1,16 @@
 # Changelog for Minecraft 26.1.2
 All notable changes to this project will be documented in this file.
 
+<a name="26.1.2-2.5.11"></a>
+## [26.1.2-2.5.11](https://github.com/CyclopsMC/EverlastingAbilities/compare/26.1.2-2.5.10...26.1.2-2.5.11) - 2026-10-31 13:41:38
+
+
+### Fixed
+* Add missing passive mobs to default friendlyMobs (#331)
+  For existing worlds to benefit from this change, a config reset of `friendlyMobs` is needed.
+
 <a name="26.1.2-2.5.10"></a>
-## [26.1.2-2.5.10](https://github.com/CyclopsMC/EverlastingAbilities/compare/26.1.2-2.5.9...26.1.2-2.5.10) - 2026-05-25 14:29:25
+## [26.1.2-2.5.10](https://github.com/CyclopsMC/EverlastingAbilities/compare/26.1.2-2.5.9...26.1.2-2.5.10) - 2026-05-25 14:29:25 +0200
 
 
 ### Fixed
