@@ -1,8 +1,16 @@
 # Changelog for Minecraft 1.21.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.21.1-2.5.7"></a>
+## [1.21.1-2.5.7](https://github.com/CyclopsMC/EverlastingAbilities/compare/1.21.1-2.5.6...1.21.1-2.5.7) - 2026-10-31 13:37:56
+
+
+### Fixed
+* Add missing passive mobs to default friendlyMobs (#331)
+  For existing worlds to benefit from this change, a config reset of `friendlyMobs` is needed.
+
 <a name="1.21.1-2.5.6"></a>
-## [1.21.1-2.5.6](https://github.com/CyclopsMC/EverlastingAbilities/compare/1.21.1-2.5.5...1.21.1-2.5.6) - 2026-03-20 20:06:50
+## [1.21.1-2.5.6](https://github.com/CyclopsMC/EverlastingAbilities/compare/1.21.1-2.5.5...1.21.1-2.5.6) - 2026-03-20 20:06:50 +0100
 
 
 ### Fixed
